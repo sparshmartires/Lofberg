@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 import { ArrowLeft } from "lucide-react"
+import { useForgotPasswordMutation } from "@/store/services/authApi"
+import { useState } from "react"
 
 interface FormValues {
   emailOrPhone: string
@@ -12,18 +14,33 @@ interface FormValues {
 
 export default function ForgotPasswordPage() {
   const router = useRouter()
+  const [forgotPassword, { isLoading, error }] = useForgotPasswordMutation()
+  const [apiError, setApiError] = useState<string>("")
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    setError,
   } = useForm<FormValues>()
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Reset request:", data)
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setApiError("")
+      await forgotPassword({
+        email: data.emailOrPhone,
+      }).unwrap()
 
-    // Later: call API
-   router.push(`/verify-code?email=${encodeURIComponent(data.emailOrPhone)}`)
+      // Navigate to verify code page
+      router.push(`/verify-code?email=${encodeURIComponent(data.emailOrPhone)}`)
+    } catch (err: any) {
+      const errorMessage = err?.data?.message || err?.error || "Failed to send reset code"
+      setApiError(errorMessage)
+      setError("emailOrPhone", {
+        type: "manual",
+        message: errorMessage,
+      })
+    }
   }
 
   return (
@@ -83,7 +100,7 @@ export default function ForgotPasswordPage() {
             />
 
             {errors.emailOrPhone && (
-              <p className="text-xs text-red-500">
+              <p className="text-xs text-red-500 mt-[8px]">
                 {errors.emailOrPhone.message}
               </p>
             )}
@@ -93,8 +110,9 @@ export default function ForgotPasswordPage() {
             type="submit"
             variant="primary"
             className="w-[220px]"
+            disabled={isLoading || isSubmitting}
           >
-            Continue
+            {isLoading ? "Sending..." : "Continue"}
           </Button>
 
         </form>

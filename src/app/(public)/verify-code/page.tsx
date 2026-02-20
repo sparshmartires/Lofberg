@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
+import { useVerifyCodeMutation, useResendCodeMutation } from "@/store/services/authApi"
 
 export default function VerifyCodePage() {
   const router = useRouter()
@@ -14,6 +15,9 @@ export default function VerifyCodePage() {
   const [error, setError] = useState("")
   const [seconds, setSeconds] = useState(60)
   const [canResend, setCanResend] = useState(false)
+
+  const [verifyCode, { isLoading: isVerifying }] = useVerifyCodeMutation()
+  const [resendCode, { isLoading: isResending }] = useResendCodeMutation()
 
   /* ================= Countdown Logic ================= */
 
@@ -30,13 +34,25 @@ export default function VerifyCodePage() {
     return () => clearTimeout(timer)
   }, [seconds])
 
-  const handleResend = () => {
-    // Reset timer
-    setSeconds(60)
-    setCanResend(false)
+  const handleResend = async () => {
+    try {
+      if (!email) {
+        setError("Email not found")
+        return
+      }
 
-    // Later call resend API here
-    console.log("Resend OTP")
+      await resendCode({
+        email: email,
+      }).unwrap()
+
+      // Reset timer
+      setSeconds(60)
+      setCanResend(false)
+      setError("")
+    } catch (err: any) {
+      const errorMessage = err?.data?.message || err?.error || "Failed to resend code"
+      setError(errorMessage)
+    }
   }
 
   /* ================= OTP Handling ================= */
@@ -58,7 +74,7 @@ export default function VerifyCodePage() {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const fullCode = code.join("")
 
     if (fullCode.length < 5) {
@@ -66,10 +82,27 @@ export default function VerifyCodePage() {
       return
     }
 
-    console.log("OTP Submitted:", fullCode)
+    if (!email) {
+      setError("Email not found")
+      return
+    }
 
-    // navigate to next step (reset password page later)
-    router.push("/reset-password")
+    try {
+      setError("")
+      const result = await verifyCode({
+        email: email,
+        code: fullCode,
+      }).unwrap()
+
+      // Store reset token for next step
+      sessionStorage.setItem("resetToken", result.resetToken)
+
+      // navigate to reset password page
+      router.push("/reset-password")
+    } catch (err: any) {
+      const errorMessage = err?.data?.message || err?.error || "Invalid verification code"
+      setError(errorMessage)
+    }
   }
 
   const maskedEmail = email
@@ -157,8 +190,9 @@ export default function VerifyCodePage() {
           variant="primary"
           className="w-[220px]"
           onClick={handleSubmit}
+          disabled={isVerifying}
         >
-          Continue
+          {isVerifying ? "Verifying..." : "Continue"}
         </Button>
 
       </div>

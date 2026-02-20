@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowLeft, Eye, EyeOff } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useResetPasswordMutation } from "@/store/services/authApi"
 
 interface FormValues {
   password: string
@@ -14,12 +15,17 @@ interface FormValues {
 
 export default function ResetPasswordPage() {
   const router = useRouter()
+  const [resetToken, setResetToken] = useState<string>("")
+  const [error, setError] = useState<string>("")
+
+  const [resetPassword, { isLoading }] = useResetPasswordMutation()
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    setError: setFormError,
   } = useForm<FormValues>()
 
   const [showPassword, setShowPassword] = useState(false)
@@ -27,11 +33,45 @@ export default function ResetPasswordPage() {
 
   const passwordValue = watch("password")
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Password Reset:", data)
+  // Get reset token from session storage
+  useEffect(() => {
+    const token = sessionStorage.getItem("resetToken")
+    if (!token) {
+      setError("Invalid session. Please try again.")
+      router.push("/forgot-password")
+      return
+    }
+    setResetToken(token)
+  }, [router])
 
-    // Navigate back to login
-    router.push("/login")
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setError("")
+
+      if (!resetToken) {
+        setError("Invalid session")
+        return
+      }
+
+      await resetPassword({
+        resetToken: resetToken,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      }).unwrap()
+
+      // Clear session storage
+      sessionStorage.removeItem("resetToken")
+
+      // Navigate back to login
+      router.push("/login")
+    } catch (err: any) {
+      const errorMessage = err?.data?.message || err?.error || "Failed to reset password"
+      setError(errorMessage)
+      setFormError("password", {
+        type: "manual",
+        message: errorMessage,
+      })
+    }
   }
 
   return (
@@ -51,6 +91,12 @@ export default function ResetPasswordPage() {
         <h1 className="text-[40px] leading-[120%] tracking-[-0.04em] text-[#1F1F1F] mb-10">
           Reset Password
         </h1>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
@@ -153,8 +199,9 @@ export default function ResetPasswordPage() {
                 type="submit"
                 variant="primary"
                 className="w-full"
+                disabled={isLoading || isSubmitting}
               >
-                Reset Password
+                {isLoading ? "Resetting..." : "Reset Password"}
               </Button>
             </div>
 

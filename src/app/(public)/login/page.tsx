@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
+import { useLoginMutation } from "@/store/services/authApi"
 
 interface LoginFormValues {
   email: string
@@ -13,17 +14,26 @@ interface LoginFormValues {
 
 export default function LoginPage() {
   const router = useRouter()
+  const [login, { isLoading, error }] = useLoginMutation()
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>()
 
-  const onSubmit = (data: LoginFormValues) => {
-    // Hardcoded login for now
-    document.cookie = "auth_token=demo; path=/"
-    router.push("/users")
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      await login({
+        email: data.email,
+        password: data.password,
+      }).unwrap()
+
+      // Navigate on success
+      router.push("/users")
+    } catch (err: any) {
+   
+    }
   }
 
   return (
@@ -127,22 +137,25 @@ export default function LoginPage() {
                 {errors.password.message}
               </p>
             )}
+
             <Link href="/forgot-password" className="text-[14px] text-[#7B3EBE] cursor-pointer">
-            Forgot Password?
-          </Link>
+              Forgot Password?
+            </Link>
           </div>
-
-          {/* FORGOT PASSWORD */}
-         
-
+          {error && "data" in error && (error as any).data?.error && (
+            <p className="text-xs text-red-500">
+              {(error as any).data?.error}
+            </p>
+          )}
           {/* LOGIN BUTTON */}
           <div className="pt-4">
             <Button
               type="submit"
               variant="primary"
               className="w-[180px]"
+              disabled={isLoading || isSubmitting}
             >
-              Log in
+              {isLoading ? "Logging in..." : "Log in"}
             </Button>
           </div>
         </form>
