@@ -157,6 +157,10 @@
 }
 
 @layer components {
+
+  .empty-state-container {
+    @apply flex flex-col items-center justify-center py-16 space-y-4 text-center;
+  }
   
   .text-display-xl {
     font-family: var(--font-brownstd);
@@ -196,6 +200,18 @@
     font-size: 12px;
     line-height: 17px;
     letter-spacing: -0.36px;
+  }
+
+  .empty-state-icon-wrap {
+    @apply h-12 w-12 flex items-center justify-center rounded-full bg-[#59187B]/10;
+  }
+
+  .empty-state-icon {
+    @apply h-6 w-6 text-[#59187B];
+  }
+
+  .empty-state-message {
+    @apply text-[18px] leading-[120%] tracking-[0em] font-normal text-[#59187B] text-center;
   }
   
 }
