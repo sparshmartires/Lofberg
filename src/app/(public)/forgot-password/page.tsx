@@ -46,23 +46,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F4F2F7] px-4">
 
-      <div
-        className="
-          w-full
-          max-w-[667px]
-          rounded-[28px]
-          border
-          border-[#EDEDED]
-          bg-white
-          px-[20px]
-          py-[32px]
-          sm:px-[32px]
-          sm:py-[48px]
-          flex
-          flex-col
-          gap-[32px]
-        "
-      >
+      <div className="w-full max-w-[667px] rounded-[28px] border border-[#EDEDED] bg-white px-[20px] py-[32px] sm:px-[32px] sm:py-[48px] flex flex-col gap-[32px]">
         {/* Back */}
         <button
           onClick={() => router.back()}

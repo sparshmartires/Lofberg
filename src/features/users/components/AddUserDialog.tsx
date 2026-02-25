@@ -23,6 +23,7 @@ import { Plus } from "lucide-react"
 interface AddUserDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onUserCreated: () => void   
 }
 
 interface FormValues {
@@ -36,7 +37,7 @@ interface FormValues {
   notes: string
 }
 
-export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
+export function AddUserDialog({ open, onOpenChange, onUserCreated }: AddUserDialogProps) {
   const {
     register,
     handleSubmit,
@@ -44,10 +45,12 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
     formState: { errors },
   } = useForm<FormValues>()
 
-  const onSubmit = (data: FormValues) => {
-    console.log("User Created:", data)
-    onOpenChange(false)
-  }
+const onSubmit = (data: FormValues) => {
+  console.log("User Created:", data)
+onUserCreated()
+ // allow dialog close animation to finish
+}
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

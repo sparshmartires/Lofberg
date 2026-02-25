@@ -1,6 +1,6 @@
 import { UserPlus } from "lucide-react"
 
-export function SalesEmptyState() {
+export function CustomerEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 space-y-4 text-center">
 
@@ -11,7 +11,7 @@ export function SalesEmptyState() {
       <p
         className="text-[18px] leading-[120%] tracking-[0em] font-normal text-[#59187B] text-center"
       >
-        No sales rep found. Click add “sales rep” to create one
+        No customers found. Click add “customer” to create one
       </p>
 
     </div>

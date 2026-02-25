@@ -53,17 +53,7 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
     prepareHeaders: (headers) => {
-      // Get token from cookies (client-side)
-      let token = null;
-      if (typeof document !== "undefined") {
-        const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
-          const [key, value] = cookie.split("=");
-          acc[key] = value;
-          return acc;
-        }, {} as Record<string, string>);
-        token = cookies["auth_token"];
-      }
-      
+      const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
@@ -141,9 +131,8 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
           // Clear stored data
+          localStorage.removeItem("auth_token");
           localStorage.removeItem("user");
-          // Clear auth token cookie
-          document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
         } catch (err) {
           // Error handling
         }

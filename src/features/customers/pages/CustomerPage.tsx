@@ -3,17 +3,17 @@
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { SalesEmptyState } from "@/features/sales/components/SalesEmptyState"
-import { AddSalesDialog } from "@/features/sales/components/AddSalesDialog"
+import { AddCustomerDialog} from "@/features/customers/components/AddCustomerPage"
 import { useState } from "react"
-import { SalesPagination } from "@/features/sales/components/SalesPagination"
-import { SalesTable } from "../components/SalesTable"
+import { CustomerPagination } from "@/features/customers/components/CustomerPagination"
+import { CustomersTable } from "../components/CustomerTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
-import { SalesRepFilters } from "../components/SalesRepFilters"
-export function SalesPage() {
+import { CustomerFilters } from "../components/CustomerFilter"
+export function CustomersPage() {
   const users: any[] = [] // Mock empty state
   const [open, setOpen] = useState(false)
   const [successOpen, setSuccessOpen] = useState(false)
-  const handleSaleCreated = () => {
+  const handleCustomerCreated = () => {
     setOpen(false)
 
     setTimeout(() => {
@@ -31,7 +31,7 @@ export function SalesPage() {
             <h1
               className="text-[40px] leading-[120%]  tracking-[-0.04em] font-normal  text-[#1F1F1F]"
             >
-              Sales Representatives
+              Customer Management
             </h1>
 
             <p
@@ -44,7 +44,7 @@ export function SalesPage() {
 
           <Button variant="primary" onClick={() => setOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Add Sales Representative
+            Add Customer
           </Button>
         </div>
 
@@ -56,7 +56,7 @@ export function SalesPage() {
             <h2
               className="text-[18px] leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
             >
-              Sales Team ({users.length})
+              Customer ({users.length})
             </h2>
 
           </div>
@@ -64,7 +64,7 @@ export function SalesPage() {
           {users.length === 0 ? (
             //   <UsersEmptyState />
             <>
-              <SalesTable />
+              <CustomersTable />
 
             </>
           ) : (
@@ -74,10 +74,11 @@ export function SalesPage() {
           )}
 
         </div>
-        <SalesPagination />
+        <CustomerPagination />
       </div>
-      <AddSalesDialog open={open} onOpenChange={setOpen}
-        onSaleCreated={handleSaleCreated}
+      <AddCustomerDialog open={open} onOpenChange={setOpen}
+        onCustomerCreated={handleCustomerCreated}
+       
       />
       <UserFeedbackDialog
         open={successOpen}

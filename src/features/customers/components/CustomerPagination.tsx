@@ -16,7 +16,7 @@ import {
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
-export function SalesPagination() {
+export function CustomerPagination() {
   return (
     <div className="flex items-center justify-between mt-10">
 

@@ -118,9 +118,9 @@ function SelectItem({
         data-slot="select-item-indicator"
         className="absolute right-2 flex size-3.5 items-center justify-center"
       >
-        <SelectPrimitive.ItemIndicator>
+        {/* <SelectPrimitive.ItemIndicator>
           <CheckIcon className="size-4" />
-        </SelectPrimitive.ItemIndicator>
+        </SelectPrimitive.ItemIndicator> */}
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>

@@ -7,9 +7,18 @@ import { AddUserDialog } from "@/features/users/components/AddUserDialog"
 import { useState } from "react"
 import { UsersPagination } from "@/features/users/components/UsersPagination"
 import { UsersTable } from "../components/UsersTable"
+import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 export function UsersPage() {
   const users: any[] = [] // Mock empty state
 const [open, setOpen] = useState(false)
+const [successOpen, setSuccessOpen] = useState(false)
+const handleUserCreated = () => {
+  setOpen(false)
+
+  setTimeout(() => {
+    setSuccessOpen(true)
+  }, 200)
+}
 
   return (
     <>
@@ -20,25 +29,13 @@ const [open, setOpen] = useState(false)
   <div className="space-y-2">
 
     <h1
-      className="
-        text-[40px]
-        leading-[120%]
-        tracking-[-0.04em]
-        font-normal
-        text-[#1F1F1F]
-      "
+      className="  text-[40px]  leading-[120%] tracking-[-0.04em]  font-normal  text-[#1F1F1F]"
     >
       User Management
     </h1>
 
     <p
-      className="
-        text-[14px]
-        leading-[120%]
-        tracking-[-0.04em]
-        font-normal
-        text-[#747474]
-      "
+      className="  text-[14px]  leading-[120%]  tracking-[-0.04em]  font-normal text-[#747474]"
     >
       Manage system administrators and users
     </p>
@@ -57,13 +54,7 @@ const [open, setOpen] = useState(false)
 
         <div className="mb-6">
           <h2
-  className="
-    text-[18px]
-    leading-[120%]
-    tracking-[0em]
-    font-normal
-    text-[#1F1F1F]
-  "
+  className=" text-[18px]  leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
 >
   System Users ({users.length})
 </h2>
@@ -85,8 +76,16 @@ const [open, setOpen] = useState(false)
       </div>
       <UsersPagination />
     </div>
-    <AddUserDialog open={open} onOpenChange={setOpen} />
-
+    <AddUserDialog open={open} onOpenChange={setOpen} 
+     onUserCreated={handleUserCreated}
+    />
+<UserFeedbackDialog
+     open={successOpen}
+  onOpenChange={setSuccessOpen}
+  type="success"
+  title="User created successfully. "
+  description="Password sent to email."
+  />
     </>
   )
 }

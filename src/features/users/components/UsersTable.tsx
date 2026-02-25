@@ -14,6 +14,7 @@ import { Pencil, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { EditUserDialog } from "./EditUserDialog"
+import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 
 interface User {
   id: number
@@ -112,7 +113,7 @@ const users: User[] = [
 export function UsersTable() {
     const [editOpen, setEditOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
-
+const [deleteOpen, setDeleteOpen] = useState(false)
   const handleEdit = (user: User) => {
     setSelectedUser(user)
     setEditOpen(true)
@@ -226,13 +227,49 @@ export function UsersTable() {
               </TableCell>
 
               {/* ACTIONS */}
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-4">
-                  <Pencil className="h-4 w-4 text-[#7B3EBE] cursor-pointer" 
-                   onClick={() => handleEdit(user)}/>
-                  <Trash2 className="h-4 w-4 text-[#7B3EBE] cursor-pointer" />
-                </div>
-              </TableCell>
+             <TableCell className="text-right">
+  <div className="flex justify-end gap-3">
+
+    {/* EDIT BUTTON */}
+    <button
+      onClick={() => handleEdit(user)}
+      className="
+        w-[22px]
+        h-[22px]
+        rounded-[6px]
+        bg-[#F4ECFB]
+        flex
+        items-center
+        justify-center
+        hover:bg-[#E9D8FA]
+        transition
+      "
+    >
+      <Pencil className="w-[11px] h-[11px] text-[#5B2D91]" 
+       />
+    </button>
+
+    {/* DELETE BUTTON */}
+    <button
+      onClick={() => setDeleteOpen(true)}
+      className="
+        w-[22px]
+        h-[22px]
+        rounded-[6px]
+        bg-[#F4ECFB]
+        flex
+        items-center
+        justify-center
+        hover:bg-[#E9D8FA]
+        transition
+      "
+    >
+      <Trash2 className="w-[11px] h-[11px] text-[#5B2D91]" />
+    </button>
+
+  </div>
+</TableCell>
+
 
             </TableRow>
           ))}
@@ -262,6 +299,17 @@ export function UsersTable() {
           }}
         />
       )}
+      <UserFeedbackDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        type="error"
+        title="Are you sure?"
+        description="karin will no longer have access to Lofberg, and their profile will be archived."
+        primaryActionLabel="Cancel"
+        onPrimaryAction={() => setDeleteOpen(false)}
+        secondaryActionLabel="Revoke"
+        onSecondaryAction={() => setDeleteOpen(false)}
+      />
       </>
   )
 }

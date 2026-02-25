@@ -23,6 +23,7 @@ import { Plus } from "lucide-react"
 interface AddSalesDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onSaleCreated: () => void
 }
 
 interface FormValues {
@@ -35,7 +36,7 @@ interface FormValues {
   notes: string
 }
 
-export function AddSalesDialog({ open, onOpenChange }: AddSalesDialogProps) {
+export function AddSalesDialog({ open, onOpenChange, onSaleCreated }: AddSalesDialogProps) {
   const {
     register,
     handleSubmit,
@@ -45,7 +46,7 @@ export function AddSalesDialog({ open, onOpenChange }: AddSalesDialogProps) {
 
   const onSubmit = (data: FormValues) => {
     console.log("Sale Created:", data)
-    onOpenChange(false)
+    onSaleCreated()
   }
 
   return (
