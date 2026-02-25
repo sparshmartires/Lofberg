@@ -120,32 +120,32 @@ const [deleteOpen, setDeleteOpen] = useState(false)
   }
   return (
     <>
-    <div className="rounded-[24px]  border-[#EDEDED] bg-white overflow-hidden">
+    <div className="table-card border-[#EDEDED]">
 
       <Table>
 
         {/* TABLE HEADER */}
         <TableHeader>
-          <TableRow className="border-b border-[#E0E0E0] h-[64px]">
-            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+          <TableRow className="table-header-row-bordered">
+            <TableHead className="table-header-cell">
               Name
             </TableHead>
-            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+            <TableHead className="table-header-cell">
               Email
             </TableHead>
-            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+            <TableHead className="table-header-cell">
               Role
             </TableHead>
-            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+            <TableHead className="table-header-cell">
               Status
             </TableHead>
-            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+            <TableHead className="table-header-cell">
               Reports
             </TableHead>
-            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+            <TableHead className="table-header-cell">
               Last login
             </TableHead>
-            <TableHead className="text-right text-[#1F1F1F] text-[14px] font-normal">
+            <TableHead className="text-right table-header-cell">
               Actions
             </TableHead>
           </TableRow>
@@ -156,7 +156,7 @@ const [deleteOpen, setDeleteOpen] = useState(false)
           {users.map((user) => (
             <TableRow
               key={user.id}
-              className="h-[72px] border-b border-[#EDEDED] hover:bg-[#FAFAFA] transition-colors"
+              className="table-body-row"
             >
               {/* NAME */}
               <TableCell>
@@ -168,29 +168,21 @@ const [deleteOpen, setDeleteOpen] = useState(false)
                     height={36}
                     className="rounded-full object-cover"
                   />
-                  <span className="text-[14px] text-[#1F1F1F]">
+                  <span className="table-name-text">
                     {user.name}
                   </span>
                 </div>
               </TableCell>
 
               {/* EMAIL */}
-              <TableCell className="text-[14px] text-[#4E4E4E]">
+              <TableCell className="table-muted-text">
                 {user.email}
               </TableCell>
 
               {/* ROLE */}
               <TableCell>
                 <Badge
-                  className="
-                    bg-[#EADCF6]
-                    text-[#7B3EBE]
-                    rounded-full
-                    px-4
-                    py-1
-                    text-[12px]
-                    font-normal
-                  "
+                  className="table-role-badge"
                 >
                   {user.role}
                 </Badge>
@@ -200,11 +192,7 @@ const [deleteOpen, setDeleteOpen] = useState(false)
               <TableCell>
                 <Badge
                   className={`
-                    rounded-full
-                    px-4
-                    py-1
-                    text-[12px]
-                    font-normal
+                    table-status-badge
                     ${
                       user.status === "Active"
                         ? "bg-[#7DB356] text-white"
@@ -217,54 +205,34 @@ const [deleteOpen, setDeleteOpen] = useState(false)
               </TableCell>
 
               {/* REPORTS */}
-              <TableCell className="text-[14px] text-[#1F1F1F]">
+              <TableCell className="table-name-text">
                 {user.reports}
               </TableCell>
 
               {/* LAST LOGIN */}
-              <TableCell className="text-[14px] text-[#4E4E4E]">
+              <TableCell className="table-muted-text">
                 {user.lastLogin}
               </TableCell>
 
               {/* ACTIONS */}
              <TableCell className="text-right">
-  <div className="flex justify-end gap-3">
+  <div className="table-actions-wrap">
 
     {/* EDIT BUTTON */}
     <button
       onClick={() => handleEdit(user)}
-      className="
-        w-[22px]
-        h-[22px]
-        rounded-[6px]
-        bg-[#F4ECFB]
-        flex
-        items-center
-        justify-center
-        hover:bg-[#E9D8FA]
-        transition
-      "
+      className="table-action-btn"
     >
-      <Pencil className="w-[11px] h-[11px] text-[#5B2D91]" 
+      <Pencil className="table-action-icon" 
        />
     </button>
 
     {/* DELETE BUTTON */}
     <button
       onClick={() => setDeleteOpen(true)}
-      className="
-        w-[22px]
-        h-[22px]
-        rounded-[6px]
-        bg-[#F4ECFB]
-        flex
-        items-center
-        justify-center
-        hover:bg-[#E9D8FA]
-        transition
-      "
+      className="table-action-btn"
     >
-      <Trash2 className="w-[11px] h-[11px] text-[#5B2D91]" />
+      <Trash2 className="table-action-icon" />
     </button>
 
   </div>

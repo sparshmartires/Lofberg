@@ -120,32 +120,32 @@ export function SalesTable() {
     }
     return (
         <>
-            <div className="rounded-[24px]  border-[#EDEDED] bg-white overflow-hidden">
+            <div className="table-card border-[#EDEDED]">
 
                 <Table>
 
                     {/* TABLE HEADER */}
                     <TableHeader>
-                        <TableRow className="border-b border-[#E0E0E0] h-[64px]">
-                            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+                        <TableRow className="table-header-row-bordered">
+                            <TableHead className="table-header-cell">
                                 Name
                             </TableHead>
-                            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+                            <TableHead className="table-header-cell">
                                 Email
                             </TableHead>
-                            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+                            <TableHead className="table-header-cell">
                                 Role
                             </TableHead>
-                            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+                            <TableHead className="table-header-cell">
                                 Status
                             </TableHead>
-                            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+                            <TableHead className="table-header-cell">
                                 Reports
                             </TableHead>
-                            <TableHead className="text-[#1F1F1F] text-[14px] font-normal">
+                            <TableHead className="table-header-cell">
                                 Last login
                             </TableHead>
-                            <TableHead className="text-right text-[#1F1F1F] text-[14px] font-normal">
+                            <TableHead className="text-right table-header-cell">
                                 Actions
                             </TableHead>
                         </TableRow>
@@ -156,7 +156,7 @@ export function SalesTable() {
                         {users.map((sale) => (
                             <TableRow
                                 key={sale.id}
-                                className="h-[72px] border-b border-[#EDEDED] hover:bg-[#FAFAFA] transition-colors"
+                                className="table-body-row"
                             >
                                 {/* NAME */}
                                 <TableCell>
@@ -168,29 +168,21 @@ export function SalesTable() {
                                             height={36}
                                             className="rounded-full object-cover"
                                         />
-                                        <span className="text-[14px] text-[#1F1F1F]">
+                                        <span className="table-name-text">
                                             {sale.name}
                                         </span>
                                     </div>
                                 </TableCell>
 
                                 {/* EMAIL */}
-                                <TableCell className="text-[14px] text-[#4E4E4E]">
+                                <TableCell className="table-muted-text">
                                     {sale.email}
                                 </TableCell>
 
                                 {/* ROLE */}
                                 <TableCell>
                                     <Badge
-                                        className="
-                    bg-[#EADCF6]
-                    text-[#7B3EBE]
-                    rounded-full
-                    px-4
-                    py-1
-                    text-[12px]
-                    font-normal
-                  "
+                                        className="table-role-badge"
                                     >
                                         {sale.role}
                                     </Badge>
@@ -200,11 +192,7 @@ export function SalesTable() {
                                 <TableCell>
                                     <Badge
                                         className={`
-                    rounded-full
-                    px-4
-                    py-1
-                    text-[12px]
-                    font-normal
+                    table-status-badge
                     ${sale.status === "Active"
                                                 ? "bg-[#7DB356] text-white"
                                                 : "bg-[#E5E5E5] text-[#6B6B6B]"
@@ -216,34 +204,34 @@ export function SalesTable() {
                                 </TableCell>
 
                                 {/* REPORTS */}
-                                <TableCell className="text-[14px] text-[#1F1F1F]">
+                                <TableCell className="table-name-text">
                                     {sale.reports}
                                 </TableCell>
 
                                 {/* LAST LOGIN */}
-                                <TableCell className="text-[14px] text-[#4E4E4E]">
+                                <TableCell className="table-muted-text">
                                     {sale.lastLogin}
                                 </TableCell>
 
                                 {/* ACTIONS */}
                                 <TableCell className="text-right">
-                                    <div className="flex justify-end gap-3">
+                                    <div className="table-actions-wrap">
 
                                         {/* EDIT BUTTON */}
                                         <button
                                             onClick={() => handleEdit(sale)}
-                                            className="w-[22px] h-[22px] rounded-[6px] bg-[#F4ECFB] flex items-center justify-center  hover:bg-[#E9D8FA] transition"
+                                            className="table-action-btn"
                                         >
-                                            <Pencil className="w-[11px] h-[11px] text-[#5B2D91]"
+                                            <Pencil className="table-action-icon"
                                             />
                                         </button>
 
                                         {/* DELETE BUTTON */}
                                         <button
                                             onClick={() => setHistoryOpen(true)}
-                                            className="w-[22px] h-[22px] rounded-[6px] bg-[#F4ECFB]  flex  items-center  justify-center  hover:bg-[#E9D8FA] transition "
+                                            className="table-action-btn"
                                         >
-                                            <EyeIcon className="w-[11px] h-[11px] text-[#5B2D91]" />
+                                            <EyeIcon className="table-action-icon" />
                                         </button>
 
                                     </div>

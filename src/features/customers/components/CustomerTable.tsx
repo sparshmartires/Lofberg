@@ -73,27 +73,27 @@ export function CustomersTable() {
 
   return (
     <>
-      <div className="rounded-[24px]  bg-white overflow-hidden">
+      <div className="table-card">
         <Table>
           {/* HEADER */}
           <TableHeader>
-            <TableRow className="h-[64px] ">
-              <TableHead className="text-[14px] text-[#1F1F1F] font-normal">
+            <TableRow className="table-header-row">
+              <TableHead className="table-header-cell">
                 Name
               </TableHead>
-              <TableHead className="text-[14px] text-[#1F1F1F] font-normal">
+              <TableHead className="table-header-cell">
                 Segment
               </TableHead>
-              <TableHead className="text-[14px] text-[#1F1F1F] font-normal">
+              <TableHead className="table-header-cell">
                 Service tier
               </TableHead>
-              <TableHead className="text-[14px] text-[#1F1F1F] font-normal">
+              <TableHead className="table-header-cell">
                 Last report date
               </TableHead>
-              <TableHead className="text-[14px] text-[#1F1F1F] font-normal">
+              <TableHead className="table-header-cell">
                 Status
               </TableHead>
-              <TableHead className="text-right text-[14px] text-[#1F1F1F] font-normal">
+              <TableHead className="text-right table-header-cell">
                 Actions
               </TableHead>
             </TableRow>
@@ -104,7 +104,7 @@ export function CustomersTable() {
             {customers.map((customer) => (
               <TableRow
                 key={customer.id}
-                className="h-[72px] border-b border-[#EDEDED] hover:bg-[#FAFAFA] transition"
+                className="table-body-row"
               >
                 {/* NAME */}
                 <TableCell>
@@ -116,24 +116,24 @@ export function CustomersTable() {
                       height={36}
                       className="rounded-full object-cover"
                     />
-                    <span className="text-[14px] text-[#1F1F1F]">
+                    <span className="table-name-text">
                       {customer.name}
                     </span>
                   </div>
                 </TableCell>
 
                 {/* SEGMENT */}
-                <TableCell className="text-[14px] text-[#4E4E4E]">
+                <TableCell className="table-muted-text">
                   {customer.segment}
                 </TableCell>
 
                 {/* SERVICE TIER */}
-                <TableCell className="text-[14px] text-[#4E4E4E]">
+                <TableCell className="table-muted-text">
                   {customer.serviceTier}
                 </TableCell>
 
                 {/* LAST REPORT DATE */}
-                <TableCell className="text-[14px] text-[#4E4E4E]">
+                <TableCell className="table-muted-text">
                   {customer.lastReportDate}
                 </TableCell>
 
@@ -164,19 +164,19 @@ export function CustomersTable() {
 
                 {/* ACTIONS */}
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-3">
+                  <div className="table-actions-wrap">
                     <button
                       onClick={() => handleEdit(customer)}
-                      className="w-[22px] h-[22px] rounded-[6px] bg-[#F4ECFB] flex items-center justify-center hover:bg-[#E9D8FA] transition"
+                      className="table-action-btn"
                     >
-                      <Pencil className="w-[11px] h-[11px] text-[#5B2D91]" />
+                      <Pencil className="table-action-icon" />
                     </button>
 
                     <button
                       onClick={() => handleHistory(customer)}
-                      className="w-[22px] h-[22px] rounded-[6px] bg-[#F4ECFB] flex items-center justify-center hover:bg-[#E9D8FA] transition"
+                      className="table-action-btn"
                     >
-                      <Eye className="w-[11px] h-[11px] text-[#5B2D91]" />
+                      <Eye className="table-action-icon" />
                     </button>
                   </div>
                 </TableCell>

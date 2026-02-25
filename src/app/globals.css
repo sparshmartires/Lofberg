@@ -158,6 +158,46 @@
 
 @layer components {
 
+  .table-card {
+    @apply rounded-[24px] bg-white overflow-hidden;
+  }
+
+  .table-header-row {
+    @apply h-[64px];
+  }
+
+  .table-header-row-bordered {
+    @apply border-b border-[#E0E0E0] h-[64px];
+  }
+
+  .table-header-cell {
+    @apply text-[14px] text-[#1F1F1F] font-normal;
+  }
+
+  .table-body-row {
+    @apply h-[72px] border-b border-[#EDEDED] hover:bg-[#FAFAFA] transition-colors;
+  }
+
+  .table-name-text {
+    @apply text-[14px] text-[#1F1F1F];
+  }
+
+  .table-muted-text {
+    @apply text-[14px] text-[#4E4E4E];
+  }
+
+  .table-actions-wrap {
+    @apply flex justify-end gap-3;
+  }
+
+  .table-action-btn {
+    @apply w-[22px] h-[22px] rounded-[6px] bg-[#F4ECFB] flex items-center justify-center hover:bg-[#E9D8FA] transition;
+  }
+
+  .table-action-icon {
+    @apply w-[11px] h-[11px] text-[#5B2D91];
+  }
+
   .empty-state-container {
     @apply flex flex-col items-center justify-center py-16 space-y-4 text-center;
   }
@@ -214,6 +254,26 @@
     @apply text-[18px] leading-[120%] tracking-[0em] font-normal text-[#59187B] text-center;
   }
   
+}
+
+@layer utilities {
+  .table-role-badge[data-slot="badge"] {
+    background-color: #eadcf6;
+    color: #7b3ebe;
+    border-radius: 9999px;
+    padding: 4px 16px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1rem;
+  }
+
+  .table-status-badge[data-slot="badge"] {
+    border-radius: 9999px;
+    padding: 4px 16px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1rem;
+  }
 }
 
 
