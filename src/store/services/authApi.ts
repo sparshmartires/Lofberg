@@ -37,9 +37,9 @@ export interface VerifyCodeResponse {
 }
 
 export interface ResetPasswordRequest {
-  resetToken: string;
-  password: string;
-  confirmPassword: string;
+  email: string;
+  token: string;
+  newPassword: string;
 }
 
 export interface ResetPasswordResponse {

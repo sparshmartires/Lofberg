@@ -96,6 +96,7 @@ export default function VerifyCodePage() {
 
       // Store reset token for next step
       sessionStorage.setItem("resetToken", result.resetToken)
+      sessionStorage.setItem("resetEmail", email)
 
       // navigate to reset password page
       router.push("/reset-password")

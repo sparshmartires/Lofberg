@@ -8,10 +8,13 @@ import { useState } from "react"
 import { UsersPagination } from "@/features/users/components/UsersPagination"
 import { UsersTable } from "../components/UsersTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
+import { UsersHeaderActions } from "../components/UsersHeaderActions"
 export function UsersPage() {
   const users: any[] = [] // Mock empty state
 const [open, setOpen] = useState(false)
 const [successOpen, setSuccessOpen] = useState(false)
+ const [search, setSearch] = useState("")
+  const [status, setStatus] = useState("all")
 const handleUserCreated = () => {
   setOpen(false)
 
@@ -25,24 +28,24 @@ const handleUserCreated = () => {
     <div className="min-h-screen bg-background py-10">
 
       {/* Header */}
-      <div className="flex items-start justify-between pb-10">
-  <div className="space-y-2">
+      <div className="flex items-center justify-between pb-10">
+  <div >
 
     <h1
-      className="  text-[40px]  leading-[120%] tracking-[-0.04em]  font-normal  text-[#1F1F1F]"
+      className="text-[40px]  leading-[120%] tracking-[-0.04em]  font-normal  text-[#1F1F1F] mb-[4px]"
     >
       User Management
     </h1>
 
     <p
-      className="  text-[14px]  leading-[120%]  tracking-[-0.04em]  font-normal text-[#747474]"
+      className="text-[14px]  leading-[120%]  tracking-[-0.04em]  font-normal text-[#747474] "
     >
       Manage system administrators and users
     </p>
 
   </div>
 
-  <Button variant="primary" onClick={() => setOpen(true)}>
+  <Button variant="primary" onClick={() => setOpen(true)} className="pt-[10px] pb-[10px] pl-[20px] pr-[20px]">
     <Plus className="h-4 w-4 mr-2" />
     Add User
   </Button>
@@ -50,15 +53,20 @@ const handleUserCreated = () => {
 
 
       {/* Card Container */}
-      <div className="rounded-[24px] border border-border bg-white p-8 shadow-sm">
+      <div className="rounded-[24px] bg-white shadow-sm  py-[32px] px-[24px]">
 
-        <div className="mb-6">
+        <div className="flex items-center justify-between mb-[28px] gap-6">
           <h2
-  className=" text-[18px]  leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
+  className="text-[18px]  leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
 >
-  System Users ({users.length})
+  System Users 
 </h2>
-
+<UsersHeaderActions
+              search={search}
+              status={status}
+              onSearchChange={setSearch}
+              onStatusChange={setStatus}
+            />
         </div>
 
         {users.length === 0 ? (

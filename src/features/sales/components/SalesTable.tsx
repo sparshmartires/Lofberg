@@ -36,7 +36,7 @@ const users: User[] = [
         status: "Active",
         reports: 92,
         lastLogin: "02/02/2026",
-        avatar: "/avatars/1.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     },
     {
         id: 2,
@@ -46,7 +46,7 @@ const users: User[] = [
         status: "Inactive",
         reports: 29,
         lastLogin: "01/27/2025",
-        avatar: "/avatars/2.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/44.jpg",
     },
     {
         id: 3,
@@ -56,7 +56,7 @@ const users: User[] = [
         status: "Active",
         reports: 92,
         lastLogin: "02/02/2026",
-        avatar: "/avatars/1.jpg",
+        avatar: "https://randomuser.me/api/portraits/women/65.jpg",
     },
     {
         id: 4,
@@ -66,7 +66,7 @@ const users: User[] = [
         status: "Inactive",
         reports: 29,
         lastLogin: "01/27/2025",
-        avatar: "/avatars/2.jpg",
+        avatar: "https://randomuser.me/api/portraits/women/21.jpg",
     },
     {
         id: 5,
@@ -76,7 +76,7 @@ const users: User[] = [
         status: "Active",
         reports: 92,
         lastLogin: "02/02/2026",
-        avatar: "/avatars/1.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/11.jpg",
     },
     {
         id: 6,
@@ -86,7 +86,7 @@ const users: User[] = [
         status: "Inactive",
         reports: 29,
         lastLogin: "01/27/2025",
-        avatar: "/avatars/2.jpg",
+        avatar: "https://randomuser.me/api/portraits/women/90.jpg",
     },
     {
         id: 7,
@@ -96,7 +96,7 @@ const users: User[] = [
         status: "Active",
         reports: 92,
         lastLogin: "02/02/2026",
-        avatar: "/avatars/1.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     },
     {
         id: 8,
@@ -106,7 +106,7 @@ const users: User[] = [
         status: "Inactive",
         reports: 29,
         lastLogin: "01/27/2025",
-        avatar: "/avatars/2.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/44.jpg",
     },
 ]
 
@@ -118,34 +118,44 @@ export function SalesTable() {
         setSelectedSale(sale)
         setEditOpen(true)
     }
+      const columnWidths = {
+    name: "w-[180px]",
+    email: "w-[230px]",
+    role: "w-[140px]",
+    status: "w-[120px]",
+    reports: "w-[100px]",
+    lastLogin: "w-[110px]",
+    actions: "w-[90px]",
+  }
+
     return (
         <>
-            <div className="table-card border-[#EDEDED]">
+            <div className="table-card border-[0px]">
 
-                <Table>
+                <Table className="table-fixed">
 
                     {/* TABLE HEADER */}
                     <TableHeader>
                         <TableRow className="table-header-row-bordered">
-                            <TableHead className="table-header-cell">
+                            <TableHead className={`table-header-cell ${columnWidths.name}`}>
                                 Name
                             </TableHead>
-                            <TableHead className="table-header-cell">
+                            <TableHead className={`table-header-cell ${columnWidths.email}`}>
                                 Email
                             </TableHead>
-                            <TableHead className="table-header-cell">
+                            <TableHead className={`table-header-cell ${columnWidths.role}`}>
                                 Role
                             </TableHead>
-                            <TableHead className="table-header-cell">
+                            <TableHead className={`table-header-cell ${columnWidths.status}`}>
                                 Status
                             </TableHead>
-                            <TableHead className="table-header-cell">
+                            <TableHead className={`table-header-cell ${columnWidths.reports}`}>
                                 Reports
                             </TableHead>
-                            <TableHead className="table-header-cell">
+                            <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
                                 Last login
                             </TableHead>
-                            <TableHead className="text-right table-header-cell">
+                            <TableHead className={`text-right table-header-cell ${columnWidths.actions}`}>
                                 Actions
                             </TableHead>
                         </TableRow>
@@ -159,7 +169,7 @@ export function SalesTable() {
                                 className="table-body-row"
                             >
                                 {/* NAME */}
-                                <TableCell>
+                                <TableCell className={`table-name-cell ${columnWidths.name}`}>
                                     <div className="flex items-center gap-3">
                                         <Image
                                             src={sale.avatar}
@@ -175,12 +185,12 @@ export function SalesTable() {
                                 </TableCell>
 
                                 {/* EMAIL */}
-                                <TableCell className="table-muted-text">
+                                <TableCell className={`table-muted-text ${columnWidths.email} truncate`}>
                                     {sale.email}
                                 </TableCell>
 
                                 {/* ROLE */}
-                                <TableCell>
+                                <TableCell className={`table-role-cell ${columnWidths.role}`}>
                                     <Badge
                                         className="table-role-badge"
                                     >
@@ -189,7 +199,7 @@ export function SalesTable() {
                                 </TableCell>
 
                                 {/* STATUS */}
-                                <TableCell>
+                                <TableCell className={`table-status-cell ${columnWidths.status}`}>
                                     <Badge
                                         className={`
                     table-status-badge
@@ -204,17 +214,17 @@ export function SalesTable() {
                                 </TableCell>
 
                                 {/* REPORTS */}
-                                <TableCell className="table-name-text">
+                                <TableCell className={`table-name-text ${columnWidths.reports}`}>
                                     {sale.reports}
                                 </TableCell>
 
                                 {/* LAST LOGIN */}
-                                <TableCell className="table-muted-text">
+                                <TableCell className={`table-muted-text ${columnWidths.lastLogin}`}>
                                     {sale.lastLogin}
                                 </TableCell>
 
                                 {/* ACTIONS */}
-                                <TableCell className="text-right">
+                                <TableCell className={`text-right ${columnWidths.actions}`}>
                                     <div className="table-actions-wrap">
 
                                         {/* EDIT BUTTON */}
@@ -269,7 +279,7 @@ export function SalesTable() {
                 open={historyOpen}
                 onOpenChange={setHistoryOpen}
                 userName="Karin Bergström"
-                avatar="/avatars/1.jpg"
+                avatar="https://randomuser.me/api/portraits/men/32.jpg"
             />
         </>
     )

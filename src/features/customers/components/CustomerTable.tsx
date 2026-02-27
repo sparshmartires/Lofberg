@@ -33,7 +33,7 @@ const customers: Customer[] = [
     serviceTier: "Type A",
     lastReportDate: "02/02/2026",
     status: "Active",
-    avatar: "/avatars/1.jpg",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
     id: 2,
@@ -42,7 +42,7 @@ const customers: Customer[] = [
     serviceTier: "Type A",
     lastReportDate: "02/02/2026",
     status: "Active",
-    avatar: "/avatars/2.jpg",
+    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ const customers: Customer[] = [
     serviceTier: "Type A",
     lastReportDate: "01/27/2025",
     status: "Inactive",
-    avatar: "/avatars/3.jpg",
+    avatar: "https://randomuser.me/api/portraits/women/21.jpg",
   },
 ]
 
@@ -107,7 +107,7 @@ export function CustomersTable() {
                 className="table-body-row"
               >
                 {/* NAME */}
-                <TableCell>
+                <TableCell className="table-name-cell">
                   <div className="flex items-center gap-3">
                     <Image
                       src={customer.avatar}

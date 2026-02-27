@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,7 +15,9 @@ interface FormValues {
 
 export default function ResetPasswordPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [resetToken, setResetToken] = useState<string>("")
+  const [resetEmail, setResetEmail] = useState<string>("")
   const [error, setError] = useState<string>("")
 
   const [resetPassword, { isLoading }] = useResetPasswordMutation()
@@ -33,34 +35,50 @@ export default function ResetPasswordPage() {
 
   const passwordValue = watch("password")
 
-  // Get reset token from session storage
+  // Get reset token/email from URL first, fallback to session storage
   useEffect(() => {
-    const token = sessionStorage.getItem("resetToken")
-    if (!token) {
-      setError("Invalid session. Please try again.")
-      router.push("/forgot-password")
+    const tokenFromUrl = searchParams.get("token")
+    const emailFromUrl = searchParams.get("email")
+
+    if (tokenFromUrl && emailFromUrl) {
+      setResetToken(tokenFromUrl)
+      setResetEmail(emailFromUrl)
+      sessionStorage.setItem("resetToken", tokenFromUrl)
+      sessionStorage.setItem("resetEmail", emailFromUrl)
       return
     }
-    setResetToken(token)
-  }, [router])
+
+    const tokenFromSession = sessionStorage.getItem("resetToken")
+    const emailFromSession = sessionStorage.getItem("resetEmail")
+
+    if (tokenFromSession && emailFromSession) {
+      setResetToken(tokenFromSession)
+      setResetEmail(emailFromSession)
+      return
+    }
+
+    setError("Invalid session. Please try again.")
+    router.push("/forgot-password")
+  }, [router, searchParams])
 
   const onSubmit = async (data: FormValues) => {
     try {
       setError("")
 
-      if (!resetToken) {
+      if (!resetToken || !resetEmail) {
         setError("Invalid session")
         return
       }
 
       await resetPassword({
-        resetToken: resetToken,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
+        email: resetEmail,
+        token: resetToken,
+        newPassword: data.password,
       }).unwrap()
 
       // Clear session storage
       sessionStorage.removeItem("resetToken")
+      sessionStorage.removeItem("resetEmail")
 
       // Navigate back to login
       router.push("/login")

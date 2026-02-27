@@ -35,7 +35,7 @@ export default function AppSidebar() {
                     aria-label="Open menu"
                     className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-primary/90 transition"
                 >
-                    <Menu className="w-6 h-6 text-accent" />
+                    <Menu className="w-10 h-10 text-accent" />
                 </button>
             </SheetTrigger>
 

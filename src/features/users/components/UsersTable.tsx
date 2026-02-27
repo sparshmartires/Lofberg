@@ -36,7 +36,7 @@ const users: User[] = [
     status: "Active",
     reports: 92,
     lastLogin: "02/02/2026",
-    avatar: "/avatars/1.jpg",
+    avatar: "https://randomuser.me/api/portraits/men/44.jpg",
   },
   {
     id: 2,
@@ -46,7 +46,7 @@ const users: User[] = [
     status: "Inactive",
     reports: 29,
     lastLogin: "01/27/2025",
-    avatar: "/avatars/2.jpg",
+    avatar: "https://randomuser.me/api/portraits/men/44.jpg",
   },
    {
     id: 3,
@@ -56,7 +56,7 @@ const users: User[] = [
     status: "Active",
     reports: 92,
     lastLogin: "02/02/2026",
-    avatar: "/avatars/1.jpg",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
     id: 4,
@@ -66,7 +66,7 @@ const users: User[] = [
     status: "Inactive",
     reports: 29,
     lastLogin: "01/27/2025",
-    avatar: "/avatars/2.jpg",
+    avatar: "https://randomuser.me/api/portraits/men/44.jpg",
   },
    {
     id: 5,
@@ -76,7 +76,7 @@ const users: User[] = [
     status: "Active",
     reports: 92,
     lastLogin: "02/02/2026",
-    avatar: "/avatars/1.jpg",
+    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
   },
   {
     id: 6,
@@ -86,7 +86,7 @@ const users: User[] = [
     status: "Inactive",
     reports: 29,
     lastLogin: "01/27/2025",
-    avatar: "/avatars/2.jpg",
+    avatar: "https://randomuser.me/api/portraits/women/21.jpg",
   },
    {
     id: 7,
@@ -96,7 +96,7 @@ const users: User[] = [
     status: "Active",
     reports: 92,
     lastLogin: "02/02/2026",
-    avatar: "/avatars/1.jpg",
+    avatar: "https://randomuser.me/api/portraits/men/11.jpg",
   },
   {
     id: 8,
@@ -106,7 +106,7 @@ const users: User[] = [
     status: "Inactive",
     reports: 29,
     lastLogin: "01/27/2025",
-    avatar: "/avatars/2.jpg",
+    avatar: "https://randomuser.me/api/portraits/women/90.jpg",
   },
 ]
 
@@ -114,6 +114,17 @@ export function UsersTable() {
     const [editOpen, setEditOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
 const [deleteOpen, setDeleteOpen] = useState(false)
+
+  const columnWidths = {
+    name: "w-[180px]",
+    email: "w-[230px]",
+    role: "w-[140px]",
+    status: "w-[120px]",
+    reports: "w-[100px]",
+    lastLogin: "w-[110px]",
+    actions: "w-[90px]",
+  }
+
   const handleEdit = (user: User) => {
     setSelectedUser(user)
     setEditOpen(true)
@@ -122,30 +133,30 @@ const [deleteOpen, setDeleteOpen] = useState(false)
     <>
     <div className="table-card border-[#EDEDED]">
 
-      <Table>
+      <Table className="table-fixed">
 
         {/* TABLE HEADER */}
         <TableHeader>
           <TableRow className="table-header-row-bordered">
-            <TableHead className="table-header-cell">
+            <TableHead className={`table-header-cell ${columnWidths.name}`}>
               Name
             </TableHead>
-            <TableHead className="table-header-cell">
+            <TableHead className={`table-header-cell ${columnWidths.email}`}>
               Email
             </TableHead>
-            <TableHead className="table-header-cell">
+            <TableHead className={`table-header-cell ${columnWidths.role}`}>
               Role
             </TableHead>
-            <TableHead className="table-header-cell">
+            <TableHead className={`table-header-cell ${columnWidths.status}`}>
               Status
             </TableHead>
-            <TableHead className="table-header-cell">
+            <TableHead className={`table-header-cell ${columnWidths.reports}`}>
               Reports
             </TableHead>
-            <TableHead className="table-header-cell">
+            <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
               Last login
             </TableHead>
-            <TableHead className="text-right table-header-cell">
+            <TableHead className={`table-header-cell ${columnWidths.actions}`}>
               Actions
             </TableHead>
           </TableRow>
@@ -159,13 +170,13 @@ const [deleteOpen, setDeleteOpen] = useState(false)
               className="table-body-row"
             >
               {/* NAME */}
-              <TableCell>
-                <div className="flex items-center gap-3">
+              <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                <div className="flex items-center gap-[8px]">
                   <Image
                     src={user.avatar}
                     alt={user.name}
-                    width={36}
-                    height={36}
+                    width={24}
+                    height={24}
                     className="rounded-full object-cover"
                   />
                   <span className="table-name-text">
@@ -175,12 +186,12 @@ const [deleteOpen, setDeleteOpen] = useState(false)
               </TableCell>
 
               {/* EMAIL */}
-              <TableCell className="table-muted-text">
+              <TableCell className={`table-muted-text ${columnWidths.email} truncate`}>
                 {user.email}
               </TableCell>
 
               {/* ROLE */}
-              <TableCell>
+              <TableCell className={columnWidths.role}>
                 <Badge
                   className="table-role-badge"
                 >
@@ -189,7 +200,7 @@ const [deleteOpen, setDeleteOpen] = useState(false)
               </TableCell>
 
               {/* STATUS */}
-              <TableCell>
+              <TableCell className={columnWidths.status}>
                 <Badge
                   className={`
                     table-status-badge
@@ -205,17 +216,17 @@ const [deleteOpen, setDeleteOpen] = useState(false)
               </TableCell>
 
               {/* REPORTS */}
-              <TableCell className="table-name-text">
+              <TableCell className={`table-name-text ${columnWidths.reports}`}>
                 {user.reports}
               </TableCell>
 
               {/* LAST LOGIN */}
-              <TableCell className="table-muted-text">
+              <TableCell className={`table-muted-text ${columnWidths.lastLogin}`}>
                 {user.lastLogin}
               </TableCell>
 
               {/* ACTIONS */}
-             <TableCell className="text-right">
+             <TableCell className={`${columnWidths.actions}`}>
   <div className="table-actions-wrap">
 
     {/* EDIT BUTTON */}
