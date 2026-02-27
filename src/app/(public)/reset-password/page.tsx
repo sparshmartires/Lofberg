@@ -27,7 +27,6 @@ export default function ResetPasswordPage() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-    setError: setFormError,
   } = useForm<FormValues>()
 
   const [showPassword, setShowPassword] = useState(false)
@@ -85,15 +84,11 @@ export default function ResetPasswordPage() {
     } catch (err: any) {
       const errorMessage = err?.data?.message || err?.error || "Failed to reset password"
       setError(errorMessage)
-      setFormError("password", {
-        type: "manual",
-        message: errorMessage,
-      })
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F1F6] p-4">
+    <div className="min-h-screen flex items-start justify-center bg-[#F4F1F6] py-[40px]">
       <div className="w-full max-w-[880px] bg-white rounded-[28px] border border-[#EDEDED] px-8 py-12">
 
         {/* Back */}
@@ -110,12 +105,7 @@ export default function ResetPasswordPage() {
           Reset Password
         </h1>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
-            <p className="text-red-700">{error}</p>
-          </div>
-        )}
-
+      
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
           {/* NEW PASSWORD */}
@@ -224,6 +214,12 @@ export default function ResetPasswordPage() {
             </div>
 
           </div>
+
+          {error && (
+            <p className="text-sm text-red-500">
+              {error}
+            </p>
+          )}
 
         </form>
       </div>

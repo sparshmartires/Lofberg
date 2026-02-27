@@ -14,8 +14,9 @@ interface FormValues {
 
 export default function ForgotPasswordPage() {
   const router = useRouter()
-  const [forgotPassword, { isLoading, error }] = useForgotPasswordMutation()
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation()
   const [apiError, setApiError] = useState<string>("")
+  const [successMessage, setSuccessMessage] = useState<string>("")
 
   const {
     register,
@@ -27,13 +28,14 @@ export default function ForgotPasswordPage() {
   const onSubmit = async (data: FormValues) => {
     try {
       setApiError("")
-      await forgotPassword({
+      setSuccessMessage("")
+      const response = await forgotPassword({
         email: data.emailOrPhone,
       }).unwrap()
 
-      // Navigate to verify code page
-      router.push(`/verify-code?email=${encodeURIComponent(data.emailOrPhone)}`)
+      setSuccessMessage(response.message || "Reset code sent successfully. Please check your email.")
     } catch (err: any) {
+      setSuccessMessage("")
       const errorMessage = err?.data?.message || err?.error || "Failed to send reset code"
       setApiError(errorMessage)
       setError("emailOrPhone", {
@@ -44,7 +46,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F2F7] px-4">
+    <div className="min-h-screen flex items-start justify-center bg-[#F4F2F7] px-4 py-[40px]">
 
       <div className="w-full max-w-[667px] rounded-[28px] border border-[#EDEDED] bg-white px-[20px] py-[32px] sm:px-[32px] sm:py-[48px] flex flex-col gap-[32px]">
         {/* Back */}
@@ -72,14 +74,19 @@ export default function ForgotPasswordPage() {
 
           <div className="mb-[16px]">
             <label className="text-[14px] text-[#1F1F1F] mb-[6px]">
-              Email / Phone number <span className="text-red-500">*</span>
+              Email<span className="text-red-500">*</span>
             </label>
 
             <Input
+              type="email"
               className="mt-[6px]"
-              placeholder="Enter Email / Phone number"
+              placeholder="Enter email"
               {...register("emailOrPhone", {
                 required: "This field is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Enter a valid email address",
+                },
               })}
             />
 
@@ -98,6 +105,18 @@ export default function ForgotPasswordPage() {
           >
             {isLoading ? "Sending..." : "Continue"}
           </Button>
+
+          {successMessage && (
+            <p className="text-sm text-[#1F1F1F]">
+              {successMessage}
+            </p>
+          )}
+
+          {apiError && (
+            <p className="text-xs text-red-500">
+              {apiError}
+            </p>
+          )}
 
         </form>
       </div>

@@ -30,7 +30,7 @@ export function UsersHeaderActions({
       <div className="relative w-[217px] h-[48px]">
         <Search
           size={16}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A8A8A]"
         />
 
         <Input

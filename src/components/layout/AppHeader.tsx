@@ -4,6 +4,9 @@ import * as React from "react"
 import { FileText, User } from "lucide-react"
 import AppSidebar from "@/components/layout/AppSideBar"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+import { useAppDispatch } from "@/store/hooks"
+import { logout } from "@/store/slices/authSlice"
 
 import {
   Select,
@@ -12,6 +15,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
+import { UserProfileDropdown } from "./UserProfileDropdown"
 
 const languages = [
   { label: "English", code: "EN" },
@@ -25,6 +29,17 @@ const languages = [
 
 export default function AppHeader() {
   const [language, setLanguage] = React.useState("EN")
+  const router = useRouter()
+  const dispatch = useAppDispatch()
+
+  const handleLogout = React.useCallback(() => {
+    document.cookie =
+      "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; Max-Age=0; SameSite=Strict"
+    localStorage.removeItem("auth_token")
+    localStorage.removeItem("user")
+    dispatch(logout())
+    router.replace("/login")
+  }, [dispatch, router])
 
   return (
     <header className="w-full bg-primary text-primary-foreground px-10 flex items-center justify-between py-4">
@@ -55,7 +70,7 @@ export default function AppHeader() {
         </Button>
 
         {/* Language Select */}
-     <Select value={language} onValueChange={setLanguage}>
+     {/* <Select value={language} onValueChange={setLanguage}>
  <SelectTrigger
   className="
     w-[98px]
@@ -98,19 +113,12 @@ export default function AppHeader() {
       </SelectItem>
     ))}
   </SelectContent>
-</Select>
+</Select> */}
 
 
 
         {/* User Button (kept simple) */}
-        <Button
-          variant="outlineBrand"
-          size="md"
-          className="gap-2 bg-white text-primary hover:bg-white/90 px-5 py-3"
-        >
-          <User className="w-4 h-4" />
-          Admin User
-        </Button>
+        <UserProfileDropdown onLogout={handleLogout} />
 
       </div>
     </header>

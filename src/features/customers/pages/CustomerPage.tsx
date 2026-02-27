@@ -25,7 +25,7 @@ export function CustomersPage() {
       <div className="min-h-screen bg-background py-10">
 
         {/* Header */}
-        <div className="flex items-start justify-between pb-10">
+        <div className="flex items-center justify-between pb-10">
           <div className="space-y-2">
 
             <h1
@@ -42,7 +42,7 @@ export function CustomersPage() {
 
           </div>
 
-          <Button variant="primary" onClick={() => setOpen(true)}>
+          <Button variant="primary" onClick={() => setOpen(true)} className="pt-[10px] pb-[10px] pl-[20px] pr-[20px]">
             <Plus className="h-4 w-4 mr-2" />
             Add Customer
           </Button>
@@ -56,7 +56,7 @@ export function CustomersPage() {
             <h2
               className="text-[18px] leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
             >
-              Customer ({users.length})
+              Customer
             </h2>
 
           </div>

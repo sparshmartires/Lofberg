@@ -155,7 +155,7 @@ export function SalesTable() {
                             <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
                                 Last login
                             </TableHead>
-                            <TableHead className={`text-right table-header-cell ${columnWidths.actions}`}>
+                            <TableHead className={`table-header-cell ${columnWidths.actions}`}>
                                 Actions
                             </TableHead>
                         </TableRow>
@@ -169,13 +169,14 @@ export function SalesTable() {
                                 className="table-body-row"
                             >
                                 {/* NAME */}
-                                <TableCell className={`table-name-cell ${columnWidths.name}`}>
-                                    <div className="flex items-center gap-3">
+                                              <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                <div className="flex items-center gap-[8px]">
+
                                         <Image
                                             src={sale.avatar}
                                             alt={sale.name}
-                                            width={36}
-                                            height={36}
+                                            width={24}
+                                            height={24}
                                             className="rounded-full object-cover"
                                         />
                                         <span className="table-name-text">

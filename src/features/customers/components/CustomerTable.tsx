@@ -70,15 +70,23 @@ export function CustomersTable() {
     setSelectedCustomer(customer)
     setHistoryOpen(true)
   }
-
+    const columnWidths = {
+    name: "w-[220px]",
+    email: "w-[230px]",
+    role: "w-[140px]",
+    status: "w-[120px]",
+    reports: "w-[100px]",
+    lastLogin: "w-[110px]",
+    actions: "w-[90px]",
+  }
   return (
     <>
-      <div className="table-card">
-        <Table>
+      <div className="table-card border-[0px]">
+        <Table className="table-fixed">
           {/* HEADER */}
           <TableHeader>
-            <TableRow className="table-header-row">
-              <TableHead className="table-header-cell">
+            <TableRow className="table-header-row-bordered">
+              <TableHead className={`table-header-cell ${columnWidths.name}`}>
                 Name
               </TableHead>
               <TableHead className="table-header-cell">
@@ -93,7 +101,7 @@ export function CustomersTable() {
               <TableHead className="table-header-cell">
                 Status
               </TableHead>
-              <TableHead className="text-right table-header-cell">
+              <TableHead className="table-header-cell">
                 Actions
               </TableHead>
             </TableRow>
@@ -107,13 +115,13 @@ export function CustomersTable() {
                 className="table-body-row"
               >
                 {/* NAME */}
-                <TableCell className="table-name-cell">
-                  <div className="flex items-center gap-3">
+                          <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                <div className="flex items-center gap-[8px]">
                     <Image
                       src={customer.avatar}
                       alt={customer.name}
-                      width={36}
-                      height={36}
+                      width={24}
+                      height={24}
                       className="rounded-full object-cover"
                     />
                     <span className="table-name-text">

@@ -1,11 +1,13 @@
 "use client"
 
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { useLoginMutation } from "@/store/services/authApi"
+import { Eye, EyeOff } from "lucide-react"
 
 interface LoginFormValues {
   email: string
@@ -15,6 +17,7 @@ interface LoginFormValues {
 export default function LoginPage() {
   const router = useRouter()
   const [login, { isLoading, error }] = useLoginMutation()
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     register,
@@ -24,13 +27,12 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      // await login({
-      //   email: data.email,
-      //   password: data.password,
-      // }).unwrap()
-      // const expiresIn = data.expiresIn || 1800; // 30 minutes default
-      //     const expires = new Date(Date.now() + expiresIn * 1000);
-document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
+      await login({
+        email: data.email,
+        password: data.password,
+      }).unwrap()
+      
+//document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
       // Navigate on success
       router.push("/users")
     } catch (err: any) {
@@ -39,7 +41,7 @@ document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F2F7]">
+    <div className="min-h-screen flex items-start justify-center bg-[#F4F2F7]">
 
       {/* LOGIN CARD */}
       <div className="w-full max-w-[667px] rounded-[28px] border border-[#EDEDED] bg-white px-[20px] py-[32px] sm:px-[32px] sm:py-[48px] flex flex-col gap-[32px] m-[40px]">
@@ -90,17 +92,28 @@ document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
               Password
             </label>
 
-            <Input
-              type="password"
-              placeholder="Enter password"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Minimum 6 characters",
-                },
-              })}
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Minimum 6 characters",
+                  },
+                })}
+                className="pr-12"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9E9E9E]"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
 
             {errors.password && (
               <p className="text-xs text-red-500">
