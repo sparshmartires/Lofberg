@@ -18,6 +18,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 export function AppPagination() {
   return (
+    <>
+    <div className="pagination-desktop">
     <div className="pagination-container">
       <div className="pagination-side">
         <p className="pagination-results-text">Results: 1–11 of 150</p>
@@ -81,5 +83,16 @@ export function AppPagination() {
         </Select>
       </div>
     </div>
+    </div>
+    <div className="pagination-mobile">
+        <p className="pagination-results-text">
+          Results: 1–11 of 150
+        </p>
+
+        <button className="pagination-load-more">
+          Load more
+        </button>
+      </div>
+    </>
   )
 }

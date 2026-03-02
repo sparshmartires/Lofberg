@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
 import { AddCustomerDialog} from "@/features/customers/components/AddCustomerPage"
 import { useState } from "react"
 import { AppPagination } from "@/components/ui/app-pagination"
 import { CustomersTable } from "../components/CustomerTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { CustomerFilters } from "../components/CustomerFilter"
+import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
+import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
 export function CustomersPage() {
   const users: any[] = [] // Mock empty state
   const [open, setOpen] = useState(false)
@@ -24,39 +24,19 @@ export function CustomersPage() {
       <div className="min-h-screen bg-background py-10">
 
         {/* Header */}
-        <div className="flex items-center justify-between pb-10">
-          <div className="space-y-2">
-
-            <h1
-              className="text-[40px] leading-[120%]  tracking-[-0.04em] font-normal  text-[#1F1F1F]"
-            >
-              Customer Management
-            </h1>
-
-            <p
-              className="text-[14px] leading-[120%] tracking-[-0.04em] font-normal text-[#747474]"
-            >
-              Createsustainability reports and and receipts for customers
-            </p>
-
-          </div>
-
-          <Button variant="primary" onClick={() => setOpen(true)} className="pt-[10px] pb-[10px] pl-[20px] pr-[20px]">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Customer
-          </Button>
-        </div>
+        <PageHeaderWithAction
+          title="Customer Management"
+          description="Createsustainability reports and and receipts for customers"
+          actionLabel="Add Customer"
+          onActionClick={() => setOpen(true)}
+        />
 
         {/* <SalesRepFilters /> */}
         {/* Card Container */}
         <div className="rounded-[24px] border border-border bg-white p-8 shadow-sm">
 
           <div className="mb-6">
-            <h2
-              className="text-[18px] leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
-            >
-              Customer
-            </h2>
+            <PageSectionTitle title="Customer" />
 
           </div>
 

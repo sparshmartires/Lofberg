@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
 import { AddSalesDialog } from "@/features/sales/components/AddSalesDialog"
 import { useState } from "react"
 import { AppPagination } from "@/components/ui/app-pagination"
 import { SalesTable } from "../components/SalesTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { SalesRepFilters } from "../components/SalesRepFilters"
+import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
+import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
 export function SalesPage() {
   const users: any[] = [] // Mock empty state
   const [open, setOpen] = useState(false)
@@ -24,38 +24,18 @@ export function SalesPage() {
       <div className="min-h-screen bg-background py-10">
 
         {/* Header */}
-        <div className="flex items-center justify-between pb-10">
-          <div >
-
-            <h1
-              className="text-[40px] leading-[120%]  tracking-[-0.04em] font-normal  text-[#1F1F1F] mb-[4px]"
-            >
-              Sales Representatives
-            </h1>
-
-            <p
-              className="text-[14px] leading-[120%] tracking-[-0.04em] font-normal text-[#747474]"
-            >
-              Createsustainability reports and and receipts for customers
-            </p>
-
-          </div>
-
-          <Button variant="primary" onClick={() => setOpen(true)} className="pt-[10px] pb-[10px] pl-[20px] pr-[20px]">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Sales Representative
-          </Button>
-        </div>
+        <PageHeaderWithAction
+          title="Sales Representatives"
+          description="Createsustainability reports and and receipts for customers"
+          actionLabel="Add Sales Representative"
+          onActionClick={() => setOpen(true)}
+        />
         <SalesRepFilters />
         {/* Card Container */}
         <div className="rounded-[24px]   py-[32px] px-[24px] bg-white shadow-sm">
 
           <div className="mb-[28px] gap-6">
-            <h2
-              className="text-[18px] leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
-            >
-              Sales Team 
-            </h2>
+            <PageSectionTitle title="Sales Team" />
 
           </div>
 

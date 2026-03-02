@@ -132,7 +132,7 @@ export function UsersTable() {
   return (
     <>
       <div className="table-card border-[#EDEDED]">
-
+<div className="users-table-desktop">
         <Table className="table-fixed">
 
           {/* TABLE HEADER */}
@@ -170,7 +170,7 @@ export function UsersTable() {
                 className="table-body-row"
               >
                 {/* NAME */}
-                <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                <TableCell className={`table-name-cell ${columnWidths.name}`} data-label="Name">
                   <div className="flex items-center gap-[8px]">
                     <Image
                       src={user.avatar}
@@ -186,12 +186,12 @@ export function UsersTable() {
                 </TableCell>
 
                 {/* EMAIL */}
-                <TableCell className={`table-muted-text ${columnWidths.email} truncate`}>
+                <TableCell className={`table-muted-text ${columnWidths.email} truncate`} data-label="Email">
                   {user.email}
                 </TableCell>
 
                 {/* ROLE */}
-                <TableCell className={columnWidths.role}>
+                <TableCell className={columnWidths.role} data-label="Role">
                   <Badge
                     className="table-role-badge"
                   >
@@ -200,7 +200,7 @@ export function UsersTable() {
                 </TableCell>
 
                 {/* STATUS */}
-                <TableCell className={columnWidths.status}>
+                <TableCell className={columnWidths.status} data-label="Status">
                   <Badge
                     className={`
                     table-status-badge
@@ -215,17 +215,17 @@ export function UsersTable() {
                 </TableCell>
 
                 {/* REPORTS */}
-                <TableCell className={`table-name-text ${columnWidths.reports}`}>
+                <TableCell className={`table-name-text ${columnWidths.reports}`} data-label="Reports">
                   {user.reports}
                 </TableCell>
 
                 {/* LAST LOGIN */}
-                <TableCell className={`table-muted-text ${columnWidths.lastLogin}`}>
+                <TableCell className={`table-muted-text ${columnWidths.lastLogin}`} data-label="Last login">
                   {user.lastLogin}
                 </TableCell>
 
                 {/* ACTIONS */}
-                <TableCell className={`${columnWidths.actions}`}>
+                <TableCell className={`${columnWidths.actions}`} data-label="Actions">
                   <div className="table-actions-wrap">
 
                     {/* EDIT BUTTON */}
@@ -254,7 +254,79 @@ export function UsersTable() {
           </TableBody>
 
         </Table>
+        </div>
+<div className="users-list-mobile">
+  {users.map((user) => (
+    <div key={user.id} className="user-mobile-card">
 
+      {/* Header */}
+      <div className="user-mobile-header">
+        <div className="flex items-center gap-3">
+          <Image
+            src={user.avatar}
+            alt={user.name}
+            width={32}
+            height={32}
+            className="rounded-full object-cover"
+          />
+          <span className="user-mobile-name">
+            {user.name}
+          </span>
+        </div>
+
+        <Badge
+          className={
+            user.status === "Active"
+              ? "bg-[#7DB356] text-white rounded-full px-4 py-1 text-xs"
+              : "bg-[#E5E5E5] text-[#6B6B6B] rounded-full px-4 py-1 text-xs"
+          }
+        >
+          {user.status}
+        </Badge>
+      </div>
+
+      <div className="user-mobile-divider" />
+
+   {/* Info Section */}
+
+{/* Email + Last login in one row */}
+<div className="user-mobile-split-row">
+  <div>
+    <div className="user-mobile-label">Email : {user.email}</div>
+    <span className="user-mobile-label">Role : {user.role}</span>
+  </div>
+
+  <div className="text-right">
+    <div className="user-mobile-label">Last login</div>
+    <div className="user-mobile-value">{user.lastLogin}</div>
+  </div>
+</div>
+
+{/* Role */}
+
+
+{/* Reports */}
+<div className="user-mobile-stacked">
+  <span className="user-mobile-label">Reports : {user.reports}</span>
+  <span className="user-mobile-value"></span>
+</div>
+
+      <div className="user-mobile-divider" />
+
+      {/* Actions */}
+      <div className="user-mobile-actions">
+        <button onClick={() => handleEdit(user)} className="mobile-edit">
+          Edit <Pencil className="h-3 w-3 inline ml-1" />
+        </button>
+
+        <button onClick={() => setDeleteOpen(true)} className="mobile-delete">
+          Delete <Trash2 className="h-3 w-3 inline ml-1" />
+        </button>
+      </div>
+
+    </div>
+  ))}
+</div>
       </div>
       {selectedUser && (
         <EditUserDialog

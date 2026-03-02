@@ -12,7 +12,7 @@ export default function AppLayout({
       <AppHeader />
 
       {/* Page Content */}
-      <main className="px-10 py-10">
+      <main className="px-10 py-10 max-[649px]:px-4 max-[649px]:py-4">
         {children}
       </main>
 

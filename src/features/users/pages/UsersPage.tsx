@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
 import { AddUserDialog } from "@/features/users/components/AddUserDialog"
 import { useState } from "react"
 import { AppPagination } from "@/components/ui/app-pagination"
 import { UsersTable } from "../components/UsersTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { UsersHeaderActions } from "../components/UsersHeaderActions"
+import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
+import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
 export function UsersPage() {
   const users: any[] = [] // Mock empty state
 const [open, setOpen] = useState(false)
@@ -27,45 +27,27 @@ const handleUserCreated = () => {
     <div className="min-h-screen bg-background py-10">
 
       {/* Header */}
-      <div className="flex items-center justify-between pb-10">
-  <div >
-
-    <h1
-      className="text-[40px]  leading-[120%] tracking-[-0.04em]  font-normal  text-[#1F1F1F] mb-[4px]"
-    >
-      User Management
-    </h1>
-
-    <p
-      className="text-[14px]  leading-[120%]  tracking-[-0.04em]  font-normal text-[#747474] "
-    >
-      Manage system administrators and users
-    </p>
-
-  </div>
-
-  <Button variant="primary" onClick={() => setOpen(true)} className="pt-[10px] pb-[10px] pl-[20px] pr-[20px]">
-    <Plus className="h-4 w-4 mr-2" />
-    Add User
-  </Button>
-</div>
+      <PageHeaderWithAction
+        title="User Management"
+        description="Manage system administrators and users"
+        actionLabel="Add User"
+        onActionClick={() => setOpen(true)}
+      />
 
 
       {/* Card Container */}
-      <div className="rounded-[24px] bg-white shadow-sm  py-[32px] px-[24px]">
+      <div className="rounded-[24px] bg-white shadow-sm py-[32px] px-[24px] max-[649px]:p-[12px]">
 
-        <div className="flex items-center justify-between mb-[28px] gap-6">
-          <h2
-  className="text-[18px]  leading-[120%] tracking-[0em] font-normal text-[#1F1F1F]"
->
-  System Users 
-</h2>
-<UsersHeaderActions
-              search={search}
-              status={status}
-              onSearchChange={setSearch}
-              onStatusChange={setStatus}
-            />
+        <div className="flex items-center justify-between mb-[28px] max-[649px]:mb-[16px] gap-6">
+          <PageSectionTitle title="System Users" />
+<div className="max-[649px]:hidden">
+  <UsersHeaderActions
+    search={search}
+    status={status}
+    onSearchChange={setSearch}
+    onStatusChange={setStatus}
+  />
+</div>
         </div>
 
         {users.length === 0 ? (
