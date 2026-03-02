@@ -1,19 +1,17 @@
 import { UserPlus } from "lucide-react"
 
-export function UsersEmptyState() {
+type EmptyStateProps = {
+  description: string
+}
+
+export function EmptyState({ description }: EmptyStateProps) {
   return (
     <div className="empty-state-container">
-
       <div className="empty-state-icon-wrap">
         <UserPlus className="empty-state-icon" />
       </div>
 
-      <p
-        className="empty-state-message"
-      >
-        No users found. Click add “user” to create one
-      </p>
-
+      <p className="empty-state-message">{description}</p>
     </div>
   )
 }

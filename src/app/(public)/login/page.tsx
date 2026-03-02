@@ -44,10 +44,10 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-start justify-center bg-[#F4F2F7]">
 
       {/* LOGIN CARD */}
-      <div className="w-full max-w-[667px] rounded-[28px] border border-[#EDEDED] bg-white px-[20px] py-[32px] sm:px-[32px] sm:py-[48px] flex flex-col gap-[32px] m-[40px]">
+      <div className="w-full max-w-[667px] rounded-[28px] border border-[#EDEDED] bg-white px-[20px] py-[32px] sm:px-[32px] sm:py-[48px] flex flex-col gap-[32px] m-[40px] max-[540px]:mx-[5px]">
         {/* HEADER */}
         <div className="space-y-2">
-          <h1 className="text-[48px] leading-[100%] tracking-[-0.005em] font-normal text-[#1F1F1F]">
+          <h1 className="text-[48px] leading-[100%] tracking-[-0.005em] font-normal text-[#1F1F1F] max-[540px]:text-[32px]">
             Welcome back
           </h1>
 

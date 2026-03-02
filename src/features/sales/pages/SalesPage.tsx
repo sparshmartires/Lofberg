@@ -2,10 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { SalesEmptyState } from "@/features/sales/components/SalesEmptyState"
 import { AddSalesDialog } from "@/features/sales/components/AddSalesDialog"
 import { useState } from "react"
-import { SalesPagination } from "@/features/sales/components/SalesPagination"
+import { AppPagination } from "@/components/ui/app-pagination"
 import { SalesTable } from "../components/SalesTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { SalesRepFilters } from "../components/SalesRepFilters"
@@ -73,7 +72,7 @@ export function SalesPage() {
           )}
 
         </div>
-        <SalesPagination />
+        <AppPagination />
       </div>
       <AddSalesDialog open={open} onOpenChange={setOpen}
         onSaleCreated={handleSaleCreated}

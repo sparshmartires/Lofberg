@@ -2,10 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { SalesEmptyState } from "@/features/sales/components/SalesEmptyState"
 import { AddCustomerDialog} from "@/features/customers/components/AddCustomerPage"
 import { useState } from "react"
-import { CustomerPagination } from "@/features/customers/components/CustomerPagination"
+import { AppPagination } from "@/components/ui/app-pagination"
 import { CustomersTable } from "../components/CustomerTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { CustomerFilters } from "../components/CustomerFilter"
@@ -74,7 +73,7 @@ export function CustomersPage() {
           )}
 
         </div>
-        <CustomerPagination />
+        <AppPagination />
       </div>
       <AddCustomerDialog open={open} onOpenChange={setOpen}
         onCustomerCreated={handleCustomerCreated}

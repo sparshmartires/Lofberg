@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table"
 
 import { Badge } from "@/components/ui/badge"
-import { EyeIcon, Pencil, Trash2 } from "lucide-react"
+import { EyeIcon, Pencil } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { EditSalesDialog } from "./EditSalesDialog"
@@ -118,15 +118,15 @@ export function SalesTable() {
         setSelectedSale(sale)
         setEditOpen(true)
     }
-      const columnWidths = {
-    name: "w-[180px]",
-    email: "w-[230px]",
-    role: "w-[140px]",
-    status: "w-[120px]",
-    reports: "w-[100px]",
-    lastLogin: "w-[110px]",
-    actions: "w-[90px]",
-  }
+    const columnWidths = {
+        name: "w-[180px]",
+        email: "w-[230px]",
+        role: "w-[140px]",
+        status: "w-[120px]",
+        reports: "w-[100px]",
+        lastLogin: "w-[110px]",
+        actions: "w-[90px]",
+    }
 
     return (
         <>
@@ -169,8 +169,8 @@ export function SalesTable() {
                                 className="table-body-row"
                             >
                                 {/* NAME */}
-                                              <TableCell className={`table-name-cell ${columnWidths.name}`}>
-                <div className="flex items-center gap-[8px]">
+                                <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                                    <div className="flex items-center gap-[8px]">
 
                                         <Image
                                             src={sale.avatar}

@@ -24,51 +24,27 @@ export function UsersHeaderActions({
   onStatusChange,
 }: UsersHeaderActionsProps) {
   return (
-    <div className="flex items-center gap-4">
+    <div className="users-header-actions">
       
       {/* Search */}
-      <div className="relative w-[217px] h-[48px]">
+      <div className="users-header-actions-search-wrap">
         <Search
           size={16}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A8A8A]"
+          className="users-header-actions-search-icon"
         />
 
         <Input
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search"
-          className="
-            w-full h-full
-            rounded-[99px]
-            border border-[#F0F0F0]
-            pl-[20px] pr-[40px]
-            py-[12px]
-            shadow-[0px_2px_4px_0px_#0000000A]
-            text-[#8A8A8A]
-            placeholder:text-[#8A8A8A]
-            focus:outline-none
-            focus:ring-0
-          "
+          className="users-header-actions-search-input"
         />
       </div>
 
       {/* Status Dropdown */}
-      <div className="w-[141px] h-[48px]">
+      <div className="users-header-actions-status-wrap">
         <Select value={status} onValueChange={onStatusChange}>
-          <SelectTrigger
-            className="
-              w-full !h-[48px]
-              rounded-[99px]
-              color-[#1F1F1F]
-              border border-[#F0F0F0]
-              pl-[20px] pr-[8px]
-              py-[12px]
-              shadow-[0px_2px_4px_0px_#0000000A]
-              text-[#8A8A8A]
-              focus:outline-none
-              focus:ring-0
-            "
-          >
+          <SelectTrigger className="users-header-actions-status-trigger">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
 

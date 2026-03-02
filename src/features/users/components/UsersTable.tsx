@@ -48,7 +48,7 @@ const users: User[] = [
     lastLogin: "01/27/2025",
     avatar: "https://randomuser.me/api/portraits/men/44.jpg",
   },
-   {
+  {
     id: 3,
     name: "Karin Bergström",
     email: "karin.bergstrom@acme.com",
@@ -68,7 +68,7 @@ const users: User[] = [
     lastLogin: "01/27/2025",
     avatar: "https://randomuser.me/api/portraits/men/44.jpg",
   },
-   {
+  {
     id: 5,
     name: "Karin Bergström",
     email: "karin.bergstrom@acme.com",
@@ -88,7 +88,7 @@ const users: User[] = [
     lastLogin: "01/27/2025",
     avatar: "https://randomuser.me/api/portraits/women/21.jpg",
   },
-   {
+  {
     id: 7,
     name: "Karin Bergström",
     email: "karin.bergstrom@acme.com",
@@ -111,9 +111,9 @@ const users: User[] = [
 ]
 
 export function UsersTable() {
-    const [editOpen, setEditOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
-const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   const columnWidths = {
     name: "w-[180px]",
@@ -131,133 +131,132 @@ const [deleteOpen, setDeleteOpen] = useState(false)
   }
   return (
     <>
-    <div className="table-card border-[#EDEDED]">
+      <div className="table-card border-[#EDEDED]">
 
-      <Table className="table-fixed">
+        <Table className="table-fixed">
 
-        {/* TABLE HEADER */}
-        <TableHeader>
-          <TableRow className="table-header-row-bordered">
-            <TableHead className={`table-header-cell ${columnWidths.name}`}>
-              Name
-            </TableHead>
-            <TableHead className={`table-header-cell ${columnWidths.email}`}>
-              Email
-            </TableHead>
-            <TableHead className={`table-header-cell ${columnWidths.role}`}>
-              Role
-            </TableHead>
-            <TableHead className={`table-header-cell ${columnWidths.status}`}>
-              Status
-            </TableHead>
-            <TableHead className={`table-header-cell ${columnWidths.reports}`}>
-              Reports
-            </TableHead>
-            <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
-              Last login
-            </TableHead>
-            <TableHead className={`table-header-cell ${columnWidths.actions}`}>
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
+          {/* TABLE HEADER */}
+          <TableHeader>
+            <TableRow className="table-header-row-bordered">
+              <TableHead className={`table-header-cell ${columnWidths.name}`}>
+                Name
+              </TableHead>
+              <TableHead className={`table-header-cell ${columnWidths.email}`}>
+                Email
+              </TableHead>
+              <TableHead className={`table-header-cell ${columnWidths.role}`}>
+                Role
+              </TableHead>
+              <TableHead className={`table-header-cell ${columnWidths.status}`}>
+                Status
+              </TableHead>
+              <TableHead className={`table-header-cell ${columnWidths.reports}`}>
+                Reports
+              </TableHead>
+              <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
+                Last login
+              </TableHead>
+              <TableHead className={`table-header-cell ${columnWidths.actions}`}>
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
 
-        {/* TABLE BODY */}
-        <TableBody>
-          {users.map((user) => (
-            <TableRow
-              key={user.id}
-              className="table-body-row"
-            >
-              {/* NAME */}
-              <TableCell className={`table-name-cell ${columnWidths.name}`}>
-                <div className="flex items-center gap-[8px]">
-                  <Image
-                    src={user.avatar}
-                    alt={user.name}
-                    width={24}
-                    height={24}
-                    className="rounded-full object-cover"
-                  />
-                  <span className="table-name-text">
-                    {user.name}
-                  </span>
-                </div>
-              </TableCell>
+          {/* TABLE BODY */}
+          <TableBody>
+            {users.map((user) => (
+              <TableRow
+                key={user.id}
+                className="table-body-row"
+              >
+                {/* NAME */}
+                <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                  <div className="flex items-center gap-[8px]">
+                    <Image
+                      src={user.avatar}
+                      alt={user.name}
+                      width={24}
+                      height={24}
+                      className="rounded-full object-cover"
+                    />
+                    <span className="table-name-text">
+                      {user.name}
+                    </span>
+                  </div>
+                </TableCell>
 
-              {/* EMAIL */}
-              <TableCell className={`table-muted-text ${columnWidths.email} truncate`}>
-                {user.email}
-              </TableCell>
+                {/* EMAIL */}
+                <TableCell className={`table-muted-text ${columnWidths.email} truncate`}>
+                  {user.email}
+                </TableCell>
 
-              {/* ROLE */}
-              <TableCell className={columnWidths.role}>
-                <Badge
-                  className="table-role-badge"
-                >
-                  {user.role}
-                </Badge>
-              </TableCell>
+                {/* ROLE */}
+                <TableCell className={columnWidths.role}>
+                  <Badge
+                    className="table-role-badge"
+                  >
+                    {user.role}
+                  </Badge>
+                </TableCell>
 
-              {/* STATUS */}
-              <TableCell className={columnWidths.status}>
-                <Badge
-                  className={`
+                {/* STATUS */}
+                <TableCell className={columnWidths.status}>
+                  <Badge
+                    className={`
                     table-status-badge
-                    ${
-                      user.status === "Active"
+                    ${user.status === "Active"
                         ? "bg-[#7DB356] text-white"
                         : "bg-[#E5E5E5] text-[#6B6B6B]"
-                    }
+                      }
                   `}
-                >
-                  {user.status}
-                </Badge>
-              </TableCell>
+                  >
+                    {user.status}
+                  </Badge>
+                </TableCell>
 
-              {/* REPORTS */}
-              <TableCell className={`table-name-text ${columnWidths.reports}`}>
-                {user.reports}
-              </TableCell>
+                {/* REPORTS */}
+                <TableCell className={`table-name-text ${columnWidths.reports}`}>
+                  {user.reports}
+                </TableCell>
 
-              {/* LAST LOGIN */}
-              <TableCell className={`table-muted-text ${columnWidths.lastLogin}`}>
-                {user.lastLogin}
-              </TableCell>
+                {/* LAST LOGIN */}
+                <TableCell className={`table-muted-text ${columnWidths.lastLogin}`}>
+                  {user.lastLogin}
+                </TableCell>
 
-              {/* ACTIONS */}
-             <TableCell className={`${columnWidths.actions}`}>
-  <div className="table-actions-wrap">
+                {/* ACTIONS */}
+                <TableCell className={`${columnWidths.actions}`}>
+                  <div className="table-actions-wrap">
 
-    {/* EDIT BUTTON */}
-    <button
-      onClick={() => handleEdit(user)}
-      className="table-action-btn"
-    >
-      <Pencil className="table-action-icon" 
-       />
-    </button>
+                    {/* EDIT BUTTON */}
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="table-action-btn"
+                    >
+                      <Pencil className="table-action-icon"
+                      />
+                    </button>
 
-    {/* DELETE BUTTON */}
-    <button
-      onClick={() => setDeleteOpen(true)}
-      className="table-action-btn"
-    >
-      <Trash2 className="table-action-icon" />
-    </button>
+                    {/* DELETE BUTTON */}
+                    <button
+                      onClick={() => setDeleteOpen(true)}
+                      className="table-action-btn"
+                    >
+                      <Trash2 className="table-action-icon" />
+                    </button>
 
-  </div>
-</TableCell>
+                  </div>
+                </TableCell>
 
 
-            </TableRow>
-          ))}
-        </TableBody>
+              </TableRow>
+            ))}
+          </TableBody>
 
-      </Table>
+        </Table>
 
-    </div>
-    {selectedUser && (
+      </div>
+      {selectedUser && (
         <EditUserDialog
           open={editOpen}
           onOpenChange={setEditOpen}
@@ -289,6 +288,6 @@ const [deleteOpen, setDeleteOpen] = useState(false)
         secondaryActionLabel="Revoke"
         onSecondaryAction={() => setDeleteOpen(false)}
       />
-      </>
+    </>
   )
 }

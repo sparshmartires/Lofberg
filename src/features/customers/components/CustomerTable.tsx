@@ -70,7 +70,7 @@ export function CustomersTable() {
     setSelectedCustomer(customer)
     setHistoryOpen(true)
   }
-    const columnWidths = {
+  const columnWidths = {
     name: "w-[220px]",
     email: "w-[230px]",
     role: "w-[140px]",
@@ -115,8 +115,8 @@ export function CustomersTable() {
                 className="table-body-row"
               >
                 {/* NAME */}
-                          <TableCell className={`table-name-cell ${columnWidths.name}`}>
-                <div className="flex items-center gap-[8px]">
+                <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                  <div className="flex items-center gap-[8px]">
                     <Image
                       src={customer.avatar}
                       alt={customer.name}
@@ -148,7 +148,7 @@ export function CustomersTable() {
                 {/* STATUS */}
                 <TableCell>
                   <span
-  className={`
+                    className={`
     w-[84px]
     h-[32px]
     inline-flex
@@ -159,15 +159,14 @@ export function CustomersTable() {
     py-[4px]
     text-[12px]
     font-medium
-    ${
-      customer.status === "Active"
-        ? "bg-[#7DB356] text-white"
-        : "bg-[#E5E5E5] text-[#6B6B6B]"
-    }
+    ${customer.status === "Active"
+                        ? "bg-[#7DB356] text-white"
+                        : "bg-[#E5E5E5] text-[#6B6B6B]"
+                      }
   `}
->
-  {customer.status}
-</span>
+                  >
+                    {customer.status}
+                  </span>
                 </TableCell>
 
                 {/* ACTIONS */}
@@ -201,7 +200,7 @@ export function CustomersTable() {
           onOpenChange={setEditOpen}
           //@ts-ignore
           customer={selectedCustomer}
-          onCustomerUpdated={()=>{}}
+          onCustomerUpdated={() => { }}
         />
       )}
 

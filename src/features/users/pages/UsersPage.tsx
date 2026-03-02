@@ -2,10 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { UsersEmptyState } from "@/features/users/components/UsersEmptyState"
 import { AddUserDialog } from "@/features/users/components/AddUserDialog"
 import { useState } from "react"
-import { UsersPagination } from "@/features/users/components/UsersPagination"
+import { AppPagination } from "@/components/ui/app-pagination"
 import { UsersTable } from "../components/UsersTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { UsersHeaderActions } from "../components/UsersHeaderActions"
@@ -82,7 +81,7 @@ const handleUserCreated = () => {
         )}
 
       </div>
-      <UsersPagination />
+      <AppPagination />
     </div>
     <AddUserDialog open={open} onOpenChange={setOpen} 
      onUserCreated={handleUserCreated}

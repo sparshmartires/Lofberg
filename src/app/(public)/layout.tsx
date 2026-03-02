@@ -12,7 +12,7 @@ export default function PublicLayout({
       <PublicAppHeader />
 
       {/* Page Content */}
-      <main className="px-10 py-10">
+      <main className="px-10 py-10 max-[540px]:px-[5px]">
         {children}
       </main>
 
