@@ -60,7 +60,7 @@ export function EditSalesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-[880px] rounded-[32px] p-10 bg-white"
+        className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-[600px]:p-8 max-[600px]:max-h-[calc(100vh-2rem)] max-[600px]:overflow-y-auto"
       >
         {/* HEADER */}
         <div className="space-y-2">
@@ -109,7 +109,7 @@ export function EditSalesDialog({
                 </p>
               )}
             </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 max-[600px]:grid-cols-1 gap-6 [&>*]:min-w-0">
 
           
 
@@ -277,8 +277,8 @@ export function EditSalesDialog({
           </div>
 
           {/* ACTIONS */}
-          <div className="flex justify-center gap-6 pt-6">
-            <div className="w-[200px]">
+          <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
+            <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
               <Button
                 type="button"
                 variant="outlineBrand"
@@ -289,7 +289,7 @@ export function EditSalesDialog({
               </Button>
             </div>
 
-            <div className="w-[200px]">
+            <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
               <Button
                 type="submit"
                 variant="primary"
