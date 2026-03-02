@@ -304,7 +304,7 @@ onUserCreated()
                 type="button"
                 variant="outlineBrand"
                 onClick={() => onOpenChange(false)}
-                className="w-full"
+                className="w-full px-[20px] py-[10px]"
               >
                 Cancel
               </Button>
@@ -314,7 +314,7 @@ onUserCreated()
               <Button
                 type="submit"
                 variant="primary"
-                className="w-full"
+                className="w-full px-[20px] py-[10px]"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Create User

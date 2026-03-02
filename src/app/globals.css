@@ -323,7 +323,7 @@
   }
 
   .users-header-actions-search-input {
-    @apply w-full h-full rounded-[99px] border border-[#F0F0F0] pl-[20px] pr-[40px] py-[12px] shadow-[0px_2px_4px_0px_#0000000A] text-[#8A8A8A] placeholder:text-[#8A8A8A] focus:outline-none focus:ring-0;
+    @apply w-full h-full rounded-[99px] border border-[#F0F0F0] pl-[20px] pr-[40px] py-[12px] shadow-[0px_2px_4px_0px_#0000000A] !text-[#8A8A8A] placeholder:!text-[#8A8A8A] focus:outline-none focus:ring-0;
   }
 
   .users-header-actions-status-wrap {
@@ -331,10 +331,195 @@
   }
 
   .users-header-actions-status-trigger {
-    @apply w-full !h-[48px] rounded-[99px] border border-[#F0F0F0] pl-[20px] pr-[8px] py-[12px] shadow-[0px_2px_4px_0px_#0000000A] text-[#8A8A8A] focus:outline-none focus:ring-0;
+    @apply !w-full !h-[44px] !rounded-[99px] !border !border-[#F0F0F0] pl-[20px] pr-[8px] py-[12px] shadow-[0px_2px_4px_0px_#0000000A] !text-[#8A8A8A] focus:outline-none focus:ring-0;
     color: #1f1f1f;
   }
-  
+
+  .login-page-container {
+    @apply min-h-screen flex items-start justify-center;
+    background-color: #f4f2f7;
+  }
+
+  .login-card {
+    @apply w-full flex flex-col;
+    max-width: 667px;
+    border-radius: 28px;
+    border: 1px solid #ededed;
+    background-color: #ffffff;
+    padding: 32px 20px;
+    gap: 32px;
+    margin: 40px;
+  }
+
+  .login-header {
+    @apply space-y-2;
+  }
+
+  .login-title {
+    font-size: 48px;
+    line-height: 100%;
+    letter-spacing: -0.005em;
+    font-weight: 400;
+    color: #1f1f1f;
+  }
+
+  .login-subtitle {
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: -0.005em;
+    color: #6b6b6b;
+  }
+
+  .login-form {
+    @apply flex flex-col;
+    gap: 20px;
+  }
+
+  .login-field-group {
+    @apply space-y-2;
+  }
+
+  .login-label {
+    font-size: 14px;
+    color: #1f1f1f;
+  }
+
+  .login-password-wrap {
+    @apply relative;
+  }
+
+  .login-password-input {
+    @apply pr-12;
+  }
+
+  .login-password-toggle {
+    @apply absolute right-4 top-1/2 -translate-y-1/2;
+    color: #9e9e9e;
+  }
+
+  .login-forgot-link {
+    font-size: 14px;
+    color: #7b3ebe;
+    cursor: pointer;
+  }
+
+  .login-error-text {
+    @apply text-xs text-red-500;
+  }
+
+  .login-submit-wrap {
+    @apply pt-4;
+  }
+
+  .login-submit-btn {
+    width: 180px;
+  }
+
+  @media (min-width: 640px) {
+    .login-card {
+      padding: 48px 32px;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .login-card {
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+
+    .login-title {
+      font-size: 32px;
+    }
+  }
+
+  .forgot-password-page-container {
+    @apply min-h-screen flex items-start justify-center px-4;
+    background-color: #f4f2f7;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .forgot-password-card {
+    @apply w-full flex flex-col;
+    max-width: 667px;
+    border-radius: 28px;
+    border: 1px solid #ededed;
+    background-color: #ffffff;
+    padding: 32px 20px;
+    gap: 32px;
+  }
+
+  .forgot-password-back-btn {
+    @apply flex items-center gap-2;
+    font-size: 14px;
+    color: #1f1f1f;
+  }
+
+  .forgot-password-title-wrap {
+    @apply space-y-3;
+  }
+
+  .forgot-password-title {
+    font-size: 32px;
+    line-height: 100%;
+    letter-spacing: -0.5%;
+    color: #1f1f1f;
+  }
+
+  .forgot-password-description {
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: -0.5%;
+    color: #747474;
+    max-width: 520px;
+  }
+
+  .forgot-password-form {
+    @apply space-y-6;
+  }
+
+  .forgot-password-field-wrap {
+    margin-bottom: 16px;
+  }
+
+  .forgot-password-label {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #1f1f1f;
+  }
+
+  .forgot-password-input {
+    margin-top: 6px;
+  }
+
+  .forgot-password-submit-btn {
+    width: 220px;
+  }
+
+  .forgot-password-success-text {
+    @apply text-sm;
+    color: #1f1f1f;
+  }
+
+  .forgot-password-error-text {
+    @apply text-xs text-red-500;
+  }
+
+  .forgot-password-input-error-spacing {
+    margin-top: 8px;
+  }
+
+  @media (min-width: 640px) {
+    .forgot-password-card {
+      padding: 48px 32px;
+    }
+
+    .forgot-password-title {
+      font-size: 40px;
+    }
+  }
+
 }
 
 @layer utilities {

@@ -91,7 +91,7 @@ const handleUserCreated = () => {
   onOpenChange={setSuccessOpen}
   type="success"
   title="User created successfully. "
-  description="Password sent to email."
+  description=""
   />
     </>
   )

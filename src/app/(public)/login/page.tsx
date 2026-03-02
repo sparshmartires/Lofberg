@@ -41,17 +41,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-[#F4F2F7]">
+    <div className="login-page-container">
 
       {/* LOGIN CARD */}
-      <div className="w-full max-w-[667px] rounded-[28px] border border-[#EDEDED] bg-white px-[20px] py-[32px] sm:px-[32px] sm:py-[48px] flex flex-col gap-[32px] m-[40px] max-[540px]:mx-[5px]">
+      <div className="login-card">
         {/* HEADER */}
-        <div className="space-y-2">
-          <h1 className="text-[48px] leading-[100%] tracking-[-0.005em] font-normal text-[#1F1F1F] max-[540px]:text-[32px]">
+        <div className="login-header">
+          <h1 className="login-title">
             Welcome back
           </h1>
 
-          <p className="text-[16px] leading-[150%] tracking-[-0.005em] text-[#6B6B6B]">
+          <p className="login-subtitle">
             Log in to continue
           </p>
         </div>
@@ -59,11 +59,11 @@ export default function LoginPage() {
         {/* FORM */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-[20px]"
+          className="login-form"
         >
           {/* EMAIL */}
-          <div className="space-y-2">
-            <label className="text-[14px] text-[#1F1F1F]">
+          <div className="login-field-group">
+            <label className="login-label">
               Email
             </label>
 
@@ -80,19 +80,19 @@ export default function LoginPage() {
             />
 
             {errors.email && (
-              <p className="text-xs text-red-500">
+              <p className="login-error-text">
                 {errors.email.message}
               </p>
             )}
           </div>
 
           {/* PASSWORD */}
-          <div className="space-y-2">
-            <label className="text-[14px] text-[#1F1F1F]">
+          <div className="login-field-group">
+            <label className="login-label">
               Password
             </label>
 
-            <div className="relative">
+            <div className="login-password-wrap">
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
@@ -103,39 +103,39 @@ export default function LoginPage() {
                     message: "Minimum 6 characters",
                   },
                 })}
-                className="pr-12"
+                className="login-password-input"
               />
 
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9E9E9E]"
+                className="login-password-toggle"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
 
             {errors.password && (
-              <p className="text-xs text-red-500">
+              <p className="login-error-text">
                 {errors.password.message}
               </p>
             )}
 
-            <Link href="/forgot-password" className="text-[14px] text-[#7B3EBE] cursor-pointer">
+            <Link href="/forgot-password" className="login-forgot-link">
               Forgot Password?
             </Link>
           </div>
           {error && "data" in error && (error as any).data?.error && (
-            <p className="text-xs text-red-500">
+            <p className="login-error-text">
               {(error as any).data?.error}
             </p>
           )}
           {/* LOGIN BUTTON */}
-          <div className="pt-4">
+          <div className="login-submit-wrap">
             <Button
               type="submit"
               variant="primary"
-              className="w-[180px]"
+              className="login-submit-btn"
               disabled={isLoading || isSubmitting}
             >
               {isLoading ? "Logging in..." : "Log in"}

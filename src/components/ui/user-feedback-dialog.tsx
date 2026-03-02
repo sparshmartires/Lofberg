@@ -96,6 +96,7 @@ export function UserFeedbackDialog({
         <Button
         style={{width:"147px"}}
           variant="outlineBrand"
+           className="px-[20px] py-[10px]"
           onClick={onSecondaryAction}
         >
           {secondaryActionLabel}
@@ -104,6 +105,7 @@ export function UserFeedbackDialog({
 
     {primaryActionLabel&&  <Button
         variant="primary" size="sm"
+        className="px-[20px] py-[10px]"
         onClick={onPrimaryAction}
       >
         {primaryActionLabel}
