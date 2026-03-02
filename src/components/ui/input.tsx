@@ -12,7 +12,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         className={cn(
           // Base layout
-          "w-full h-[44px]",
+          "w-full min-w-0 h-[44px]",
           "rounded-[99px]",
           "px-[20px] pr-[8px] py-[12px]",
 

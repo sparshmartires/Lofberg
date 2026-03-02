@@ -25,7 +25,7 @@ export function UsersHeaderActions({
 }: UsersHeaderActionsProps) {
   return (
     <div className="users-header-actions">
-      
+
       {/* Search */}
       <div className="users-header-actions-search-wrap">
         <Search

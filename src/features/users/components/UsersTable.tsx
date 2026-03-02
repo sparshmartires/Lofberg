@@ -132,201 +132,201 @@ export function UsersTable() {
   return (
     <>
       <div className="table-card border-[#EDEDED]">
-<div className="users-table-desktop">
-        <Table className="table-fixed">
+        <div className="users-table-desktop">
+          <Table className="table-fixed">
 
-          {/* TABLE HEADER */}
-          <TableHeader>
-            <TableRow className="table-header-row-bordered">
-              <TableHead className={`table-header-cell ${columnWidths.name}`}>
-                Name
-              </TableHead>
-              <TableHead className={`table-header-cell ${columnWidths.email}`}>
-                Email
-              </TableHead>
-              <TableHead className={`table-header-cell ${columnWidths.role}`}>
-                Role
-              </TableHead>
-              <TableHead className={`table-header-cell ${columnWidths.status}`}>
-                Status
-              </TableHead>
-              <TableHead className={`table-header-cell ${columnWidths.reports}`}>
-                Reports
-              </TableHead>
-              <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
-                Last login
-              </TableHead>
-              <TableHead className={`table-header-cell ${columnWidths.actions}`}>
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
+            {/* TABLE HEADER */}
+            <TableHeader>
+              <TableRow className="table-header-row-bordered">
+                <TableHead className={`table-header-cell ${columnWidths.name}`}>
+                  Name
+                </TableHead>
+                <TableHead className={`table-header-cell ${columnWidths.email}`}>
+                  Email
+                </TableHead>
+                <TableHead className={`table-header-cell ${columnWidths.role}`}>
+                  Role
+                </TableHead>
+                <TableHead className={`table-header-cell ${columnWidths.status}`}>
+                  Status
+                </TableHead>
+                <TableHead className={`table-header-cell ${columnWidths.reports}`}>
+                  Reports
+                </TableHead>
+                <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
+                  Last login
+                </TableHead>
+                <TableHead className={`table-header-cell ${columnWidths.actions}`}>
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
 
-          {/* TABLE BODY */}
-          <TableBody>
-            {users.map((user) => (
-              <TableRow
-                key={user.id}
-                className="table-body-row"
-              >
-                {/* NAME */}
-                <TableCell className={`table-name-cell ${columnWidths.name}`} data-label="Name">
-                  <div className="flex items-center gap-[8px]">
-                    <Image
-                      src={user.avatar}
-                      alt={user.name}
-                      width={24}
-                      height={24}
-                      className="rounded-full object-cover"
-                    />
-                    <span className="table-name-text">
-                      {user.name}
-                    </span>
-                  </div>
-                </TableCell>
+            {/* TABLE BODY */}
+            <TableBody>
+              {users.map((user) => (
+                <TableRow
+                  key={user.id}
+                  className="table-body-row"
+                >
+                  {/* NAME */}
+                  <TableCell className={`table-name-cell ${columnWidths.name}`} data-label="Name">
+                    <div className="flex items-center gap-[8px]">
+                      <Image
+                        src={user.avatar}
+                        alt={user.name}
+                        width={24}
+                        height={24}
+                        className="rounded-full object-cover"
+                      />
+                      <span className="table-name-text">
+                        {user.name}
+                      </span>
+                    </div>
+                  </TableCell>
 
-                {/* EMAIL */}
-                <TableCell className={`table-muted-text ${columnWidths.email} truncate`} data-label="Email">
-                  {user.email}
-                </TableCell>
+                  {/* EMAIL */}
+                  <TableCell className={`table-muted-text ${columnWidths.email} truncate`} data-label="Email">
+                    {user.email}
+                  </TableCell>
 
-                {/* ROLE */}
-                <TableCell className={columnWidths.role} data-label="Role">
-                  <Badge
-                    className="table-role-badge"
-                  >
-                    {user.role}
-                  </Badge>
-                </TableCell>
+                  {/* ROLE */}
+                  <TableCell className={columnWidths.role} data-label="Role">
+                    <Badge
+                      className="table-role-badge"
+                    >
+                      {user.role}
+                    </Badge>
+                  </TableCell>
 
-                {/* STATUS */}
-                <TableCell className={columnWidths.status} data-label="Status">
-                  <Badge
-                    className={`
+                  {/* STATUS */}
+                  <TableCell className={columnWidths.status} data-label="Status">
+                    <Badge
+                      className={`
                     table-status-badge
                     ${user.status === "Active"
-                        ? "bg-[#7DB356] text-white"
-                        : "bg-[#E5E5E5] text-[#6B6B6B]"
-                      }
+                          ? "bg-[#7DB356] text-white"
+                          : "bg-[#E5E5E5] text-[#6B6B6B]"
+                        }
                   `}
-                  >
-                    {user.status}
-                  </Badge>
-                </TableCell>
-
-                {/* REPORTS */}
-                <TableCell className={`table-name-text ${columnWidths.reports}`} data-label="Reports">
-                  {user.reports}
-                </TableCell>
-
-                {/* LAST LOGIN */}
-                <TableCell className={`table-muted-text ${columnWidths.lastLogin}`} data-label="Last login">
-                  {user.lastLogin}
-                </TableCell>
-
-                {/* ACTIONS */}
-                <TableCell className={`${columnWidths.actions}`} data-label="Actions">
-                  <div className="table-actions-wrap">
-
-                    {/* EDIT BUTTON */}
-                    <button
-                      onClick={() => handleEdit(user)}
-                      className="table-action-btn"
                     >
-                      <Pencil className="table-action-icon"
-                      />
-                    </button>
+                      {user.status}
+                    </Badge>
+                  </TableCell>
 
-                    {/* DELETE BUTTON */}
-                    <button
-                      onClick={() => setDeleteOpen(true)}
-                      className="table-action-btn"
-                    >
-                      <Trash2 className="table-action-icon" />
-                    </button>
+                  {/* REPORTS */}
+                  <TableCell className={`table-name-text ${columnWidths.reports}`} data-label="Reports">
+                    {user.reports}
+                  </TableCell>
 
-                  </div>
-                </TableCell>
+                  {/* LAST LOGIN */}
+                  <TableCell className={`table-muted-text ${columnWidths.lastLogin}`} data-label="Last login">
+                    {user.lastLogin}
+                  </TableCell>
+
+                  {/* ACTIONS */}
+                  <TableCell className={`${columnWidths.actions}`} data-label="Actions">
+                    <div className="table-actions-wrap">
+
+                      {/* EDIT BUTTON */}
+                      <button
+                        onClick={() => handleEdit(user)}
+                        className="table-action-btn"
+                      >
+                        <Pencil className="table-action-icon"
+                        />
+                      </button>
+
+                      {/* DELETE BUTTON */}
+                      <button
+                        onClick={() => setDeleteOpen(true)}
+                        className="table-action-btn"
+                      >
+                        <Trash2 className="table-action-icon" />
+                      </button>
+
+                    </div>
+                  </TableCell>
 
 
-              </TableRow>
-            ))}
-          </TableBody>
+                </TableRow>
+              ))}
+            </TableBody>
 
-        </Table>
+          </Table>
         </div>
-<div className="users-list-mobile">
-  {users.map((user) => (
-    <div key={user.id} className="user-mobile-card">
+        <div className="users-list-mobile">
+          {users.map((user) => (
+            <div key={user.id} className="user-mobile-card">
 
-      {/* Header */}
-      <div className="user-mobile-header">
-        <div className="flex items-center gap-3">
-          <Image
-            src={user.avatar}
-            alt={user.name}
-            width={32}
-            height={32}
-            className="rounded-full object-cover"
-          />
-          <span className="user-mobile-name">
-            {user.name}
-          </span>
+              {/* Header */}
+              <div className="user-mobile-header">
+                <div className="flex items-center gap-3">
+                  <Image
+                    src={user.avatar}
+                    alt={user.name}
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover"
+                  />
+                  <span className="user-mobile-name">
+                    {user.name}
+                  </span>
+                </div>
+
+                <Badge
+                  className={
+                    user.status === "Active"
+                      ? "bg-[#7DB356] text-white rounded-full px-4 py-1 text-xs"
+                      : "bg-[#E5E5E5] text-[#6B6B6B] rounded-full px-4 py-1 text-xs"
+                  }
+                >
+                  {user.status}
+                </Badge>
+              </div>
+
+              <div className="user-mobile-divider" />
+
+              {/* Info Section */}
+
+              {/* Email + Last login in one row */}
+              <div className="user-mobile-split-row">
+                <div>
+                  <div className="user-mobile-label">Email : {user.email}</div>
+                  <span className="user-mobile-label">Role : {user.role}</span>
+                </div>
+
+                <div className="text-right">
+                  <div className="user-mobile-label">Last login</div>
+                  <div className="user-mobile-value">{user.lastLogin}</div>
+                </div>
+              </div>
+
+              {/* Role */}
+
+
+              {/* Reports */}
+              <div className="user-mobile-stacked">
+                <span className="user-mobile-label">Reports : {user.reports}</span>
+                <span className="user-mobile-value"></span>
+              </div>
+
+              <div className="user-mobile-divider" />
+
+              {/* Actions */}
+              <div className="user-mobile-actions">
+                <button onClick={() => handleEdit(user)} className="mobile-edit">
+                  Edit <Pencil className="h-3 w-3 inline ml-1" />
+                </button>
+
+                <button onClick={() => setDeleteOpen(true)} className="mobile-delete">
+                  Delete <Trash2 className="h-3 w-3 inline ml-1" />
+                </button>
+              </div>
+
+            </div>
+          ))}
         </div>
-
-        <Badge
-          className={
-            user.status === "Active"
-              ? "bg-[#7DB356] text-white rounded-full px-4 py-1 text-xs"
-              : "bg-[#E5E5E5] text-[#6B6B6B] rounded-full px-4 py-1 text-xs"
-          }
-        >
-          {user.status}
-        </Badge>
-      </div>
-
-      <div className="user-mobile-divider" />
-
-   {/* Info Section */}
-
-{/* Email + Last login in one row */}
-<div className="user-mobile-split-row">
-  <div>
-    <div className="user-mobile-label">Email : {user.email}</div>
-    <span className="user-mobile-label">Role : {user.role}</span>
-  </div>
-
-  <div className="text-right">
-    <div className="user-mobile-label">Last login</div>
-    <div className="user-mobile-value">{user.lastLogin}</div>
-  </div>
-</div>
-
-{/* Role */}
-
-
-{/* Reports */}
-<div className="user-mobile-stacked">
-  <span className="user-mobile-label">Reports : {user.reports}</span>
-  <span className="user-mobile-value"></span>
-</div>
-
-      <div className="user-mobile-divider" />
-
-      {/* Actions */}
-      <div className="user-mobile-actions">
-        <button onClick={() => handleEdit(user)} className="mobile-edit">
-          Edit <Pencil className="h-3 w-3 inline ml-1" />
-        </button>
-
-        <button onClick={() => setDeleteOpen(true)} className="mobile-delete">
-          Delete <Trash2 className="h-3 w-3 inline ml-1" />
-        </button>
-      </div>
-
-    </div>
-  ))}
-</div>
       </div>
       {selectedUser && (
         <EditUserDialog
