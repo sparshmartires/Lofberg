@@ -131,6 +131,7 @@ export function SalesTable() {
     return (
         <>
             <div className="table-card border-[0px]">
+                <div className="users-table-desktop">
 
                 <Table className="table-fixed">
 
@@ -169,7 +170,7 @@ export function SalesTable() {
                                 className="table-body-row"
                             >
                                 {/* NAME */}
-                                <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                                <TableCell className={`table-name-cell ${columnWidths.name}`} data-label="Name">
                                     <div className="flex items-center gap-[8px]">
 
                                         <Image
@@ -186,12 +187,12 @@ export function SalesTable() {
                                 </TableCell>
 
                                 {/* EMAIL */}
-                                <TableCell className={`table-muted-text ${columnWidths.email} truncate`}>
+                                <TableCell className={`table-muted-text ${columnWidths.email} truncate`} data-label="Email">
                                     {sale.email}
                                 </TableCell>
 
                                 {/* ROLE */}
-                                <TableCell className={`table-role-cell ${columnWidths.role}`}>
+                                <TableCell className={`table-role-cell ${columnWidths.role}`} data-label="Role">
                                     <Badge
                                         className="table-role-badge"
                                     >
@@ -200,7 +201,7 @@ export function SalesTable() {
                                 </TableCell>
 
                                 {/* STATUS */}
-                                <TableCell className={`table-status-cell ${columnWidths.status}`}>
+                                <TableCell className={`table-status-cell ${columnWidths.status}`} data-label="Status">
                                     <Badge
                                         className={`
                     table-status-badge
@@ -215,17 +216,17 @@ export function SalesTable() {
                                 </TableCell>
 
                                 {/* REPORTS */}
-                                <TableCell className={`table-name-text ${columnWidths.reports}`}>
+                                <TableCell className={`table-name-text ${columnWidths.reports}`} data-label="Reports">
                                     {sale.reports}
                                 </TableCell>
 
                                 {/* LAST LOGIN */}
-                                <TableCell className={`table-muted-text ${columnWidths.lastLogin}`}>
+                                <TableCell className={`table-muted-text ${columnWidths.lastLogin}`} data-label="Last login">
                                     {sale.lastLogin}
                                 </TableCell>
 
                                 {/* ACTIONS */}
-                                <TableCell className={`text-right ${columnWidths.actions}`}>
+                                <TableCell className={`text-right ${columnWidths.actions}`} data-label="Actions">
                                     <div className="table-actions-wrap">
 
                                         {/* EDIT BUTTON */}
@@ -253,6 +254,72 @@ export function SalesTable() {
                     </TableBody>
 
                 </Table>
+
+                </div>
+
+                <div className="users-list-mobile">
+                    {users.map((sale) => (
+                        <div key={sale.id} className="user-mobile-card">
+
+                            <div className="user-mobile-header">
+                                <div className="flex items-center gap-3">
+                                    <Image
+                                        src={sale.avatar}
+                                        alt={sale.name}
+                                        width={32}
+                                        height={32}
+                                        className="rounded-full object-cover"
+                                    />
+                                    <span className="user-mobile-name">
+                                        {sale.name}
+                                    </span>
+                                </div>
+
+                                <Badge
+                                    className={
+                                        sale.status === "Active"
+                                            ? "bg-[#7DB356] text-white rounded-full px-4 py-1 text-xs"
+                                            : "bg-[#E5E5E5] text-[#6B6B6B] rounded-full px-4 py-1 text-xs"
+                                    }
+                                >
+                                    {sale.status}
+                                </Badge>
+                            </div>
+
+                            <div className="user-mobile-divider" />
+
+                            <div className="user-mobile-split-row">
+                                <div>
+                                    <div className="user-mobile-label">Email : {sale.email}</div>
+                                    <span className="user-mobile-label">Role : {sale.role}</span>
+                                </div>
+
+                                <div className="text-right">
+                                    <div className="user-mobile-label">Last login</div>
+                                    <div className="user-mobile-value">{sale.lastLogin}</div>
+                                </div>
+                            </div>
+
+                            <div className="user-mobile-stacked">
+                                <span className="user-mobile-label">Reports : {sale.reports}</span>
+                                <span className="user-mobile-value"></span>
+                            </div>
+
+                            <div className="user-mobile-divider" />
+
+                            <div className="user-mobile-actions">
+                                <button onClick={() => handleEdit(sale)} className="mobile-edit">
+                                    Edit <Pencil className="h-3 w-3 inline ml-1" />
+                                </button>
+
+                                <button onClick={() => setHistoryOpen(true)} className="mobile-delete">
+                                    History <EyeIcon className="h-3 w-3 inline ml-1" />
+                                </button>
+                            </div>
+
+                        </div>
+                    ))}
+                </div>
 
             </div>
             {selectedSale && (
