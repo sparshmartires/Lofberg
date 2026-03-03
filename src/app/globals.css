@@ -857,6 +857,102 @@
     font-weight: 500;
   }
 }
+/* Hide mobile by default */
+.customers-mobile {
+  display: none;
+}
+
+/* Mobile breakpoint */
+@media (max-width: 799px) {
+
+  .customers-desktop {
+    display: none;
+  }
+
+  .customers-mobile {
+    display: block;
+  }
+
+  .customer-card {
+    background: #fff;
+    border: 1px solid #EDEDED;
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .customer-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .customer-name {
+    font-size: 16px;
+    color: #1F1F1F;
+  }
+
+  .customer-status {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+  }
+
+  .customer-status.active {
+    background: #7DB356;
+    color: #fff;
+  }
+
+  .customer-status.inactive {
+    background: #E5E5E5;
+    color: #6B6B6B;
+  }
+.customer-info{
+  display: flex;
+justify-content: space-between;
+}
+  .customer-row {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .customer-tier {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .label {
+    color: #6B6B6B;
+    margin-right: 4px;
+  }
+
+  .value {
+    color: #1F1F1F;
+  }
+
+  .customer-divider {
+    height: 1px;
+    background: #EDEDED;
+    margin: 12px 0;
+  }
+
+  .customer-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .edit-link,
+  .view-link {
+    font-size: 14px;
+    color: #5B2D91;
+    display: flex;
+    align-items: center;
+  }
+}
 }
 
 @layer utilities {

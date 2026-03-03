@@ -82,6 +82,7 @@ export function CustomersTable() {
   return (
     <>
       <div className="table-card border-[0px]">
+        <div className="customers-desktop">
         <Table className="table-fixed">
           {/* HEADER */}
           <TableHeader>
@@ -191,8 +192,76 @@ export function CustomersTable() {
             ))}
           </TableBody>
         </Table>
+        </div>
+      </div>
+<div className="customers-mobile">
+  {customers.map((customer) => (
+    <div key={customer.id} className="customer-card">
+
+      {/* Top Row */}
+      <div className="customer-card-header">
+        <div className="flex items-center gap-3">
+          <Image
+            src={customer.avatar}
+            alt={customer.name}
+            width={32}
+            height={32}
+            className="rounded-full object-cover"
+          />
+          <span className="customer-name">
+            {customer.name}
+          </span>
+        </div>
+
+        <span
+          className={`customer-status ${
+            customer.status === "Active"
+              ? "active"
+              : "inactive"
+          }`}
+        >
+          {customer.status}
+        </span>
+      </div>
+  <div className="customer-divider" />
+      {/* Segment + Date */}
+      <div className="customer-info">
+        <div className="customer-row">
+          <span className="label">Segment: {customer.segment}</span>
+           <span className="label">Service tier:{customer.serviceTier}</span>
+        </div>
+
+        <div className="text-right">
+          <span className="label">Last report date</span>
+          <div className="value">{customer.lastReportDate}</div>
+        </div>
       </div>
 
+      {/* Service Tier */}
+     
+
+      <div className="customer-divider" />
+
+      {/* Actions */}
+      <div className="customer-actions">
+        <button
+          onClick={() => handleEdit(customer)}
+          className="edit-link"
+        >
+          Edit <Pencil className="h-3 w-3 ml-1" />
+        </button>
+
+        <button
+          onClick={() => handleHistory(customer)}
+          className="view-link"
+        >
+          View Details <Eye className="h-3 w-3 ml-1" />
+        </button>
+      </div>
+
+    </div>
+  ))}
+</div>
       {/* EDIT DIALOG */}
       {selectedCustomer && (
         <EditCustomerDialog

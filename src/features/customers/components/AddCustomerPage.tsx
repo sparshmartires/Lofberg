@@ -80,7 +80,7 @@ export function AddCustomerDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-[900px] rounded-[32px] p-10 bg-white max-h-[90vh] overflow-y-auto"
+        className="w-[calc(100%-32px)] max-w-[900px] rounded-[32px] p-4 min-[700px]:p-10 bg-white max-h-[90vh] overflow-y-auto"
       >
         {/* HEADER */}
         <div className="space-y-2">
@@ -117,7 +117,7 @@ export function AddCustomerDialog({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
               {/* Account Code */}
               <div className="space-y-2">
                 <label>Account Code / ERP ID</label>
@@ -216,7 +216,7 @@ export function AddCustomerDialog({
           <div className="space-y-6">
             <h3 className="text-lg font-medium">Contact Information</h3>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label>Contact Person</label>
                 <Input
@@ -246,7 +246,7 @@ export function AddCustomerDialog({
                 )}
               </div>
 
-              <div className="space-y-2 col-span-2">
+              <div className="space-y-2 min-[700px]:col-span-2">
                 <label>Contact Phone</label>
                 <Input
                   placeholder="Enter phone number"
@@ -255,7 +255,7 @@ export function AddCustomerDialog({
                 />
               </div>
 
-              <div className="space-y-2 col-span-2">
+              <div className="space-y-2 min-[700px]:col-span-2">
                 <label>Address</label>
                 <Input
                   placeholder="Add Address"
@@ -390,8 +390,8 @@ export function AddCustomerDialog({
           </div>
 
           {/* ACTIONS */}
-          <div className="flex justify-center gap-6 pt-6">
-            <div className="w-[200px]">
+          <div className="flex flex-col min-[700px]:flex-row justify-center gap-4 min-[700px]:gap-6 pt-6">
+            <div className="w-full min-[700px]:w-[200px]">
               <Button
                 type="button"
                 variant="outlineBrand"
@@ -402,7 +402,7 @@ export function AddCustomerDialog({
               </Button>
             </div>
 
-            <div className="w-[200px]">
+            <div className="w-full min-[700px]:w-[200px]">
               <Button type="submit" variant="primary" className="w-full">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Customer
