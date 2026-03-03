@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown, User } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface UserProfileDropdownProps {
   currentRole?: string
@@ -24,18 +25,18 @@ export function UserProfileDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="
-            flex items-center gap-2
-            h-[48px]
-            px-[20px]
-            rounded-[99px]
-            bg-white
-            text-[#1F1F1F]
-            shadow-[0px_2px_4px_0px_#0000000A]
-            border border-[#F0F0F0]
-            hover:bg-gray-50
-            transition
-          "
+          className={cn(
+            "flex items-center gap-2",
+            "h-[48px]",
+            "px-[20px]",
+            "rounded-[99px]",
+            "bg-white",
+            "text-[#1F1F1F]",
+            "shadow-[0px_2px_4px_0px_#0000000A]",
+            "border border-[#F0F0F0]",
+            "hover:bg-gray-50",
+            "transition"
+          )}
         >
           <User size={18} />
           <span className="text-sm font-medium">Admin User</span>
@@ -45,13 +46,13 @@ export function UserProfileDropdown({
 
       <DropdownMenuContent
         align="end"
-        className="
-          w-[190px]
-          rounded-[20px]
-          p-4
-          bg-white
-          shadow-lg
-        "
+        className={cn(
+          "w-[190px]",
+          "rounded-[20px]",
+          "p-4",
+          "bg-white",
+          "shadow-lg"
+        )}
       >
         {/* My Profile */}
         <DropdownMenuItem className="text-sm cursor-pointer">

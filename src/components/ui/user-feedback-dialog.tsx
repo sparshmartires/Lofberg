@@ -7,7 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Check, AlertTriangle } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { SuccessIcon } from "@/icons/success"
 import { DisclaimerIcon } from "@/icons/disclaimer"
 
@@ -22,8 +22,10 @@ interface FeedbackDialogProps {
   description?: string
   primaryActionLabel?: string
   onPrimaryAction?: () => void
+  primaryActionLoading?: boolean
   secondaryActionLabel?: string
   onSecondaryAction?: () => void
+  secondaryActionLoading?: boolean
 }
 
 export function UserFeedbackDialog({
@@ -34,8 +36,10 @@ export function UserFeedbackDialog({
   description,
   primaryActionLabel,
   onPrimaryAction,
+  primaryActionLoading = false,
   secondaryActionLabel,
   onSecondaryAction,
+  secondaryActionLoading = false,
 }: FeedbackDialogProps) {
   const isSuccess = type === "success"
 
@@ -98,7 +102,9 @@ export function UserFeedbackDialog({
           variant="outlineBrand"
            className="px-[20px] py-[10px]"
           onClick={onSecondaryAction}
+          disabled={secondaryActionLoading}
         >
+          {secondaryActionLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
           {secondaryActionLabel}
         </Button>
       )}
@@ -107,7 +113,9 @@ export function UserFeedbackDialog({
         variant="primary" size="sm"
         className="px-[20px] py-[10px]"
         onClick={onPrimaryAction}
+        disabled={primaryActionLoading}
       >
+        {primaryActionLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
         {primaryActionLabel}
       </Button>}
     </div>

@@ -77,6 +77,7 @@ export const authApi = createApi({
           const expiresIn = data.expiresIn || 1800; // 30 minutes default
           const expires = new Date(Date.now() + expiresIn * 1000);
           document.cookie = `auth_token=${data.token}; path=/; expires=${expires.toUTCString()}; SameSite=Strict`;
+          localStorage.setItem("auth_token", data.token);
           // Store user data in localStorage for Redux state
           localStorage.setItem("user", JSON.stringify(data.user));
         } catch (err) {

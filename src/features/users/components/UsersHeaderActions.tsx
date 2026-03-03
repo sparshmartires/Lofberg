@@ -8,11 +8,12 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
-import { Search } from "lucide-react"
+import { Loader2, Search } from "lucide-react"
 
 interface UsersHeaderActionsProps {
   search: string
   status: string
+  isLoading?: boolean
   onSearchChange: (value: string) => void
   onStatusChange: (value: string) => void
 }
@@ -20,6 +21,7 @@ interface UsersHeaderActionsProps {
 export function UsersHeaderActions({
   search,
   status,
+  isLoading = false,
   onSearchChange,
   onStatusChange,
 }: UsersHeaderActionsProps) {
@@ -55,6 +57,8 @@ export function UsersHeaderActions({
           </SelectContent>
         </Select>
       </div>
+
+      {isLoading ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : null}
     </div>
   )
 }
