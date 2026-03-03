@@ -162,10 +162,6 @@
     @apply rounded-[24px] bg-white overflow-hidden;
   }
 
-  .table-header-row {
-    @apply h-[64px];
-  }
-
   .table-header-row-bordered {
     @apply h-[36px] px-[12px] !border-b-0;
   }
@@ -810,14 +806,6 @@
     color: #4E4E4E;
   }
 
-  .history-mobile-badge {
-    background: #EADCF6;
-    color: #7B3EBE;
-    border-radius: 999px;
-    padding: 6px 16px;
-    font-size: 12px;
-  }
-
   .history-mobile-divider {
     height: 1px;
     background: #E5E5E5;
@@ -828,10 +816,6 @@
     display: flex;
     justify-content: space-between;
     gap: 16px;
-  }
-
-  .history-mobile-segment {
-    margin-top: 12px;
   }
 
   .history-mobile-label {
@@ -918,11 +902,6 @@ justify-content: space-between;
     flex-direction: column;
     font-size: 14px;
     margin-bottom: 6px;
-  }
-
-  .customer-tier {
-    font-size: 14px;
-    margin-bottom: 12px;
   }
 
   .label {

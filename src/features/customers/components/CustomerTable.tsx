@@ -82,8 +82,8 @@ export function CustomersTable() {
   return (
     <>
       <div className="table-card border-[0px]">
-        <div className="customers-desktop">
-        <Table className="table-fixed">
+        <div className="customers-desktop overflow-x-auto">
+        <Table className="table-fixed min-w-[760px]">
           {/* HEADER */}
           <TableHeader>
             <TableRow className="table-header-row-bordered">

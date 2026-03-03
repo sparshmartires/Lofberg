@@ -80,7 +80,7 @@ export function AddCustomerDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-[calc(100%-32px)] max-w-[900px] rounded-[32px] p-4 min-[700px]:p-10 bg-white max-h-[90vh] overflow-y-auto"
+        className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-[600px]:p-8 max-[600px]:max-h-[calc(100vh-2rem)] max-[600px]:overflow-y-auto"
       >
         {/* HEADER */}
         <div className="space-y-2">
@@ -390,20 +390,24 @@ export function AddCustomerDialog({
           </div>
 
           {/* ACTIONS */}
-          <div className="flex flex-col min-[700px]:flex-row justify-center gap-4 min-[700px]:gap-6 pt-6">
-            <div className="w-full min-[700px]:w-[200px]">
+          <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
+            <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
               <Button
                 type="button"
                 variant="outlineBrand"
                 onClick={() => onOpenChange(false)}
-                className="w-full"
+                className="w-full px-[20px] py-[10px]"
               >
                 Cancel
               </Button>
             </div>
 
-            <div className="w-full min-[700px]:w-[200px]">
-              <Button type="submit" variant="primary" className="w-full">
+            <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full px-[20px] py-[10px]"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Customer
               </Button>
