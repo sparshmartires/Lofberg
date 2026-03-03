@@ -709,8 +709,154 @@
     display: flex;
     align-items: center;
   }
+
+}
+/* Toggle hidden on desktop */
+.filters-card {
+  width: 100%;
+  border-radius: 28px;
+  background: white;
+  border: 1px solid #F0F0F0;
+  padding: 24px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.03);
+  margin-bottom: 24px;
 }
 
+.filter-field label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #1F1F1F;
+}
+
+/* Desktop */
+.filters-desktop {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.filters-mobile {
+  display: none;
+}
+
+/* Mobile */
+@media (max-width: 649px) {
+
+  .filters-desktop {
+    display: none;
+  }
+
+  .filters-mobile {
+    display: block;
+  }
+
+  .mobile-advanced {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+  }
+
+  .mobile-advanced.open {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .mobile-toggle {
+    margin-top: 16px;
+    text-align: center;
+    color: #5B2D91;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+}
+/* Hide mobile by default */
+.history-mobile {
+  display: none;
+}
+
+/* Mobile styles */
+@media (max-width: 649px) {
+
+  .history-desktop {
+    display: none;
+  }
+
+  .history-mobile {
+    display: block;
+  }
+
+  .history-mobile-card {
+    border: 1px solid #EADCF6;
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fff;
+  }
+
+  .history-mobile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .history-mobile-name {
+    font-size: 16px;
+    color: #4E4E4E;
+  }
+
+  .history-mobile-badge {
+    background: #EADCF6;
+    color: #7B3EBE;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+  }
+
+  .history-mobile-divider {
+    height: 1px;
+    background: #E5E5E5;
+    margin: 16px 0;
+  }
+
+  .history-mobile-split {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .history-mobile-segment {
+    margin-top: 12px;
+  }
+
+  .history-mobile-label {
+    font-size: 14px;
+    color: #4E4E4E;
+  }
+
+  .history-mobile-value {
+    font-size: 14px;
+    color: #1F1F1F;
+  }
+
+  .history-mobile-action {
+    display: flex;
+    justify-content: center;
+  }
+
+  .history-mobile-save {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #5B2D91;
+    font-weight: 500;
+  }
+}
 }
 
 @layer utilities {

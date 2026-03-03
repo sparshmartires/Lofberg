@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -8,6 +9,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
+import { ChevronUp, ChevronDown } from "lucide-react"
 
 interface SalesRepFiltersProps {
   search: string
@@ -30,19 +32,20 @@ export function SalesRepFilters({
   onRegionChange,
   onStatusChange,
 }: SalesRepFiltersProps) {
+
+  const [isOpen, setIsOpen] = useState(false)
+
   const fieldClass =
-    "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm focus:outline-none mb-4"
+    "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm focus:outline-none"
 
   return (
-    <div className="w-full rounded-[28px] bg-white border border-[#F0F0F0] p-6 shadow-sm mb-6">
-      {/* Responsive Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        {/* Search */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[#1F1F1F]">
-            Search
-          </label>
+    <div className="filters-card">
+
+      {/* DESKTOP LAYOUT */}
+      <div className="filters-desktop">
+
+        <div className="filter-field">
+          <label>Search</label>
           <Input
             placeholder="Search by name or code"
             value={search}
@@ -51,54 +54,42 @@ export function SalesRepFilters({
           />
         </div>
 
-        {/* Segment */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[#1F1F1F]">
-            Segment
-          </label>
+        <div className="filter-field">
+          <label>Segment</label>
           <Select value={segment} onValueChange={onSegmentChange}>
             <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="All Segments" />
+              <SelectValue placeholder="All segments" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Segments</SelectItem>
+              <SelectItem value="all">All segments</SelectItem>
               <SelectItem value="retail">Retail</SelectItem>
               <SelectItem value="horeca">HoReCa</SelectItem>
-              <SelectItem value="corporate">Corporate</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Region */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[#1F1F1F]">
-            Region
-          </label>
+        <div className="filter-field">
+          <label>Region</label>
           <Select value={region} onValueChange={onRegionChange}>
             <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="All Region" />
+              <SelectValue placeholder="All regions" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Region</SelectItem>
+              <SelectItem value="all">All regions</SelectItem>
               <SelectItem value="north">North</SelectItem>
               <SelectItem value="south">South</SelectItem>
-              <SelectItem value="east">East</SelectItem>
-              <SelectItem value="west">West</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Status */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[#1F1F1F]">
-            Status
-          </label>
+        <div className="filter-field">
+          <label>Status</label>
           <Select value={status} onValueChange={onStatusChange}>
             <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="All Status" />
+              <SelectValue placeholder="All statuses" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="all">All statuses</SelectItem>
               <SelectItem value="active">Active</SelectItem>
               <SelectItem value="inactive">Inactive</SelectItem>
             </SelectContent>
@@ -106,6 +97,73 @@ export function SalesRepFilters({
         </div>
 
       </div>
+
+      {/* MOBILE LAYOUT */}
+      <div className="filters-mobile">
+
+        {/* Search always visible */}
+        <div className="filter-field mb-4">
+          <label>Search</label>
+          <Input
+            placeholder="Search Reports"
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className={fieldClass}
+          />
+        </div>
+
+        {/* Expandable section */}
+        <div className={`mobile-advanced ${isOpen ? "open" : ""}`}>
+
+          <div className="filter-field">
+            <label>Segment</label>
+            <Select value={segment} onValueChange={onSegmentChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Segments" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Segments</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="filter-field">
+            <label>Region</label>
+            <Select value={region} onValueChange={onRegionChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Region" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Region</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="filter-field">
+            <label>Status</label>
+            <Select value={status} onValueChange={onStatusChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+        </div>
+
+        {/* Toggle always at bottom */}
+        <div
+          className="mobile-toggle"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <span>Advanced Search</span>
+          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        </div>
+
+      </div>
+
     </div>
   )
 }
