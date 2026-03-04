@@ -1,0 +1,42 @@
+.card {
+  width: 100%;
+  border-radius: 28px;
+  background: white;
+  border: 1px solid #F0F0F0;
+  padding: 24px;
+}
+
+.title {
+  font-size: 18px;
+  color: #1F1F1F;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 14px;
+  color: #1F1F1F;
+  margin-bottom: 6px;
+}
+
+.helper {
+  font-size: 13px;
+  color: #6B6B6B;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
