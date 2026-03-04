@@ -46,6 +46,98 @@ export interface ResetPasswordResponse {
   message: string;
 }
 
+type ApiObject = Record<string, unknown>;
+
+const asObject = (value: unknown): ApiObject =>
+  value && typeof value === "object" ? (value as ApiObject) : {};
+
+const unwrapPayload = (payload: unknown): unknown => {
+  let current: unknown = payload;
+
+  for (let depth = 0; depth < 4; depth += 1) {
+    const source = asObject(current);
+    const candidate = source.data ?? source.result ?? source.payload ?? source.value;
+
+    if (candidate === undefined || candidate === null || candidate === current) {
+      return current;
+    }
+
+    current = candidate;
+  }
+
+  return current;
+};
+
+const normalizeLoginResponse = (payload: unknown): LoginResponse => {
+  const root = asObject(payload);
+  const data = asObject(unwrapPayload(payload));
+  const userSource = asObject(
+    data.user ?? data.profile ?? data.account ?? root.user ?? root.profile ?? root.account
+  );
+
+  const firstName = String(userSource.firstName ?? userSource.firstname ?? "");
+  const lastName = String(userSource.lastName ?? userSource.lastname ?? "");
+  const fullName = String(userSource.fullName ?? userSource.name ?? "").trim();
+  const [fallbackFirstName, ...restNames] = fullName.split(" ");
+
+  const rawRoles = userSource.roles ?? userSource.roleNames ?? userSource.permissions ?? [];
+  const roles = Array.isArray(rawRoles)
+    ? rawRoles.map((role) => String(role)).filter(Boolean)
+    : typeof rawRoles === "string"
+      ? [rawRoles]
+      : [];
+
+  const expiresInValue = Number(
+    data.expiresIn ??
+      data.expiresInSeconds ??
+      data.expiresInSec ??
+      root.expiresIn ??
+      root.expiresInSeconds ??
+      root.expiresInSec
+  );
+
+  return {
+    token: String(data.token ?? data.accessToken ?? data.jwt ?? root.token ?? root.accessToken ?? ""),
+    expiresIn: Number.isFinite(expiresInValue) && expiresInValue > 0 ? expiresInValue : 1800,
+    user: {
+      id: String(userSource.id ?? userSource.userId ?? ""),
+      email: String(userSource.email ?? userSource.userEmail ?? ""),
+      firstName: firstName || fallbackFirstName || "",
+      lastName: lastName || restNames.join(" ").trim(),
+      roles,
+      preferredLanguageId:
+        (userSource.preferredLanguageId ?? userSource.languageId ?? null) as string | null,
+    },
+  };
+};
+
+const normalizeMessageResponse = (payload: unknown): ForgotPasswordResponse => {
+  const root = asObject(payload);
+  const data = asObject(unwrapPayload(payload));
+
+  return {
+    message: String(
+      data.message ??
+        data.detail ??
+        data.title ??
+        root.message ??
+        root.detail ??
+        root.title ??
+        "Request completed successfully."
+    ),
+  };
+};
+
+const normalizeVerifyCodeResponse = (payload: unknown): VerifyCodeResponse => {
+  const root = asObject(payload);
+  const data = asObject(unwrapPayload(payload));
+
+  return {
+    token: String(data.token ?? data.accessToken ?? root.token ?? root.accessToken ?? ""),
+    resetToken: String(data.resetToken ?? data.token ?? root.resetToken ?? root.token ?? ""),
+  };
+};
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://ascribable-goatishly-curtis.ngrok-free.dev";
 
 export const authApi = createApi({
@@ -70,17 +162,18 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      transformResponse: (response: unknown) => normalizeLoginResponse(response),
+      async onQueryStarted(_arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          // Set token in secure httpOnly cookie
-          const expiresIn = data.expiresIn || 1800; // 30 minutes default
-          const expires = new Date(Date.now() + expiresIn * 1000);
-          document.cookie = `auth_token=${data.token}; path=/; expires=${expires.toUTCString()}; SameSite=Strict`;
-          localStorage.setItem("auth_token", data.token);
-          // Store user data in localStorage for Redux state
+          if (data.token) {
+            const expires = new Date(Date.now() + data.expiresIn * 1000);
+            document.cookie = `auth_token=${data.token}; path=/; expires=${expires.toUTCString()}; SameSite=Strict`;
+            localStorage.setItem("auth_token", data.token);
+          }
+
           localStorage.setItem("user", JSON.stringify(data.user));
-        } catch (err) {
+        } catch {
           // Error handling is done in the component
         }
       },
@@ -93,6 +186,7 @@ export const authApi = createApi({
         method: "POST",
         body: data,
       }),
+      transformResponse: (response: unknown) => normalizeMessageResponse(response),
     }),
 
     // Verify OTP code endpoint
@@ -102,6 +196,7 @@ export const authApi = createApi({
         method: "POST",
         body: data,
       }),
+      transformResponse: (response: unknown) => normalizeVerifyCodeResponse(response),
     }),
 
     // Reset password endpoint
@@ -111,6 +206,7 @@ export const authApi = createApi({
         method: "POST",
         body: data,
       }),
+      transformResponse: (response: unknown) => normalizeMessageResponse(response),
     }),
 
     // Resend OTP code
@@ -120,6 +216,7 @@ export const authApi = createApi({
         method: "POST",
         body: data,
       }),
+      transformResponse: (response: unknown) => normalizeMessageResponse(response),
     }),
 
     // Logout endpoint
@@ -128,13 +225,13 @@ export const authApi = createApi({
         url: "/auth/logout",
         method: "POST",
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { queryFulfilled }) {
         try {
           await queryFulfilled;
           // Clear stored data
           localStorage.removeItem("auth_token");
           localStorage.removeItem("user");
-        } catch (err) {
+        } catch {
           // Error handling
         }
       },

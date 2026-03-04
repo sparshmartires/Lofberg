@@ -55,18 +55,64 @@ type ApiObject = Record<string, unknown>;
 const asObject = (value: unknown): ApiObject =>
   value && typeof value === "object" ? (value as ApiObject) : {};
 
-const toArray = (value: unknown): ApiObject[] => {
-  if (Array.isArray(value)) {
-    return value as ApiObject[];
+const unwrapPayload = (payload: unknown): unknown => {
+  let current: unknown = payload;
+
+  for (let depth = 0; depth < 4; depth += 1) {
+    const source = asObject(current);
+    const candidate = source.data ?? source.result ?? source.payload ?? source.value;
+
+    if (candidate === undefined || candidate === null || candidate === current) {
+      return current;
+    }
+
+    current = candidate;
   }
 
-  if (value && typeof value === "object") {
-    const source = asObject(value);
-    const candidates = [source.items, source.data, source.results, source.users, source.value];
+  return current;
+};
+
+const toArray = (value: unknown): ApiObject[] => {
+  const unwrapped = unwrapPayload(value);
+
+  if (Array.isArray(unwrapped)) {
+    return unwrapped as ApiObject[];
+  }
+
+  if (unwrapped && typeof unwrapped === "object") {
+    const source = asObject(unwrapped);
+    const candidates = [
+      source.items,
+      source.data,
+      source.results,
+      source.users,
+      source.value,
+      source.records,
+      source.rows,
+    ];
 
     for (const candidate of candidates) {
       if (Array.isArray(candidate)) {
         return candidate as ApiObject[];
+      }
+
+      if (candidate && typeof candidate === "object") {
+        const nested = asObject(candidate);
+        const nestedCandidates = [
+          nested.items,
+          nested.data,
+          nested.results,
+          nested.users,
+          nested.value,
+          nested.records,
+          nested.rows,
+        ];
+
+        for (const nestedCandidate of nestedCandidates) {
+          if (Array.isArray(nestedCandidate)) {
+            return nestedCandidate as ApiObject[];
+          }
+        }
       }
     }
   }
@@ -103,18 +149,37 @@ const normalizeUsersResponse = (
   pageNumber: number,
   pageSize: number
 ): PaginatedUsersResponse => {
-  const source = asObject(payload);
-  const items = toArray(payload).map(mapUser);
+  const root = asObject(payload);
+  const unwrapped = unwrapPayload(payload);
+  const source = asObject(unwrapped);
+  const meta = asObject(root.meta ?? source.meta);
+  const pagination = asObject(root.pagination ?? source.pagination ?? meta.pagination);
+
+  const items = toArray(unwrapped).map(mapUser);
 
   const totalCount = Number(
-    source.totalCount ?? source.totalItems ?? source.count ?? source.total ?? items.length
+    source.totalCount ??
+      source.totalItems ??
+      source.count ??
+      source.total ??
+      pagination.totalCount ??
+      pagination.totalItems ??
+      pagination.count ??
+      pagination.total ??
+      items.length
   );
 
-  const responsePageNumber = Number(source.pageNumber ?? source.page ?? pageNumber);
-  const responsePageSize = Number(source.pageSize ?? source.size ?? pageSize);
+  const responsePageNumber = Number(
+    source.pageNumber ?? source.page ?? pagination.pageNumber ?? pagination.page ?? pageNumber
+  );
+  const responsePageSize = Number(
+    source.pageSize ?? source.size ?? pagination.pageSize ?? pagination.size ?? pageSize
+  );
   const totalPages = Number(
     source.totalPages ??
       source.pageCount ??
+      pagination.totalPages ??
+      pagination.pageCount ??
       (responsePageSize > 0 ? Math.max(1, Math.ceil(totalCount / responsePageSize)) : 1)
   );
 
