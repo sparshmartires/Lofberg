@@ -327,19 +327,12 @@ export function SalesTable() {
                     open={editOpen}
                     onOpenChange={setEditOpen}
                     defaultValues={{
-                        //@ts-ignore
-                        firstName: selectedSale.firstName,
-                        //@ts-ignore
-                        lastName: selectedSale.lastName,
+                        fullName: selectedSale.name,
                         email: selectedSale.email,
-                        role: selectedSale.role,
-                        //@ts-ignore
-                        phone: selectedSale.phone || "",
-                        //@ts-ignore
-                        language: selectedSale.language || "",
-                        password: "",
-                        //@ts-ignore
-                        notes: selectedSale.notes || "",
+                        role: selectedSale.role.toLowerCase(),
+                        phone: "",
+                        status: selectedSale.status.toLowerCase(),
+                        notes: "",
                     }}
                 />
             )}
