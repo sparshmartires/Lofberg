@@ -79,10 +79,10 @@ export default function CoverPageSection() {
       </h3>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        <div>
+        <div className="min-w-0">
         <p className="text-sm mb-2">Background image</p>
 
-        <div className="h-[125px] border-2 border-dashed border-[#D8B4F8] rounded-xl p-4 flex flex-col items-center justify-center gap-3">
+        <div className="w-full min-w-0 h-[125px] border-2 border-dashed border-[#D8B4F8] rounded-xl p-4 flex flex-col items-center justify-center gap-3">
           <Upload className="text-[#5B2D91]" />
 
           <p className="text-sm text-[#4E4E4E]">Upload a file or drag and drop</p>
@@ -93,10 +93,10 @@ export default function CoverPageSection() {
         </div>
         </div>
 
-        <div>
+        <div className="min-w-0">
         <p className="text-sm mb-2">Header text</p>
 
-        <div className="h-[125px] w-full rounded-xl border border-border bg-white overflow-hidden flex flex-col">
+        <div className="h-[125px] w-full min-w-0 rounded-xl border border-border bg-white overflow-hidden flex flex-col">
           <div className="flex items-center gap-1 border-b border-border px-2 py-1 bg-white">
             <Button
               type="button"

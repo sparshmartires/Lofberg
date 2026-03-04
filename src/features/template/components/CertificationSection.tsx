@@ -23,7 +23,7 @@ export default function CertificationsSection() {
 
         <textarea
           placeholder="Enter header text"
-          className="w-full h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
 
@@ -47,12 +47,12 @@ export default function CertificationsSection() {
             <div className="grid lg:grid-cols-2 gap-8">
 
               {/* LOGO */}
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm mb-2">
                   Certification logo
                 </p>
 
-                <div className="h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
+                <div className="w-full min-w-0 h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
                   <Upload className="text-[#5B2D91]" />
 
                   <p className="text-sm text-[#4E4E4E]">
@@ -62,12 +62,12 @@ export default function CertificationsSection() {
               </div>
 
               {/* BACKGROUND */}
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm mb-2">
                   Background image
                 </p>
 
-                <div className="h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
+                <div className="w-full min-w-0 h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
                   <Upload className="text-[#5B2D91]" />
 
                   <p className="text-sm text-[#4E4E4E]">
@@ -86,7 +86,7 @@ export default function CertificationsSection() {
 
               <input
                 placeholder="Organic coffee"
-                className="w-full h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
+                className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
               />
             </div>
 
@@ -98,7 +98,7 @@ export default function CertificationsSection() {
 
               <textarea
                 placeholder="Keep placeholders like {Quantity}, for dynamic values"
-                className="w-full h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
               />
             </div>
 

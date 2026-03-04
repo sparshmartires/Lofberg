@@ -13,7 +13,7 @@ export default function UspSection() {
         <p className="text-sm mb-2">Header text</p>
         <textarea
           placeholder="Enter header text"
-          className="w-full h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
 
@@ -21,7 +21,7 @@ export default function UspSection() {
         <p className="text-sm mb-2">Intro text</p>
         <textarea
           placeholder="Enter introduction text"
-          className="w-full h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
 
@@ -35,22 +35,22 @@ export default function UspSection() {
             </p>
 
             <div className="grid lg:grid-cols-2 gap-8">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm mb-2">Section image</p>
 
-                <div className="h-[120px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
+                <div className="w-full min-w-0 h-[120px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
                   <Upload className="text-[#5B2D91]" />
 
                   <p className="text-sm text-[#4E4E4E]">Upload a file or drag and drop</p>
                 </div>
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm mb-2">Section text</p>
 
                 <textarea
                   placeholder="Enter section text"
-                  className="w-full h-[120px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                  className="w-full min-w-0 h-[120px] rounded-xl border border-[#EDEDED] p-3 resize-none"
                 />
               </div>
             </div>

@@ -29,7 +29,7 @@ export default function IncreasingImpactSection() {
 
         <textarea
           placeholder="Enter header text"
-          className="w-full h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
 
@@ -39,12 +39,12 @@ export default function IncreasingImpactSection() {
 
         <textarea
           placeholder="Enter introduction text"
-          className="w-full h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
 
       {/* STEP SECTION HEADER */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between max-[799px]:flex-col max-[799px]:items-start max-[799px]:gap-6">
         <div>
           <p className="text-sm font-medium">
             Report / Receipt template
@@ -56,7 +56,7 @@ export default function IncreasingImpactSection() {
 
         <button
           onClick={addStep}
-          className="flex items-center gap-1 bg-[#4A145F] text-white text-sm px-[20px] py-[10px] rounded-[99px]"
+          className="flex items-center gap-1 bg-[#4A145F] text-white text-sm px-[20px] py-[10px] rounded-[99px] max-[799px]:w-full max-[799px]:justify-center"
         >
           <Plus size={14} /> Add step
         </button>
@@ -82,7 +82,7 @@ export default function IncreasingImpactSection() {
 
               <input
                 placeholder="Eg. Reduce waste"
-                className="w-full h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
+                className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
               />
             </div>
 
@@ -90,10 +90,10 @@ export default function IncreasingImpactSection() {
             <div className="grid lg:grid-cols-2 gap-8">
 
               {/* IMAGE */}
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm mb-2">Section image</p>
 
-                <div className="h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
+                <div className="w-full min-w-0 h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
                   <Upload className="text-[#5B2D91]" />
 
                   <p className="text-sm text-[#4E4E4E]">
@@ -103,12 +103,12 @@ export default function IncreasingImpactSection() {
               </div>
 
               {/* TEXT */}
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm mb-2">Section text</p>
 
                 <textarea
                   placeholder="Enter section text"
-                  className="w-full h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                  className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
                 />
               </div>
 

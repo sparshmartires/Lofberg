@@ -38,28 +38,30 @@ export default function SustainabilitySection({ templateType }: SustainabilitySe
   }, [isReceiptTemplate])
 
   return (
-    <div className="w-full rounded-[28px] border border-[#EDEDED] bg-white p-8 space-y-6 mt-[20px]">
-      <div
-        className={`w-full grid grid-cols-1 sm:grid-cols-2 ${
-          isReceiptTemplate ? "lg:grid-cols-2" : "lg:grid-cols-5"
-        } gap-3 bg-[#F6F1FB] p-[10px] rounded-xl`}
-      >
-        {tabs.map((tab) => (
-          <button
-            key={tab.value}
-            type="button"
-            onClick={() => setActiveTab(tab.value)}
-            className={`w-full px-3 py-2 rounded-md text-sm text-center ${
-              activeTab === tab.value
-                ? "bg-[#4A145F] text-white"
-                : "bg-transparent text-[#1F1F1F]"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+    <div className="w-full rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 space-y-6 mt-[20px] min-w-0">
+      <div className="w-full overflow-x-auto">
+        <div
+          className={`min-w-max flex gap-3 bg-[#F6F1FB] p-[10px] rounded-xl lg:min-w-0 lg:grid ${
+            isReceiptTemplate ? "lg:grid-cols-2" : "lg:grid-cols-5"
+          }`}
+        >
+          {tabs.map((tab) => (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => setActiveTab(tab.value)}
+              className={`shrink-0 min-w-[140px] px-3 py-2 rounded-md text-sm text-center lg:min-w-0 lg:w-full ${
+                activeTab === tab.value
+                  ? "bg-[#4A145F] text-white"
+                  : "bg-transparent text-[#1F1F1F]"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="py-[32px] px-[24px] rounded-[28px] border border-[#EDEDED]">
+      <div className="p-4 sm:p-6 md:py-[32px] md:px-[24px] rounded-[28px] border border-[#EDEDED] min-w-0">
         {activeTab === "cover" && <CoverPageSection />}
         {activeTab === "compiled" && <CompiledReceiptSection />}
         {activeTab === "about" && <AboutSustainabilitySection />}
