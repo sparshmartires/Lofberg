@@ -39,10 +39,14 @@ export default function SustainabilitySection({ templateType }: SustainabilitySe
 
   return (
     <div className="w-full rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 space-y-6 mt-[20px] min-w-0">
-      <div className="w-full overflow-x-auto">
+      <div className={`w-full ${isReceiptTemplate ? "overflow-x-hidden" : "overflow-x-auto"}`}>
         <div
-          className={`min-w-max flex gap-3 bg-[#F6F1FB] p-[10px] rounded-xl lg:min-w-0 lg:grid ${
-            isReceiptTemplate ? "lg:grid-cols-2" : "lg:grid-cols-5"
+          className={`${
+            isReceiptTemplate
+              ? "w-full grid grid-cols-2"
+              : "min-w-max flex lg:min-w-0 lg:grid lg:grid-cols-5"
+          } gap-3 bg-[#F6F1FB] p-[10px] rounded-xl ${
+            isReceiptTemplate ? "lg:grid-cols-2" : ""
           }`}
         >
           {tabs.map((tab) => (
@@ -50,7 +54,9 @@ export default function SustainabilitySection({ templateType }: SustainabilitySe
               key={tab.value}
               type="button"
               onClick={() => setActiveTab(tab.value)}
-              className={`shrink-0 min-w-[140px] px-3 py-2 rounded-md text-sm text-center lg:min-w-0 lg:w-full ${
+              className={`px-3 py-2 rounded-md text-sm text-center whitespace-nowrap lg:min-w-0 lg:w-full ${
+                isReceiptTemplate ? "w-full min-w-0" : "shrink-0 min-w-[140px]"
+              } ${
                 activeTab === tab.value
                   ? "bg-[#4A145F] text-white"
                   : "bg-transparent text-[#1F1F1F]"
