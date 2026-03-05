@@ -10,12 +10,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ChevronUp, ChevronDown } from "lucide-react"
+import { SalesFilterOption } from "@/store/services/salesRepresentativesApi"
 
 interface SalesRepFiltersProps {
   search: string
   segment: string
   region: string
   status: string
+  segmentOptions: SalesFilterOption[]
+  regionOptions: SalesFilterOption[]
   onSearchChange: (value: string) => void
   onSegmentChange: (value: string) => void
   onRegionChange: (value: string) => void
@@ -27,6 +30,8 @@ export function SalesRepFilters({
   segment,
   region,
   status,
+  segmentOptions,
+  regionOptions,
   onSearchChange,
   onSegmentChange,
   onRegionChange,
@@ -62,8 +67,11 @@ export function SalesRepFilters({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All segments</SelectItem>
-              <SelectItem value="retail">Retail</SelectItem>
-              <SelectItem value="horeca">HoReCa</SelectItem>
+              {segmentOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -76,8 +84,11 @@ export function SalesRepFilters({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All regions</SelectItem>
-              <SelectItem value="north">North</SelectItem>
-              <SelectItem value="south">South</SelectItem>
+              {regionOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -123,6 +134,11 @@ export function SalesRepFilters({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Segments</SelectItem>
+                {segmentOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -135,6 +151,11 @@ export function SalesRepFilters({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Region</SelectItem>
+                {regionOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

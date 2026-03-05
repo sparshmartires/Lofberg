@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { Plus } from "lucide-react"
+import { Loader2, Plus } from "lucide-react"
 
 import {
   Dialog,
@@ -20,6 +20,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+export interface DialogSalesRoleOption {
+  id: string
+  name: string
+}
+
 export interface SalesFormValues {
   fullName: string
   email: string
@@ -34,6 +39,9 @@ interface SalesDialogFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   defaultValues?: SalesFormValues
+  roleOptions?: DialogSalesRoleOption[]
+  isSubmitting?: boolean
+  submitError?: string
   onSubmit: (data: SalesFormValues) => void
 }
 
@@ -42,7 +50,7 @@ const EMPTY_VALUES: SalesFormValues = {
   email: "",
   role: "",
   phone: "",
-  status: "",
+  status: "active",
   notes: "",
 }
 
@@ -51,6 +59,9 @@ export function SalesDialogForm({
   open,
   onOpenChange,
   defaultValues,
+  roleOptions = [],
+  isSubmitting = false,
+  submitError,
   onSubmit,
 }: SalesDialogFormProps) {
   const values = defaultValues ?? EMPTY_VALUES
@@ -121,12 +132,13 @@ export function SalesDialogForm({
 
           <div className="grid grid-cols-2 max-[600px]:grid-cols-1 gap-6 [&>*]:min-w-0">
             <div className="space-y-2">
-              <label className="text-body text-foreground">Email</label>
+              <label className="text-body text-foreground">Email *</label>
 
               <Input
                 type="email"
                 placeholder="email@lofberg.se"
                 {...register("email", {
+                  required: "Email is required",
                   pattern: {
                     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     message: "Please enter a valid email address",
@@ -170,9 +182,11 @@ export function SalesDialogForm({
                     </SelectTrigger>
 
                     <SelectContent>
-                      <SelectItem value="salesperson">Salesperson</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
+                      {roleOptions.map((role) => (
+                        <SelectItem key={role.id} value={role.id}>
+                          {role.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -221,7 +235,7 @@ export function SalesDialogForm({
 
             <textarea
               rows={4}
-              placeholder="Internal notes about this sale"
+              placeholder="Internal notes about this sales representative"
               className="
                 w-full
                 rounded-[20px]
@@ -234,6 +248,8 @@ export function SalesDialogForm({
               {...register("notes")}
             />
           </div>
+
+          {submitError ? <p className="text-xs text-red-500">{submitError}</p> : null}
 
           <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
             <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
@@ -248,9 +264,17 @@ export function SalesDialogForm({
             </div>
 
             <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
-              <Button type="submit" variant="primary" className="w-full">
-                <Plus className="h-4 w-4 mr-2" />
-                {isAddMode ? "Create Sale" : "Save Changes"}
+              <Button type="submit" variant="primary" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Plus className="h-4 w-4 mr-2" />
+                )}
+                {isSubmitting
+                  ? "Saving..."
+                  : isAddMode
+                    ? "Create"
+                    : "Save Changes"}
               </Button>
             </div>
           </div>

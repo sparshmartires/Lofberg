@@ -27,12 +27,12 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      // await login({
-      //   email: data.email,
-      //   password: data.password,
-      // }).unwrap()
+      await login({
+        email: data.email,
+        password: data.password,
+      }).unwrap()
       
-document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
+//document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
       // Navigate on success
       router.push("/users")
     } catch (err: any) {
