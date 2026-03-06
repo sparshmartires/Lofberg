@@ -5,8 +5,8 @@ import { Plus } from "lucide-react"
 type PageHeaderWithActionProps = {
   title: string
   description: string
-  actionLabel: string
-  onActionClick: () => void
+  actionLabel?: string
+  onActionClick?: () => void
   className?: string
 }
 
@@ -34,14 +34,16 @@ export function PageHeaderWithAction({
         </p>
       </div>
 
-      <Button
-        variant="primary"
-        onClick={onActionClick}
-        className="page-header-with-action-button"
-      >
-        <Plus className="page-header-with-action-icon" />
-        {actionLabel}
-      </Button>
+      {actionLabel && onActionClick ? (
+        <Button
+          variant="primary"
+          onClick={onActionClick}
+          className="page-header-with-action-button"
+        >
+          <Plus className="page-header-with-action-icon" />
+          {actionLabel}
+        </Button>
+      ) : null}
     </div>
   )
 }

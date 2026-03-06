@@ -18,7 +18,7 @@ export default function AppSidebar() {
     const menuItems = [
         { label: "Dashboard", href: "/dashboard" },
         { label: "Generate Report/Receipt", href: "/template" },
-        { label: "Historical reports", href: "#" },
+        { label: "Historical reports", href: "/historical-reports" },
         { label: "Customer Management", href: "/customers" },
         { label: "Sales Representative", href: "/sales" },
         { label: "User Management", href: "/users" },
