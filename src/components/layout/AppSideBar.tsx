@@ -24,7 +24,7 @@ export default function AppSidebar() {
         { label: "User Management", href: "/users" },
         { label: "Report receipt template", href: "#" },
         { label: "Useful resources", href: "#" },
-        { label: "Conversion logic", href: "#" },
+        { label: "Conversion logic", href: "/conversion-logic" },
     ]
 
     return (
