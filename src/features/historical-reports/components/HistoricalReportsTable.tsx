@@ -137,43 +137,52 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
         </Table>
       </div>
 
-      <div className="users-list-mobile">
-        {reports.map((report) => (
-          <div key={report.id} className="user-mobile-card">
-            <div className="user-mobile-header">
-              <div>
-                <div className="user-mobile-name">{report.title}</div>
-                <div className="user-mobile-label">{report.id}</div>
-              </div>
-              <Badge className={`${getStatusClass(report.status)} rounded-full px-4 py-1 text-xs`}>
-                {report.status}
-              </Badge>
-            </div>
+ <div className="users-list-mobile">
+  {reports.map((report) => (
+    <div key={report.id} className="user-mobile-card">
 
-            <div className="user-mobile-divider" />
+      {/* HEADER */}
+      <div className="flex items-center justify-between">
+        <div className="text-[14px] text-[#1F1F1F]">
+          Report title/ID : <span className="text-[#4E4E4E]">{report.id}</span>
+        </div>
 
-            <div className="user-mobile-stacked">
-              <span className="user-mobile-label">Customer : {report.customerName}</span>
-            </div>
-
-            <div className="user-mobile-stacked">
-              <span className="user-mobile-label">Sales representative : {report.salesRepresentative}</span>
-            </div>
-
-            <div className="user-mobile-stacked">
-              <span className="user-mobile-label">Report date : {formatDate(report.reportDate)}</span>
-            </div>
-
-            <div className="user-mobile-divider" />
-
-            <div className="user-mobile-actions">
-              <button onClick={() => handleDownload(report)} className="mobile-edit">
-                Download <Download className="h-3 w-3 inline ml-1" />
-              </button>
-            </div>
-          </div>
-        ))}
+        <Badge className={`${getStatusClass(report.status)} rounded-full px-4 py-1 text-xs`}>
+          {report.status}
+        </Badge>
       </div>
+
+      <div className="user-mobile-divider" />
+
+      {/* CUSTOMER */}
+      <div className="text-[14px] text-[#4E4E4E]">
+        Customer name : {report.customerName}
+      </div>
+
+      {/* SALES REP */}
+      <div className="text-[14px] text-[#4E4E4E]">
+        Sales representative: {report.salesRepresentative}
+      </div>
+
+      {/* DATE */}
+      <div className="text-[14px] text-[#4E4E4E]">
+        Report date : {formatDate(report.reportDate)}
+      </div>
+
+      {/* ACTION */}
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={() => handleDownload(report)}
+          className="flex items-center gap-2 text-[#5B2D91] text-[14px]"
+        >
+          Save
+          <Download className="h-4 w-4" />
+        </button>
+      </div>
+
+    </div>
+  ))}
+</div>
     </div>
   )
 }

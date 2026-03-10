@@ -23,7 +23,7 @@ export default function AppSidebar() {
         { label: "Sales Representative", href: "/sales" },
         { label: "User Management", href: "/users" },
         { label: "Report receipt template", href: "#" },
-        { label: "Useful resources", href: "#" },
+        { label: "Useful resources", href: "/useful-resources" },
         { label: "Conversion logic", href: "/conversion-logic" },
     ]
 

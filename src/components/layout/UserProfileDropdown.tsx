@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown, User } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 interface UserProfileDropdownProps {
   currentRole?: string
@@ -21,6 +22,8 @@ export function UserProfileDropdown({
   onRoleChange,
   onLogout,
 }: UserProfileDropdownProps) {
+  const router = useRouter()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -55,7 +58,10 @@ export function UserProfileDropdown({
         )}
       >
         {/* My Profile */}
-        <DropdownMenuItem className="text-sm cursor-pointer">
+        <DropdownMenuItem
+          className="text-sm cursor-pointer"
+          onClick={() => router.push("/profile")}
+        >
           My Profile
         </DropdownMenuItem>
 
