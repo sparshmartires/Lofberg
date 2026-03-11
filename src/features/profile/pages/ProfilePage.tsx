@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Loader2, Save } from "lucide-react"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { useGetMeQuery, useUpdateMeMutation } from "@/store/services/authApi"
+import { ChangePasswordDialog } from "@/features/profile/components/ChangePasswordDialog"
 
 const formatDateTime = (value: string) => {
   if (!value) return "-"
@@ -45,6 +46,7 @@ export default function MyProfilePage() {
   const [touched, setTouched] = useState({ firstName: false, lastName: false, phoneNumber: false })
   const [saveError, setSaveError] = useState("")
   const [saveSuccess, setSaveSuccess] = useState("")
+  const [changePasswordDialogOpen, setChangePasswordDialogOpen] = useState(false)
 
   const firstName = touched.firstName ? draft.firstName : profile?.firstName || ""
   const lastName = touched.lastName ? draft.lastName : profile?.lastName || ""
@@ -251,13 +253,22 @@ export default function MyProfilePage() {
             Update your password to keep your account secure
           </p>
 
-          <Button variant="outlineBrand">
+          <Button 
+            variant="outlineBrand"
+            onClick={() => setChangePasswordDialogOpen(true)}
+          >
             Change password
           </Button>
 
         </div>
 
       </div>
+
+      {/* CHANGE PASSWORD DIALOG */}
+      <ChangePasswordDialog
+        open={changePasswordDialogOpen}
+        onOpenChange={setChangePasswordDialogOpen}
+      />
 
     </div>
   )

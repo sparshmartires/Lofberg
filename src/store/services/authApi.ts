@@ -67,6 +67,15 @@ export interface UpdateMeRequest {
   profileImageUrl?: string | null;
 }
 
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  message: string;
+}
+
 type ApiObject = Record<string, unknown>;
 
 const asObject = (value: unknown): ApiObject =>
@@ -372,6 +381,15 @@ export const authApi = createApi({
         }
       },
     }),
+
+    changePassword: builder.mutation<ChangePasswordResponse, ChangePasswordRequest>({
+      query: (body) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body,
+      }),
+      transformResponse: (response: unknown) => normalizeMessageResponse(response),
+    }),
   }),
 });
 
@@ -384,4 +402,5 @@ export const {
   useLogoutMutation,
   useGetMeQuery,
   useUpdateMeMutation,
+  useChangePasswordMutation,
 } = authApi;
