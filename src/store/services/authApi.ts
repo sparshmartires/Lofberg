@@ -46,6 +46,27 @@ export interface ResetPasswordResponse {
   message: string;
 }
 
+export interface MeResponse {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  roles: string[];
+  preferredLanguageId: string | null;
+  phoneNumber: string;
+  avatarUrl: string;
+  isActive: boolean;
+  lastLoginAt: string;
+}
+
+export interface UpdateMeRequest {
+  firstName?: string | null;
+  lastName?: string | null;
+  phoneNumber?: string | null;
+  profileImageUrl?: string | null;
+}
+
 type ApiObject = Record<string, unknown>;
 
 const asObject = (value: unknown): ApiObject =>
@@ -138,10 +159,69 @@ const normalizeVerifyCodeResponse = (payload: unknown): VerifyCodeResponse => {
   };
 };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://ascribable-goatishly-curtis.ngrok-free.dev";
+const normalizeMeResponse = (payload: unknown): MeResponse => {
+  const root = asObject(payload);
+  const data = asObject(unwrapPayload(payload));
+  const userSource = asObject(data.user ?? data.profile ?? data.account ?? data);
+
+  const firstName = String(userSource.firstName ?? userSource.firstname ?? "").trim();
+  const lastName = String(userSource.lastName ?? userSource.lastname ?? "").trim();
+  const fullNameSource = String(userSource.fullName ?? userSource.name ?? "").trim();
+  const [fallbackFirstName, ...restNames] = fullNameSource.split(" ").filter(Boolean);
+
+  const rolesSource = userSource.roles ?? userSource.roleNames ?? userSource.permissions ?? [];
+  const roles = Array.isArray(rolesSource)
+    ? rolesSource.map((role) => String(role)).filter(Boolean)
+    : typeof rolesSource === "string"
+      ? [rolesSource]
+      : [];
+
+  const normalizedFirstName = firstName || fallbackFirstName || "";
+  const normalizedLastName = lastName || restNames.join(" ").trim();
+
+  return {
+    id: String(userSource.id ?? userSource.userId ?? root.id ?? ""),
+    email: String(userSource.email ?? userSource.userEmail ?? root.email ?? ""),
+    firstName: normalizedFirstName,
+    lastName: normalizedLastName,
+    fullName:
+      fullNameSource ||
+      `${normalizedFirstName} ${normalizedLastName}`.trim() ||
+      String(userSource.email ?? root.email ?? ""),
+    roles,
+    preferredLanguageId:
+      (userSource.preferredLanguageId ?? userSource.languageId ?? null) as string | null,
+    phoneNumber: String(userSource.phoneNumber ?? userSource.phone ?? root.phoneNumber ?? ""),
+    avatarUrl: String(
+      userSource.avatarUrl ??
+        userSource.profileImageUrl ??
+        userSource.imageUrl ??
+        userSource.photoUrl ??
+        ""
+    ),
+    isActive: Boolean(userSource.isActive ?? userSource.active ?? true),
+    lastLoginAt: String(userSource.lastLoginAt ?? userSource.lastLogin ?? root.lastLoginAt ?? ""),
+  };
+};
+
+const FALLBACK_API_BASE_URL = "https://ascribable-goatishly-curtis.ngrok-free.dev";
+
+const normalizeApiBaseUrl = (value: string | undefined): string => {
+  const raw = (value || "").trim();
+  const candidate = raw || FALLBACK_API_BASE_URL;
+
+  if (candidate.startsWith("http://") || candidate.startsWith("https://")) {
+    return candidate.replace(/\/+$/, "");
+  }
+
+  return `https://${candidate.replace(/^\/+/, "").replace(/\/+$/, "")}`;
+};
+
+const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
 export const authApi = createApi({
   reducerPath: "authApi",
+  tagTypes: ["Me"],
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
     prepareHeaders: (headers) => {
@@ -236,6 +316,62 @@ export const authApi = createApi({
         }
       },
     }),
+
+    getMe: builder.query<MeResponse, void>({
+      query: () => ({
+        url: "/auth/me",
+        method: "GET",
+      }),
+      providesTags: ["Me"],
+      transformResponse: (response: unknown) => normalizeMeResponse(response),
+      async onQueryStarted(_arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const cachedUser = {
+            id: data.id,
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            roles: data.roles,
+            preferredLanguageId: data.preferredLanguageId,
+          };
+          if (typeof window !== "undefined") {
+            localStorage.setItem("user", JSON.stringify(cachedUser));
+          }
+        } catch {
+          // Error handling is done in the component
+        }
+      },
+    }),
+
+    updateMe: builder.mutation<MeResponse, UpdateMeRequest>({
+      query: (body) => ({
+        url: "/auth/me",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Me"],
+      transformResponse: (response: unknown) => normalizeMeResponse(response),
+      async onQueryStarted(_arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const cachedUser = {
+            id: data.id,
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            roles: data.roles,
+            preferredLanguageId: data.preferredLanguageId,
+          };
+
+          if (typeof window !== "undefined") {
+            localStorage.setItem("user", JSON.stringify(cachedUser));
+          }
+        } catch {
+          // Error handling is done in the component
+        }
+      },
+    }),
   }),
 });
 
@@ -246,4 +382,6 @@ export const {
   useResetPasswordMutation,
   useResendCodeMutation,
   useLogoutMutation,
+  useGetMeQuery,
+  useUpdateMeMutation,
 } = authApi;
