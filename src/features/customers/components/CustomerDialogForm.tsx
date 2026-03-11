@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Plus, Save, Upload } from "lucide-react"
+import Image from "next/image"
 
 export interface CustomerFormValues {
   customerName: string
@@ -34,7 +35,11 @@ interface CustomerDialogFormProps {
   control: Control<CustomerFormValues>
   register: UseFormRegister<CustomerFormValues>
   errors: FieldErrors<CustomerFormValues>
+  segmentOptions: Array<{ id: string; name: string }>
+  regionOptions: Array<{ id: string; name: string }>
   logoPreview?: string | null
+  submitError?: string
+  isSubmitting?: boolean
   onCancel: () => void
 }
 
@@ -46,19 +51,18 @@ export function CustomerDialogForm({
   control,
   register,
   errors,
+  segmentOptions,
+  regionOptions,
   logoPreview,
+  submitError,
+  isSubmitting = false,
   onCancel,
 }: CustomerDialogFormProps) {
   return (
     <div className="space-y-8 mt-6">
-      {/* ========================= */}
-      {/* CUSTOMER INFORMATION */}
-      {/* ========================= */}
-
       <div className="space-y-6">
         <h3 className="text-lg font-medium">Customer Information</h3>
 
-        {/* Customer Name */}
         <div className="space-y-2">
           <label>Customer Name *</label>
           <Input
@@ -74,7 +78,6 @@ export function CustomerDialogForm({
         </div>
 
         <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
-          {/* Account Code */}
           <div className="space-y-2">
             <label>Account Code / ERP ID</label>
             <Input
@@ -84,7 +87,6 @@ export function CustomerDialogForm({
             />
           </div>
 
-          {/* Industry */}
           <div className="space-y-2">
             <label>Industry / Segment</label>
             <Controller
@@ -96,16 +98,17 @@ export function CustomerDialogForm({
                     <SelectValue placeholder="Select segment" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="retail">Retail</SelectItem>
-                    <SelectItem value="horeca">HoReCa</SelectItem>
-                    <SelectItem value="corporate">Corporate</SelectItem>
+                    {segmentOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>
+                        {option.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
             />
           </div>
 
-          {/* Service Tier */}
           <div className="space-y-2">
             <label>Service Tier</label>
             <Controller
@@ -117,16 +120,14 @@ export function CustomerDialogForm({
                     <SelectValue placeholder="Select tier" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="A">Type A</SelectItem>
-                    <SelectItem value="B">Type B</SelectItem>
-                    <SelectItem value="C">Type C</SelectItem>
+                    <SelectItem value="1">Type A</SelectItem>
+                    <SelectItem value="2">Type B</SelectItem>
                   </SelectContent>
                 </Select>
               )}
             />
           </div>
 
-          {/* Region */}
           <div className="space-y-2">
             <label>Region</label>
             <Controller
@@ -138,10 +139,11 @@ export function CustomerDialogForm({
                     <SelectValue placeholder="Select region" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="north">North</SelectItem>
-                    <SelectItem value="south">South</SelectItem>
-                    <SelectItem value="east">East</SelectItem>
-                    <SelectItem value="west">West</SelectItem>
+                    {regionOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>
+                        {option.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -149,7 +151,6 @@ export function CustomerDialogForm({
           </div>
         </div>
 
-        {/* Subcustomer */}
         <div className="flex items-center space-x-2">
           <Controller
             name="isSubCustomer"
@@ -164,10 +165,6 @@ export function CustomerDialogForm({
           <label>Enable as subcustomer</label>
         </div>
       </div>
-
-      {/* ========================= */}
-      {/* CONTACT INFO */}
-      {/* ========================= */}
 
       <div className="space-y-6">
         <h3 className="text-lg font-medium">Contact Information</h3>
@@ -222,10 +219,6 @@ export function CustomerDialogForm({
         </div>
       </div>
 
-      {/* ========================= */}
-      {/* ADMIN CONTROLS */}
-      {/* ========================= */}
-
       <div className="space-y-6">
         <h3 className="text-lg font-medium">Admin controls / Metadata</h3>
 
@@ -262,10 +255,6 @@ export function CustomerDialogForm({
           />
         </div>
 
-        {/* ========================= */}
-        {/* CUSTOMER LOGO */}
-        {/* ========================= */}
-
         <div className="space-y-4">
           <div>
             <h3 className="text-lg font-medium text-[#1F1F1F]">
@@ -288,10 +277,13 @@ export function CustomerDialogForm({
 
                 <div className="flex flex-col items-center justify-center text-center px-6 py-12 rounded-[28px] border-2 border-dashed border-[#D9C2F3] bg-[#FAF7FF] transition-colors hover:bg-[#F5EDFF]">
                   {logoPreview ? (
-                    <img
+                    <Image
                       src={logoPreview}
                       alt="Logo Preview"
-                      className="h-20 object-contain mb-4"
+                      width={160}
+                      height={80}
+                      className="h-20 w-auto object-contain mb-4"
+                      unoptimized
                     />
                   ) : (
                     <>
@@ -313,13 +305,17 @@ export function CustomerDialogForm({
         </div>
       </div>
 
-      {/* ACTIONS */}
+      {submitError ? (
+        <p className="text-sm text-destructive">{submitError}</p>
+      ) : null}
+
       <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
         <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
           <Button
             type="button"
             variant="outlineBrand"
             onClick={onCancel}
+            disabled={isSubmitting}
             className="w-full px-[20px] py-[10px]"
           >
             Cancel
@@ -330,9 +326,12 @@ export function CustomerDialogForm({
           <Button
             type="submit"
             variant="primary"
+            disabled={isSubmitting}
             className="w-full px-[20px] py-[10px]"
           >
-            {mode === "add" ? (
+            {isSubmitting ? (
+              mode === "add" ? "Adding..." : "Saving..."
+            ) : mode === "add" ? (
               <>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Customer

@@ -14,59 +14,68 @@ import Image from "next/image"
 import { useState } from "react"
 import { EditCustomerDialog } from "./EditCustomerPage"
 import { CustomerHistoryDialog } from "./CustomerHistoryDialog"
+import { CustomerItem } from "@/store/services/customersApi"
 
-interface Customer {
-  id: number
+interface CustomerRow {
+  id: string
   name: string
   segment: string
   serviceTier: string
-  lastReportDate: string
+  lastReportDate: string | null
   status: "Active" | "Inactive"
   avatar: string
 }
 
-const customers: Customer[] = [
-  {
-    id: 1,
-    name: "Karin Bergström",
-    segment: "Hotel",
-    serviceTier: "Type A",
-    lastReportDate: "02/02/2026",
-    status: "Active",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: 2,
-    name: "Cecilia Holm",
-    segment: "Retail chain",
-    serviceTier: "Type A",
-    lastReportDate: "02/02/2026",
-    status: "Active",
-    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-  },
-  {
-    id: 3,
-    name: "Anna Svensson",
-    segment: "Arena",
-    serviceTier: "Type A",
-    lastReportDate: "01/27/2025",
-    status: "Inactive",
-    avatar: "https://randomuser.me/api/portraits/women/21.jpg",
-  },
-]
+interface CustomersTableProps {
+  customers: CustomerItem[]
+}
 
-export function CustomersTable() {
+const getServiceTierLabel = (serviceTier: number | null) => {
+  if (serviceTier === 1) return "Type A"
+  if (serviceTier === 2) return "Type B"
+  return "-"
+}
+
+const formatDate = (value: string | null) => {
+  if (!value) return "-"
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    return "-"
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  }).format(date)
+}
+
+const mapCustomerForView = (customer: CustomerItem): CustomerRow => ({
+  id: customer.id,
+  name: customer.name || "-",
+  segment: customer.segmentName || "-",
+  serviceTier: getServiceTierLabel(customer.serviceTier),
+  lastReportDate: formatDate(customer.lastReportDate),
+  status: customer.isActive ? "Active" : "Inactive",
+  avatar:
+    customer.logoUrl ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(customer.name || "Customer")}&background=F2F2F2&color=6B6B6B`,
+})
+
+export function CustomersTable({ customers }: CustomersTableProps) {
   const [editOpen, setEditOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
-  const [selectedCustomer, setSelectedCustomer] =
-    useState<Customer | null>(null)
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerRow | null>(null)
 
-  const handleEdit = (customer: Customer) => {
+  const customerRows = customers.map(mapCustomerForView)
+
+  const handleEdit = (customer: CustomerRow) => {
     setSelectedCustomer(customer)
     setEditOpen(true)
   }
 
-  const handleHistory = (customer: Customer) => {
+  const handleHistory = (customer: CustomerRow) => {
     setSelectedCustomer(customer)
     setHistoryOpen(true)
   }
@@ -110,7 +119,7 @@ export function CustomersTable() {
 
           {/* BODY */}
           <TableBody>
-            {customers.map((customer) => (
+            {customerRows.map((customer) => (
               <TableRow
                 key={customer.id}
                 className="table-body-row"
@@ -195,7 +204,7 @@ export function CustomersTable() {
         </div>
       </div>
 <div className="customers-mobile">
-  {customers.map((customer) => (
+  {customerRows.map((customer) => (
     <div key={customer.id} className="customer-card">
 
       {/* Top Row */}
@@ -267,9 +276,7 @@ export function CustomersTable() {
         <EditCustomerDialog
           open={editOpen}
           onOpenChange={setEditOpen}
-          //@ts-ignore
-          customer={selectedCustomer}
-          onCustomerUpdated={() => { }}
+          customerId={selectedCustomer.id}
         />
       )}
 

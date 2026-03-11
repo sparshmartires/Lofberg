@@ -3,6 +3,7 @@ import { exampleApi } from "./services/exampleApi";
 import { authApi } from "./services/authApi";
 import { usersApi } from "./services/usersApi";
 import { salesRepresentativesApi } from "./services/salesRepresentativesApi";
+import { customersApi } from "./services/customersApi";
 import authReducer from "./slices/authSlice";
 
 
@@ -12,6 +13,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [salesRepresentativesApi.reducerPath]: salesRepresentativesApi.reducer,
+    [customersApi.reducerPath]: customersApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -19,7 +21,8 @@ export const store = configureStore({
       exampleApi.middleware,
       authApi.middleware,
       usersApi.middleware,
-      salesRepresentativesApi.middleware
+      salesRepresentativesApi.middleware,
+      customersApi.middleware
     ),
 });
 

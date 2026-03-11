@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
         hostname: "ui-avatars.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "stlofbergdev0426.blob.core.windows.net",
+        pathname: "/**",
+      },
     ],
   },
 

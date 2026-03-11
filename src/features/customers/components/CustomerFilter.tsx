@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -10,10 +9,36 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function CustomerFilters() {
-  const [segment, setSegment] = React.useState("")
-  const [region, setRegion] = React.useState("")
-  const [status, setStatus] = React.useState("")
+interface FilterOption {
+  id: string
+  name: string
+}
+
+interface CustomerFiltersProps {
+  search: string
+  segment: string
+  region: string
+  status: string
+  segmentOptions: FilterOption[]
+  regionOptions: FilterOption[]
+  onSearchChange: (value: string) => void
+  onSegmentChange: (value: string) => void
+  onRegionChange: (value: string) => void
+  onStatusChange: (value: string) => void
+}
+
+export function CustomerFilters({
+  search,
+  segment,
+  region,
+  status,
+  segmentOptions,
+  regionOptions,
+  onSearchChange,
+  onSegmentChange,
+  onRegionChange,
+  onStatusChange,
+}: CustomerFiltersProps) {
 
   return (
     <div className="w-full max-w-[1360px] mx-auto">
@@ -36,6 +61,8 @@ export function CustomerFilters() {
             </label>
 
             <Input
+              value={search}
+              onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by name or code"
               className="
                 !h-[44px]
@@ -55,7 +82,7 @@ export function CustomerFilters() {
               Segment
             </label>
 
-            <Select value={segment} onValueChange={setSegment}>
+            <Select value={segment} onValueChange={onSegmentChange}>
               <SelectTrigger
                 className="
                   !h-[44px]
@@ -71,8 +98,12 @@ export function CustomerFilters() {
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="hotel">Hotel</SelectItem>
-                <SelectItem value="restaurant">Restaurant</SelectItem>
+                <SelectItem value="all">All Segments</SelectItem>
+                {segmentOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -83,7 +114,7 @@ export function CustomerFilters() {
               Region
             </label>
 
-            <Select value={region} onValueChange={setRegion}>
+            <Select value={region} onValueChange={onRegionChange}>
               <SelectTrigger
                 className="
                   !h-[44px]
@@ -99,8 +130,12 @@ export function CustomerFilters() {
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="north">North</SelectItem>
-                <SelectItem value="south">South</SelectItem>
+                <SelectItem value="all">All Region</SelectItem>
+                {regionOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -111,7 +146,7 @@ export function CustomerFilters() {
               Status
             </label>
 
-            <Select value={status} onValueChange={setStatus}>
+            <Select value={status} onValueChange={onStatusChange}>
               <SelectTrigger
                 className="
                   !h-[44px]
@@ -127,6 +162,7 @@ export function CustomerFilters() {
               </SelectTrigger>
 
               <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>

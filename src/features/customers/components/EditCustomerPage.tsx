@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -8,47 +8,57 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { CustomerDialogForm, CustomerFormValues } from "./CustomerDialogForm"
-
-interface Customer {
-  id: string
-  customerName: string
-  accountCode: string
-  industry: string
-  serviceTier: string
-  region: string
-  isSubCustomer: boolean
-  contactPerson: string
-  contactEmail: string
-  contactPhone: string
-  address: string
-  status: string
-  notes: string
-  logoUrl?: string
-}
+import {
+  useGetCustomerByIdQuery,
+  useGetCustomerRegionsQuery,
+  useGetCustomerSegmentsQuery,
+  useUpdateCustomerMutation,
+  useUploadCustomerLogoMutation,
+} from "@/store/services/customersApi"
 
 interface EditCustomerDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  customer: Customer | null
-  onCustomerUpdated: (updated: Customer) => void
+  customerId: string
 }
+
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 export function EditCustomerDialog({
   open,
   onOpenChange,
-  customer,
-  onCustomerUpdated,
+  customerId,
 }: EditCustomerDialogProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState("")
+
+  const [updateCustomer, { isLoading: isUpdating }] = useUpdateCustomerMutation()
+  const [uploadCustomerLogo] = useUploadCustomerLogoMutation()
+  const { data: segmentOptions = [] } = useGetCustomerSegmentsQuery()
+  const { data: regionOptions = [] } = useGetCustomerRegionsQuery()
+  const hasValidCustomerId = UUID_REGEX.test(customerId)
+  const { data: customer } = useGetCustomerByIdQuery(
+    { id: customerId, includeHierarchy: true },
+    {
+      skip: !open || !hasValidCustomerId,
+      refetchOnMountOrArgChange: true,
+    }
+  )
+
+  const serviceTierDefaultValue = useMemo(() => {
+    if (customer?.serviceTier === 1) return "1"
+    if (customer?.serviceTier === 2) return "2"
+    return ""
+  }, [customer?.serviceTier])
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    watch,
     formState: { errors },
   } = useForm<CustomerFormValues>({
     defaultValues: {
@@ -58,28 +68,56 @@ export function EditCustomerDialog({
     },
   })
 
+  const handleDialogOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setLogoPreview(null)
+      setSubmitError("")
+    }
+
+    onOpenChange(nextOpen)
+  }
+
   useEffect(() => {
-    if (customer) {
+    if (!open || !customerId) return
+
+    reset({
+      customerName: "",
+      accountCode: "",
+      industry: "",
+      serviceTier: "",
+      region: "",
+      isSubCustomer: false,
+      contactPerson: "",
+      contactEmail: "",
+      contactPhone: "",
+      address: "",
+      status: "active",
+      notes: "",
+      logo: null,
+    })
+  }, [customerId, open, reset])
+
+  useEffect(() => {
+    if (!customer || customer.id !== customerId) return
+
       reset({
-        customerName: customer.customerName,
-        accountCode: customer.accountCode,
-        industry: customer.industry,
-        serviceTier: customer.serviceTier,
-        region: customer.region,
+        customerName: customer.name || "",
+        accountCode: customer.accountCode || "",
+        industry: customer.segmentId || "",
+        serviceTier: serviceTierDefaultValue,
+        region: customer.regionId || "",
         isSubCustomer: customer.isSubCustomer,
-        contactPerson: customer.contactPerson,
-        contactEmail: customer.contactEmail,
-        contactPhone: customer.contactPhone,
-        address: customer.address,
-        status: customer.status,
-        notes: customer.notes,
+        contactPerson: customer.contactName || "",
+        contactEmail: customer.contactEmail || "",
+        contactPhone: customer.contactPhone || "",
+        address: customer.address || "",
+        status: customer.isActive ? "active" : "inactive",
+        notes: customer.notes || "",
         logo: null,
       })
-      setLogoPreview(customer.logoUrl || null)
-    }
-  }, [customer, reset])
+  }, [customer, customerId, reset, serviceTierDefaultValue])
 
-  const logoFile = watch("logo")
+  const logoFile = useWatch({ control, name: "logo" })
 
   useEffect(() => {
     if (logoFile && logoFile.length > 0) {
@@ -92,24 +130,71 @@ export function EditCustomerDialog({
     }
   }, [logoFile])
 
-  const onSubmit = (data: CustomerFormValues) => {
-    const { logo, ...rest } = data
+  const getApiErrorMessage = (error: unknown) => {
+    if (typeof error === "object" && error !== null) {
+      const errorObj = error as { data?: unknown; error?: string }
 
-    const updatedCustomer = {
-      ...customer,
-      ...rest,
+      if (typeof errorObj.error === "string" && errorObj.error.trim()) {
+        return errorObj.error
+      }
+
+      if (typeof errorObj.data === "string" && errorObj.data.trim()) {
+        return errorObj.data
+      }
+
+      if (typeof errorObj.data === "object" && errorObj.data !== null) {
+        const dataObj = errorObj.data as Record<string, unknown>
+        const possibleMessage = dataObj.error ?? dataObj.message ?? dataObj.title ?? dataObj.detail
+
+        if (typeof possibleMessage === "string" && possibleMessage.trim()) {
+          return possibleMessage
+        }
+      }
     }
 
-    console.log("Customer Updated:", updatedCustomer)
-    //@ts-expect-error -- customer is confirmed non-null, spread merges types
-    onCustomerUpdated(updatedCustomer)
-    onOpenChange(false)
+    return "Request failed. Please try again."
   }
 
-  if (!customer) return null
+  const onSubmit = async (data: CustomerFormValues) => {
+    if (!hasValidCustomerId || !customer || customer.id !== customerId) return
+
+    setSubmitError("")
+
+    try {
+      await updateCustomer({
+        id: customer.id,
+        body: {
+          name: data.customerName,
+          accountCode: data.accountCode || null,
+          segmentId: data.industry,
+          serviceTier: Number(data.serviceTier),
+          regionId: data.region,
+          isSubCustomer: data.isSubCustomer,
+          parentCustomerId: customer.parentCustomerId || null,
+          contactName: data.contactPerson || null,
+          contactEmail: data.contactEmail || null,
+          contactPhone: data.contactPhone || null,
+          address: data.address || null,
+          isActive: data.status === "active",
+          notes: data.notes || null,
+        },
+      }).unwrap()
+
+      const logoFile = data.logo?.[0]
+      if (logoFile) {
+        await uploadCustomerLogo({ id: customer.id, file: logoFile }).unwrap()
+      }
+
+      onOpenChange(false)
+    } catch (error) {
+      setSubmitError(getApiErrorMessage(error))
+    }
+  }
+
+  if (!customerId || !hasValidCustomerId) return null
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent
         showCloseButton={false}
         className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-h-[calc(100vh-2rem)] overflow-y-auto max-[600px]:p-8"
@@ -129,8 +214,16 @@ export function EditCustomerDialog({
             control={control}
             register={register}
             errors={errors}
-            logoPreview={logoPreview}
-            onCancel={() => onOpenChange(false)}
+            segmentOptions={segmentOptions}
+            regionOptions={regionOptions}
+            logoPreview={
+              logoFile && logoFile.length > 0
+                ? logoPreview
+                : customer?.logoUrl || null
+            }
+            submitError={submitError}
+            isSubmitting={isUpdating}
+            onCancel={() => handleDialogOpenChange(false)}
           />
         </form>
       </DialogContent>
