@@ -11,6 +11,8 @@ export interface CoverPageContent {
 export interface AboutSustainabilityContent {
   headerText: string
   introText: string
+  intro_hero_image?: string   // Banner image URL
+  intro_circle_image?: string // Graph/chart image URL
 }
 
 /** LofbergsUSPs (PageType 3) */
