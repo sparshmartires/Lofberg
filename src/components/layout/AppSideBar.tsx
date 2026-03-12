@@ -17,12 +17,12 @@ export default function AppSidebar() {
 
     const menuItems = [
         { label: "Dashboard", href: "/dashboard" },
-        { label: "Generate Report/Receipt", href: "/template" },
+        { label: "Generate Report/Receipt", href: "/report-generation" },
         { label: "Historical reports", href: "/historical-reports" },
         { label: "Customer Management", href: "/customers" },
         { label: "Sales Representative", href: "/sales" },
         { label: "User Management", href: "/users" },
-        { label: "Report receipt template", href: "#" },
+        { label: "Report receipt template", href: "/template" },
         { label: "Useful resources", href: "/useful-resources" },
         { label: "Conversion logic", href: "/conversion-logic" },
     ]

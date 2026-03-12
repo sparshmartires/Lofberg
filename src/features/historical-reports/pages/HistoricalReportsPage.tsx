@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import { AppPagination } from "@/components/ui/app-pagination"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
@@ -86,6 +87,7 @@ const mockReports: HistoricalReportItem[] = [
 ]
 
 export function HistoricalReportsPage() {
+  const router = useRouter()
   const [search, setSearch] = useState("")
   const [customer, setCustomer] = useState("all")
   const [salesRepresentative, setSalesRepresentative] = useState("all")
@@ -174,11 +176,17 @@ export function HistoricalReportsPage() {
     setPageNumber(1)
   }
 
+  const handleGenerateReport = () => {
+    router.push("/report-generation")
+  }
+
   return (
     <div className="min-h-screen bg-background py-10">
       <PageHeaderWithAction
         title="Historical reports"
         description="Review and download previously generated reports"
+        actionLabel="Generate report"
+        onActionClick={handleGenerateReport}
       />
 
       <HistoricalReportsFilters

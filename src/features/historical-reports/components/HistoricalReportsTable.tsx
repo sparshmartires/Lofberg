@@ -9,7 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Download } from "lucide-react"
+import { Download, Pencil } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export interface HistoricalReportItem {
   id: string
@@ -45,6 +46,8 @@ const getStatusClass = (status: HistoricalReportItem["status"]) => {
 }
 
 export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps) {
+  const router = useRouter()
+
   const columnWidths = {
     title: "w-[220px]",
     customer: "w-[180px]",
@@ -122,6 +125,15 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
 
                 <TableCell className={columnWidths.actions} data-label="Actions">
                   <div className="table-actions-wrap">
+                    {report.status === "Draft" && (
+                      <button
+                        onClick={() => router.push(`/report-generation?draftId=${report.id}`)}
+                        className="table-action-btn"
+                        aria-label={`Continue editing ${report.title}`}
+                      >
+                        <Pencil className="table-action-icon" />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDownload(report)}
                       className="table-action-btn"
