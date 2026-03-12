@@ -202,7 +202,7 @@ export const reportsApi = createApi({
       ],
     }),
 
-    generateReport: builder.mutation<{ reportId: string }, GenerateReportRequest>({
+    generateReport: builder.mutation<{ reportId: string; generatedFileUrl: string | null }, GenerateReportRequest>({
       query: (body) => ({
         url: "/reports/generate",
         method: "POST",
@@ -210,7 +210,10 @@ export const reportsApi = createApi({
       }),
       transformResponse: (response: unknown) => {
         const unwrapped = asObject(unwrapPayload(response))
-        return { reportId: String(unwrapped.id ?? unwrapped.reportId ?? "") }
+        return {
+          reportId: String(unwrapped.id ?? unwrapped.reportId ?? ""),
+          generatedFileUrl: (unwrapped.generatedFileUrl as string) ?? null,
+        }
       },
       invalidatesTags: [
         { type: "Reports", id: "LIST" },

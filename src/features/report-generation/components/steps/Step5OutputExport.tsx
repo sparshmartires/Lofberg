@@ -54,6 +54,11 @@ export function Step5OutputExport() {
         step5,
       }).unwrap()
       dispatch(setGeneratedReportId(result.reportId))
+
+      // Open the generated PDF in a new tab
+      if (result.generatedFileUrl) {
+        window.open(result.generatedFileUrl, "_blank")
+      }
     } catch {
       // Error handling
     } finally {
