@@ -4,7 +4,6 @@ import { useCallback } from "react"
 import { ChevronLeft, ChevronRight, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useWizardNavigation } from "../hooks/useWizardNavigation"
-import { StepProgressTracker } from "./StepProgressTracker"
 import { ReportSummary } from "./ReportSummary"
 import { Step1CustomerDetails } from "./steps/Step1CustomerDetails"
 import { Step2DataSource } from "./steps/Step2DataSource"
@@ -29,9 +28,6 @@ export function ReportWizard() {
 
   return (
     <div className="space-y-6">
-      {/* Progress Tracker */}
-      <StepProgressTracker currentStep={currentStep} />
-
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
         {/* Left: Step Content */}
