@@ -4,6 +4,7 @@
 /** CoverPage (PageType 0) */
 export interface CoverPageContent {
   headerText: string // HTML from TipTap rich text editor
+  cover_image?: string // URL from uploaded background image
 }
 
 /** AboutSustainability (PageType 2) */

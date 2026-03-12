@@ -286,6 +286,24 @@ export const templatesApi = createApi({
         { type: "Templates", id: "LIST" },
       ],
     }),
+
+    uploadTemplateImage: builder.mutation<{ url: string }, { file: File }>({
+      query: ({ file }) => {
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("fileCategory", "Image")
+
+        return {
+          url: "/files/upload",
+          method: "POST",
+          body: formData,
+        }
+      },
+      transformResponse: (response: unknown) => {
+        const unwrapped = asObject(unwrapPayload(response))
+        return { url: String(unwrapped.fileUrl ?? unwrapped.url ?? "") }
+      },
+    }),
   }),
 })
 
@@ -299,4 +317,5 @@ export const {
   usePublishDraftMutation,
   useRollbackVersionMutation,
   useSaveActiveChangesMutation,
+  useUploadTemplateImageMutation,
 } = templatesApi
