@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   AlignCenter,
   AlignLeft,
@@ -19,6 +19,11 @@ import StarterKit from "@tiptap/starter-kit"
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { parseContentJson, type CoverPageContent } from "../types"
+
+const DEFAULT_CONTENT: CoverPageContent = {
+  headerText: "<p>Sustainability report</p>",
+}
 
 const defaultToolbarState = {
   isBold: false,
@@ -31,8 +36,21 @@ const defaultToolbarState = {
   isAlignRight: false,
 }
 
-export default function CoverPageSection() {
-  const [headerText, setHeaderText] = useState("<p>Sustainability report</p>")
+interface CoverPageSectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function CoverPageSection({ contentJson, onChange }: CoverPageSectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<CoverPageContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+  const isExternalUpdate = useRef(false)
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
 
   const editor = useEditor({
     extensions: [
@@ -45,12 +63,27 @@ export default function CoverPageSection() {
         placeholder: "Sustainability report",
       }),
     ],
-    content: headerText,
+    content: parsed.headerText,
     immediatelyRender: false,
     onUpdate: ({ editor: currentEditor }) => {
-      setHeaderText(currentEditor.getHTML())
+      if (isExternalUpdate.current) return
+      const data = { headerText: currentEditor.getHTML() }
+      if (onChangeRef.current) {
+        onChangeRef.current(JSON.stringify(data))
+      } else {
+        setLocalContent(data)
+      }
     },
   })
+
+  // Sync editor content when contentJson changes externally
+  useEffect(() => {
+    if (editor && parsed.headerText !== editor.getHTML()) {
+      isExternalUpdate.current = true
+      editor.commands.setContent(parsed.headerText)
+      isExternalUpdate.current = false
+    }
+  }, [parsed.headerText, editor])
 
   const toolbarState = useEditorState({
     editor,

@@ -4,6 +4,7 @@ import { authApi } from "./services/authApi";
 import { usersApi } from "./services/usersApi";
 import { salesRepresentativesApi } from "./services/salesRepresentativesApi";
 import { customersApi } from "./services/customersApi";
+import { templatesApi } from "./services/templatesApi";
 import authReducer from "./slices/authSlice";
 
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     [usersApi.reducerPath]: usersApi.reducer,
     [salesRepresentativesApi.reducerPath]: salesRepresentativesApi.reducer,
     [customersApi.reducerPath]: customersApi.reducer,
+    [templatesApi.reducerPath]: templatesApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -22,7 +24,8 @@ export const store = configureStore({
       authApi.middleware,
       usersApi.middleware,
       salesRepresentativesApi.middleware,
-      customersApi.middleware
+      customersApi.middleware,
+      templatesApi.middleware
     ),
 });
 

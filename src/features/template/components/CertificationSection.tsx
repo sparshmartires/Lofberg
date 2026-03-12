@@ -1,15 +1,67 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import { Upload } from "lucide-react"
+import { parseContentJson, type CertificationsContent } from "../types"
 
-export default function CertificationsSection() {
+const CERTIFICATION_TYPES = [
+  "Organic certification",
+  "Fairtrade certification",
+  "Rainforest alliance certification",
+  "CO2 certification",
+]
 
-  const certifications = [
-    "Organic certification",
-    "Fairtrade certification",
-    "Rainforest alliance certification",
-    "CO2 certification",
-  ]
+const DEFAULT_CONTENT: CertificationsContent = {
+  headerText: "",
+  certifications: CERTIFICATION_TYPES.map((type) => ({
+    type,
+    headerText: "",
+    descriptionText: "",
+  })),
+}
+
+interface CertificationsSectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function CertificationsSection({
+  contentJson,
+  onChange,
+}: CertificationsSectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<CertificationsContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+
+  // Ensure we always have 4 certifications
+  const certifications = useMemo(() => {
+    return CERTIFICATION_TYPES.map((type, i) => {
+      const existing = parsed.certifications?.[i]
+      return existing ?? { type, headerText: "", descriptionText: "" }
+    })
+  }, [parsed.certifications])
+
+  const emit = (data: CertificationsContent) => {
+    if (onChange) {
+      onChange(JSON.stringify(data))
+    } else {
+      setLocalContent(data)
+    }
+  }
+
+  const updateHeaderText = (value: string) => {
+    emit({ ...parsed, headerText: value })
+  }
+
+  const updateCert = (index: number, field: "headerText" | "descriptionText", value: string) => {
+    const updated = certifications.map((c, i) =>
+      i === index ? { ...c, [field]: value } : c
+    )
+    emit({ ...parsed, certifications: updated })
+  }
 
   return (
     <div className="space-y-8">
@@ -23,6 +75,8 @@ export default function CertificationsSection() {
 
         <textarea
           placeholder="Enter header text"
+          value={parsed.headerText}
+          onChange={(e) => updateHeaderText(e.target.value)}
           className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
@@ -32,7 +86,7 @@ export default function CertificationsSection() {
       {/* CERTIFICATION TYPES */}
       <div className="space-y-6">
 
-        {certifications.map((title, index) => (
+        {certifications.map((cert, index) => (
           <div
             key={index}
             className="border border-[#EADCF6] rounded-[24px] p-6 space-y-4"
@@ -40,7 +94,7 @@ export default function CertificationsSection() {
 
             {/* TITLE */}
             <p className="text-sm font-medium">
-              {title}
+              {CERTIFICATION_TYPES[index]}
             </p>
 
             {/* IMAGES */}
@@ -86,6 +140,8 @@ export default function CertificationsSection() {
 
               <input
                 placeholder="Organic coffee"
+                value={cert.headerText}
+                onChange={(e) => updateCert(index, "headerText", e.target.value)}
                 className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
               />
             </div>
@@ -98,6 +154,8 @@ export default function CertificationsSection() {
 
               <textarea
                 placeholder="Keep placeholders like {Quantity}, for dynamic values"
+                value={cert.descriptionText}
+                onChange={(e) => updateCert(index, "descriptionText", e.target.value)}
                 className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
               />
             </div>

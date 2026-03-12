@@ -1,20 +1,53 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Upload, Plus } from "lucide-react"
+import { parseContentJson, type IncreasingImpactContent } from "../types"
 
-export default function IncreasingImpactSection() {
-  const [steps, setSteps] = useState([
-    { id: 1, name: "", text: "" },
-  ])
+const DEFAULT_CONTENT: IncreasingImpactContent = {
+  headerText: "",
+  introText: "",
+  steps: [{ name: "", text: "" }],
+}
+
+interface IncreasingImpactSectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function IncreasingImpactSection({
+  contentJson,
+  onChange,
+}: IncreasingImpactSectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<IncreasingImpactContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+
+  const steps = parsed.steps?.length ? parsed.steps : [{ name: "", text: "" }]
+
+  const emit = (data: IncreasingImpactContent) => {
+    if (onChange) {
+      onChange(JSON.stringify(data))
+    } else {
+      setLocalContent(data)
+    }
+  }
+
+  const updateField = (field: "headerText" | "introText", value: string) => {
+    emit({ ...parsed, [field]: value })
+  }
+
+  const updateStep = (index: number, field: "name" | "text", value: string) => {
+    const updated = steps.map((s, i) => (i === index ? { ...s, [field]: value } : s))
+    emit({ ...parsed, steps: updated })
+  }
 
   const addStep = () => {
     if (steps.length >= 10) return
-
-    setSteps([
-      ...steps,
-      { id: steps.length + 1, name: "", text: "" },
-    ])
+    emit({ ...parsed, steps: [...steps, { name: "", text: "" }] })
   }
 
   return (
@@ -29,6 +62,8 @@ export default function IncreasingImpactSection() {
 
         <textarea
           placeholder="Enter header text"
+          value={parsed.headerText}
+          onChange={(e) => updateField("headerText", e.target.value)}
           className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
@@ -39,6 +74,8 @@ export default function IncreasingImpactSection() {
 
         <textarea
           placeholder="Enter introduction text"
+          value={parsed.introText}
+          onChange={(e) => updateField("introText", e.target.value)}
           className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
@@ -67,7 +104,7 @@ export default function IncreasingImpactSection() {
 
         {steps.map((step, index) => (
           <div
-            key={step.id}
+            key={index}
             className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
           >
             <p className="text-sm font-medium">
@@ -82,6 +119,8 @@ export default function IncreasingImpactSection() {
 
               <input
                 placeholder="Eg. Reduce waste"
+                value={step.name}
+                onChange={(e) => updateStep(index, "name", e.target.value)}
                 className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
               />
             </div>
@@ -108,6 +147,8 @@ export default function IncreasingImpactSection() {
 
                 <textarea
                   placeholder="Enter section text"
+                  value={step.text}
+                  onChange={(e) => updateStep(index, "text", e.target.value)}
                   className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
                 />
               </div>

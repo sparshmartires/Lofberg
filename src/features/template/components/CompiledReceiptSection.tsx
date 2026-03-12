@@ -1,10 +1,58 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import { Upload } from "lucide-react"
+import { parseContentJson, type CompiledReceiptContent } from "../types"
 
-export default function CompiledReceiptSection() {
+const DEFAULT_CONTENT: CompiledReceiptContent = {
+  headerText: "",
+  introText: "",
+  boxes: [
+    { sectionName: "", text: "" },
+    { sectionName: "", text: "" },
+    { sectionName: "", text: "" },
+  ],
+}
 
-  const boxes = [1, 2, 3]
+interface CompiledReceiptSectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function CompiledReceiptSection({
+  contentJson,
+  onChange,
+}: CompiledReceiptSectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<CompiledReceiptContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+
+  // Ensure we always have at least 3 boxes
+  const boxes = useMemo(() => {
+    const b = parsed.boxes ?? []
+    while (b.length < 3) b.push({ sectionName: "", text: "" })
+    return b.slice(0, 3)
+  }, [parsed.boxes])
+
+  const emit = (data: CompiledReceiptContent) => {
+    if (onChange) {
+      onChange(JSON.stringify(data))
+    } else {
+      setLocalContent(data)
+    }
+  }
+
+  const updateField = (field: "headerText" | "introText", value: string) => {
+    emit({ ...parsed, [field]: value })
+  }
+
+  const updateBox = (index: number, field: "sectionName" | "text", value: string) => {
+    const updated = boxes.map((b, i) => (i === index ? { ...b, [field]: value } : b))
+    emit({ ...parsed, boxes: updated })
+  }
 
   return (
     <div className="space-y-8 mt-6">
@@ -28,6 +76,8 @@ export default function CompiledReceiptSection() {
 
           <input
             placeholder="Enter header text"
+            value={parsed.headerText}
+            onChange={(e) => updateField("headerText", e.target.value)}
             className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
           />
         </div>
@@ -37,6 +87,8 @@ export default function CompiledReceiptSection() {
 
           <input
             placeholder="Enter introduction text"
+            value={parsed.introText}
+            onChange={(e) => updateField("introText", e.target.value)}
             className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
           />
         </div>
@@ -57,14 +109,14 @@ export default function CompiledReceiptSection() {
       {/* BOXES */}
       <div className="space-y-6">
 
-        {boxes.map((box) => (
+        {boxes.map((box, index) => (
           <div
-            key={box}
+            key={index}
             className="border border-[#EADCF6] rounded-[24px] p-6 space-y-4"
           >
 
             <p className="text-sm font-medium">
-              Certification text box {box}
+              Certification text box {index + 1}
             </p>
 
             {/* SECTION NAME */}
@@ -75,6 +127,8 @@ export default function CompiledReceiptSection() {
 
               <input
                 placeholder="Eg. Organic impact"
+                value={box.sectionName}
+                onChange={(e) => updateBox(index, "sectionName", e.target.value)}
                 className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
               />
             </div>
@@ -105,6 +159,8 @@ export default function CompiledReceiptSection() {
 
                 <textarea
                   placeholder="Enter section text"
+                  value={box.text}
+                  onChange={(e) => updateBox(index, "text", e.target.value)}
                   className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
                 />
               </div>

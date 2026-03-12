@@ -1,8 +1,39 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import { Upload } from "lucide-react"
+import { parseContentJson, type AboutSustainabilityContent } from "../types"
 
-export default function AboutSustainabilitySection() {
+const DEFAULT_CONTENT: AboutSustainabilityContent = {
+  headerText: "",
+  introText: "",
+}
+
+interface AboutSustainabilitySectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function AboutSustainabilitySection({
+  contentJson,
+  onChange,
+}: AboutSustainabilitySectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<AboutSustainabilityContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+
+  const update = (field: keyof AboutSustainabilityContent, value: string) => {
+    const updated = { ...parsed, [field]: value }
+    if (onChange) {
+      onChange(JSON.stringify(updated))
+    } else {
+      setLocalContent(updated)
+    }
+  }
+
   return (
     <div className="grid lg:grid-cols-2 gap-8">
       <div className="min-w-0 lg:col-start-1 lg:row-start-1">
@@ -19,6 +50,8 @@ export default function AboutSustainabilitySection() {
 
         <textarea
           placeholder="Enter header text"
+          value={parsed.headerText}
+          onChange={(e) => update("headerText", e.target.value)}
           className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
@@ -37,6 +70,8 @@ export default function AboutSustainabilitySection() {
 
         <textarea
           placeholder="Enter introduction text"
+          value={parsed.introText}
+          onChange={(e) => update("introText", e.target.value)}
           className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>

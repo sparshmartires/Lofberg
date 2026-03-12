@@ -1,15 +1,56 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import { Upload } from "lucide-react"
+import { PageType, type TemplatePageContentDto } from "@/store/services/templatesApi"
+import { parseContentJson, type ReceiptContent } from "../types"
 
-export default function ReceiptSection() {
+const DEFAULT_CONTENT: ReceiptContent = {
+  textBox1: "",
+  textBox2: "",
+}
 
-  const receipts = [
-    "Organic receipt",
-    "Fairtrade receipt",
-    "Rainforest alliance receipt",
-    "CO2 receipt",
-  ]
+const RECEIPT_TYPES: { label: string; pageType: PageType }[] = [
+  { label: "Organic receipt", pageType: PageType.ReceiptOrganic },
+  { label: "Fairtrade receipt", pageType: PageType.ReceiptFairtrade },
+  { label: "Rainforest alliance receipt", pageType: PageType.ReceiptRAC },
+  { label: "CO2 receipt", pageType: PageType.ReceiptCO2 },
+]
+
+interface ReceiptSectionProps {
+  pages?: TemplatePageContentDto[]
+  onPageChange?: (templatePageId: string, json: string) => void
+}
+
+export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSectionProps) {
+  const [localEdits, setLocalEdits] = useState<Record<number, ReceiptContent>>({})
+
+  const receiptData = useMemo(
+    () =>
+      RECEIPT_TYPES.map(({ label, pageType }, idx) => {
+        const page = pages.find((p) => p.pageType === pageType)
+        const content = page
+          ? parseContentJson<ReceiptContent>(page.contentJson, DEFAULT_CONTENT)
+          : (localEdits[idx] ?? DEFAULT_CONTENT)
+        return { label, pageType, page, content, idx }
+      }),
+    [pages, localEdits]
+  )
+
+  const updateReceipt = (
+    page: TemplatePageContentDto | undefined,
+    content: ReceiptContent,
+    field: "textBox1" | "textBox2",
+    value: string,
+    idx: number
+  ) => {
+    const updated = { ...content, [field]: value }
+    if (page && onPageChange) {
+      onPageChange(page.templatePageId, JSON.stringify(updated))
+    } else {
+      setLocalEdits((prev) => ({ ...prev, [idx]: updated }))
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -28,7 +69,7 @@ export default function ReceiptSection() {
       {/* RECEIPT TYPES */}
       <div className="space-y-6">
 
-        {receipts.map((title, index) => (
+        {receiptData.map(({ label, content, page, idx }, index) => (
           <div
             key={index}
             className="border border-[#EADCF6] rounded-[24px] p-6 space-y-6"
@@ -36,7 +77,7 @@ export default function ReceiptSection() {
 
             {/* TITLE */}
             <p className="text-sm font-medium">
-              {title}
+              {label}
             </p>
 
             {/* BACKGROUND IMAGE */}
@@ -64,6 +105,8 @@ export default function ReceiptSection() {
 
                 <textarea
                   placeholder="Enter section text"
+                  value={content.textBox1}
+                  onChange={(e) => updateReceipt(page, content, "textBox1", e.target.value, idx)}
                   className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
                 />
               </div>
@@ -75,6 +118,8 @@ export default function ReceiptSection() {
 
                 <textarea
                   placeholder="Enter section text"
+                  value={content.textBox2}
+                  onChange={(e) => updateReceipt(page, content, "textBox2", e.target.value, idx)}
                   className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
                 />
               </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { PageType, type TemplatePageContentDto } from "@/store/services/templatesApi"
 import IncreasingImpactSection from "./IncreasingImpactSection"
 import CertificationsSection from "./CertificationSection"
 import CoverPageSection from "./CoverPageSection"
@@ -11,9 +12,15 @@ import CompiledReceiptSection from "./CompiledReceiptSection"
 
 interface SustainabilitySectionProps {
   templateType: string
+  pages?: TemplatePageContentDto[]
+  onPageChange?: (templatePageId: string, contentJson: string) => void
 }
 
-export default function SustainabilitySection({ templateType }: SustainabilitySectionProps) {
+export default function SustainabilitySection({
+  templateType,
+  pages = [],
+  onPageChange,
+}: SustainabilitySectionProps) {
   const isReceiptTemplate = templateType === "receipt-a4"
 
   const [activeTab, setActiveTab] = useState(isReceiptTemplate ? "receipt" : "about")
@@ -36,6 +43,24 @@ export default function SustainabilitySection({ templateType }: SustainabilitySe
   useEffect(() => {
     setActiveTab(isReceiptTemplate ? "receipt" : "about")
   }, [isReceiptTemplate])
+
+  const getPage = (pageType: PageType) => pages.find((p) => p.pageType === pageType)
+
+  const makeSectionProps = (pageType: PageType) => {
+    const page = getPage(pageType)
+    if (!page || !onPageChange) return {}
+    return {
+      contentJson: page.contentJson,
+      onChange: (json: string) => onPageChange(page.templatePageId, json),
+    }
+  }
+
+  const receiptPages = [
+    getPage(PageType.ReceiptOrganic),
+    getPage(PageType.ReceiptFairtrade),
+    getPage(PageType.ReceiptRAC),
+    getPage(PageType.ReceiptCO2),
+  ].filter((p): p is TemplatePageContentDto => p !== undefined)
 
   return (
     <div className="w-full rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 space-y-6 mt-[20px] min-w-0">
@@ -68,20 +93,37 @@ export default function SustainabilitySection({ templateType }: SustainabilitySe
         </div>
       </div>
       <div className="p-4 sm:p-6 md:py-[32px] md:px-[24px] rounded-[28px] border border-[#EDEDED] min-w-0">
-        {activeTab === "cover" && <CoverPageSection />}
-        {activeTab === "compiled" && <CompiledReceiptSection />}
-        {activeTab === "about" && <AboutSustainabilitySection />}
-        {activeTab === "usp" && <UspSection />}
-        {activeTab === "receipt" && <ReceiptSection />}
-      {activeTab === "impact" && <IncreasingImpactSection />}
-      {activeTab === "cert" && <CertificationsSection />}
-      {activeTab === "receipt" && (
-        <div className="text-sm text-[#747474]">Receipt content will be added here.</div>
-      )}
-      {activeTab === "compiled" && (
-        <div className="text-sm text-[#747474]">Compiled receipt content will be added here.</div>
-      )}
-     </div>  
+        {/* Render all sections but hide inactive ones to preserve local state across tab switches */}
+        {!isReceiptTemplate && (
+          <>
+            <div style={{ display: activeTab === "cover" ? "block" : "none" }}>
+              <CoverPageSection {...makeSectionProps(PageType.CoverPage)} />
+            </div>
+            <div style={{ display: activeTab === "about" ? "block" : "none" }}>
+              <AboutSustainabilitySection {...makeSectionProps(PageType.AboutSustainability)} />
+            </div>
+            <div style={{ display: activeTab === "usp" ? "block" : "none" }}>
+              <UspSection {...makeSectionProps(PageType.LofbergsUSPs)} />
+            </div>
+            <div style={{ display: activeTab === "impact" ? "block" : "none" }}>
+              <IncreasingImpactSection {...makeSectionProps(PageType.IncreasingPositiveImpact)} />
+            </div>
+            <div style={{ display: activeTab === "cert" ? "block" : "none" }}>
+              <CertificationsSection {...makeSectionProps(PageType.CertificationsOverview)} />
+            </div>
+          </>
+        )}
+        {isReceiptTemplate && (
+          <>
+            <div style={{ display: activeTab === "receipt" ? "block" : "none" }}>
+              <ReceiptSection pages={receiptPages} onPageChange={onPageChange} />
+            </div>
+            <div style={{ display: activeTab === "compiled" ? "block" : "none" }}>
+              <CompiledReceiptSection {...makeSectionProps(PageType.CompiledReceiptSummary)} />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
