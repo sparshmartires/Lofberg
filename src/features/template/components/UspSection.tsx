@@ -1,14 +1,20 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Upload } from "lucide-react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { parseContentJson, type UspContent } from "../types"
+import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
+import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
 const DEFAULT_CONTENT: UspContent = {
   headerText: "",
   introText: "",
-  sections: [{ text: "" }, { text: "" }, { text: "" }],
+  sectionText1: "",
+  sectionText2: "",
+  sectionText3: "",
 }
+
+type TextFieldKey = "headerText" | "introText" | "sectionText1" | "sectionText2" | "sectionText3"
+type ImageFieldKey = "sectionImage1" | "sectionImage2" | "sectionImage3"
 
 interface UspSectionProps {
   contentJson?: string | null
@@ -17,35 +23,60 @@ interface UspSectionProps {
 
 export default function UspSection({ contentJson, onChange }: UspSectionProps) {
   const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+  const [imageFiles, setImageFiles] = useState<Record<ImageFieldKey, File | null>>({
+    sectionImage1: null,
+    sectionImage2: null,
+    sectionImage3: null,
+  })
+  const [uploadImage] = useUploadTemplateImageMutation()
 
   const parsed = useMemo(
     () => contentJson ? parseContentJson<UspContent>(contentJson, DEFAULT_CONTENT) : localContent,
     [contentJson, localContent]
   )
 
-  // Ensure we always have 3 sections
-  const sections = useMemo(() => {
-    const s = parsed.sections ?? []
-    while (s.length < 3) s.push({ text: "" })
-    return s.slice(0, 3)
-  }, [parsed.sections])
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+  const parsedRef = useRef(parsed)
+  parsedRef.current = parsed
 
-  const emit = (data: UspContent) => {
-    if (onChange) {
-      onChange(JSON.stringify(data))
+  const emitChange = useCallback((data: UspContent) => {
+    if (onChangeRef.current) {
+      onChangeRef.current(JSON.stringify(data))
     } else {
       setLocalContent(data)
     }
-  }
+  }, [])
 
-  const updateField = (field: "headerText" | "introText", value: string) => {
-    emit({ ...parsed, [field]: value })
-  }
+  const updateField = useCallback(
+    (field: TextFieldKey, value: string) => {
+      emitChange({ ...parsedRef.current, [field]: value })
+    },
+    [emitChange]
+  )
 
-  const updateSection = (index: number, text: string) => {
-    const updated = sections.map((s, i) => (i === index ? { ...s, text } : s))
-    emit({ ...parsed, sections: updated })
-  }
+  const handleImageChange = useCallback(
+    async (field: ImageFieldKey, file: File | null) => {
+      setImageFiles((prev) => ({ ...prev, [field]: file }))
+      if (!file) {
+        emitChange({ ...parsedRef.current, [field]: undefined })
+        return
+      }
+      try {
+        const result = await uploadImage({ file }).unwrap()
+        emitChange({ ...parsedRef.current, [field]: result.url })
+      } catch {
+        setImageFiles((prev) => ({ ...prev, [field]: null }))
+      }
+    },
+    [uploadImage, emitChange]
+  )
+
+  const sections: { label: string; textKey: TextFieldKey; imageKey: ImageFieldKey }[] = [
+    { label: "USP sections (up to 3)", textKey: "sectionText1", imageKey: "sectionImage1" },
+    { label: "Section 2", textKey: "sectionText2", imageKey: "sectionImage2" },
+    { label: "Section 3", textKey: "sectionText3", imageKey: "sectionImage3" },
+  ]
 
   return (
     <div className="space-y-8">
@@ -76,21 +107,22 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
       <div className="border-t border-[#EDEDED]" />
 
       <div className="space-y-6">
-        {sections.map((section, index) => (
-          <div key={index} className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4">
-            <p className="text-sm font-medium">
-              {index === 0 ? "USP sections (up to 3)" : `Section ${index + 1}`}
-            </p>
+        {sections.map((section) => (
+          <div key={section.textKey} className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4">
+            <p className="text-sm font-medium">{section.label}</p>
 
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="min-w-0">
                 <p className="text-sm mb-2">Section image</p>
 
-                <div className="w-full min-w-0 h-[120px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
-                  <Upload className="text-[#5B2D91]" />
-
-                  <p className="text-sm text-[#4E4E4E]">Upload a file or drag and drop</p>
-                </div>
+                <FileDropZone
+                  accept=".jpg,.jpeg,.png,.svg,.webp"
+                  acceptLabel="Max 2MB, JPG/PNG/SVG"
+                  file={imageFiles[section.imageKey]}
+                  previewUrl={parsed[section.imageKey]}
+                  onFileChange={(file) => handleImageChange(section.imageKey, file)}
+                  className="h-[120px]"
+                />
               </div>
 
               <div className="min-w-0">
@@ -98,8 +130,8 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
 
                 <textarea
                   placeholder="Enter section text"
-                  value={section.text}
-                  onChange={(e) => updateSection(index, e.target.value)}
+                  value={parsed[section.textKey]}
+                  onChange={(e) => updateField(section.textKey, e.target.value)}
                   className="w-full min-w-0 h-[120px] rounded-xl border border-[#EDEDED] p-3 resize-none"
                 />
               </div>

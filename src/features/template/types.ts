@@ -19,7 +19,12 @@ export interface AboutSustainabilityContent {
 export interface UspContent {
   headerText: string
   introText: string
-  sections: { text: string }[] // up to 3
+  sectionText1: string
+  sectionImage1?: string
+  sectionText2: string
+  sectionImage2?: string
+  sectionText3: string
+  sectionImage3?: string
 }
 
 /** IncreasingPositiveImpact (PageType 4) */
