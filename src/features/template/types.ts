@@ -37,11 +37,26 @@ export interface IncreasingImpactContent {
 /** CertificationsOverview (PageType 5) */
 export interface CertificationsContent {
   headerText: string
-  certifications: {
-    type: string // "Organic", "Fairtrade", "Rainforest alliance", "CO2"
-    headerText: string
-    descriptionText: string
-  }[]
+  // General (total volume)
+  cert_general_header: string
+  cert_general_text: string
+  cert_general_image?: string
+  cert_general_logo?: string
+  // Rainforest Alliance
+  cert_rainforest_header: string
+  cert_rainforest_text: string
+  cert_rainforest_image?: string
+  cert_rainforest_logo?: string
+  // Fairtrade
+  cert_fairtrade_header: string
+  cert_fairtrade_text: string
+  cert_fairtrade_image?: string
+  cert_fairtrade_logo?: string
+  // Organic
+  cert_organic_header: string
+  cert_organic_text: string
+  cert_organic_image?: string
+  cert_organic_logo?: string
 }
 
 /** Receipt pages (PageTypes 6–9) — one per certification */

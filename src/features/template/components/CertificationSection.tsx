@@ -1,23 +1,31 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Upload } from "lucide-react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { parseContentJson, type CertificationsContent } from "../types"
+import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
+import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
-const CERTIFICATION_TYPES = [
-  "Organic certification",
-  "Fairtrade certification",
-  "Rainforest alliance certification",
-  "CO2 certification",
-]
+const CERT_BLOCKS = [
+  { key: "general", label: "General certification" },
+  { key: "rainforest", label: "Rainforest Alliance certification" },
+  { key: "fairtrade", label: "Fairtrade certification" },
+  { key: "organic", label: "Organic certification" },
+] as const
+
+type CertKey = (typeof CERT_BLOCKS)[number]["key"]
+type ImageField = `cert_${CertKey}_image` | `cert_${CertKey}_logo`
+type TextField = `cert_${CertKey}_header` | `cert_${CertKey}_text`
 
 const DEFAULT_CONTENT: CertificationsContent = {
   headerText: "",
-  certifications: CERTIFICATION_TYPES.map((type) => ({
-    type,
-    headerText: "",
-    descriptionText: "",
-  })),
+  cert_general_header: "",
+  cert_general_text: "",
+  cert_rainforest_header: "",
+  cert_rainforest_text: "",
+  cert_fairtrade_header: "",
+  cert_fairtrade_text: "",
+  cert_organic_header: "",
+  cert_organic_text: "",
 }
 
 interface CertificationsSectionProps {
@@ -30,38 +38,50 @@ export default function CertificationsSection({
   onChange,
 }: CertificationsSectionProps) {
   const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+  const [imageFiles, setImageFiles] = useState<Record<string, File | null>>({})
+  const [uploadImage] = useUploadTemplateImageMutation()
 
   const parsed = useMemo(
     () => contentJson ? parseContentJson<CertificationsContent>(contentJson, DEFAULT_CONTENT) : localContent,
     [contentJson, localContent]
   )
 
-  // Ensure we always have 4 certifications
-  const certifications = useMemo(() => {
-    return CERTIFICATION_TYPES.map((type, i) => {
-      const existing = parsed.certifications?.[i]
-      return existing ?? { type, headerText: "", descriptionText: "" }
-    })
-  }, [parsed.certifications])
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+  const parsedRef = useRef(parsed)
+  parsedRef.current = parsed
 
-  const emit = (data: CertificationsContent) => {
-    if (onChange) {
-      onChange(JSON.stringify(data))
+  const emitChange = useCallback((data: CertificationsContent) => {
+    if (onChangeRef.current) {
+      onChangeRef.current(JSON.stringify(data))
     } else {
       setLocalContent(data)
     }
-  }
+  }, [])
 
-  const updateHeaderText = (value: string) => {
-    emit({ ...parsed, headerText: value })
-  }
+  const updateText = useCallback(
+    (field: "headerText" | TextField, value: string) => {
+      emitChange({ ...parsedRef.current, [field]: value })
+    },
+    [emitChange]
+  )
 
-  const updateCert = (index: number, field: "headerText" | "descriptionText", value: string) => {
-    const updated = certifications.map((c, i) =>
-      i === index ? { ...c, [field]: value } : c
-    )
-    emit({ ...parsed, certifications: updated })
-  }
+  const handleImageChange = useCallback(
+    async (field: ImageField, file: File | null) => {
+      setImageFiles((prev) => ({ ...prev, [field]: file }))
+      if (!file) {
+        emitChange({ ...parsedRef.current, [field]: undefined })
+        return
+      }
+      try {
+        const result = await uploadImage({ file }).unwrap()
+        emitChange({ ...parsedRef.current, [field]: result.url })
+      } catch {
+        setImageFiles((prev) => ({ ...prev, [field]: null }))
+      }
+    },
+    [uploadImage, emitChange]
+  )
 
   return (
     <div className="space-y-8">
@@ -69,107 +89,81 @@ export default function CertificationsSection({
         Certifications report section
       </h3>
 
-      {/* HEADER */}
       <div>
         <p className="text-sm mb-2">Header Text</p>
-
         <textarea
           placeholder="Enter header text"
           value={parsed.headerText}
-          onChange={(e) => updateHeaderText(e.target.value)}
+          onChange={(e) => updateText("headerText", e.target.value)}
           className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
 
       <div className="border-t border-[#EDEDED]" />
 
-      {/* CERTIFICATION TYPES */}
       <div className="space-y-6">
+        {CERT_BLOCKS.map((cert) => {
+          const headerField = `cert_${cert.key}_header` as TextField
+          const textField = `cert_${cert.key}_text` as TextField
+          const imageField = `cert_${cert.key}_image` as ImageField
+          const logoField = `cert_${cert.key}_logo` as ImageField
 
-        {certifications.map((cert, index) => (
-          <div
-            key={index}
-            className="border border-[#EADCF6] rounded-[24px] p-6 space-y-4"
-          >
+          return (
+            <div
+              key={cert.key}
+              className="border border-[#EADCF6] rounded-[24px] p-6 space-y-4"
+            >
+              <p className="text-sm font-medium">{cert.label}</p>
 
-            {/* TITLE */}
-            <p className="text-sm font-medium">
-              {CERTIFICATION_TYPES[index]}
-            </p>
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Certification logo</p>
+                  <FileDropZone
+                    accept=".jpg,.jpeg,.png,.svg,.webp"
+                    acceptLabel="Max 2MB, JPG/PNG/SVG"
+                    file={imageFiles[logoField] ?? null}
+                    previewUrl={parsed[logoField]}
+                    onFileChange={(file) => handleImageChange(logoField, file)}
+                    className="h-[110px]"
+                  />
+                </div>
 
-            {/* IMAGES */}
-            <div className="grid lg:grid-cols-2 gap-8">
-
-              {/* LOGO */}
-              <div className="min-w-0">
-                <p className="text-sm mb-2">
-                  Certification logo
-                </p>
-
-                <div className="w-full min-w-0 h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
-                  <Upload className="text-[#5B2D91]" />
-
-                  <p className="text-sm text-[#4E4E4E]">
-                    Upload a file or drag and drop
-                  </p>
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Background image</p>
+                  <FileDropZone
+                    accept=".jpg,.jpeg,.png,.svg,.webp"
+                    acceptLabel="Max 2MB, JPG/PNG/SVG"
+                    file={imageFiles[imageField] ?? null}
+                    previewUrl={parsed[imageField]}
+                    onFileChange={(file) => handleImageChange(imageField, file)}
+                    className="h-[110px]"
+                  />
                 </div>
               </div>
 
-              {/* BACKGROUND */}
-              <div className="min-w-0">
-                <p className="text-sm mb-2">
-                  Background image
-                </p>
-
-                <div className="w-full min-w-0 h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
-                  <Upload className="text-[#5B2D91]" />
-
-                  <p className="text-sm text-[#4E4E4E]">
-                    Upload a file or drag and drop
-                  </p>
-                </div>
+              <div>
+                <p className="text-sm mb-2">Header text</p>
+                <input
+                  placeholder="Enter certification header"
+                  value={parsed[headerField] ?? ""}
+                  onChange={(e) => updateText(headerField, e.target.value)}
+                  className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
+                />
               </div>
 
+              <div>
+                <p className="text-sm mb-2">Description text</p>
+                <textarea
+                  placeholder="Enter certification description"
+                  value={parsed[textField] ?? ""}
+                  onChange={(e) => updateText(textField, e.target.value)}
+                  className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                />
+              </div>
             </div>
-
-            {/* HEADER TEXT */}
-            <div>
-              <p className="text-sm mb-2">
-                Header text
-              </p>
-
-              <input
-                placeholder="Organic coffee"
-                value={cert.headerText}
-                onChange={(e) => updateCert(index, "headerText", e.target.value)}
-                className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
-              />
-            </div>
-
-            {/* DESCRIPTION */}
-            <div>
-              <p className="text-sm mb-2">
-                Description text
-              </p>
-
-              <textarea
-                placeholder="Keep placeholders like {Quantity}, for dynamic values"
-                value={cert.descriptionText}
-                onChange={(e) => updateCert(index, "descriptionText", e.target.value)}
-                className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
-              />
-            </div>
-
-            {/* WARNING */}
-            <p className="text-xs text-[#7B3EBE]">
-              ⚠ Keep placeholders like {"{Quantity}"}, {"{TimePeriod}"} in the text
-            </p>
-
-          </div>
-        ))}
-
+          )
+        })}
       </div>
-
     </div>
   )
 }
