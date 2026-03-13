@@ -5,9 +5,29 @@ import { parseContentJson, type AboutSustainabilityContent } from "../types"
 import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
+const RIGHT_BLOCKS = [
+  { index: 1, label: "Icon + Textblock 1 (right)" },
+  { index: 2, label: "Icon + Textblock 2 (right)" },
+] as const
+
+const BOTTOM_BLOCKS = [
+  { index: 3, label: "Icon + Textblock 3 (bottom left)" },
+  { index: 4, label: "Icon + Textblock 4 (bottom right)" },
+] as const
+
+const ALL_BLOCKS = [...RIGHT_BLOCKS, ...BOTTOM_BLOCKS] as const
+
+type BlockIndex = (typeof ALL_BLOCKS)[number]["index"]
+type ImageField = "intro_hero_image" | "intro_circle_image" | `intro_icon_${BlockIndex}`
+type TextField = "headerText" | "introText" | `intro_textblock_${BlockIndex}`
+
 const DEFAULT_CONTENT: AboutSustainabilityContent = {
   headerText: "",
   introText: "",
+  intro_textblock_1: "",
+  intro_textblock_2: "",
+  intro_textblock_3: "",
+  intro_textblock_4: "",
 }
 
 interface AboutSustainabilitySectionProps {
@@ -20,8 +40,7 @@ export default function AboutSustainabilitySection({
   onChange,
 }: AboutSustainabilitySectionProps) {
   const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
-  const [bannerFile, setBannerFile] = useState<File | null>(null)
-  const [chartFile, setChartFile] = useState<File | null>(null)
+  const [imageFiles, setImageFiles] = useState<Record<string, File | null>>({})
   const [uploadImage] = useUploadTemplateImageMutation()
 
   const parsed = useMemo(
@@ -42,95 +61,166 @@ export default function AboutSustainabilitySection({
     }
   }, [])
 
-  const update = useCallback(
-    (field: "headerText" | "introText", value: string) => {
+  const updateText = useCallback(
+    (field: TextField, value: string) => {
       emitChange({ ...parsedRef.current, [field]: value })
     },
     [emitChange]
   )
 
-  const handleBannerChange = useCallback(
-    async (file: File | null) => {
-      setBannerFile(file)
+  const handleImageChange = useCallback(
+    async (field: ImageField, file: File | null) => {
+      setImageFiles((prev) => ({ ...prev, [field]: file }))
       if (!file) {
-        emitChange({ ...parsedRef.current, intro_hero_image: undefined })
+        emitChange({ ...parsedRef.current, [field]: undefined })
         return
       }
       try {
         const result = await uploadImage({ file }).unwrap()
-        emitChange({ ...parsedRef.current, intro_hero_image: result.url })
+        emitChange({ ...parsedRef.current, [field]: result.url })
       } catch {
-        setBannerFile(null)
-      }
-    },
-    [uploadImage, emitChange]
-  )
-
-  const handleChartChange = useCallback(
-    async (file: File | null) => {
-      setChartFile(file)
-      if (!file) {
-        emitChange({ ...parsedRef.current, intro_circle_image: undefined })
-        return
-      }
-      try {
-        const result = await uploadImage({ file }).unwrap()
-        emitChange({ ...parsedRef.current, intro_circle_image: result.url })
-      } catch {
-        setChartFile(null)
+        setImageFiles((prev) => ({ ...prev, [field]: null }))
       }
     },
     [uploadImage, emitChange]
   )
 
   return (
-    <div className="grid lg:grid-cols-2 gap-8">
-      <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-        <p className="text-sm mb-2">Upload banner image</p>
+    <div className="space-y-8">
+      <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
+        About sustainability section
+      </h3>
 
-        <FileDropZone
-          accept=".jpg,.jpeg,.png,.svg,.webp"
-          acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
-          file={bannerFile}
-          previewUrl={parsed.intro_hero_image}
-          onFileChange={handleBannerChange}
-          className="h-[125px]"
-        />
+      <div className="grid lg:grid-cols-2 gap-8">
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Banner image</p>
+          <FileDropZone
+            accept=".jpg,.jpeg,.png,.svg,.webp"
+            acceptLabel="Recommended size: 1920x1080px, Max 2MB"
+            file={imageFiles["intro_hero_image"] ?? null}
+            previewUrl={parsed.intro_hero_image}
+            onFileChange={(file) => handleImageChange("intro_hero_image", file)}
+            className="h-[125px]"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Header text</p>
+          <textarea
+            placeholder="Enter header text"
+            value={parsed.headerText}
+            onChange={(e) => updateText("headerText", e.target.value)}
+            className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Circle image (graph/chart)</p>
+          <FileDropZone
+            accept=".jpg,.jpeg,.png,.svg,.webp"
+            acceptLabel="Recommended size: 800x800px, Max 2MB"
+            file={imageFiles["intro_circle_image"] ?? null}
+            previewUrl={parsed.intro_circle_image}
+            onFileChange={(file) => handleImageChange("intro_circle_image", file)}
+            className="h-[125px]"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Intro text</p>
+          <textarea
+            placeholder="Enter introduction text"
+            value={parsed.introText}
+            onChange={(e) => updateText("introText", e.target.value)}
+            className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          />
+        </div>
       </div>
 
-      <div className="min-w-0 lg:col-start-2 lg:row-start-1">
-        <p className="text-sm mb-2">Header text</p>
+      <div className="border-t border-[#EDEDED]" />
 
-        <textarea
-          placeholder="Enter header text"
-          value={parsed.headerText}
-          onChange={(e) => update("headerText", e.target.value)}
-          className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
-        />
+      <p className="text-sm font-medium text-[#8A8A8A]">Right-side blocks</p>
+      <div className="space-y-6">
+        {RIGHT_BLOCKS.map((block) => {
+          const iconField = `intro_icon_${block.index}` as ImageField
+          const textField = `intro_textblock_${block.index}` as TextField
+
+          return (
+            <div
+              key={block.index}
+              className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
+            >
+              <p className="text-sm font-medium">{block.label}</p>
+
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Icon image</p>
+                  <FileDropZone
+                    accept=".jpg,.jpeg,.png,.svg,.webp"
+                    acceptLabel="Max 2MB, JPG/PNG/SVG"
+                    file={imageFiles[iconField] ?? null}
+                    previewUrl={parsed[iconField]}
+                    onFileChange={(file) => handleImageChange(iconField, file)}
+                    className="h-[110px]"
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Text block</p>
+                  <textarea
+                    placeholder="Enter text content"
+                    value={parsed[textField] ?? ""}
+                    onChange={(e) => updateText(textField, e.target.value)}
+                    className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
-      <div className="min-w-0 lg:col-start-1 lg:row-start-2">
-        <p className="text-sm mb-2">Graph/chart image</p>
+      <div className="border-t border-[#EDEDED]" />
 
-        <FileDropZone
-          accept=".jpg,.jpeg,.png,.svg,.webp"
-          acceptLabel="Recommended size: 800x800px, Max 2MB, JPG/PNG/SVG"
-          file={chartFile}
-          previewUrl={parsed.intro_circle_image}
-          onFileChange={handleChartChange}
-          className="h-[125px]"
-        />
-      </div>
+      <p className="text-sm font-medium text-[#8A8A8A]">Bottom blocks</p>
+      <div className="space-y-6">
+        {BOTTOM_BLOCKS.map((block) => {
+          const iconField = `intro_icon_${block.index}` as ImageField
+          const textField = `intro_textblock_${block.index}` as TextField
 
-      <div className="min-w-0 lg:col-start-2 lg:row-start-2">
-        <p className="text-sm mb-2">Intro text</p>
+          return (
+            <div
+              key={block.index}
+              className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
+            >
+              <p className="text-sm font-medium">{block.label}</p>
 
-        <textarea
-          placeholder="Enter introduction text"
-          value={parsed.introText}
-          onChange={(e) => update("introText", e.target.value)}
-          className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
-        />
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Icon image</p>
+                  <FileDropZone
+                    accept=".jpg,.jpeg,.png,.svg,.webp"
+                    acceptLabel="Max 2MB, JPG/PNG/SVG"
+                    file={imageFiles[iconField] ?? null}
+                    previewUrl={parsed[iconField]}
+                    onFileChange={(file) => handleImageChange(iconField, file)}
+                    className="h-[110px]"
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Text block</p>
+                  <textarea
+                    placeholder="Enter text content"
+                    value={parsed[textField] ?? ""}
+                    onChange={(e) => updateText(textField, e.target.value)}
+                    className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

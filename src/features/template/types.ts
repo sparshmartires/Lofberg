@@ -11,8 +11,16 @@ export interface CoverPageContent {
 export interface AboutSustainabilityContent {
   headerText: string
   introText: string
-  intro_hero_image?: string   // Banner image URL
-  intro_circle_image?: string // Graph/chart image URL
+  intro_hero_image?: string    // Banner image URL
+  intro_circle_image?: string  // Graph/chart image URL
+  intro_icon_1?: string        // Icon 1 (right row 1)
+  intro_textblock_1: string    // Textblock 1 (right row 1)
+  intro_icon_2?: string        // Icon 2 (right row 2)
+  intro_textblock_2: string    // Textblock 2 (right row 2)
+  intro_icon_3?: string        // Icon 3 (bottom left)
+  intro_textblock_3: string    // Textblock 3 (bottom left)
+  intro_icon_4?: string        // Icon 4 (bottom right)
+  intro_textblock_4: string    // Textblock 4 (bottom right)
 }
 
 /** LofbergsUSPs (PageType 3) */
