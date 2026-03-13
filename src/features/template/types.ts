@@ -31,7 +31,27 @@ export interface UspContent {
 export interface IncreasingImpactContent {
   headerText: string
   introText: string
-  steps: { name: string; text: string }[] // up to 10
+  wantMoreText: string
+  actionText1: string
+  actionImage1?: string
+  actionText2: string
+  actionImage2?: string
+  actionText3: string
+  actionImage3?: string
+  actionText4: string
+  actionImage4?: string
+  actionText5: string
+  actionImage5?: string
+  actionText6: string
+  actionImage6?: string
+  actionText7: string
+  actionImage7?: string
+  actionText8: string
+  actionImage8?: string
+  actionText9: string
+  actionImage9?: string
+  actionText10: string
+  actionImage10?: string
 }
 
 /** CertificationsOverview (PageType 5) */
