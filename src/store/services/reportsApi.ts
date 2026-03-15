@@ -238,6 +238,24 @@ export const reportsApi = createApi({
         return { url: String(unwrapped.fileUrl ?? unwrapped.url ?? "") }
       },
     }),
+
+    uploadImage: builder.mutation<{ url: string }, { file: File }>({
+      query: ({ file }) => {
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("fileCategory", "Image")
+
+        return {
+          url: "/files/upload",
+          method: "POST",
+          body: formData,
+        }
+      },
+      transformResponse: (response: unknown) => {
+        const unwrapped = asObject(unwrapPayload(response))
+        return { url: String(unwrapped.fileUrl ?? unwrapped.url ?? "") }
+      },
+    }),
   }),
 })
 
@@ -250,4 +268,5 @@ export const {
   useDeleteDraftMutation,
   useGenerateReportMutation,
   useUploadDataFileMutation,
+  useUploadImageMutation,
 } = reportsApi

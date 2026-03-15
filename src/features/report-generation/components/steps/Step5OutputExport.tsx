@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/select"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep5, setGenerating, setGeneratedReportId } from "@/store/slices/reportWizardSlice"
-import { useGenerateReportMutation } from "@/store/services/reportsApi"
+import { useGenerateReportMutation, useUploadImageMutation } from "@/store/services/reportsApi"
 import { OutputFormat, OutputSize, ReportType } from "../../types"
+import type { Step1Data } from "../../types"
 
 const fieldClass =
   "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-body focus:ring-0 focus:outline-none"
@@ -25,6 +26,7 @@ export function Step5OutputExport() {
   )
 
   const [generateReport] = useGenerateReportMutation()
+  const [uploadImage] = useUploadImageMutation()
   const [error, setError] = useState<string | null>(null)
 
   const isReceiptOnly = step3.reportType === ReportType.ReceiptOnly
@@ -43,6 +45,20 @@ export function Step5OutputExport() {
     [dispatch]
   )
 
+  const resolveStep1WithLogo = useCallback(async (): Promise<Step1Data> => {
+    // If there's a logo file but the URL is a blob: URL, upload it first
+    if (
+      step1.customerLogoFile &&
+      step1.customerLogoUrl &&
+      step1.customerLogoUrl.startsWith("blob:")
+    ) {
+      const { url } = await uploadImage({ file: step1.customerLogoFile }).unwrap()
+      return { ...step1, customerLogoUrl: url, customerLogoFile: null }
+    }
+    // Strip the File object so it doesn't get serialized as {}
+    return { ...step1, customerLogoFile: null }
+  }, [step1, uploadImage])
+
   const handleGenerate = useCallback(async () => {
     setError(null)
 
@@ -57,9 +73,10 @@ export function Step5OutputExport() {
 
     dispatch(setGenerating(true))
     try {
+      const resolvedStep1 = await resolveStep1WithLogo()
       const result = await generateReport({
         draftId,
-        step1,
+        step1: resolvedStep1,
         step2: { rows: step2.rows },
         step3,
         step4,
@@ -80,7 +97,7 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, generateReport, draftId, step1, step2, step3, step4, step5])
+  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, step2, step3, step4, step5, step1.salesRepresentativeId])
 
   const handlePreview = useCallback(async () => {
     setError(null)
@@ -96,9 +113,10 @@ export function Step5OutputExport() {
 
     dispatch(setGenerating(true))
     try {
+      const resolvedStep1 = await resolveStep1WithLogo()
       const result = await generateReport({
         draftId,
-        step1,
+        step1: resolvedStep1,
         step2: { rows: step2.rows },
         step3,
         step4,
@@ -117,7 +135,7 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, generateReport, draftId, step1, step2, step3, step4, step5])
+  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, step2, step3, step4, step5, step1.salesRepresentativeId])
 
   return (
     <div className="space-y-6">
