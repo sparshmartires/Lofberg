@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +25,7 @@ export function Step5OutputExport() {
   )
 
   const [generateReport] = useGenerateReportMutation()
+  const [error, setError] = useState<string | null>(null)
 
   const isReceiptOnly = step3.reportType === ReportType.ReceiptOnly
 
@@ -43,6 +44,17 @@ export function Step5OutputExport() {
   )
 
   const handleGenerate = useCallback(async () => {
+    setError(null)
+
+    if (!step1.salesRepresentativeId) {
+      setError("Please select a sales representative in Step 1.")
+      return
+    }
+    if (!step2.rows || step2.rows.length === 0) {
+      setError("Please add certification data in Step 2.")
+      return
+    }
+
     dispatch(setGenerating(true))
     try {
       const result = await generateReport({
@@ -59,17 +71,53 @@ export function Step5OutputExport() {
       if (result.generatedFileUrl) {
         window.open(result.generatedFileUrl, "_blank")
       }
-    } catch {
-      // Error handling
+    } catch (err: unknown) {
+      const message =
+        err && typeof err === "object" && "data" in err
+          ? String((err as { data?: { error?: string } }).data?.error ?? "Report generation failed")
+          : "Report generation failed. Please try again."
+      setError(message)
     } finally {
       dispatch(setGenerating(false))
     }
   }, [dispatch, generateReport, draftId, step1, step2, step3, step4, step5])
 
-  const handlePreview = useCallback(() => {
-    // In a real implementation, this would open a preview in a new tab
-    window.open(`/api/reports/preview`, "_blank")
-  }, [])
+  const handlePreview = useCallback(async () => {
+    setError(null)
+
+    if (!step1.salesRepresentativeId) {
+      setError("Please select a sales representative in Step 1.")
+      return
+    }
+    if (!step2.rows || step2.rows.length === 0) {
+      setError("Please add certification data in Step 2.")
+      return
+    }
+
+    dispatch(setGenerating(true))
+    try {
+      const result = await generateReport({
+        draftId,
+        step1,
+        step2: { rows: step2.rows },
+        step3,
+        step4,
+        step5,
+      }).unwrap()
+
+      if (result.generatedFileUrl) {
+        window.open(result.generatedFileUrl, "_blank")
+      }
+    } catch (err: unknown) {
+      const message =
+        err && typeof err === "object" && "data" in err
+          ? String((err as { data?: { error?: string } }).data?.error ?? "Preview generation failed")
+          : "Preview generation failed. Please try again."
+      setError(message)
+    } finally {
+      dispatch(setGenerating(false))
+    }
+  }, [dispatch, generateReport, draftId, step1, step2, step3, step4, step5])
 
   return (
     <div className="space-y-6">
@@ -126,6 +174,12 @@ export function Step5OutputExport() {
           </p>
         </div>
       </div>
+
+      {error && (
+        <div className="rounded-[12px] bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
 
       {/* Generate area */}
       <div className="rounded-[24px] bg-[#FAFAFA] border border-[#F0F0F0] p-8 text-center space-y-4">
