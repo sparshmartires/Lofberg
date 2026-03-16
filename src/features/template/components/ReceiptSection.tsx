@@ -5,6 +5,7 @@ import { PageType, type TemplatePageContentDto } from "@/store/services/template
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
 import { parseContentJson, type ReceiptContent } from "../types"
+import { RichTextEditor } from "./RichTextEditor"
 
 interface ReceiptFieldMap {
   bgImage: string
@@ -182,11 +183,11 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
                 Description text
               </p>
 
-              <textarea
-                placeholder="Enter description text"
+              <RichTextEditor
                 value={(content[fields.descText] as string) ?? ""}
-                onChange={(e) => updateField(page, content, fields.descText, e.target.value, idx)}
-                className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                onChange={(html) => updateField(page, content, fields.descText, html, idx)}
+                placeholder="Enter description text"
+                className="h-[110px]"
               />
             </div>
 
@@ -200,11 +201,11 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
                       Receipt text box 1
                     </p>
 
-                    <textarea
-                      placeholder="Enter section text"
+                    <RichTextEditor
                       value={(content[fields.text1] as string) ?? ""}
-                      onChange={(e) => updateField(page, content, fields.text1!, e.target.value, idx)}
-                      className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                      onChange={(html) => updateField(page, content, fields.text1!, html, idx)}
+                      placeholder="Enter section text"
+                      className="h-[110px]"
                     />
                   </div>
                 )}
@@ -215,11 +216,11 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
                       Receipt text box 2
                     </p>
 
-                    <textarea
-                      placeholder="Enter section text"
+                    <RichTextEditor
                       value={(content[fields.text2] as string) ?? ""}
-                      onChange={(e) => updateField(page, content, fields.text2!, e.target.value, idx)}
-                      className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                      onChange={(html) => updateField(page, content, fields.text2!, html, idx)}
+                      placeholder="Enter section text"
+                      className="h-[110px]"
                     />
                   </div>
                 )}

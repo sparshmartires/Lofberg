@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react"
 import { parseContentJson, type CompiledReceiptContent } from "../types"
+import { RichTextEditor } from "./RichTextEditor"
 import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
@@ -94,11 +95,11 @@ export default function CompiledReceiptSection({
         <div className="min-w-0">
           <p className="text-sm mb-2">Description text</p>
 
-          <input
-            placeholder="Enter description text"
+          <RichTextEditor
             value={parsed.receipt_comp_desc_text}
-            onChange={(e) => updateField("receipt_comp_desc_text", e.target.value)}
-            className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
+            onChange={(html) => updateField("receipt_comp_desc_text", html)}
+            placeholder="Enter description text"
+            className="h-[90px]"
           />
         </div>
 

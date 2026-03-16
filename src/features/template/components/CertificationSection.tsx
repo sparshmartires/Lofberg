@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react"
 import { parseContentJson, type CertificationsContent } from "../types"
+import { RichTextEditor } from "./RichTextEditor"
 import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
@@ -153,11 +154,11 @@ export default function CertificationsSection({
 
               <div>
                 <p className="text-sm mb-2">Description text</p>
-                <textarea
-                  placeholder="Enter certification description"
+                <RichTextEditor
                   value={parsed[textField] ?? ""}
-                  onChange={(e) => updateText(textField, e.target.value)}
-                  className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                  onChange={(html) => updateText(textField, html)}
+                  placeholder="Enter certification description"
+                  className="h-[90px]"
                 />
               </div>
             </div>

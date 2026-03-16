@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react"
 import { parseContentJson, type IncreasingImpactContent } from "../types"
+import { RichTextEditor } from "./RichTextEditor"
 import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
@@ -111,11 +112,11 @@ export default function IncreasingImpactSection({
 
       <div>
         <p className="text-sm mb-2">Intro text</p>
-        <textarea
-          placeholder="Enter introduction text"
+        <RichTextEditor
           value={parsed.introText}
-          onChange={(e) => updateText("introText", e.target.value)}
-          className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          onChange={(html) => updateText("introText", html)}
+          placeholder="Enter introduction text"
+          className="h-[110px]"
         />
       </div>
 
@@ -159,11 +160,11 @@ export default function IncreasingImpactSection({
 
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Section text</p>
-                  <textarea
-                    placeholder="Enter section text"
+                  <RichTextEditor
                     value={parsed[textField] ?? ""}
-                    onChange={(e) => updateText(textField, e.target.value)}
-                    className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+                    onChange={(html) => updateText(textField, html)}
+                    placeholder="Enter section text"
+                    className="h-[110px]"
                   />
                 </div>
               </div>
@@ -176,11 +177,11 @@ export default function IncreasingImpactSection({
 
       <div>
         <p className="text-sm mb-2">Want to know more text</p>
-        <textarea
-          placeholder="Enter 'want to know more' text"
+        <RichTextEditor
           value={parsed.wantMoreText}
-          onChange={(e) => updateText("wantMoreText", e.target.value)}
-          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          onChange={(html) => updateText("wantMoreText", html)}
+          placeholder="Enter 'want to know more' text"
+          className="h-[90px]"
         />
       </div>
     </div>
