@@ -29,7 +29,6 @@ const initialStep1: Step1Data = {
   customerSegment: "",
   customerType: "",
   customerLogoUrl: null,
-  customerLogoFile: null,
   salesRepresentativeId: "",
   salesRepresentativeName: "",
   reportDate: today(),
@@ -37,7 +36,6 @@ const initialStep1: Step1Data = {
 }
 
 const initialStep2: Step2Data = {
-  dataFile: null,
   dataFileName: null,
   rows: DEFAULT_DATA_ROWS,
   timePeriod: null,

@@ -16,6 +16,7 @@ import { useGetSalesRepresentativesQuery, useGetLanguagesQuery } from "@/store/s
 import { CustomerItem } from "@/store/services/customersApi"
 import { CustomerSearchCombobox } from "../CustomerSearchCombobox"
 import { FileDropZone } from "../FileDropZone"
+import { getCustomerLogoFile, setCustomerLogoFile } from "../../customerLogoRef"
 import type { Step1Data } from "../../types"
 
 const fieldClass =
@@ -87,8 +88,9 @@ export function Step1CustomerDetails() {
 
   const handleLogoChange = useCallback(
     (file: File | null) => {
+      setCustomerLogoFile(file)
       const logoUrl = file ? URL.createObjectURL(file) : null
-      dispatch(updateStep1({ customerLogoFile: file, customerLogoUrl: logoUrl }))
+      dispatch(updateStep1({ customerLogoUrl: logoUrl }))
     },
     [dispatch]
   )
@@ -223,7 +225,7 @@ export function Step1CustomerDetails() {
         <FileDropZone
           accept=".png,.jpg,.jpeg,.svg"
           acceptLabel="PNG, JPG or SVG recommended"
-          file={step1.customerLogoFile}
+          file={getCustomerLogoFile()}
           previewUrl={step1.customerLogoUrl}
           onFileChange={handleLogoChange}
         />

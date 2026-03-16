@@ -14,6 +14,7 @@ import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep5, setGenerating, setGeneratedReportId } from "@/store/slices/reportWizardSlice"
 import { useGenerateReportMutation, useUploadImageMutation } from "@/store/services/reportsApi"
 import { OutputFormat, OutputSize, ReportType } from "../../types"
+import { getCustomerLogoFile, setCustomerLogoFile } from "../../customerLogoRef"
 import type { Step1Data } from "../../types"
 
 const fieldClass =
@@ -46,17 +47,18 @@ export function Step5OutputExport() {
   )
 
   const resolveStep1WithLogo = useCallback(async (): Promise<Step1Data> => {
+    const logoFile = getCustomerLogoFile()
     // If there's a logo file but the URL is a blob: URL, upload it first
     if (
-      step1.customerLogoFile &&
+      logoFile &&
       step1.customerLogoUrl &&
       step1.customerLogoUrl.startsWith("blob:")
     ) {
-      const { url } = await uploadImage({ file: step1.customerLogoFile }).unwrap()
-      return { ...step1, customerLogoUrl: url, customerLogoFile: null }
+      const { url } = await uploadImage({ file: logoFile }).unwrap()
+      setCustomerLogoFile(null)
+      return { ...step1, customerLogoUrl: url }
     }
-    // Strip the File object so it doesn't get serialized as {}
-    return { ...step1, customerLogoFile: null }
+    return step1
   }, [step1, uploadImage])
 
   const handleGenerate = useCallback(async () => {

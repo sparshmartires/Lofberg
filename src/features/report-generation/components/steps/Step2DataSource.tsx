@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useRef, useState } from "react"
 import * as XLSX from "xlsx"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep2 } from "@/store/slices/reportWizardSlice"
@@ -16,15 +16,17 @@ import {
 export function Step2DataSource() {
   const dispatch = useAppDispatch()
   const step2 = useAppSelector((state) => state.reportWizard.step2)
+  const [localFile, setLocalFile] = useState<File | null>(null)
 
   const parseFile = useCallback(
     (file: File | null) => {
+      setLocalFile(file)
       if (!file) {
-        dispatch(updateStep2({ dataFile: null, dataFileName: null, rows: DEFAULT_DATA_ROWS }))
+        dispatch(updateStep2({ dataFileName: null, rows: DEFAULT_DATA_ROWS }))
         return
       }
 
-      dispatch(updateStep2({ dataFile: file, dataFileName: file.name }))
+      dispatch(updateStep2({ dataFileName: file.name }))
 
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -94,7 +96,7 @@ export function Step2DataSource() {
         <FileDropZone
           accept=".csv,.xlsx,.xls"
           acceptLabel="CSV or XLSX up to 100 MB"
-          file={step2.dataFile}
+          file={localFile}
           onFileChange={parseFile}
         />
       </div>

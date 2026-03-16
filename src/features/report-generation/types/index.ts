@@ -99,7 +99,6 @@ export interface Step1Data {
   customerSegment: string
   customerType: string
   customerLogoUrl: string | null
-  customerLogoFile: File | null
   salesRepresentativeId: string
   salesRepresentativeName: string
   reportDate: string
@@ -107,7 +106,6 @@ export interface Step1Data {
 }
 
 export interface Step2Data {
-  dataFile: File | null
   dataFileName: string | null
   rows: CertificationDataRow[]
   timePeriod: string | null
