@@ -18,27 +18,71 @@ import {
   type UpdatePageContentRequest,
 } from "@/store/services/templatesApi"
 
+// ── Helper: map A4 dirty pages to A3 counterparts by pageType ────────
+function mapPagesToA3(
+  dirtyPages: UpdatePageContentRequest[],
+  a4Pages: TemplatePageContentDto[] | undefined,
+  a3Pages: TemplatePageContentDto[] | undefined
+): UpdatePageContentRequest[] {
+  if (!a4Pages || !a3Pages) return []
+  return dirtyPages.flatMap(({ templatePageId, contentJson }) => {
+    const a4Page = a4Pages.find((p) => p.templatePageId === templatePageId)
+    if (!a4Page) return []
+    const a3Page = a3Pages.find((p) => p.pageType === a4Page.pageType)
+    if (!a3Page) return []
+    return [{ templatePageId: a3Page.templatePageId, contentJson }]
+  })
+}
+
 export function TemplatePage() {
-  const [templateType, setTemplateType] = useState("report-a4")
+  const [templateType, setTemplateType] = useState("report")
   const [language, setLanguage] = useState("en")
   const [localEdits, setLocalEdits] = useState<Record<string, string>>({})
   const [isSaving, setIsSaving] = useState(false)
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
+  const isReceipt = templateType === "receipt"
+
   // ── Fetch templates ────────────────────────────────────────────────
   const { data: templates, isLoading: isLoadingTemplates, error: templatesError } = useGetTemplatesQuery()
 
+  // Primary templates (always A4 for editing)
   const selectedTemplate = useMemo(
     () =>
       templates?.find((t) =>
-        templateType === "report-a4"
-          ? t.type === TemplateType.Report && t.size === TemplateSize.A4
-          : t.type === TemplateType.Receipt && t.size === TemplateSize.A4
+        isReceipt
+          ? t.type === TemplateType.Receipt && t.size === TemplateSize.A4
+          : t.type === TemplateType.Report && t.size === TemplateSize.A4
       ),
-    [templates, templateType]
+    [templates, isReceipt]
   )
 
-  // ── Fetch active version with pages ────────────────────────────────
+  const compiledTemplate = useMemo(
+    () =>
+      isReceipt
+        ? templates?.find((t) => t.type === TemplateType.CompiledReceipt && t.size === TemplateSize.A4)
+        : undefined,
+    [templates, isReceipt]
+  )
+
+  // A3 counterparts (for mirroring saves)
+  const a3ReceiptTemplate = useMemo(
+    () =>
+      isReceipt
+        ? templates?.find((t) => t.type === TemplateType.Receipt && t.size === TemplateSize.A3)
+        : undefined,
+    [templates, isReceipt]
+  )
+
+  const a3CompiledTemplate = useMemo(
+    () =>
+      isReceipt
+        ? templates?.find((t) => t.type === TemplateType.CompiledReceipt && t.size === TemplateSize.A3)
+        : undefined,
+    [templates, isReceipt]
+  )
+
+  // ── Fetch active versions (A4 primary) ─────────────────────────────
   const { data: versionData, isLoading: isLoadingVersion } = useGetTemplateVersionQuery(
     {
       templateId: selectedTemplate?.id ?? "",
@@ -47,27 +91,59 @@ export function TemplatePage() {
     { skip: !selectedTemplate?.id || !selectedTemplate?.activeVersion?.id }
   )
 
-  // ── Initialize local edits from fetched version ────────────────────
+  const { data: compiledVersionData, isLoading: isLoadingCompiledVersion } = useGetTemplateVersionQuery(
+    {
+      templateId: compiledTemplate?.id ?? "",
+      versionId: compiledTemplate?.activeVersion?.id ?? "",
+    },
+    { skip: !compiledTemplate?.id || !compiledTemplate?.activeVersion?.id }
+  )
+
+  // ── Fetch A3 versions (for page ID mapping during save mirroring) ──
+  const { data: a3VersionData } = useGetTemplateVersionQuery(
+    {
+      templateId: a3ReceiptTemplate?.id ?? "",
+      versionId: a3ReceiptTemplate?.activeVersion?.id ?? "",
+    },
+    { skip: !a3ReceiptTemplate?.id || !a3ReceiptTemplate?.activeVersion?.id }
+  )
+
+  const { data: a3CompiledVersionData } = useGetTemplateVersionQuery(
+    {
+      templateId: a3CompiledTemplate?.id ?? "",
+      versionId: a3CompiledTemplate?.activeVersion?.id ?? "",
+    },
+    { skip: !a3CompiledTemplate?.id || !a3CompiledTemplate?.activeVersion?.id }
+  )
+
+  // ── Merge A4 pages from both sources ───────────────────────────────
+  const allApiPages = useMemo(() => {
+    const main = versionData?.pages ?? []
+    const compiled = compiledVersionData?.pages ?? []
+    return [...main, ...compiled]
+  }, [versionData, compiledVersionData])
+
+  // ── Initialize local edits from fetched versions ───────────────────
   useEffect(() => {
-    if (versionData?.pages) {
+    if (allApiPages.length > 0) {
       const initial: Record<string, string> = {}
-      for (const page of versionData.pages) {
+      for (const page of allApiPages) {
         if (page.contentJson) {
           initial[page.templatePageId] = page.contentJson
         }
       }
       setLocalEdits(initial)
     }
-  }, [versionData])
+  }, [allApiPages])
 
   // ── Merge API pages with local edits ───────────────────────────────
   const mergedPages: TemplatePageContentDto[] = useMemo(() => {
-    if (!versionData?.pages) return []
-    return versionData.pages.map((page) => ({
+    if (allApiPages.length === 0) return []
+    return allApiPages.map((page) => ({
       ...page,
       contentJson: localEdits[page.templatePageId] ?? page.contentJson,
     }))
-  }, [versionData, localEdits])
+  }, [allApiPages, localEdits])
 
   // ── Page change handler ────────────────────────────────────────────
   const handlePageChange = useCallback(
@@ -77,13 +153,17 @@ export function TemplatePage() {
     []
   )
 
-  // ── Build dirty pages for API ──────────────────────────────────────
-  const buildDirtyPages = useCallback((): UpdatePageContentRequest[] => {
-    return Object.entries(localEdits).map(([templatePageId, contentJson]) => ({
-      templatePageId,
-      contentJson,
-    }))
-  }, [localEdits])
+  // ── Build dirty pages for a specific template ──────────────────────
+  const buildDirtyPagesForTemplate = useCallback(
+    (templatePages: TemplatePageContentDto[] | undefined): UpdatePageContentRequest[] => {
+      if (!templatePages) return []
+      const pageIds = new Set(templatePages.map((p) => p.templatePageId))
+      return Object.entries(localEdits)
+        .filter(([id]) => pageIds.has(id))
+        .map(([templatePageId, contentJson]) => ({ templatePageId, contentJson }))
+    },
+    [localEdits]
+  )
 
   // ── Mutations ──────────────────────────────────────────────────────
   const [saveActiveChanges] = useSaveActiveChangesMutation()
@@ -95,8 +175,11 @@ export function TemplatePage() {
       setStatusMessage({ type: "error", text: "Not connected to API. Please log in first." })
       return
     }
-    const pages = buildDirtyPages()
-    if (pages.length === 0) {
+
+    const mainPages = buildDirtyPagesForTemplate(versionData?.pages)
+    const compiledPages = buildDirtyPagesForTemplate(compiledVersionData?.pages)
+
+    if (mainPages.length === 0 && compiledPages.length === 0) {
       setStatusMessage({ type: "error", text: "No changes to save." })
       return
     }
@@ -104,10 +187,40 @@ export function TemplatePage() {
     setIsSaving(true)
     setStatusMessage(null)
     try {
-      await saveActiveChanges({
-        templateId: selectedTemplate.id,
-        body: { pages },
-      }).unwrap()
+      // Save to A4 templates (primary)
+      if (mainPages.length > 0) {
+        await saveActiveChanges({
+          templateId: selectedTemplate.id,
+          body: { pages: mainPages },
+        }).unwrap()
+      }
+      if (compiledPages.length > 0 && compiledTemplate?.id) {
+        await saveActiveChanges({
+          templateId: compiledTemplate.id,
+          body: { pages: compiledPages },
+        }).unwrap()
+      }
+
+      // Mirror to A3 templates
+      if (mainPages.length > 0 && a3ReceiptTemplate?.id) {
+        const a3Pages = mapPagesToA3(mainPages, versionData?.pages, a3VersionData?.pages)
+        if (a3Pages.length > 0) {
+          await saveActiveChanges({
+            templateId: a3ReceiptTemplate.id,
+            body: { pages: a3Pages },
+          }).unwrap()
+        }
+      }
+      if (compiledPages.length > 0 && a3CompiledTemplate?.id) {
+        const a3Pages = mapPagesToA3(compiledPages, compiledVersionData?.pages, a3CompiledVersionData?.pages)
+        if (a3Pages.length > 0) {
+          await saveActiveChanges({
+            templateId: a3CompiledTemplate.id,
+            body: { pages: a3Pages },
+          }).unwrap()
+        }
+      }
+
       setStatusMessage({ type: "success", text: "Changes saved successfully." })
     } catch (err) {
       console.error("Failed to save changes:", err)
@@ -117,13 +230,27 @@ export function TemplatePage() {
     }
   }
 
+  // Helper: create draft if one doesn't already exist (ignore 409 Conflict)
+  const ensureDraft = async (templateId: string) => {
+    try {
+      await createDraft({ templateId }).unwrap()
+    } catch (err: unknown) {
+      const status = (err as { status?: number })?.status
+      if (status !== 409) throw err
+      // Draft already exists — proceed with update
+    }
+  }
+
   const handleSaveAsDraft = async () => {
     if (!selectedTemplate?.id) {
       setStatusMessage({ type: "error", text: "Not connected to API. Please log in first." })
       return
     }
-    const pages = buildDirtyPages()
-    if (pages.length === 0) {
+
+    const mainPages = buildDirtyPagesForTemplate(versionData?.pages)
+    const compiledPages = buildDirtyPagesForTemplate(compiledVersionData?.pages)
+
+    if (mainPages.length === 0 && compiledPages.length === 0) {
       setStatusMessage({ type: "error", text: "No changes to save as draft." })
       return
     }
@@ -131,11 +258,22 @@ export function TemplatePage() {
     setIsSaving(true)
     setStatusMessage(null)
     try {
-      await createDraft({ templateId: selectedTemplate.id }).unwrap()
-      await updateDraft({
-        templateId: selectedTemplate.id,
-        body: { pages },
-      }).unwrap()
+      // Drafts are only created for A4 templates; A3 is mirrored on publish/save
+      if (mainPages.length > 0) {
+        await ensureDraft(selectedTemplate.id)
+        await updateDraft({
+          templateId: selectedTemplate.id,
+          body: { pages: mainPages },
+        }).unwrap()
+      }
+      if (compiledPages.length > 0 && compiledTemplate?.id) {
+        await ensureDraft(compiledTemplate.id)
+        await updateDraft({
+          templateId: compiledTemplate.id,
+          body: { pages: compiledPages },
+        }).unwrap()
+      }
+
       setStatusMessage({ type: "success", text: "Draft saved successfully." })
     } catch (err) {
       console.error("Failed to save as draft:", err)
@@ -145,7 +283,7 @@ export function TemplatePage() {
     }
   }
 
-  const isLoading = isLoadingTemplates || isLoadingVersion
+  const isLoading = isLoadingTemplates || isLoadingVersion || isLoadingCompiledVersion
 
   return (
     <div className="min-h-screen bg-background py-10">
@@ -215,7 +353,14 @@ export function TemplatePage() {
         onPageChange={handlePageChange}
       />
 
-      {selectedTemplate && <VersionHistory templateId={selectedTemplate.id} />}
+      {selectedTemplate && (
+        <VersionHistory
+          templateIds={[
+            selectedTemplate.id,
+            ...(compiledTemplate ? [compiledTemplate.id] : []),
+          ]}
+        />
+      )}
     </div>
   )
 }

@@ -21,7 +21,7 @@ export default function SustainabilitySection({
   pages = [],
   onPageChange,
 }: SustainabilitySectionProps) {
-  const isReceiptTemplate = templateType === "receipt-a4"
+  const isReceiptTemplate = templateType === "receipt"
 
   const [activeTab, setActiveTab] = useState(isReceiptTemplate ? "receipt" : "about")
 

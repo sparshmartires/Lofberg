@@ -84,7 +84,7 @@ export function FileDropZone({
         onChange={handleInputChange}
       />
 
-      <div className="flex flex-col items-center justify-center text-center px-6 py-12">
+      <div className="flex flex-col items-center justify-center text-center px-6 py-3 h-full">
         {file || displayUrl ? (
           <div className="relative">
             {isImage && displayUrl ? (

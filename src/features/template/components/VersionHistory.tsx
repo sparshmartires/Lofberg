@@ -13,7 +13,8 @@ import {
 } from "@/store/services/templatesApi"
 
 interface VersionHistoryProps {
-  templateId: string
+  templateIds: string[]
+  label?: string
 }
 
 const STATUS_BADGE: Record<VersionStatus, { label: string; classes: string }> = {
@@ -41,8 +42,16 @@ function formatDate(dateString: string | null): string {
   })
 }
 
-export default function VersionHistory({ templateId }: VersionHistoryProps) {
-  const { data: versions = [], isLoading } = useGetTemplateVersionsQuery({ templateId })
+export default function VersionHistory({ templateIds, label }: VersionHistoryProps) {
+  const primaryId = templateIds[0]
+  const { data: versions = [], isLoading } = useGetTemplateVersionsQuery({ templateId: primaryId })
+
+  // Fetch secondary template versions for restore (need matching versionId by versionNumber)
+  const { data: secondaryVersions = [] } = useGetTemplateVersionsQuery(
+    { templateId: templateIds[1] ?? "" },
+    { skip: templateIds.length < 2 }
+  )
+
   const [createDraft] = useCreateDraftMutation()
   const [publishDraft] = usePublishDraftMutation()
   const [rollbackVersion] = useRollbackVersionMutation()
@@ -53,8 +62,10 @@ export default function VersionHistory({ templateId }: VersionHistoryProps) {
   const handleCreateVersion = async () => {
     setIsCreating(true)
     try {
-      await createDraft({ templateId }).unwrap()
-      await publishDraft({ templateId }).unwrap()
+      for (const id of templateIds) {
+        await createDraft({ templateId: id }).unwrap()
+        await publishDraft({ templateId: id }).unwrap()
+      }
     } catch (err) {
       console.error("Failed to create version:", err)
     } finally {
@@ -68,7 +79,21 @@ export default function VersionHistory({ templateId }: VersionHistoryProps) {
     }
     setActionInProgress(versionId)
     try {
-      await rollbackVersion({ templateId, versionId }).unwrap()
+      // Restore primary template
+      await rollbackVersion({ templateId: primaryId, versionId }).unwrap()
+
+      // Restore secondary templates by matching versionNumber
+      if (templateIds.length > 1) {
+        const primaryVersion = versions.find((v) => v.id === versionId)
+        if (primaryVersion) {
+          for (const id of templateIds.slice(1)) {
+            const match = secondaryVersions.find((v) => v.versionNumber === primaryVersion.versionNumber)
+            if (match) {
+              await rollbackVersion({ templateId: id, versionId: match.id }).unwrap()
+            }
+          }
+        }
+      }
     } catch (err) {
       console.error("Failed to restore version:", err)
     } finally {
@@ -79,7 +104,9 @@ export default function VersionHistory({ templateId }: VersionHistoryProps) {
   const handlePublishDraft = async () => {
     setActionInProgress("publish")
     try {
-      await publishDraft({ templateId }).unwrap()
+      for (const id of templateIds) {
+        await publishDraft({ templateId: id }).unwrap()
+      }
     } catch (err) {
       console.error("Failed to publish draft:", err)
     } finally {
@@ -91,7 +118,9 @@ export default function VersionHistory({ templateId }: VersionHistoryProps) {
     if (!window.confirm("Are you sure you want to delete this draft?")) return
     setActionInProgress("delete")
     try {
-      await deleteDraft({ templateId }).unwrap()
+      for (const id of templateIds) {
+        await deleteDraft({ templateId: id }).unwrap()
+      }
     } catch (err) {
       console.error("Failed to delete draft:", err)
     } finally {
@@ -110,7 +139,7 @@ export default function VersionHistory({ templateId }: VersionHistoryProps) {
   return (
     <div className="rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 mt-[20px]">
       <div className="flex items-center justify-between mb-6 max-[649px]:flex-col max-[649px]:items-start max-[649px]:gap-4">
-        <h3 className="text-lg font-medium text-[#1F1F1F]">Version history</h3>
+        <h3 className="text-lg font-medium text-[#1F1F1F]">{label ?? "Version history"}</h3>
         <Button
           variant="primary"
           className="page-header-with-action-button"

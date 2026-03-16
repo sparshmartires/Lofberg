@@ -87,17 +87,23 @@ export interface CertificationsContent {
   cert_organic_logo?: string
 }
 
-/** Receipt pages (PageTypes 6–9) — one per certification */
-export interface ReceiptContent {
-  textBox1: string
-  textBox2: string
-}
+/** Receipt pages (PageTypes 6–9) — one per certification.
+ *  Keys match the HTML data-field-name attributes (different per receipt type). */
+export type ReceiptContent = Record<string, string | undefined>
 
-/** CompiledReceiptSummary (PageType 10) */
+/** CompiledReceiptSummary (PageType 10).
+ *  Keys match HTML data-field-name attributes:
+ *  receipt_comp_header, receipt_comp_desc_text,
+ *  receipt_comp_icon_1/2/3, receipt_comp_section_name_1/2/3 */
 export interface CompiledReceiptContent {
-  headerText: string
-  introText: string
-  boxes: { sectionName: string; text: string }[] // 1–3
+  receipt_comp_header: string
+  receipt_comp_desc_text: string
+  receipt_comp_icon_1?: string
+  receipt_comp_icon_2?: string
+  receipt_comp_icon_3?: string
+  receipt_comp_section_name_1?: string
+  receipt_comp_section_name_2?: string
+  receipt_comp_section_name_3?: string
 }
 
 // ── Helper ───────────────────────────────────────────────────────────
