@@ -40,6 +40,7 @@ const initialStep2: Step2Data = {
   dataFile: null,
   dataFileName: null,
   rows: DEFAULT_DATA_ROWS,
+  timePeriod: null,
 }
 
 const initialStep3: Step3Data = {

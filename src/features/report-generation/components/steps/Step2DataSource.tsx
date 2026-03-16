@@ -32,10 +32,31 @@ export function Step2DataSource() {
           const data = e.target?.result
           const workbook = XLSX.read(data, { type: "array" })
           const sheet = workbook.Sheets[workbook.SheetNames[0]]
-          const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet)
+
+          // Extract metadata from rows before the data header
+          const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1")
+          let timePeriod: string | null = null
+          let headerRow = 0
+
+          for (let r = range.s.r; r <= Math.min(range.e.r, 10); r++) {
+            const cell = sheet[XLSX.utils.encode_cell({ r, c: 0 })]
+            const cellVal = cell ? String(cell.v).trim().toLowerCase() : ""
+            if (cellVal === "date") {
+              const dateCell = sheet[XLSX.utils.encode_cell({ r, c: 1 })]
+              if (dateCell) timePeriod = String(dateCell.v).trim()
+            }
+            if (cellVal === "name") {
+              headerRow = r
+              break
+            }
+          }
+
+          const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
+            range: headerRow,
+          })
 
           const rows = mapExcelToRows(json)
-          dispatch(updateStep2({ rows }))
+          dispatch(updateStep2({ rows, timePeriod }))
         } catch {
           // If parsing fails, keep default rows
         }
@@ -104,12 +125,20 @@ function mapExcelToRows(
     const idx = rows.findIndex((r) => r.certificationType === certType)
     if (idx === -1) continue
 
+    // Pick the right currency column based on certification type
+    let currency: number | null = toNum(row["Currency (€)"] ?? row.Currency ?? row.currency ?? row.amount)
+    if (certType === CertificationType.FTPremierCooperativePremium) {
+      currency = toNum(row["EUR_FT_Cooperative_Premium"] ?? row["EUR_FT_Coop"]) ?? currency
+    } else if (certType === CertificationType.FTPremierOrganicFarming) {
+      currency = toNum(row["EUR_FT_Organic_Income"] ?? row["EUR_FT_Org"]) ?? currency
+    }
+
     rows[idx] = {
       ...rows[idx],
-      quantityKg: toNum(row["Qty (kg)"] ?? row.Qty ?? row.qty ?? row.Quantity ?? row.quantity),
+      quantityKg: toNum(row["Qty (kgs)"] ?? row["Qty (kg)"] ?? row.Qty ?? row.qty ?? row.Quantity ?? row.quantity),
       footballFields: toNum(row["Football Fields"] ?? row["Football fields"] ?? row.footballFields),
       cupsOfCoffee: toNum(row["Cups of Coffee"] ?? row["Cups of coffee"] ?? row.cupsOfCoffee ?? row.cups),
-      currencyAmount: toNum(row["Currency (€)"] ?? row.Currency ?? row.currency ?? row.amount),
+      currencyAmount: currency,
     }
   }
 
@@ -117,16 +146,19 @@ function mapExcelToRows(
 }
 
 function matchCertificationType(name: string): CertificationType | null {
+  // Exact label match first (case-insensitive)
   const labels = Object.entries(CERTIFICATION_LABELS)
   for (const [key, label] of labels) {
-    if (name.includes(label.toLowerCase()) || label.toLowerCase().includes(name)) {
+    if (name === label.toLowerCase()) {
       return Number(key) as CertificationType
     }
   }
+
+  // Keyword fallbacks (order matters: specific before general)
   if (name.includes("rainforest")) return CertificationType.RainforestAlliance
-  if (name.includes("fairtrade") && !name.includes("premier")) return CertificationType.Fairtrade
   if (name.includes("cooperative") || name.includes("coop")) return CertificationType.FTPremierCooperativePremium
   if (name.includes("organic farming") || name.includes("organic income")) return CertificationType.FTPremierOrganicFarming
+  if ((name.includes("fairtrade") || name.includes("fair trade")) && !name.includes("premier")) return CertificationType.Fairtrade
   if (name.includes("organic")) return CertificationType.Organic
   if (name.includes("co2")) return CertificationType.CO2
   return null

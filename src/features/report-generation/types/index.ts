@@ -110,6 +110,7 @@ export interface Step2Data {
   dataFile: File | null
   dataFileName: string | null
   rows: CertificationDataRow[]
+  timePeriod: string | null
 }
 
 export interface Step3Data {
@@ -168,7 +169,7 @@ export interface SaveDraftRequest {
 export interface GenerateReportRequest {
   draftId?: string | null
   step1: Step1Data
-  step2: { rows: CertificationDataRow[] }
+  step2: { rows: CertificationDataRow[]; timePeriod?: string | null }
   step3: Step3Data
   step4: Step4Data
   step5: Step5Data

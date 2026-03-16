@@ -77,7 +77,7 @@ export function Step5OutputExport() {
       const result = await generateReport({
         draftId,
         step1: resolvedStep1,
-        step2: { rows: step2.rows },
+        step2: { rows: step2.rows, timePeriod: step2.timePeriod },
         step3,
         step4,
         step5,
@@ -117,7 +117,7 @@ export function Step5OutputExport() {
       const result = await generateReport({
         draftId,
         step1: resolvedStep1,
-        step2: { rows: step2.rows },
+        step2: { rows: step2.rows, timePeriod: step2.timePeriod },
         step3,
         step4,
         step5,
