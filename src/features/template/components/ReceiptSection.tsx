@@ -9,10 +9,9 @@ import { RichTextEditor } from "./RichTextEditor"
 
 interface ReceiptFieldMap {
   bgImage: string
+  sectionImage: string
   header: string
   descText: string
-  text1?: string
-  text2?: string
 }
 
 const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMap }[] = [
@@ -21,10 +20,9 @@ const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMa
     pageType: PageType.ReceiptRAC,
     fields: {
       bgImage: "receipt_bg_image",
+      sectionImage: "receipt_section_icon",
       header: "receipt_header",
       descText: "receipt_desc_text",
-      text1: "receipt_text_1",
-      text2: "receipt_text_2",
     },
   },
   {
@@ -32,6 +30,7 @@ const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMa
     pageType: PageType.ReceiptCO2,
     fields: {
       bgImage: "receipt_co2_bg_image",
+      sectionImage: "receipt_co2_section_icon",
       header: "receipt_co2_header",
       descText: "receipt_co2_desc_text",
     },
@@ -41,6 +40,7 @@ const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMa
     pageType: PageType.ReceiptFairtrade,
     fields: {
       bgImage: "receipt_ft_bg_image",
+      sectionImage: "receipt_ft_section_icon",
       header: "receipt_ft_header",
       descText: "receipt_ft_desc_text",
     },
@@ -50,6 +50,7 @@ const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMa
     pageType: PageType.ReceiptOrganic,
     fields: {
       bgImage: "receipt_org_bg_image",
+      sectionImage: "receipt_org_section_icon",
       header: "receipt_org_header",
       descText: "receipt_org_desc_text",
     },
@@ -65,7 +66,7 @@ interface ReceiptSectionProps {
 
 export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSectionProps) {
   const [localEdits, setLocalEdits] = useState<Record<number, ReceiptContent>>({})
-  const [imageFiles, setImageFiles] = useState<Record<number, File | null>>({})
+  const [imageFiles, setImageFiles] = useState<Record<string, File | null>>({})
   const [uploadImage] = useUploadTemplateImageMutation()
 
   const receiptData = useMemo(
@@ -103,17 +104,17 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
   }
 
   const handleImageChange = useCallback(
-    async (idx: number, page: TemplatePageContentDto | undefined, content: ReceiptContent, bgField: string, file: File | null) => {
-      setImageFiles((prev) => ({ ...prev, [idx]: file }))
+    async (key: string, page: TemplatePageContentDto | undefined, content: ReceiptContent, fieldName: string, file: File | null, idx: number) => {
+      setImageFiles((prev) => ({ ...prev, [key]: file }))
       if (!file) {
-        emitChange(page, { ...content, [bgField]: undefined }, idx)
+        emitChange(page, { ...content, [fieldName]: undefined }, idx)
         return
       }
       try {
         const result = await uploadImage({ file }).unwrap()
-        emitChange(page, { ...content, [bgField]: result.url }, idx)
+        emitChange(page, { ...content, [fieldName]: result.url }, idx)
       } catch {
-        setImageFiles((prev) => ({ ...prev, [idx]: null }))
+        setImageFiles((prev) => ({ ...prev, [key]: null }))
       }
     },
     [uploadImage, emitChange]
@@ -147,20 +148,37 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
               {label}
             </p>
 
-            {/* BACKGROUND IMAGE */}
-            <div>
-              <p className="text-sm mb-2">
-                Background image
-              </p>
+            {/* IMAGES */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm mb-2">
+                  Background image
+                </p>
 
-              <FileDropZone
-                accept=".jpg,.jpeg,.png,.svg,.webp"
-                acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
-                file={imageFiles[idx] || null}
-                previewUrl={content[fields.bgImage] as string | undefined}
-                onFileChange={(file) => handleImageChange(idx, page, content, fields.bgImage, file)}
-                className="h-[110px]"
-              />
+                <FileDropZone
+                  accept=".jpg,.jpeg,.png,.svg,.webp"
+                  acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
+                  file={imageFiles[`${idx}-bg`] || null}
+                  previewUrl={content[fields.bgImage] as string | undefined}
+                  onFileChange={(file) => handleImageChange(`${idx}-bg`, page, content, fields.bgImage, file, idx)}
+                  className="h-[110px]"
+                />
+              </div>
+
+              <div>
+                <p className="text-sm mb-2">
+                  Section image
+                </p>
+
+                <FileDropZone
+                  accept=".jpg,.jpeg,.png,.svg,.webp"
+                  acceptLabel="Small icon/logo, Max 2MB, JPG/PNG/SVG"
+                  file={imageFiles[`${idx}-section`] || null}
+                  previewUrl={content[fields.sectionImage] as string | undefined}
+                  onFileChange={(file) => handleImageChange(`${idx}-section`, page, content, fields.sectionImage, file, idx)}
+                  className="h-[110px]"
+                />
+              </div>
             </div>
 
             {/* HEADER */}
@@ -190,43 +208,6 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
                 className="h-[110px]"
               />
             </div>
-
-            {/* ADDITIONAL TEXT BOXES (RAC only) */}
-            {(fields.text1 || fields.text2) && (
-              <div className="grid lg:grid-cols-2 gap-8">
-
-                {fields.text1 && (
-                  <div className="min-w-0">
-                    <p className="text-sm mb-2">
-                      Receipt text box 1
-                    </p>
-
-                    <RichTextEditor
-                      value={(content[fields.text1] as string) ?? ""}
-                      onChange={(html) => updateField(page, content, fields.text1!, html, idx)}
-                      placeholder="Enter section text"
-                      className="h-[110px]"
-                    />
-                  </div>
-                )}
-
-                {fields.text2 && (
-                  <div className="min-w-0">
-                    <p className="text-sm mb-2">
-                      Receipt text box 2
-                    </p>
-
-                    <RichTextEditor
-                      value={(content[fields.text2] as string) ?? ""}
-                      onChange={(html) => updateField(page, content, fields.text2!, html, idx)}
-                      placeholder="Enter section text"
-                      className="h-[110px]"
-                    />
-                  </div>
-                )}
-
-              </div>
-            )}
 
             {/* INFO TEXT */}
             <p className="text-xs text-[#7B3EBE]">
