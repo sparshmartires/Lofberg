@@ -27,6 +27,7 @@ const initialStep1: Step1Data = {
   customerEmail: "",
   customerPhone: "",
   customerSegment: "",
+  customerSegmentId: null,
   customerType: "",
   customerLogoUrl: null,
   salesRepresentativeId: "",
@@ -52,7 +53,8 @@ const initialStep4: Step4Data = {
   includeThirdPartyLogo: false,
   showCupsOfCoffee: true,
   selectedAddOnBlocks: [],
-  conversionLogicId: null,
+  selectedSegmentConversionId: null,
+  selectedCO2ConversionId: null,
 }
 
 const initialStep5: Step5Data = {

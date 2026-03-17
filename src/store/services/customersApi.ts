@@ -65,6 +65,17 @@ export interface UpdateCustomerRequest extends CreateCustomerRequest {
   isActive: boolean
 }
 
+/** Convert a request object to FormData with PascalCase keys for [FromForm] binding */
+const toFormData = (obj: Record<string, unknown>): FormData => {
+  const formData = new FormData()
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === null || value === undefined) continue
+    const pascalKey = key.charAt(0).toUpperCase() + key.slice(1)
+    formData.append(pascalKey, String(value))
+  }
+  return formData
+}
+
 type ApiObject = Record<string, unknown>
 
 const UUID_REGEX =
@@ -384,20 +395,18 @@ export const customersApi = createApi({
     }),
 
     createCustomer: builder.mutation<unknown, CreateCustomerRequest>({
-      query: (body) => ({
-        url: "/customers",
-        method: "POST",
-        body,
-      }),
+      query: (body) => {
+        const formData = toFormData(body)
+        return { url: "/customers", method: "POST", body: formData }
+      },
       invalidatesTags: [{ type: "Customers", id: "LIST" }],
     }),
 
     updateCustomer: builder.mutation<unknown, { id: string; body: UpdateCustomerRequest }>({
-      query: ({ id, body }) => ({
-        url: `/customers/${id}`,
-        method: "PUT",
-        body,
-      }),
+      query: ({ id, body }) => {
+        const formData = toFormData(body)
+        return { url: `/customers/${id}`, method: "PUT", body: formData }
+      },
       invalidatesTags: (_result, _error, arg) => [
         { type: "Customers", id: arg.id },
         { type: "Customers", id: "LIST" },

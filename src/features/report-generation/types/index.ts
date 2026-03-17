@@ -97,6 +97,7 @@ export interface Step1Data {
   customerEmail: string
   customerPhone: string
   customerSegment: string
+  customerSegmentId: string | null
   customerType: string
   customerLogoUrl: string | null
   salesRepresentativeId: string
@@ -122,7 +123,8 @@ export interface Step4Data {
   includeThirdPartyLogo: boolean
   showCupsOfCoffee: boolean
   selectedAddOnBlocks: AddOnBlock[]
-  conversionLogicId: string | null
+  selectedSegmentConversionId: string | null
+  selectedCO2ConversionId: string | null
 }
 
 export interface Step5Data {

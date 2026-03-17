@@ -3,9 +3,16 @@
 import Image from "next/image"
 import { useAppSelector } from "@/store/hooks"
 import { CertificationType, FT_PREMIER_TYPES } from "../types"
+import { useGetSegmentConversionsBySegmentQuery, useGetCO2ConversionsQuery } from "@/store/services/conversionLogicApi"
 
 export function ReportSummary() {
-  const { step1, step2, currentStep } = useAppSelector((state) => state.reportWizard)
+  const { step1, step2, step4, currentStep } = useAppSelector((state) => state.reportWizard)
+
+  const segmentId = step1.customerSegmentId
+  const { data: segmentConversions = [] } = useGetSegmentConversionsBySegmentQuery(
+    segmentId!, { skip: !segmentId }
+  )
+  const { data: co2Conversions = [] } = useGetCO2ConversionsQuery()
 
   const hasCustomer = Boolean(step1.customerId)
   const hasData = step2.rows.some((r) => r.quantityKg !== null || r.currencyAmount !== null)
@@ -67,6 +74,31 @@ export function ReportSummary() {
               </p>
             )}
           </div>
+
+          {/* Conversion selections (from step 4+) */}
+          {currentStep >= 4 && (
+            <div className="space-y-1 text-sm">
+              <p className="text-sm font-medium text-[#747474] mt-2">Conversion settings</p>
+              <p>
+                <span className="text-[#747474]">Unit: </span>
+                <span className="text-[#1F1F1F]">
+                  {step4.selectedSegmentConversionId
+                    ? segmentConversions.find((sc) => sc.id === step4.selectedSegmentConversionId)?.metricName ?? "Custom"
+                    : step4.showCupsOfCoffee
+                      ? "Cups of coffee"
+                      : "Football pitches"}
+                </span>
+              </p>
+              {step4.selectedCO2ConversionId && (
+                <p>
+                  <span className="text-[#747474]">CO2 comparison: </span>
+                  <span className="text-[#1F1F1F]">
+                    {co2Conversions.find((c) => c.id === step4.selectedCO2ConversionId)?.name ?? "Custom"}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Data table preview (from step 2+) */}
           {hasData && currentStep >= 2 && (

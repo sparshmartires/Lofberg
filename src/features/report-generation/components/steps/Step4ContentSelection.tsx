@@ -2,10 +2,24 @@
 
 import { useCallback } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep4 } from "@/store/slices/reportWizardSlice"
 import { AddOnBlockSelector } from "../AddOnBlockSelector"
 import { AddOnBlock, CertificationType, FT_PREMIER_TYPES, CERTIFICATION_LABELS } from "../../types"
+import {
+  useGetSegmentConversionsBySegmentQuery,
+  useGetCO2ConversionsQuery,
+} from "@/store/services/conversionLogicApi"
+
+const fieldClass =
+  "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-body focus:ring-0 focus:outline-none"
 
 export function Step4ContentSelection() {
   const dispatch = useAppDispatch()
@@ -13,7 +27,21 @@ export function Step4ContentSelection() {
   const step2 = useAppSelector((state) => state.reportWizard.step2)
   const step1 = useAppSelector((state) => state.reportWizard.step1)
 
-  const hasCustomer = Boolean(step1.customerId)
+  const segmentId = step1.customerSegmentId
+
+  // Fetch segment conversions for the customer's segment (skip if no segment)
+  const { data: segmentConversions = [] } = useGetSegmentConversionsBySegmentQuery(
+    segmentId!,
+    { skip: !segmentId }
+  )
+
+  // Fetch CO2 conversions
+  const { data: co2Conversions = [] } = useGetCO2ConversionsQuery()
+
+  // Check if step2 has CO2 data with non-zero quantity
+  const hasCO2Data = step2.rows.some(
+    (r) => r.certificationType === CertificationType.CO2 && r.quantityKg !== null && r.quantityKg > 0
+  )
 
   const handleTocChange = useCallback(
     (checked: boolean) => {
@@ -29,19 +57,51 @@ export function Step4ContentSelection() {
     [dispatch]
   )
 
-  const handleCupsChange = useCallback(
-    (checked: boolean) => {
-      dispatch(updateStep4({ showCupsOfCoffee: checked }))
-    },
-    [dispatch]
-  )
-
   const handleAddOnChange = useCallback(
     (selected: AddOnBlock[]) => {
       dispatch(updateStep4({ selectedAddOnBlocks: selected }))
     },
     [dispatch]
   )
+
+  const handleQuantityUnitChange = useCallback(
+    (value: string) => {
+      if (value === "football_pitches") {
+        dispatch(updateStep4({
+          selectedSegmentConversionId: null,
+          showCupsOfCoffee: false,
+        }))
+      } else if (value === "cups_of_coffee") {
+        dispatch(updateStep4({
+          selectedSegmentConversionId: null,
+          showCupsOfCoffee: true,
+        }))
+      } else {
+        // A segment conversion ID
+        dispatch(updateStep4({
+          selectedSegmentConversionId: value,
+          showCupsOfCoffee: false,
+        }))
+      }
+    },
+    [dispatch]
+  )
+
+  const handleCO2ConversionChange = useCallback(
+    (value: string) => {
+      dispatch(updateStep4({
+        selectedCO2ConversionId: value === "none" ? null : value,
+      }))
+    },
+    [dispatch]
+  )
+
+  // Determine current quantity unit dropdown value
+  const quantityUnitValue = step4.selectedSegmentConversionId
+    ? step4.selectedSegmentConversionId
+    : step4.showCupsOfCoffee
+      ? "cups_of_coffee"
+      : "football_pitches"
 
   // Only show certifications with quantity data (non-FT Premier rows)
   const certRows = step2.rows.filter(
@@ -118,25 +178,61 @@ export function Step4ContentSelection() {
         )}
       </div>
 
-      {/* Cover page - cups of coffee */}
+      {/* Receipt quantity unit */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">Cover page</label>
-        <div className="flex items-center gap-2">
-          <Checkbox
-            checked={step4.showCupsOfCoffee}
-            onCheckedChange={(checked) => handleCupsChange(Boolean(checked))}
-          />
-          <label className="text-sm text-[#1F1F1F] cursor-pointer">
-            Show cups of coffee representation
-          </label>
-        </div>
+        <label className="text-sm font-medium text-[#1F1F1F]">Receipt quantity unit</label>
+        <p className="text-xs text-[#9CA3AF]">
+          Choose which unit to display on receipt pages
+        </p>
+
+        <Select value={quantityUnitValue} onValueChange={handleQuantityUnitChange}>
+          <SelectTrigger className={fieldClass}>
+            <SelectValue placeholder="Select quantity unit" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="football_pitches">Football pitches (default)</SelectItem>
+            <SelectItem value="cups_of_coffee">Cups of coffee</SelectItem>
+            {segmentConversions.map((sc) => (
+              <SelectItem key={sc.id} value={sc.id}>
+                {sc.metricName} ({sc.segmentName})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Conversion logic warning */}
-      {!hasCustomer && (
+      {/* CO2 comparison */}
+      {hasCO2Data && (
+        <div className="space-y-3">
+          <label className="text-sm font-medium text-[#1F1F1F]">CO2 comparison</label>
+          <p className="text-xs text-[#9CA3AF]">
+            Choose a tangible equivalent to display alongside raw CO2 kg on the CO2 receipt
+          </p>
+
+          <Select
+            value={step4.selectedCO2ConversionId ?? "none"}
+            onValueChange={handleCO2ConversionChange}
+          >
+            <SelectTrigger className={fieldClass}>
+              <SelectValue placeholder="Select CO2 comparison" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">None (show raw kg CO2 only)</SelectItem>
+              {co2Conversions.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
+      {/* Segment warning */}
+      {!segmentId && (
         <div className="rounded-[16px] bg-[#FFF8E1] border border-[#FFE082] px-4 py-3">
           <p className="text-sm text-[#6D4C00]">
-            Please select a customer in step 1 to configure conversion logic
+            Select a customer with a segment in Step 1 to see segment-specific conversion options
           </p>
         </div>
       )}

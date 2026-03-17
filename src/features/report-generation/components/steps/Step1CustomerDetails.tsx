@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import {
@@ -13,7 +13,7 @@ import {
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep1 } from "@/store/slices/reportWizardSlice"
 import { useGetSalesRepresentativesQuery, useGetLanguagesQuery } from "@/store/services/salesRepresentativesApi"
-import { CustomerItem } from "@/store/services/customersApi"
+import { CustomerItem, useGetCustomerSegmentsQuery } from "@/store/services/customersApi"
 import { CustomerSearchCombobox } from "../CustomerSearchCombobox"
 import { FileDropZone } from "../FileDropZone"
 import { getCustomerLogoFile, setCustomerLogoFile } from "../../customerLogoRef"
@@ -27,6 +27,8 @@ export function Step1CustomerDetails() {
   const step1 = useAppSelector((state) => state.reportWizard.step1)
   const authUser = useAppSelector((state) => state.auth.user)
 
+  const [isManualEntry, setIsManualEntry] = useState(false)
+
   const isSalesperson = authUser?.roles?.includes("Salesperson") ?? false
 
   const { data: salesRepsData } = useGetSalesRepresentativesQuery(
@@ -35,6 +37,7 @@ export function Step1CustomerDetails() {
   )
 
   const { data: languagesData } = useGetLanguagesQuery()
+  const { data: segments = [] } = useGetCustomerSegmentsQuery()
 
   const { control } = useForm<Step1Data>({
     defaultValues: step1,
@@ -66,6 +69,7 @@ export function Step1CustomerDetails() {
         customerEmail: customer.contactEmail ?? "",
         customerPhone: customer.contactPhone ?? "",
         customerSegment: customer.segmentName ?? "",
+        customerSegmentId: customer.segmentId ?? null,
         customerType: customer.serviceTier ? `Type ${customer.serviceTier === 1 ? "A" : "B"}` : "",
         customerLogoUrl: customer.logoUrl ?? null,
       }))
@@ -81,6 +85,7 @@ export function Step1CustomerDetails() {
       customerEmail: "",
       customerPhone: "",
       customerSegment: "",
+      customerSegmentId: null,
       customerType: "",
       customerLogoUrl: null,
     }))
@@ -112,17 +117,67 @@ export function Step1CustomerDetails() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-[#1F1F1F]">Customer name</label>
-            <button type="button" className="text-sm font-medium text-primary underline">
-              Add customer
+            <button
+              type="button"
+              onClick={() => {
+                setIsManualEntry(!isManualEntry)
+                if (!isManualEntry) {
+                  // Switching to manual: clear customerId but keep name
+                  dispatch(updateStep1({ customerId: null }))
+                } else {
+                  // Switching back to search: clear manual fields
+                  handleCustomerClear()
+                }
+              }}
+              className="text-sm font-medium text-primary underline"
+            >
+              {isManualEntry ? "Search existing" : "Enter manually"}
             </button>
           </div>
-          <CustomerSearchCombobox
-            value={step1.customerName}
-            selectedCustomerId={step1.customerId}
-            onSelect={handleCustomerSelect}
-            onClear={handleCustomerClear}
-          />
+          {isManualEntry ? (
+            <Input
+              value={step1.customerName}
+              onChange={(e) => dispatch(updateStep1({ customerName: e.target.value }))}
+              placeholder="Enter customer name"
+              className={fieldClass}
+            />
+          ) : (
+            <CustomerSearchCombobox
+              value={step1.customerName}
+              selectedCustomerId={step1.customerId}
+              onSelect={handleCustomerSelect}
+              onClear={handleCustomerClear}
+            />
+          )}
         </div>
+
+        {/* Segment (manual entry only) */}
+        {isManualEntry && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#1F1F1F]">Customer segment</label>
+            <Select
+              value={step1.customerSegmentId ?? ""}
+              onValueChange={(val) => {
+                const seg = segments.find((s) => s.id === val)
+                dispatch(updateStep1({
+                  customerSegmentId: val,
+                  customerSegment: seg?.name ?? "",
+                }))
+              }}
+            >
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="Select segment" />
+              </SelectTrigger>
+              <SelectContent>
+                {segments.map((seg) => (
+                  <SelectItem key={seg.id} value={seg.id}>
+                    {seg.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* Salesperson */}
         <div className="space-y-2">

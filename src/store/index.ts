@@ -6,6 +6,7 @@ import { salesRepresentativesApi } from "./services/salesRepresentativesApi";
 import { customersApi } from "./services/customersApi";
 import { templatesApi } from "./services/templatesApi";
 import { reportsApi } from "./services/reportsApi";
+import { conversionLogicApi } from "./services/conversionLogicApi";
 import authReducer from "./slices/authSlice";
 import reportWizardReducer from "./slices/reportWizardSlice";
 
@@ -19,6 +20,7 @@ export const store = configureStore({
     [customersApi.reducerPath]: customersApi.reducer,
     [templatesApi.reducerPath]: templatesApi.reducer,
     [reportsApi.reducerPath]: reportsApi.reducer,
+    [conversionLogicApi.reducerPath]: conversionLogicApi.reducer,
     auth: authReducer,
     reportWizard: reportWizardReducer,
   },
@@ -30,7 +32,8 @@ export const store = configureStore({
       salesRepresentativesApi.middleware,
       customersApi.middleware,
       templatesApi.middleware,
-      reportsApi.middleware
+      reportsApi.middleware,
+      conversionLogicApi.middleware
     ),
 });
 
