@@ -118,10 +118,12 @@ export interface Step3Data {
   generateMediaScreens: boolean
 }
 
+export type QuantityUnit = "cups_of_coffee" | "kilograms"
+
 export interface Step4Data {
   includeTableOfContents: boolean
   includeThirdPartyLogo: boolean
-  showCupsOfCoffee: boolean
+  quantityUnit: QuantityUnit
   selectedAddOnBlocks: AddOnBlock[]
   selectedSegmentConversionId: string | null
   selectedCO2ConversionId: string | null

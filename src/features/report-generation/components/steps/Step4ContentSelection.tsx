@@ -12,7 +12,7 @@ import {
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep4 } from "@/store/slices/reportWizardSlice"
 import { AddOnBlockSelector } from "../AddOnBlockSelector"
-import { AddOnBlock, CertificationType, FT_PREMIER_TYPES, CERTIFICATION_LABELS } from "../../types"
+import { AddOnBlock, FT_PREMIER_TYPES, CERTIFICATION_LABELS, QuantityUnit } from "../../types"
 import {
   useGetSegmentConversionsBySegmentQuery,
   useGetCO2ConversionsQuery,
@@ -38,11 +38,6 @@ export function Step4ContentSelection() {
   // Fetch CO2 conversions
   const { data: co2Conversions = [] } = useGetCO2ConversionsQuery()
 
-  // Check if step2 has CO2 data with non-zero quantity
-  const hasCO2Data = step2.rows.some(
-    (r) => r.certificationType === CertificationType.CO2 && r.quantityKg !== null && r.quantityKg > 0
-  )
-
   const handleTocChange = useCallback(
     (checked: boolean) => {
       dispatch(updateStep4({ includeTableOfContents: checked }))
@@ -66,28 +61,21 @@ export function Step4ContentSelection() {
 
   const handleQuantityUnitChange = useCallback(
     (value: string) => {
-      if (value === "football_pitches") {
-        dispatch(updateStep4({
-          selectedSegmentConversionId: null,
-          showCupsOfCoffee: false,
-        }))
-      } else if (value === "cups_of_coffee") {
-        dispatch(updateStep4({
-          selectedSegmentConversionId: null,
-          showCupsOfCoffee: true,
-        }))
-      } else {
-        // A segment conversion ID
-        dispatch(updateStep4({
-          selectedSegmentConversionId: value,
-          showCupsOfCoffee: false,
-        }))
-      }
+      dispatch(updateStep4({ quantityUnit: value as QuantityUnit }))
     },
     [dispatch]
   )
 
-  const handleCO2ConversionChange = useCallback(
+  const handleAreaUnitChange = useCallback(
+    (value: string) => {
+      dispatch(updateStep4({
+        selectedSegmentConversionId: value === "none" ? null : value,
+      }))
+    },
+    [dispatch]
+  )
+
+  const handleCO2UnitChange = useCallback(
     (value: string) => {
       dispatch(updateStep4({
         selectedCO2ConversionId: value === "none" ? null : value,
@@ -95,13 +83,6 @@ export function Step4ContentSelection() {
     },
     [dispatch]
   )
-
-  // Determine current quantity unit dropdown value
-  const quantityUnitValue = step4.selectedSegmentConversionId
-    ? step4.selectedSegmentConversionId
-    : step4.showCupsOfCoffee
-      ? "cups_of_coffee"
-      : "football_pitches"
 
   // Only show certifications with quantity data (non-FT Premier rows)
   const certRows = step2.rows.filter(
@@ -178,20 +159,40 @@ export function Step4ContentSelection() {
         )}
       </div>
 
-      {/* Receipt quantity unit */}
+      {/* Quantity unit */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">Receipt quantity unit</label>
+        <label className="text-sm font-medium text-[#1F1F1F]">Quantity unit</label>
         <p className="text-xs text-[#9CA3AF]">
-          Choose which unit to display on receipt pages
+          Choose how to express the base coffee quantity
         </p>
 
-        <Select value={quantityUnitValue} onValueChange={handleQuantityUnitChange}>
+        <Select value={step4.quantityUnit} onValueChange={handleQuantityUnitChange}>
           <SelectTrigger className={fieldClass}>
             <SelectValue placeholder="Select quantity unit" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="football_pitches">Football pitches (default)</SelectItem>
             <SelectItem value="cups_of_coffee">Cups of coffee</SelectItem>
+            <SelectItem value="kilograms">Kilograms</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Area unit */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-[#1F1F1F]">Area unit</label>
+        <p className="text-xs text-[#9CA3AF]">
+          Choose a comparison metric for area/impact on receipts
+        </p>
+
+        <Select
+          value={step4.selectedSegmentConversionId ?? "none"}
+          onValueChange={handleAreaUnitChange}
+        >
+          <SelectTrigger className={fieldClass}>
+            <SelectValue placeholder="Select area unit" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">Football pitches (default)</SelectItem>
             {segmentConversions.map((sc) => (
               <SelectItem key={sc.id} value={sc.id}>
                 {sc.metricName} ({sc.segmentName})
@@ -199,43 +200,38 @@ export function Step4ContentSelection() {
             ))}
           </SelectContent>
         </Select>
+
+        {!segmentId && (
+          <p className="text-xs text-[#9CA3AF] italic">
+            Select a customer with a segment in Step 1 to see additional conversion options
+          </p>
+        )}
       </div>
 
-      {/* CO2 comparison */}
-      {hasCO2Data && (
-        <div className="space-y-3">
-          <label className="text-sm font-medium text-[#1F1F1F]">CO2 comparison</label>
-          <p className="text-xs text-[#9CA3AF]">
-            Choose a tangible equivalent to display alongside raw CO2 kg on the CO2 receipt
-          </p>
+      {/* CO2 unit */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-[#1F1F1F]">CO2 unit</label>
+        <p className="text-xs text-[#9CA3AF]">
+          Choose how to express CO2 reduction on the CO2 receipt
+        </p>
 
-          <Select
-            value={step4.selectedCO2ConversionId ?? "none"}
-            onValueChange={handleCO2ConversionChange}
-          >
-            <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="Select CO2 comparison" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">None (show raw kg CO2 only)</SelectItem>
-              {co2Conversions.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
-
-      {/* Segment warning */}
-      {!segmentId && (
-        <div className="rounded-[16px] bg-[#FFF8E1] border border-[#FFE082] px-4 py-3">
-          <p className="text-sm text-[#6D4C00]">
-            Select a customer with a segment in Step 1 to see segment-specific conversion options
-          </p>
-        </div>
-      )}
+        <Select
+          value={step4.selectedCO2ConversionId ?? "none"}
+          onValueChange={handleCO2UnitChange}
+        >
+          <SelectTrigger className={fieldClass}>
+            <SelectValue placeholder="Select CO2 unit" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">Kilograms (default)</SelectItem>
+            {co2Conversions.map((c) => (
+              <SelectItem key={c.id} value={c.id}>
+                {c.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   )
 }

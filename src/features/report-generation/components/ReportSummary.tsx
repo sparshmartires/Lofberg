@@ -80,23 +80,27 @@ export function ReportSummary() {
             <div className="space-y-1 text-sm">
               <p className="text-sm font-medium text-[#747474] mt-2">Conversion settings</p>
               <p>
-                <span className="text-[#747474]">Unit: </span>
+                <span className="text-[#747474]">Quantity: </span>
+                <span className="text-[#1F1F1F]">
+                  {step4.quantityUnit === "kilograms" ? "Kilograms" : "Cups of coffee"}
+                </span>
+              </p>
+              <p>
+                <span className="text-[#747474]">Area: </span>
                 <span className="text-[#1F1F1F]">
                   {step4.selectedSegmentConversionId
                     ? segmentConversions.find((sc) => sc.id === step4.selectedSegmentConversionId)?.metricName ?? "Custom"
-                    : step4.showCupsOfCoffee
-                      ? "Cups of coffee"
-                      : "Football pitches"}
+                    : "Football pitches"}
                 </span>
               </p>
-              {step4.selectedCO2ConversionId && (
-                <p>
-                  <span className="text-[#747474]">CO2 comparison: </span>
-                  <span className="text-[#1F1F1F]">
-                    {co2Conversions.find((c) => c.id === step4.selectedCO2ConversionId)?.name ?? "Custom"}
-                  </span>
-                </p>
-              )}
+              <p>
+                <span className="text-[#747474]">CO2: </span>
+                <span className="text-[#1F1F1F]">
+                  {step4.selectedCO2ConversionId
+                    ? co2Conversions.find((c) => c.id === step4.selectedCO2ConversionId)?.name ?? "Custom"
+                    : "Kilograms"}
+                </span>
+              </p>
             </div>
           )}
 

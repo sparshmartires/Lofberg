@@ -51,7 +51,7 @@ const initialStep3: Step3Data = {
 const initialStep4: Step4Data = {
   includeTableOfContents: true,
   includeThirdPartyLogo: false,
-  showCupsOfCoffee: true,
+  quantityUnit: "cups_of_coffee",
   selectedAddOnBlocks: [],
   selectedSegmentConversionId: null,
   selectedCO2ConversionId: null,
