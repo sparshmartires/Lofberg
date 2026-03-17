@@ -14,7 +14,7 @@ import { useGetCustomerSegmentsQuery } from "@/store/services/customersApi"
 
 interface NewRowForm {
   segmentId: string
-  metricId: string
+  metricLabel: string
   value: string
 }
 
@@ -26,22 +26,22 @@ export default function SegmentBasedConversions() {
   const [updateConversion] = useUpdateSegmentConversionMutation()
   const [deleteConversion] = useDeleteSegmentConversionMutation()
 
-  const [form, setForm] = useState<NewRowForm>({ segmentId: "", metricId: "", value: "" })
+  const [form, setForm] = useState<NewRowForm>({ segmentId: "", metricLabel: "", value: "" })
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
 
   const handleCreate = async () => {
-    if (!form.segmentId || !form.metricId || !form.value) return
+    if (!form.segmentId || !form.metricLabel.trim() || !form.value) return
     const conversionValue = parseFloat(form.value)
     if (isNaN(conversionValue) || conversionValue <= 0) return
 
     await createConversion({
       segmentId: form.segmentId,
-      metricId: form.metricId,
+      metricLabel: form.metricLabel.trim(),
       conversionValue,
     })
-    setForm({ segmentId: "", metricId: "", value: "" })
+    setForm({ segmentId: "", metricLabel: "", value: "" })
   }
 
   const handleUpdate = async (item: SegmentConversionItem) => {
@@ -50,7 +50,7 @@ export default function SegmentBasedConversions() {
 
     await updateConversion({
       id: item.id,
-      body: { metricId: item.metricId, conversionValue },
+      body: { metricLabel: item.metricName, conversionValue },
     })
     setEditingId(null)
   }
@@ -179,10 +179,10 @@ export default function SegmentBasedConversions() {
           </Select>
 
           <input
-            value={form.metricId}
-            onChange={(e) => setForm({ ...form, metricId: e.target.value })}
-            className="w-[160px] h-[36px] rounded-full bg-[#F4F4F4] px-4 text-sm"
-            placeholder="Metric ID"
+            value={form.metricLabel}
+            onChange={(e) => setForm({ ...form, metricLabel: e.target.value })}
+            className="w-[160px] h-[40px] rounded-full bg-[#F4F4F4] px-4 text-sm"
+            placeholder="e.g. Hotel room"
           />
 
           <input
@@ -196,7 +196,7 @@ export default function SegmentBasedConversions() {
             type="button"
             onClick={handleCreate}
             disabled={isCreating}
-            className="border border-[#7B3EBE] text-[#7B3EBE] rounded-full px-6 py-2 text-sm disabled:opacity-50"
+            className="w-fit border border-[#7B3EBE] text-[#7B3EBE] rounded-full px-4 py-2 text-sm disabled:opacity-50"
           >
             {isCreating ? "Adding..." : "Add"}
           </button>
@@ -232,12 +232,12 @@ export default function SegmentBasedConversions() {
 
           {/* METRIC */}
           <div>
-            <p className="text-[14px] mb-2">Metric ID</p>
+            <p className="text-[14px] mb-2">Segment metric</p>
             <input
-              value={form.metricId}
-              onChange={(e) => setForm({ ...form, metricId: e.target.value })}
+              value={form.metricLabel}
+              onChange={(e) => setForm({ ...form, metricLabel: e.target.value })}
               className="w-full h-[44px] rounded-full border border-[#EDEDED] px-4"
-              placeholder="Metric ID"
+              placeholder="e.g. Hotel room"
             />
           </div>
 
@@ -257,7 +257,7 @@ export default function SegmentBasedConversions() {
             type="button"
             onClick={handleCreate}
             disabled={isCreating}
-            className="w-full border border-[#7B3EBE] text-[#7B3EBE] rounded-full py-3 disabled:opacity-50"
+            className="w-fit border border-[#7B3EBE] text-[#7B3EBE] rounded-full px-6 py-3 disabled:opacity-50"
           >
             {isCreating ? "Adding..." : "Add new conversion"}
           </button>

@@ -23,12 +23,12 @@ export interface CO2ConversionItem {
 
 export interface CreateSegmentConversionRequest {
   segmentId: string
-  metricId: string
+  metricLabel: string
   conversionValue: number
 }
 
 export interface UpdateSegmentConversionRequest {
-  metricId: string
+  metricLabel: string
   conversionValue: number
 }
 

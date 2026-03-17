@@ -183,7 +183,7 @@ export default function CO2Conversions() {
             type="button"
             onClick={handleCreate}
             disabled={isCreating}
-            className="border border-[#7B3EBE] text-[#7B3EBE] rounded-full px-6 py-2 text-sm disabled:opacity-50"
+            className="w-fit border border-[#7B3EBE] text-[#7B3EBE] rounded-full px-4 py-2 text-sm disabled:opacity-50"
           >
             {isCreating ? "Adding..." : "Add"}
           </button>
@@ -224,7 +224,7 @@ export default function CO2Conversions() {
             type="button"
             onClick={handleCreate}
             disabled={isCreating}
-            className="w-full border border-[#7B3EBE] text-[#7B3EBE] rounded-full py-3 disabled:opacity-50"
+            className="w-fit border border-[#7B3EBE] text-[#7B3EBE] rounded-full px-6 py-3 disabled:opacity-50"
           >
             {isCreating ? "Adding..." : "Add new conversion"}
           </button>
