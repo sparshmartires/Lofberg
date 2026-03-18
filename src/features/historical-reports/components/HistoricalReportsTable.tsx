@@ -9,21 +9,14 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Download, Pencil } from "lucide-react"
+import { Archive, Download, Pencil, RotateCcw } from "lucide-react"
 import { useRouter } from "next/navigation"
-
-export interface HistoricalReportItem {
-  id: string
-  title: string
-  customerName: string
-  salesRepresentative: string
-  status: "Completed" | "In Progress" | "Draft"
-  reportDate: string
-  type: string
-}
+import type { ReportDto, StatusLabel } from "@/features/report-generation/types"
+import { useArchiveReportMutation, useRestoreReportMutation } from "@/store/services/reportsApi"
 
 interface HistoricalReportsTableProps {
-  reports: HistoricalReportItem[]
+  reports: ReportDto[]
+  showSalesRepColumn?: boolean
 }
 
 const formatDate = (value: string) => {
@@ -39,14 +32,29 @@ const formatDate = (value: string) => {
   }).format(date)
 }
 
-const getStatusClass = (status: HistoricalReportItem["status"]) => {
-  if (status === "Completed") return "bg-[#7DB356] text-white"
-  if (status === "In Progress") return "bg-[#FFE378] text-[#3C1053]"
-  return "bg-[#E5E5E5] text-[#6B6B6B]"
+const getStatusClass = (statusLabel: StatusLabel) => {
+  switch (statusLabel) {
+    case "Latest":
+      return "bg-[#7DB356] text-white"
+    case "In Progress":
+      return "bg-[#FFE378] text-[#3C1053]"
+    case "Draft":
+      return "bg-[#E5E5E5] text-[#6B6B6B]"
+    case "Past":
+      return "bg-[#B0C4DE] text-[#1a1a1a]"
+    case "Archived":
+      return "bg-[#D4D4D4] text-[#6B6B6B]"
+    case "Failed":
+      return "bg-[#E57373] text-white"
+    default:
+      return "bg-[#E5E5E5] text-[#6B6B6B]"
+  }
 }
 
-export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps) {
+export function HistoricalReportsTable({ reports, showSalesRepColumn = true }: HistoricalReportsTableProps) {
   const router = useRouter()
+  const [archiveReport] = useArchiveReportMutation()
+  const [restoreReport] = useRestoreReportMutation()
 
   const columnWidths = {
     title: "w-[220px]",
@@ -54,19 +62,43 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
     salesRep: "w-[180px]",
     status: "w-[130px]",
     date: "w-[130px]",
-    actions: "w-[90px]",
+    actions: "w-[120px]",
   }
 
-  const handleDownload = (report: HistoricalReportItem) => {
-    const payload = `Report ID: ${report.id}\nTitle: ${report.title}\nCustomer: ${report.customerName}\nSales Representative: ${report.salesRepresentative}\nStatus: ${report.status}\nReport Date: ${formatDate(report.reportDate)}\nType: ${report.type}`
-    const blob = new Blob([payload], { type: "text/plain;charset=utf-8" })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement("a")
-    anchor.href = url
-    anchor.download = `${report.title.replace(/\s+/g, "-").toLowerCase()}-${report.id}.txt`
-    anchor.click()
-    URL.revokeObjectURL(url)
+  const handleDownload = (report: ReportDto) => {
+    if (report.generatedFileUrl) {
+      window.open(report.generatedFileUrl, "_blank")
+    }
   }
+
+  const handleArchive = async (report: ReportDto) => {
+    const message =
+      report.statusLabel === "Draft"
+        ? `Delete draft "${report.title}"? This cannot be undone.`
+        : `Archive report "${report.title}"?`
+
+    if (window.confirm(message)) {
+      await archiveReport({ id: report.id })
+    }
+  }
+
+  const handleRestore = async (report: ReportDto) => {
+    if (window.confirm(`Restore report "${report.title}"?`)) {
+      await restoreReport({ id: report.id })
+    }
+  }
+
+  const canEdit = (report: ReportDto) =>
+    report.statusLabel !== "Archived"
+
+  const canDownload = (report: ReportDto) =>
+    report.statusLabel !== "Draft" && report.statusLabel !== "Archived" && report.generatedFileUrl
+
+  const canArchive = (report: ReportDto) =>
+    report.statusLabel !== "Archived"
+
+  const canRestore = (report: ReportDto) =>
+    report.statusLabel === "Archived"
 
   return (
     <div className="table-card border-[#EDEDED]">
@@ -80,9 +112,11 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
               <TableHead className={`table-header-cell ${columnWidths.customer}`}>
                 Customer name
               </TableHead>
-              <TableHead className={`table-header-cell ${columnWidths.salesRep}`}>
-                Sales representative
-              </TableHead>
+              {showSalesRepColumn && (
+                <TableHead className={`table-header-cell ${columnWidths.salesRep}`}>
+                  Sales representative
+                </TableHead>
+              )}
               <TableHead className={`table-header-cell ${columnWidths.status}`}>
                 Status
               </TableHead>
@@ -101,7 +135,7 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
                 <TableCell className={`table-name-cell ${columnWidths.title}`} data-label="Report title/ID">
                   <div className="flex flex-col gap-0.5">
                     <span className="table-name-text truncate">{report.title}</span>
-                    <span className="table-muted-text">{report.id}</span>
+                    <span className="table-muted-text">{report.id.substring(0, 8)}</span>
                   </div>
                 </TableCell>
 
@@ -109,13 +143,15 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
                   {report.customerName}
                 </TableCell>
 
-                <TableCell className={`table-muted-text ${columnWidths.salesRep}`} data-label="Sales representative">
-                  {report.salesRepresentative}
-                </TableCell>
+                {showSalesRepColumn && (
+                  <TableCell className={`table-muted-text ${columnWidths.salesRep}`} data-label="Sales representative">
+                    {report.salesRepresentative}
+                  </TableCell>
+                )}
 
                 <TableCell className={columnWidths.status} data-label="Status">
-                  <Badge className={`table-status-badge ${getStatusClass(report.status)}`}>
-                    {report.status}
+                  <Badge className={`table-status-badge ${getStatusClass(report.statusLabel)}`}>
+                    {report.statusLabel}
                   </Badge>
                 </TableCell>
 
@@ -125,22 +161,48 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
 
                 <TableCell className={columnWidths.actions} data-label="Actions">
                   <div className="table-actions-wrap">
-                    {report.status === "Draft" && (
+                    {canEdit(report) && (
                       <button
-                        onClick={() => router.push(`/report-generation?draftId=${report.id}`)}
+                        onClick={() =>
+                          router.push(
+                            report.statusLabel === "Draft"
+                              ? `/report-generation?draftId=${report.id}`
+                              : `/report-generation?reportId=${report.id}`
+                          )
+                        }
                         className="table-action-btn"
-                        aria-label={`Continue editing ${report.title}`}
+                        aria-label={`Edit ${report.title}`}
                       >
                         <Pencil className="table-action-icon" />
                       </button>
                     )}
-                    <button
-                      onClick={() => handleDownload(report)}
-                      className="table-action-btn"
-                      aria-label={`Download ${report.title}`}
-                    >
-                      <Download className="table-action-icon" />
-                    </button>
+                    {canDownload(report) && (
+                      <button
+                        onClick={() => handleDownload(report)}
+                        className="table-action-btn"
+                        aria-label={`Download ${report.title}`}
+                      >
+                        <Download className="table-action-icon" />
+                      </button>
+                    )}
+                    {canArchive(report) && (
+                      <button
+                        onClick={() => handleArchive(report)}
+                        className="table-action-btn"
+                        aria-label={`Archive ${report.title}`}
+                      >
+                        <Archive className="table-action-icon" />
+                      </button>
+                    )}
+                    {canRestore(report) && (
+                      <button
+                        onClick={() => handleRestore(report)}
+                        className="table-action-btn"
+                        aria-label={`Restore ${report.title}`}
+                      >
+                        <RotateCcw className="table-action-icon" />
+                      </button>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
@@ -149,52 +211,67 @@ export function HistoricalReportsTable({ reports }: HistoricalReportsTableProps)
         </Table>
       </div>
 
- <div className="users-list-mobile">
-  {reports.map((report) => (
-    <div key={report.id} className="user-mobile-card">
+      <div className="users-list-mobile">
+        {reports.map((report) => (
+          <div key={report.id} className="user-mobile-card">
+            <div className="flex items-center justify-between">
+              <div className="text-[14px] text-[#1F1F1F]">
+                Report title/ID : <span className="text-[#4E4E4E]">{report.id.substring(0, 8)}</span>
+              </div>
 
-      {/* HEADER */}
-      <div className="flex items-center justify-between">
-        <div className="text-[14px] text-[#1F1F1F]">
-          Report title/ID : <span className="text-[#4E4E4E]">{report.id}</span>
-        </div>
+              <Badge className={`${getStatusClass(report.statusLabel)} rounded-full px-4 py-1 text-xs`}>
+                {report.statusLabel}
+              </Badge>
+            </div>
 
-        <Badge className={`${getStatusClass(report.status)} rounded-full px-4 py-1 text-xs`}>
-          {report.status}
-        </Badge>
+            <div className="user-mobile-divider" />
+
+            <div className="text-[14px] text-[#4E4E4E]">
+              Customer name : {report.customerName}
+            </div>
+
+            {showSalesRepColumn && (
+              <div className="text-[14px] text-[#4E4E4E]">
+                Sales representative: {report.salesRepresentative}
+              </div>
+            )}
+
+            <div className="text-[14px] text-[#4E4E4E]">
+              Report date : {formatDate(report.reportDate)}
+            </div>
+
+            <div className="flex justify-end mt-4 gap-3">
+              {canDownload(report) && (
+                <button
+                  onClick={() => handleDownload(report)}
+                  className="flex items-center gap-2 text-[#5B2D91] text-[14px]"
+                >
+                  Download
+                  <Download className="h-4 w-4" />
+                </button>
+              )}
+              {canArchive(report) && (
+                <button
+                  onClick={() => handleArchive(report)}
+                  className="flex items-center gap-2 text-[#5B2D91] text-[14px]"
+                >
+                  Archive
+                  <Archive className="h-4 w-4" />
+                </button>
+              )}
+              {canRestore(report) && (
+                <button
+                  onClick={() => handleRestore(report)}
+                  className="flex items-center gap-2 text-[#5B2D91] text-[14px]"
+                >
+                  Restore
+                  <RotateCcw className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
-
-      <div className="user-mobile-divider" />
-
-      {/* CUSTOMER */}
-      <div className="text-[14px] text-[#4E4E4E]">
-        Customer name : {report.customerName}
-      </div>
-
-      {/* SALES REP */}
-      <div className="text-[14px] text-[#4E4E4E]">
-        Sales representative: {report.salesRepresentative}
-      </div>
-
-      {/* DATE */}
-      <div className="text-[14px] text-[#4E4E4E]">
-        Report date : {formatDate(report.reportDate)}
-      </div>
-
-      {/* ACTION */}
-      <div className="flex justify-end mt-4">
-        <button
-          onClick={() => handleDownload(report)}
-          className="flex items-center gap-2 text-[#5B2D91] text-[14px]"
-        >
-          Save
-          <Download className="h-4 w-4" />
-        </button>
-      </div>
-
-    </div>
-  ))}
-</div>
     </div>
   )
 }

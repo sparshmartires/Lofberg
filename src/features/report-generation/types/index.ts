@@ -147,6 +147,8 @@ export interface ReportWizardState {
 }
 
 // API DTOs
+export type StatusLabel = "Draft" | "Latest" | "Past" | "Archived" | "In Progress" | "Failed"
+
 export interface ReportDto {
   id: string
   title: string
@@ -156,6 +158,7 @@ export interface ReportDto {
   reportDate: string
   reportType: ReportType
   status: ReportStatus
+  statusLabel: StatusLabel
   outputFormat: OutputFormat
   outputSize: OutputSize
   generatedFileUrl: string | null

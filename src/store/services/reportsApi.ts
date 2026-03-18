@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import type {
   ReportDto,
+  StatusLabel,
   GetReportsParams,
   PaginatedReportsResponse,
   SaveDraftRequest,
@@ -76,6 +77,7 @@ const mapReport = (item: ApiObject): ReportDto => ({
   reportDate: String(item.reportDate ?? item.createdAt ?? ""),
   reportType: Number(item.reportType ?? 0),
   status: Number(item.status ?? 0),
+  statusLabel: String(item.statusLabel ?? "Draft") as StatusLabel,
   outputFormat: Number(item.outputFormat ?? 0),
   outputSize: Number(item.outputSize ?? 0),
   generatedFileUrl: toNullableString(item.generatedFileUrl ?? item.fileUrl),
@@ -221,6 +223,28 @@ export const reportsApi = createApi({
       ],
     }),
 
+    archiveReport: builder.mutation<void, { id: string }>({
+      query: ({ id }) => ({
+        url: `/reports/${id}/archive`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Reports", id: arg.id },
+        { type: "Reports", id: "LIST" },
+      ],
+    }),
+
+    restoreReport: builder.mutation<void, { id: string }>({
+      query: ({ id }) => ({
+        url: `/reports/${id}/restore`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Reports", id: arg.id },
+        { type: "Reports", id: "LIST" },
+      ],
+    }),
+
     uploadDataFile: builder.mutation<{ url: string }, { file: File }>({
       query: ({ file }) => {
         const formData = new FormData()
@@ -267,6 +291,8 @@ export const {
   useSaveDraftMutation,
   useDeleteDraftMutation,
   useGenerateReportMutation,
+  useArchiveReportMutation,
+  useRestoreReportMutation,
   useUploadDataFileMutation,
   useUploadImageMutation,
 } = reportsApi

@@ -21,6 +21,7 @@ interface HistoricalReportsFiltersProps {
   salesRepresentativeOptions: string[]
   typeOptions: string[]
   statusOptions: string[]
+  showSalesRepFilter?: boolean
   onSearchChange: (value: string) => void
   onCustomerChange: (value: string) => void
   onSalesRepresentativeChange: (value: string) => void
@@ -38,6 +39,7 @@ export function HistoricalReportsFilters({
   salesRepresentativeOptions,
   typeOptions,
   statusOptions,
+  showSalesRepFilter = true,
   onSearchChange,
   onCustomerChange,
   onSalesRepresentativeChange,
@@ -51,7 +53,7 @@ export function HistoricalReportsFilters({
 
   return (
     <div className="filters-card">
-      <div className="hidden gap-4 md:grid md:grid-cols-2 xl:grid-cols-5">
+      <div className={`hidden gap-4 md:grid md:grid-cols-2 ${showSalesRepFilter ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}>
         <div className="filter-field">
           <label>Search</label>
           <Input
@@ -79,22 +81,24 @@ export function HistoricalReportsFilters({
           </Select>
         </div>
 
-        <div className="filter-field">
-          <label>Sales Representative</label>
-          <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
-            <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="All Sales Representative" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Sales Representative</SelectItem>
-              {salesRepresentativeOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {showSalesRepFilter && (
+          <div className="filter-field">
+            <label>Sales Representative</label>
+            <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Sales Representative" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Sales Representative</SelectItem>
+                {salesRepresentativeOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <div className="filter-field">
           <label>Type</label>
@@ -160,22 +164,24 @@ export function HistoricalReportsFilters({
             </Select>
           </div>
 
-          <div className="filter-field mb-4">
-            <label>Sales Representative</label>
-            <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
-              <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Sales Representative" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Sales Representative</SelectItem>
-                {salesRepresentativeOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {showSalesRepFilter && (
+            <div className="filter-field mb-4">
+              <label>Sales Representative</label>
+              <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
+                <SelectTrigger className={fieldClass}>
+                  <SelectValue placeholder="All Sales Representative" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sales Representative</SelectItem>
+                  {salesRepresentativeOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="filter-field mb-4">
             <label>Type</label>

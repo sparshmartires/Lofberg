@@ -1,93 +1,22 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { AppPagination } from "@/components/ui/app-pagination"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
-import {
-  HistoricalReportsTable,
-  HistoricalReportItem,
-} from "../components/HistoricalReportsTable"
+import { HistoricalReportsTable } from "../components/HistoricalReportsTable"
 import { HistoricalReportsFilters } from "../components/HistoricalReportsFilters"
+import { useGetReportsQuery } from "@/store/services/reportsApi"
+import { useAuth } from "@/store/hooks/useAuth"
 
-const mockReports: HistoricalReportItem[] = [
-  {
-    id: "RPT-1001",
-    title: "Q1 Sustainability Summary",
-    customerName: "Nordic Beans AB",
-    salesRepresentative: "Emma Johansson",
-    status: "Completed",
-    reportDate: "2026-01-12",
-    type: "Sustainability",
-  },
-  {
-    id: "RPT-1002",
-    title: "Carbon Footprint Statement",
-    customerName: "Green Cup Ltd",
-    salesRepresentative: "Liam Svensson",
-    status: "In Progress",
-    reportDate: "2026-01-30",
-    type: "Receipt",
-  },
-  {
-    id: "RPT-1003",
-    title: "Monthly Water Usage Report",
-    customerName: "Arctic Roasters",
-    salesRepresentative: "Emma Johansson",
-    status: "Draft",
-    reportDate: "2026-02-05",
-    type: "Sustainability",
-  },
-  {
-    id: "RPT-1004",
-    title: "Store Impact Overview",
-    customerName: "Café North",
-    salesRepresentative: "Noah Lindberg",
-    status: "Completed",
-    reportDate: "2026-02-16",
-    type: "Receipt",
-  },
-  {
-    id: "RPT-1005",
-    title: "Waste Reduction Snapshot",
-    customerName: "Bean Circle",
-    salesRepresentative: "Liam Svensson",
-    status: "Completed",
-    reportDate: "2026-02-20",
-    type: "Sustainability",
-  },
-  {
-    id: "RPT-1006",
-    title: "Energy Consumption Detail",
-    customerName: "Nordic Beans AB",
-    salesRepresentative: "Noah Lindberg",
-    status: "In Progress",
-    reportDate: "2026-03-01",
-    type: "Sustainability",
-  },
-  {
-    id: "RPT-1007",
-    title: "Annual Performance Receipt",
-    customerName: "Green Cup Ltd",
-    salesRepresentative: "Emma Johansson",
-    status: "Draft",
-    reportDate: "2026-03-04",
-    type: "Receipt",
-  },
-  {
-    id: "RPT-1008",
-    title: "Scope 3 Emission Analysis",
-    customerName: "Arctic Roasters",
-    salesRepresentative: "Liam Svensson",
-    status: "Completed",
-    reportDate: "2026-03-06",
-    type: "Sustainability",
-  },
-]
+const STATUS_OPTIONS = ["Draft", "Latest", "Past", "Archived"]
+const TYPE_OPTIONS = ["Report + Receipt", "Receipt Only"]
 
 export function HistoricalReportsPage() {
   const router = useRouter()
+  const { user } = useAuth()
+  const isAdmin = user?.roles?.includes("Administrator") ?? false
   const [search, setSearch] = useState("")
   const [customer, setCustomer] = useState("all")
   const [salesRepresentative, setSalesRepresentative] = useState("all")
@@ -96,55 +25,35 @@ export function HistoricalReportsPage() {
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(11)
 
-  const customerOptions = useMemo(
-    () => Array.from(new Set(mockReports.map((report) => report.customerName))),
-    []
-  )
+  // Map FE status label to BE enum value for filtering
+  const statusToEnum: Record<string, string> = {
+    Draft: "Draft",
+    Latest: "Completed",
+    Past: "Completed",
+    Archived: "Archived",
+  }
 
-  const salesRepresentativeOptions = useMemo(
-    () => Array.from(new Set(mockReports.map((report) => report.salesRepresentative))),
-    []
-  )
+  // Map FE type label to BE enum value
+  const typeToEnum: Record<string, string> = {
+    "Report + Receipt": "ReportPlusReceipt",
+    "Receipt Only": "ReceiptOnly",
+  }
 
-  const typeOptions = useMemo(
-    () => Array.from(new Set(mockReports.map((report) => report.type))),
-    []
-  )
+  const { data, isLoading } = useGetReportsQuery({
+    pageNumber,
+    pageSize,
+    searchTerm: search || undefined,
+    status: status !== "all" ? statusToEnum[status] : undefined,
+    type: type !== "all" ? typeToEnum[type] : undefined,
+  })
 
-  const statusOptions = useMemo(
-    () => Array.from(new Set(mockReports.map((report) => report.status))),
-    []
-  )
+  const reports = data?.items ?? []
 
-  const filteredReports = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase()
-
-    return mockReports.filter((report) => {
-      const matchesSearch =
-        !normalizedSearch ||
-        report.title.toLowerCase().includes(normalizedSearch) ||
-        report.id.toLowerCase().includes(normalizedSearch)
-
-      const matchesCustomer = customer === "all" || report.customerName === customer
-      const matchesSalesRepresentative =
-        salesRepresentative === "all" || report.salesRepresentative === salesRepresentative
-      const matchesType = type === "all" || report.type === type
-      const matchesStatus = status === "all" || report.status === status
-
-      return (
-        matchesSearch &&
-        matchesCustomer &&
-        matchesSalesRepresentative &&
-        matchesType &&
-        matchesStatus
-      )
-    })
-  }, [search, customer, salesRepresentative, type, status])
-
-  const paginatedReports = useMemo(() => {
-    const start = (pageNumber - 1) * pageSize
-    return filteredReports.slice(start, start + pageSize)
-  }, [filteredReports, pageNumber, pageSize])
+  // For status filter: if "Latest" or "Past" selected, additionally filter client-side by statusLabel
+  const filteredReports =
+    status === "Latest" || status === "Past"
+      ? reports.filter((r) => r.statusLabel === status)
+      : reports
 
   const handleSearchChange = (value: string) => {
     setSearch(value)
@@ -180,6 +89,12 @@ export function HistoricalReportsPage() {
     router.push("/report-generation")
   }
 
+  // Derive unique customer/sales rep names from current results for filter dropdowns
+  const customerOptions = Array.from(new Set(reports.map((r) => r.customerName).filter(Boolean)))
+  const salesRepresentativeOptions = Array.from(
+    new Set(reports.map((r) => r.salesRepresentative).filter(Boolean))
+  )
+
   return (
     <div className="min-h-screen bg-background py-10">
       <PageHeaderWithAction
@@ -197,8 +112,9 @@ export function HistoricalReportsPage() {
         status={status}
         customerOptions={customerOptions}
         salesRepresentativeOptions={salesRepresentativeOptions}
-        typeOptions={typeOptions}
-        statusOptions={statusOptions}
+        typeOptions={TYPE_OPTIONS}
+        statusOptions={STATUS_OPTIONS}
+        showSalesRepFilter={isAdmin}
         onSearchChange={handleSearchChange}
         onCustomerChange={handleCustomerChange}
         onSalesRepresentativeChange={handleSalesRepresentativeChange}
@@ -211,13 +127,17 @@ export function HistoricalReportsPage() {
           <PageSectionTitle title="Reports" />
         </div>
 
-        <HistoricalReportsTable reports={paginatedReports} />
+        {isLoading ? (
+          <div className="text-center py-8 text-sm text-[#8A8A8A]">Loading reports...</div>
+        ) : (
+          <HistoricalReportsTable reports={filteredReports} showSalesRepColumn={isAdmin} />
+        )}
       </div>
 
       <AppPagination
         currentPage={pageNumber}
         pageSize={pageSize}
-        totalCount={filteredReports.length}
+        totalCount={data?.totalCount ?? 0}
         onPageChange={setPageNumber}
         onPageSizeChange={handlePageSizeChange}
       />
