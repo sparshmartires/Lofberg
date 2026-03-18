@@ -8,7 +8,7 @@ import { useSaveDraftMutation } from "@/store/services/reportsApi"
 export function useWizardNavigation() {
   const dispatch = useAppDispatch()
   const wizardState = useAppSelector((state) => state.reportWizard)
-  const { currentStep, draftId } = wizardState
+  const { currentStep, draftId, editingReportId } = wizardState
 
   const [saveDraftMutation, { isLoading: isSaving }] = useSaveDraftMutation()
 
@@ -39,18 +39,19 @@ export function useWizardNavigation() {
     try {
       const { isGenerating, generatedReportId, ...stateToSave } = wizardState
       const result = await saveDraftMutation({
-        draftId,
+        draftId: editingReportId ? null : draftId, // Always create new draft when editing a completed report
         wizardState: stateToSave,
       }).unwrap()
 
-      if (result.draftId) {
+      // Only track draftId when NOT editing a completed report
+      if (!editingReportId && result.draftId) {
         dispatch(setDraftId(result.draftId))
       }
       return true
     } catch {
       return false
     }
-  }, [wizardState, draftId, saveDraftMutation, dispatch])
+  }, [wizardState, draftId, editingReportId, saveDraftMutation, dispatch])
 
   const reset = useCallback(() => {
     dispatch(resetWizard())

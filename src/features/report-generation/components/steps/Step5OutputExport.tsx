@@ -22,7 +22,7 @@ const fieldClass =
 
 export function Step5OutputExport() {
   const dispatch = useAppDispatch()
-  const { step1, step2, step3, step4, step5, isGenerating, draftId } = useAppSelector(
+  const { step1, step2, step3, step4, step5, isGenerating, draftId, editingReportId } = useAppSelector(
     (state) => state.reportWizard
   )
 
@@ -77,7 +77,7 @@ export function Step5OutputExport() {
     try {
       const resolvedStep1 = await resolveStep1WithLogo()
       const result = await generateReport({
-        draftId,
+        draftId: editingReportId ? undefined : draftId, // Always create new report when editing a completed report
         step1: resolvedStep1,
         step2: { rows: step2.rows, timePeriod: step2.timePeriod },
         step3,
@@ -99,7 +99,7 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, step2, step3, step4, step5, step1.salesRepresentativeId])
+  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, editingReportId, step2, step3, step4, step5, step1.salesRepresentativeId])
 
   const handlePreview = useCallback(async () => {
     setError(null)
@@ -117,7 +117,7 @@ export function Step5OutputExport() {
     try {
       const resolvedStep1 = await resolveStep1WithLogo()
       const result = await generateReport({
-        draftId,
+        draftId: editingReportId ? undefined : draftId,
         step1: resolvedStep1,
         step2: { rows: step2.rows, timePeriod: step2.timePeriod },
         step3,
@@ -137,7 +137,7 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, step2, step3, step4, step5, step1.salesRepresentativeId])
+  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, editingReportId, step2, step3, step4, step5, step1.salesRepresentativeId])
 
   return (
     <div className="space-y-6">

@@ -15,7 +15,7 @@ export function ReportSummary() {
   const { data: co2Conversions = [] } = useGetCO2ConversionsQuery()
 
   const hasCustomer = Boolean(step1.customerId)
-  const hasData = step2.rows.some((r) => r.quantityKg !== null || r.currencyAmount !== null)
+  const hasData = (step2.rows ?? []).some((r) => r.quantityKg !== null || r.currencyAmount !== null)
 
   return (
     <div className="rounded-[24px] bg-white border-l-4 border-primary shadow-sm p-6 sticky top-6">

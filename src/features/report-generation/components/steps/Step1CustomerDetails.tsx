@@ -304,7 +304,8 @@ export function Step1CustomerDetails() {
 }
 
 // Date helpers: convert between dd/mm/yyyy and yyyy-mm-dd
-function toDateInputValue(ddmmyyyy: string): string {
+function toDateInputValue(ddmmyyyy: string | undefined): string {
+  if (!ddmmyyyy) return ""
   const parts = ddmmyyyy.split("/")
   if (parts.length === 3) {
     return `${parts[2]}-${parts[1]}-${parts[0]}`
