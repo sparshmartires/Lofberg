@@ -269,6 +269,12 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
         </div>
         </div>
       </div>
+
+      <p className="text-xs text-[#9CA3AF]">
+        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
+        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
+        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
+      </p>
     </div>
   )
 }

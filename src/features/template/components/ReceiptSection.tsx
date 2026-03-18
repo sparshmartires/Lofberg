@@ -210,8 +210,10 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
             </div>
 
             {/* INFO TEXT */}
-            <p className="text-xs text-[#7B3EBE]">
-              Based on retrieved values. Keep placeholders like {"{Time period}"}, {"{Cups count}"} in the text
+            <p className="text-xs text-[#9CA3AF] mt-1">
+              Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
+              {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
+              {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
             </p>
 
           </div>
