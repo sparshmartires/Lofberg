@@ -25,6 +25,7 @@ const fieldClass =
 export function Step1CustomerDetails() {
   const dispatch = useAppDispatch()
   const step1 = useAppSelector((state) => state.reportWizard.step1)
+  const editingReportId = useAppSelector((state) => state.reportWizard.editingReportId)
   const authUser = useAppSelector((state) => state.auth.user)
 
   const [isManualEntry, setIsManualEntry] = useState(false)
@@ -115,39 +116,52 @@ export function Step1CustomerDetails() {
       {/* Customer Name + Salesperson */}
       <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-[#1F1F1F]">Customer name</label>
-            <button
-              type="button"
-              onClick={() => {
-                setIsManualEntry(!isManualEntry)
-                if (!isManualEntry) {
-                  // Switching to manual: clear customerId but keep name
-                  dispatch(updateStep1({ customerId: null }))
-                } else {
-                  // Switching back to search: clear manual fields
-                  handleCustomerClear()
-                }
-              }}
-              className="text-sm font-medium text-primary underline"
-            >
-              {isManualEntry ? "Search existing" : "Enter manually"}
-            </button>
-          </div>
-          {isManualEntry ? (
-            <Input
-              value={step1.customerName}
-              onChange={(e) => dispatch(updateStep1({ customerName: e.target.value }))}
-              placeholder="Enter customer name"
-              className={fieldClass}
-            />
+          {editingReportId ? (
+            <>
+              <label className="text-sm font-medium text-[#1F1F1F]">Customer name</label>
+              <Input
+                value={step1.customerName}
+                disabled
+                className={fieldClass}
+              />
+            </>
           ) : (
-            <CustomerSearchCombobox
-              value={step1.customerName}
-              selectedCustomerId={step1.customerId}
-              onSelect={handleCustomerSelect}
-              onClear={handleCustomerClear}
-            />
+            <>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-[#1F1F1F]">Customer name</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsManualEntry(!isManualEntry)
+                    if (!isManualEntry) {
+                      // Switching to manual: clear customerId but keep name
+                      dispatch(updateStep1({ customerId: null }))
+                    } else {
+                      // Switching back to search: clear manual fields
+                      handleCustomerClear()
+                    }
+                  }}
+                  className="text-sm font-medium text-primary underline"
+                >
+                  {isManualEntry ? "Search existing" : "Enter manually"}
+                </button>
+              </div>
+              {isManualEntry ? (
+                <Input
+                  value={step1.customerName}
+                  onChange={(e) => dispatch(updateStep1({ customerName: e.target.value }))}
+                  placeholder="Enter customer name"
+                  className={fieldClass}
+                />
+              ) : (
+                <CustomerSearchCombobox
+                  value={step1.customerName}
+                  selectedCustomerId={step1.customerId}
+                  onSelect={handleCustomerSelect}
+                  onClear={handleCustomerClear}
+                />
+              )}
+            </>
           )}
         </div>
 

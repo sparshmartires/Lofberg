@@ -7,6 +7,7 @@ import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
 import { HistoricalReportsTable } from "../components/HistoricalReportsTable"
 import { HistoricalReportsFilters } from "../components/HistoricalReportsFilters"
+import type { FilterOption } from "../components/HistoricalReportsFilters"
 import { useGetReportsQuery } from "@/store/services/reportsApi"
 import { useAuth } from "@/store/hooks/useAuth"
 
@@ -18,20 +19,12 @@ export function HistoricalReportsPage() {
   const { user } = useAuth()
   const isAdmin = user?.roles?.includes("Administrator") ?? false
   const [search, setSearch] = useState("")
-  const [customer, setCustomer] = useState("all")
-  const [salesRepresentative, setSalesRepresentative] = useState("all")
+  const [customerId, setCustomerId] = useState("all")
+  const [salesRepresentativeId, setSalesRepresentativeId] = useState("all")
   const [type, setType] = useState("all")
   const [status, setStatus] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(11)
-
-  // Map FE status label to BE enum value for filtering
-  const statusToEnum: Record<string, string> = {
-    Draft: "Draft",
-    Latest: "Completed",
-    Past: "Completed",
-    Archived: "Archived",
-  }
 
   // Map FE type label to BE enum value
   const typeToEnum: Record<string, string> = {
@@ -43,17 +36,13 @@ export function HistoricalReportsPage() {
     pageNumber,
     pageSize,
     searchTerm: search || undefined,
-    status: status !== "all" ? statusToEnum[status] : undefined,
+    customerId: customerId !== "all" ? customerId : undefined,
+    salesRepresentativeId: salesRepresentativeId !== "all" ? salesRepresentativeId : undefined,
+    status: status !== "all" ? status : undefined,
     type: type !== "all" ? typeToEnum[type] : undefined,
   })
 
   const reports = data?.items ?? []
-
-  // For status filter: if "Latest" or "Past" selected, additionally filter client-side by statusLabel
-  const filteredReports =
-    status === "Latest" || status === "Past"
-      ? reports.filter((r) => r.statusLabel === status)
-      : reports
 
   const handleSearchChange = (value: string) => {
     setSearch(value)
@@ -61,12 +50,12 @@ export function HistoricalReportsPage() {
   }
 
   const handleCustomerChange = (value: string) => {
-    setCustomer(value)
+    setCustomerId(value)
     setPageNumber(1)
   }
 
   const handleSalesRepresentativeChange = (value: string) => {
-    setSalesRepresentative(value)
+    setSalesRepresentativeId(value)
     setPageNumber(1)
   }
 
@@ -89,10 +78,20 @@ export function HistoricalReportsPage() {
     router.push("/report-generation")
   }
 
-  // Derive unique customer/sales rep names from current results for filter dropdowns
-  const customerOptions = Array.from(new Set(reports.map((r) => r.customerName).filter(Boolean)))
-  const salesRepresentativeOptions = Array.from(
-    new Set(reports.map((r) => r.salesRepresentative).filter(Boolean))
+  // Derive unique customer/sales rep options from current results for filter dropdowns
+  const customerOptions: FilterOption[] = Array.from(
+    new Map(
+      reports
+        .filter((r) => r.customerId && r.customerName)
+        .map((r) => [r.customerId, { id: r.customerId, name: r.customerName }])
+    ).values()
+  )
+  const salesRepresentativeOptions: FilterOption[] = Array.from(
+    new Map(
+      reports
+        .filter((r) => r.salesRepresentativeId && r.salesRepresentative)
+        .map((r) => [r.salesRepresentativeId, { id: r.salesRepresentativeId, name: r.salesRepresentative }])
+    ).values()
   )
 
   return (
@@ -106,8 +105,8 @@ export function HistoricalReportsPage() {
 
       <HistoricalReportsFilters
         search={search}
-        customer={customer}
-        salesRepresentative={salesRepresentative}
+        customer={customerId}
+        salesRepresentative={salesRepresentativeId}
         type={type}
         status={status}
         customerOptions={customerOptions}
@@ -130,7 +129,7 @@ export function HistoricalReportsPage() {
         {isLoading ? (
           <div className="text-center py-8 text-sm text-[#8A8A8A]">Loading reports...</div>
         ) : (
-          <HistoricalReportsTable reports={filteredReports} showSalesRepColumn={isAdmin} />
+          <HistoricalReportsTable reports={reports} showSalesRepColumn={isAdmin} isAdmin={isAdmin} />
         )}
       </div>
 

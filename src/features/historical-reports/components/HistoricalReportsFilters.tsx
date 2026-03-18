@@ -11,14 +11,19 @@ import {
 } from "@/components/ui/select"
 import { ChevronDown, ChevronUp } from "lucide-react"
 
+export interface FilterOption {
+  id: string
+  name: string
+}
+
 interface HistoricalReportsFiltersProps {
   search: string
   customer: string
   salesRepresentative: string
   type: string
   status: string
-  customerOptions: string[]
-  salesRepresentativeOptions: string[]
+  customerOptions: FilterOption[]
+  salesRepresentativeOptions: FilterOption[]
   typeOptions: string[]
   statusOptions: string[]
   showSalesRepFilter?: boolean
@@ -73,8 +78,8 @@ export function HistoricalReportsFilters({
             <SelectContent>
               <SelectItem value="all">All Customers</SelectItem>
               {customerOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -91,8 +96,8 @@ export function HistoricalReportsFilters({
               <SelectContent>
                 <SelectItem value="all">All Sales Representative</SelectItem>
                 {salesRepresentativeOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -156,8 +161,8 @@ export function HistoricalReportsFilters({
               <SelectContent>
                 <SelectItem value="all">All Customers</SelectItem>
                 {customerOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -174,8 +179,8 @@ export function HistoricalReportsFilters({
                 <SelectContent>
                   <SelectItem value="all">All Sales Representative</SelectItem>
                   {salesRepresentativeOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

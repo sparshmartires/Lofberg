@@ -144,6 +144,7 @@ export interface ReportWizardState {
   step5: Step5Data
   isGenerating: boolean
   generatedReportId: string | null
+  editingReportId: string | null
 }
 
 // API DTOs
@@ -154,6 +155,7 @@ export interface ReportDto {
   title: string
   customerName: string
   customerId: string
+  salesRepresentativeId: string
   salesRepresentative: string
   reportDate: string
   reportType: ReportType

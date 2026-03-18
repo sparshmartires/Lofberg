@@ -17,6 +17,7 @@ import { useArchiveReportMutation, useRestoreReportMutation } from "@/store/serv
 interface HistoricalReportsTableProps {
   reports: ReportDto[]
   showSalesRepColumn?: boolean
+  isAdmin?: boolean
 }
 
 const formatDate = (value: string) => {
@@ -51,7 +52,7 @@ const getStatusClass = (statusLabel: StatusLabel) => {
   }
 }
 
-export function HistoricalReportsTable({ reports, showSalesRepColumn = true }: HistoricalReportsTableProps) {
+export function HistoricalReportsTable({ reports, showSalesRepColumn = true, isAdmin = false }: HistoricalReportsTableProps) {
   const router = useRouter()
   const [archiveReport] = useArchiveReportMutation()
   const [restoreReport] = useRestoreReportMutation()
@@ -89,7 +90,9 @@ export function HistoricalReportsTable({ reports, showSalesRepColumn = true }: H
   }
 
   const canEdit = (report: ReportDto) =>
-    report.statusLabel !== "Archived"
+    isAdmin
+      ? report.statusLabel !== "Archived"
+      : report.statusLabel === "Draft" || report.statusLabel === "Latest"
 
   const canDownload = (report: ReportDto) =>
     report.statusLabel !== "Draft" && report.statusLabel !== "Archived" && report.generatedFileUrl

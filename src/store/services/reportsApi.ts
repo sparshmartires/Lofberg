@@ -73,6 +73,7 @@ const mapReport = (item: ApiObject): ReportDto => ({
   title: String(item.title ?? item.reportName ?? item.name ?? ""),
   customerName: String(item.customerName ?? item.customer ?? ""),
   customerId: String(item.customerId ?? ""),
+  salesRepresentativeId: String(item.salesRepresentativeId ?? ""),
   salesRepresentative: String(item.salesRepresentative ?? item.salesRep ?? ""),
   reportDate: String(item.reportDate ?? item.createdAt ?? ""),
   reportType: Number(item.reportType ?? 0),
@@ -178,6 +179,15 @@ export const reportsApi = createApi({
         return { wizardState: unwrapped.wizardState as ReportWizardState }
       },
       providesTags: (_result, _error, arg) => [{ type: "ReportDrafts", id: arg.id }],
+    }),
+
+    getReportWizardState: builder.query<{ wizardState: ReportWizardState }, { id: string }>({
+      query: ({ id }) => `/reports/${id}/wizard-state`,
+      transformResponse: (response: unknown) => {
+        const unwrapped = asObject(unwrapPayload(response))
+        return { wizardState: unwrapped.wizardState as ReportWizardState }
+      },
+      providesTags: (_result, _error, arg) => [{ type: "Reports", id: arg.id }],
     }),
 
     saveDraft: builder.mutation<{ draftId: string }, SaveDraftRequest>({
@@ -288,6 +298,7 @@ export const {
   useGetReportQuery,
   useGetDraftsQuery,
   useGetDraftQuery,
+  useGetReportWizardStateQuery,
   useSaveDraftMutation,
   useDeleteDraftMutation,
   useGenerateReportMutation,

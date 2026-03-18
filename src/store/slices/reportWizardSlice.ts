@@ -72,6 +72,7 @@ const initialState: ReportWizardState = {
   step5: initialStep5,
   isGenerating: false,
   generatedReportId: null,
+  editingReportId: null,
 }
 
 const reportWizardSlice = createSlice({
