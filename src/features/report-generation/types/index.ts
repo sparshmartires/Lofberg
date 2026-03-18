@@ -163,6 +163,9 @@ export interface ReportDto {
   statusLabel: StatusLabel
   outputFormat: OutputFormat
   outputSize: OutputSize
+  customerSegment: string | null
+  customerLogoUrl: string | null
+  salesRepProfileImageUrl: string | null
   generatedFileUrl: string | null
   createdAt: string
   updatedAt: string
@@ -192,6 +195,11 @@ export interface GetReportsParams {
   type?: string
   dateFrom?: string
   dateTo?: string
+  segmentId?: string
+  createdFrom?: string
+  createdTo?: string
+  sortBy?: string
+  sortDirection?: string
 }
 
 export interface PaginatedReportsResponse {

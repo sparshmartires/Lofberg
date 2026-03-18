@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ChevronDown, ChevronUp } from "lucide-react"
+import { DateRangePicker } from "@/components/ui/date-range-picker"
 
 export interface FilterOption {
   id: string
@@ -22,16 +23,27 @@ interface HistoricalReportsFiltersProps {
   salesRepresentative: string
   type: string
   status: string
+  segment: string
   customerOptions: FilterOption[]
   salesRepresentativeOptions: FilterOption[]
+  segmentOptions: FilterOption[]
   typeOptions: string[]
   statusOptions: string[]
   showSalesRepFilter?: boolean
+  reportDateFrom: Date | undefined
+  reportDateTo: Date | undefined
+  createdFrom: Date | undefined
+  createdTo: Date | undefined
   onSearchChange: (value: string) => void
   onCustomerChange: (value: string) => void
   onSalesRepresentativeChange: (value: string) => void
   onTypeChange: (value: string) => void
   onStatusChange: (value: string) => void
+  onSegmentChange: (value: string) => void
+  onReportDateFromChange: (date: Date | undefined) => void
+  onReportDateToChange: (date: Date | undefined) => void
+  onCreatedFromChange: (date: Date | undefined) => void
+  onCreatedToChange: (date: Date | undefined) => void
 }
 
 export function HistoricalReportsFilters({
@@ -40,16 +52,27 @@ export function HistoricalReportsFilters({
   salesRepresentative,
   type,
   status,
+  segment,
   customerOptions,
   salesRepresentativeOptions,
+  segmentOptions,
   typeOptions,
   statusOptions,
   showSalesRepFilter = true,
+  reportDateFrom,
+  reportDateTo,
+  createdFrom,
+  createdTo,
   onSearchChange,
   onCustomerChange,
   onSalesRepresentativeChange,
   onTypeChange,
   onStatusChange,
+  onSegmentChange,
+  onReportDateFromChange,
+  onReportDateToChange,
+  onCreatedFromChange,
+  onCreatedToChange,
 }: HistoricalReportsFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -58,44 +81,29 @@ export function HistoricalReportsFilters({
 
   return (
     <div className="filters-card">
-      <div className={`hidden gap-4 md:grid md:grid-cols-2 ${showSalesRepFilter ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}>
-        <div className="filter-field">
-          <label>Search</label>
-          <Input
-            placeholder="Search reports"
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className={fieldClass}
-          />
-        </div>
-
-        <div className="filter-field">
-          <label>Customer</label>
-          <Select value={customer} onValueChange={onCustomerChange}>
-            <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="All Customers" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Customers</SelectItem>
-              {customerOptions.map((option) => (
-                <SelectItem key={option.id} value={option.id}>
-                  {option.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {showSalesRepFilter && (
+      {/* Desktop filters */}
+      <div className="hidden md:flex flex-col gap-4">
+        {/* Row 1: Search, Customer, Sales Rep (if admin), Type, Status */}
+        <div className={`grid gap-4 md:grid-cols-2 ${showSalesRepFilter ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}>
           <div className="filter-field">
-            <label>Sales Representative</label>
-            <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
+            <label>Search</label>
+            <Input
+              placeholder="Search reports"
+              value={search}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+
+          <div className="filter-field">
+            <label>Customer</label>
+            <Select value={customer} onValueChange={onCustomerChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Sales Representative" />
+                <SelectValue placeholder="All Customers" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Sales Representative</SelectItem>
-                {salesRepresentativeOptions.map((option) => (
+                <SelectItem value="all">All Customers</SelectItem>
+                {customerOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
                   </SelectItem>
@@ -103,43 +111,103 @@ export function HistoricalReportsFilters({
               </SelectContent>
             </Select>
           </div>
-        )}
 
-        <div className="filter-field">
-          <label>Type</label>
-          <Select value={type} onValueChange={onTypeChange}>
-            <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="All Types" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              {typeOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {showSalesRepFilter && (
+            <div className="filter-field">
+              <label>Sales Representative</label>
+              <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
+                <SelectTrigger className={fieldClass}>
+                  <SelectValue placeholder="All Sales Representative" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sales Representative</SelectItem>
+                  {salesRepresentativeOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className="filter-field">
+            <label>Type</label>
+            <Select value={type} onValueChange={onTypeChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                {typeOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="filter-field">
+            <label>Status</label>
+            <Select value={status} onValueChange={onStatusChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                {statusOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <div className="filter-field">
-          <label>Status</label>
-          <Select value={status} onValueChange={onStatusChange}>
-            <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="All Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              {statusOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Row 2: Segment, Report Date Range, Created At Range */}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="filter-field">
+            <label>Segment</label>
+            <Select value={segment} onValueChange={onSegmentChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Segments" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Segments</SelectItem>
+                {segmentOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="filter-field">
+            <label>Report Date</label>
+            <DateRangePicker
+              from={reportDateFrom}
+              to={reportDateTo}
+              onFromChange={onReportDateFromChange}
+              onToChange={onReportDateToChange}
+            />
+          </div>
+
+          <div className="filter-field">
+            <label>Created At</label>
+            <DateRangePicker
+              from={createdFrom}
+              to={createdTo}
+              onFromChange={onCreatedFromChange}
+              onToChange={onCreatedToChange}
+            />
+          </div>
         </div>
       </div>
 
+      {/* Mobile filters */}
       <div className="block md:hidden">
         <div className="filter-field mb-4">
           <label>Search</label>
@@ -205,7 +273,7 @@ export function HistoricalReportsFilters({
             </Select>
           </div>
 
-          <div className="filter-field">
+          <div className="filter-field mb-4">
             <label>Status</label>
             <Select value={status} onValueChange={onStatusChange}>
               <SelectTrigger className={fieldClass}>
@@ -220,6 +288,43 @@ export function HistoricalReportsFilters({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="filter-field mb-4">
+            <label>Segment</label>
+            <Select value={segment} onValueChange={onSegmentChange}>
+              <SelectTrigger className={fieldClass}>
+                <SelectValue placeholder="All Segments" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Segments</SelectItem>
+                {segmentOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="filter-field mb-4">
+            <label>Report Date</label>
+            <DateRangePicker
+              from={reportDateFrom}
+              to={reportDateTo}
+              onFromChange={onReportDateFromChange}
+              onToChange={onReportDateToChange}
+            />
+          </div>
+
+          <div className="filter-field">
+            <label>Created At</label>
+            <DateRangePicker
+              from={createdFrom}
+              to={createdTo}
+              onFromChange={onCreatedFromChange}
+              onToChange={onCreatedToChange}
+            />
           </div>
         </div>
 

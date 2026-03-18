@@ -81,6 +81,9 @@ const mapReport = (item: ApiObject): ReportDto => ({
   statusLabel: String(item.statusLabel ?? "Draft") as StatusLabel,
   outputFormat: Number(item.outputFormat ?? 0),
   outputSize: Number(item.outputSize ?? 0),
+  customerSegment: toNullableString(item.customerSegment),
+  customerLogoUrl: toNullableString(item.customerLogoUrl),
+  salesRepProfileImageUrl: toNullableString(item.salesRepProfileImageUrl),
   generatedFileUrl: toNullableString(item.generatedFileUrl ?? item.fileUrl),
   createdAt: String(item.createdAt ?? ""),
   updatedAt: String(item.updatedAt ?? ""),
@@ -135,7 +138,7 @@ export const reportsApi = createApi({
   tagTypes: ["Reports", "ReportDrafts"],
   endpoints: (builder) => ({
     getReports: builder.query<PaginatedReportsResponse, GetReportsParams>({
-      query: ({ pageNumber, pageSize, searchTerm, customerId, salesRepresentativeId, status, type, dateFrom, dateTo }) => ({
+      query: ({ pageNumber, pageSize, searchTerm, customerId, salesRepresentativeId, status, type, dateFrom, dateTo, segmentId, createdFrom, createdTo, sortBy, sortDirection }) => ({
         url: "/reports",
         params: {
           pageNumber,
@@ -147,6 +150,11 @@ export const reportsApi = createApi({
           ...(type ? { type } : {}),
           ...(dateFrom ? { dateFrom } : {}),
           ...(dateTo ? { dateTo } : {}),
+          ...(segmentId ? { segmentId } : {}),
+          ...(createdFrom ? { createdFrom } : {}),
+          ...(createdTo ? { createdTo } : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortDirection ? { sortDirection } : {}),
         },
       }),
       transformResponse: (response: unknown, _meta, args) =>
@@ -255,6 +263,15 @@ export const reportsApi = createApi({
       ],
     }),
 
+    getSegments: builder.query<{ id: string; name: string }[], void>({
+      query: () => "/segments",
+      transformResponse: (response: unknown) =>
+        toArray(response).map((item) => ({
+          id: String(item.id ?? ""),
+          name: String(item.name ?? ""),
+        })),
+    }),
+
     uploadDataFile: builder.mutation<{ url: string }, { file: File }>({
       query: ({ file }) => {
         const formData = new FormData()
@@ -304,6 +321,7 @@ export const {
   useGenerateReportMutation,
   useArchiveReportMutation,
   useRestoreReportMutation,
+  useGetSegmentsQuery,
   useUploadDataFileMutation,
   useUploadImageMutation,
 } = reportsApi

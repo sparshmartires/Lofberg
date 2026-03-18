@@ -19,11 +19,31 @@ const buttonVariants = cva(
 
         ghostBrand:
           "text-primary hover:bg-primary/10",
+
+        default:
+          "bg-primary text-accent hover:bg-primary/90",
+
+        destructive:
+          "bg-red-500 text-white hover:bg-red-600",
+
+        outline:
+          "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground",
+
+        link:
+          "text-primary underline-offset-4 hover:underline",
       },
 
       size: {
         md: "px-[12px] py-[8px]",
         sm: "px-[12px] py-[8px] min-w-[147px]",
+        default: "h-9 px-4 py-2",
+        lg: "h-10 px-6",
         icon: "h-10 w-10",
       },
     },
