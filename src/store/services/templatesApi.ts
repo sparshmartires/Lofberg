@@ -102,6 +102,41 @@ export interface SaveActiveChangesRequest {
   pages: UpdatePageContentRequest[]
 }
 
+// ── Translation DTOs ──────────────────────────────────────────────
+
+export enum TranslationStatus {
+  Draft = 0,
+  Submitted = 1,
+}
+
+export interface TemplatePageTranslationDto {
+  id: string
+  templatePageId: string
+  pageType: PageType
+  sortOrder: number
+  contentJson: string | null
+  translationJson: string | null
+  status: TranslationStatus
+}
+
+export interface TranslationPageUpdate {
+  templatePageId: string
+  translationJson: string | null
+}
+
+export interface SaveTranslationsRequest {
+  languageId: string
+  isDraft: boolean
+  pages: TranslationPageUpdate[]
+}
+
+export interface LanguageDto {
+  id: string
+  code: string
+  name: string
+  isDefault: boolean
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────
 
 type ApiObject = Record<string, unknown>
@@ -153,7 +188,7 @@ export const templatesApi = createApi({
       return headers
     },
   }),
-  tagTypes: ["Templates", "TemplateVersions", "TemplateVersion"],
+  tagTypes: ["Templates", "TemplateVersions", "TemplateVersion", "Translations"],
   endpoints: (builder) => ({
     // ── Queries ────────────────────────────────────────────────────
 
@@ -287,6 +322,51 @@ export const templatesApi = createApi({
       ],
     }),
 
+    getTemplateLanguages: builder.query<LanguageDto[], void>({
+      query: () => "/languages",
+      transformResponse: (response: unknown) => {
+        const unwrapped = unwrapPayload(response)
+        return Array.isArray(unwrapped) ? (unwrapped as LanguageDto[]) : []
+      },
+    }),
+
+    getTranslations: builder.query<
+      TemplatePageTranslationDto[],
+      { templateId: string; languageId: string }
+    >({
+      query: ({ templateId, languageId }) =>
+        `/templates/${templateId}/translations?languageId=${languageId}`,
+      transformResponse: (response: unknown) => {
+        const unwrapped = unwrapPayload(response)
+        return Array.isArray(unwrapped)
+          ? (unwrapped as TemplatePageTranslationDto[])
+          : []
+      },
+      providesTags: (_result, _error, arg) => [
+        { type: "Translations" as const, id: `${arg.templateId}-${arg.languageId}` },
+      ],
+    }),
+
+    saveTranslations: builder.mutation<
+      TemplatePageTranslationDto[],
+      { templateId: string; body: SaveTranslationsRequest }
+    >({
+      query: ({ templateId, body }) => ({
+        url: `/templates/${templateId}/translations`,
+        method: "PUT",
+        body,
+      }),
+      transformResponse: (response: unknown) => {
+        const unwrapped = unwrapPayload(response)
+        return Array.isArray(unwrapped)
+          ? (unwrapped as TemplatePageTranslationDto[])
+          : []
+      },
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Translations", id: `${arg.templateId}-${arg.body.languageId}` },
+      ],
+    }),
+
     uploadTemplateImage: builder.mutation<{ url: string }, { file: File }>({
       query: ({ file }) => {
         const formData = new FormData()
@@ -311,11 +391,14 @@ export const {
   useGetTemplatesQuery,
   useGetTemplateVersionsQuery,
   useGetTemplateVersionQuery,
+  useGetTemplateLanguagesQuery,
+  useGetTranslationsQuery,
   useCreateDraftMutation,
   useUpdateDraftMutation,
   useDeleteDraftMutation,
   usePublishDraftMutation,
   useRollbackVersionMutation,
   useSaveActiveChangesMutation,
+  useSaveTranslationsMutation,
   useUploadTemplateImageMutation,
 } = templatesApi
