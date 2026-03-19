@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Save, Trash2, Loader2 } from "lucide-react"
+import { Save, Trash2, Loader2, Languages } from "lucide-react"
 import {
   useGetCO2ConversionsQuery,
   useCreateCO2ConversionMutation,
@@ -9,6 +9,7 @@ import {
   useDeleteCO2ConversionMutation,
   type CO2ConversionItem,
 } from "@/store/services/conversionLogicApi"
+import ConversionTranslationDialog from "./ConversionTranslationDialog"
 
 interface NewRowForm {
   name: string
@@ -27,6 +28,7 @@ export default function CO2Conversions() {
   const [editName, setEditName] = useState("")
   const [editValue, setEditValue] = useState("")
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [translatingItem, setTranslatingItem] = useState<CO2ConversionItem | null>(null)
 
   const handleCreate = async () => {
     if (!form.name || !form.value) return
@@ -115,6 +117,14 @@ export default function CO2Conversions() {
               )}
 
               <div className="flex gap-3">
+                <button
+                  onClick={() => setTranslatingItem(row)}
+                  className="w-[32px] h-[32px] rounded-lg bg-[#F4ECFB] flex items-center justify-center"
+                  title="Translate"
+                >
+                  <Languages className="w-4 h-4 text-[#5B2D91]" />
+                </button>
+
                 {editingId === row.id ? (
                   <button
                     onClick={() => handleUpdate(row)}
@@ -252,6 +262,13 @@ export default function CO2Conversions() {
 
                 <div className="flex gap-2">
                   <button
+                    onClick={() => setTranslatingItem(row)}
+                    className="w-[28px] h-[28px] bg-[#F4ECFB] rounded flex items-center justify-center"
+                  >
+                    <Languages className="w-4 h-4 text-[#5B2D91]" />
+                  </button>
+
+                  <button
                     onClick={() => {
                       setEditingId(row.id)
                       setEditName(row.name)
@@ -274,6 +291,14 @@ export default function CO2Conversions() {
           ))}
         </div>
       </div>
+
+      <ConversionTranslationDialog
+        open={!!translatingItem}
+        onOpenChange={(open) => !open && setTranslatingItem(null)}
+        conversionId={translatingItem?.id ?? ""}
+        conversionType="co2"
+        englishMetric={translatingItem?.name ?? ""}
+      />
     </div>
   )
 }

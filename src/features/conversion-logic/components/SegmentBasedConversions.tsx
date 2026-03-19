@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
-import { Trash2, Save, Loader2 } from "lucide-react"
+import { Trash2, Save, Loader2, Languages } from "lucide-react"
 import {
   useGetSegmentConversionsQuery,
   useCreateSegmentConversionMutation,
@@ -11,6 +11,7 @@ import {
   type SegmentConversionItem,
 } from "@/store/services/conversionLogicApi"
 import { useGetCustomerSegmentsQuery } from "@/store/services/customersApi"
+import ConversionTranslationDialog from "./ConversionTranslationDialog"
 
 interface NewRowForm {
   segmentId: string
@@ -30,6 +31,7 @@ export default function SegmentBasedConversions() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [translatingItem, setTranslatingItem] = useState<SegmentConversionItem | null>(null)
 
   const handleCreate = async () => {
     if (!form.segmentId || !form.metricLabel.trim() || !form.value) return
@@ -115,6 +117,14 @@ export default function SegmentBasedConversions() {
               )}
 
               <div className="flex gap-3">
+                <button
+                  onClick={() => setTranslatingItem(row)}
+                  className="w-[32px] h-[32px] rounded-lg bg-[#F4ECFB] flex items-center justify-center"
+                  title="Translate"
+                >
+                  <Languages className="w-4 h-4 text-[#5B2D91]" />
+                </button>
+
                 {editingId === row.id ? (
                   <button
                     onClick={() => handleUpdate(row)}
@@ -290,6 +300,13 @@ export default function SegmentBasedConversions() {
 
                 <div className="flex gap-2">
                   <button
+                    onClick={() => setTranslatingItem(row)}
+                    className="w-[28px] h-[28px] bg-[#F4ECFB] rounded flex items-center justify-center"
+                  >
+                    <Languages className="w-4 h-4 text-[#5B2D91]" />
+                  </button>
+
+                  <button
                     onClick={() => {
                       setEditingId(row.id)
                       setEditValue(String(row.conversionValue))
@@ -311,6 +328,14 @@ export default function SegmentBasedConversions() {
           ))}
         </div>
       </div>
+
+      <ConversionTranslationDialog
+        open={!!translatingItem}
+        onOpenChange={(open) => !open && setTranslatingItem(null)}
+        conversionId={translatingItem?.id ?? ""}
+        conversionType="segment"
+        englishMetric={translatingItem?.metricName ?? ""}
+      />
     </div>
   )
 }

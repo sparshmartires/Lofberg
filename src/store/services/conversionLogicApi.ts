@@ -42,6 +42,17 @@ export interface UpdateCO2ConversionRequest {
   conversionValue: number
 }
 
+export interface ConversionTranslationItem {
+  id: string
+  languageId: string
+  languageName: string
+  metricText: string
+}
+
+export interface SaveConversionTranslationsRequest {
+  translations: { languageId: string; metricText: string }[]
+}
+
 type ApiObject = Record<string, unknown>
 
 const asObject = (value: unknown): ApiObject =>
@@ -110,6 +121,13 @@ const mapSegmentConversion = (item: ApiObject): SegmentConversionItem => ({
   updatedAt: toNullableString(item.updatedAt),
 })
 
+const mapConversionTranslation = (item: ApiObject): ConversionTranslationItem => ({
+  id: String(item.id ?? ""),
+  languageId: String(item.languageId ?? ""),
+  languageName: String(item.languageName ?? ""),
+  metricText: String(item.metricText ?? ""),
+})
+
 const mapCO2Conversion = (item: ApiObject): CO2ConversionItem => ({
   id: String(item.id ?? ""),
   name: String(item.name ?? ""),
@@ -143,7 +161,7 @@ export const conversionLogicApi = createApi({
       return headers
     },
   }),
-  tagTypes: ["SegmentConversions", "CO2Conversions"],
+  tagTypes: ["SegmentConversions", "CO2Conversions", "ConversionTranslations"],
   endpoints: (builder) => ({
     // ==================== SEGMENT CONVERSIONS ====================
 
@@ -257,6 +275,54 @@ export const conversionLogicApi = createApi({
         { type: "CO2Conversions", id: "LIST" },
       ],
     }),
+
+    // ==================== CONVERSION TRANSLATIONS ====================
+
+    getSegmentConversionTranslations: builder.query<ConversionTranslationItem[], string>({
+      query: (id) => `/segment-conversions/${id}/translations`,
+      transformResponse: (response: unknown) =>
+        toArray(response).map(mapConversionTranslation),
+      providesTags: (_result, _error, id) => [
+        { type: "ConversionTranslations" as const, id: `segment_${id}` },
+      ],
+    }),
+
+    saveSegmentConversionTranslations: builder.mutation<
+      unknown,
+      { id: string; body: SaveConversionTranslationsRequest }
+    >({
+      query: ({ id, body }) => ({
+        url: `/segment-conversions/${id}/translations`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "ConversionTranslations", id: `segment_${arg.id}` },
+      ],
+    }),
+
+    getCO2ConversionTranslations: builder.query<ConversionTranslationItem[], string>({
+      query: (id) => `/co2-conversions/${id}/translations`,
+      transformResponse: (response: unknown) =>
+        toArray(response).map(mapConversionTranslation),
+      providesTags: (_result, _error, id) => [
+        { type: "ConversionTranslations" as const, id: `co2_${id}` },
+      ],
+    }),
+
+    saveCO2ConversionTranslations: builder.mutation<
+      unknown,
+      { id: string; body: SaveConversionTranslationsRequest }
+    >({
+      query: ({ id, body }) => ({
+        url: `/co2-conversions/${id}/translations`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "ConversionTranslations", id: `co2_${arg.id}` },
+      ],
+    }),
   }),
 })
 
@@ -270,4 +336,8 @@ export const {
   useCreateCO2ConversionMutation,
   useUpdateCO2ConversionMutation,
   useDeleteCO2ConversionMutation,
+  useGetSegmentConversionTranslationsQuery,
+  useSaveSegmentConversionTranslationsMutation,
+  useGetCO2ConversionTranslationsQuery,
+  useSaveCO2ConversionTranslationsMutation,
 } = conversionLogicApi
