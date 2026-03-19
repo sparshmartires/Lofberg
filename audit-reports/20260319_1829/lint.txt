@@ -1,0 +1,395 @@
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\app\(public)\forgot-password\page.tsx
+  37:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\app\(public)\login\page.tsx
+   38:14  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+   38:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:50  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\app\(public)\reset-password\page.tsx
+  35:25  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\app\(public)\reset-password\page.tsx:35:25
+  33 |   const [showConfirm, setShowConfirm] = useState(false)
+  34 |
+> 35 |   const passwordValue = watch("password")
+     |                         ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  36 |
+  37 |   // Get reset token/email from URL first, fallback to session storage
+  38 |   useEffect(() => {  react-hooks/incompatible-library
+  84:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\app\(public)\verify-code\page.tsx
+   20:35  warning  'isResending' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   26:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\app\(public)\verify-code\page.tsx:26:7
+  24 |   useEffect(() => {
+  25 |     if (seconds === 0) {
+> 26 |       setCanResend(true)
+     |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  27 |       return
+  28 |     }
+  29 |  react-hooks/set-state-in-effect
+   52:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  103:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\app\not-found.tsx
+  34:27  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\components\layout\AppHeader.tsx
+   4:20  warning  'User' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  12:3   warning  'Select' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  13:3   warning  'SelectTrigger' is defined but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  14:3   warning  'SelectContent' is defined but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  15:3   warning  'SelectItem' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  16:3   warning  'SelectValue' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  20:7   warning  'languages' is assigned a value but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  31:10  warning  'language' is assigned a value but never used                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  31:20  warning  'setLanguage' is assigned a value but never used                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  51:9   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\components\layout\AppSideBar.tsx
+  82:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\components\layout\PublicAppHeader.tsx
+  6:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\components\ui\feedback-dialog.tsx
+  10:10  warning  'Check' is defined but never used          @typescript-eslint/no-unused-vars
+  10:17  warning  'AlertTriangle' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\components\ui\input.tsx
+  4:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\components\ui\select.tsx
+  4:10  warning  'CheckIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\conversion-logic\components\ConversionTranslationDialog.tsx
+  64:9  warning  The 'translationData' logical expression could make the dependencies of useEffect Hook (at line 78) change on every render. Move it inside the useEffect callback. Alternatively, wrap the initialization of 'translationData' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\customers\components\CustomerReportUploader.tsx
+  25:11  warning  'register' is assigned a value but never used                                                                    @typescript-eslint/no-unused-vars
+  25:21  warning  'setValue' is assigned a value but never used                                                                    @typescript-eslint/no-unused-vars
+  87:6   warning  React Hook useCallback has a missing dependency: 'handleFile'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\dashboard\components\ReportsByMarkets.tsx
+  22:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx
+   82:3   warning  'sortDirection' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  180:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:180:18
+  178 |             <TableHeader>
+  179 |               <TableRow className="table-header-row-bordered">
+> 180 |                 <SortableHeader column="title" className="min-w-[180px]">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  181 |                   Report title/ID
+  182 |                 </SortableHeader>
+  183 |                 <TableHead className="table-header-cell min-w-[160px]">
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,  react-hooks/static-components
+  197:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:197:18
+  195 |                   Status
+  196 |                 </TableHead>
+> 197 |                 <SortableHeader column="reportdate" className="min-w-[120px]">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  198 |                   Report date
+  199 |                 </SortableHeader>
+  200 |                 <SortableHeader column="createdat" className="min-w-[120px]">
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                              react-hooks/static-components
+  200:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:200:18
+  198 |                   Report date
+  199 |                 </SortableHeader>
+> 200 |                 <SortableHeader column="createdat" className="min-w-[120px]">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  201 |                   Created at
+  202 |                 </SortableHeader>
+  203 |                 <TableHead className="table-header-cell min-w-[120px]">
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                            react-hooks/static-components
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\report-generation\components\steps\Step2DataSource.tsx
+  3:23  warning  'useRef' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\report-generation\hooks\useWizardNavigation.ts
+  40:15  warning  'isGenerating' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  40:29  warning  'generatedReportId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\AboutSustainabilitySection.tsx
+  19:7  warning  'ALL_BLOCKS' is assigned a value but only used as a type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  53:3  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\AboutSustainabilitySection.tsx:53:3
+  51 |
+  52 |   const onChangeRef = useRef(onChange)
+> 53 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  54 |   const parsedRef = useRef(parsed)
+  55 |   parsedRef.current = parsed
+  56 |                                                                 react-hooks/refs
+  55:3  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\AboutSustainabilitySection.tsx:55:3
+  53 |   onChangeRef.current = onChange
+  54 |   const parsedRef = useRef(parsed)
+> 55 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  56 |
+  57 |   const emitChange = useCallback((data: AboutSustainabilityContent) => {
+  58 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\CertificationSection.tsx
+  51:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\CertificationSection.tsx:51:3
+  49 |
+  50 |   const onChangeRef = useRef(onChange)
+> 51 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  52 |   const parsedRef = useRef(parsed)
+  53 |   parsedRef.current = parsed
+  54 |                                                            react-hooks/refs
+  53:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\CertificationSection.tsx:53:3
+  51 |   onChangeRef.current = onChange
+  52 |   const parsedRef = useRef(parsed)
+> 53 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  54 |
+  55 |   const emitChange = useCallback((data: CertificationsContent) => {
+  56 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\CompiledReceiptSection.tsx
+  38:9  warning  The 'emit' function makes the dependencies of useCallback Hook (at line 64) change on every render. To fix this, wrap the definition of 'emit' in its own useCallback() Hook  react-hooks/exhaustive-deps
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\CoverPageSection.tsx
+  56:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\CoverPageSection.tsx:56:3
+  54 |   const isExternalUpdate = useRef(false)
+  55 |   const onChangeRef = useRef(onChange)
+> 56 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  57 |   const parsedRef = useRef(parsed)
+  58 |   parsedRef.current = parsed
+  59 |              react-hooks/refs
+  58:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\CoverPageSection.tsx:58:3
+  56 |   onChangeRef.current = onChange
+  57 |   const parsedRef = useRef(parsed)
+> 58 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  59 |
+  60 |   const emitChange = useCallback((data: CoverPageContent) => {
+  61 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\IncreasingImpactSection.tsx
+  61:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\IncreasingImpactSection.tsx:61:3
+  59 |
+  60 |   const onChangeRef = useRef(onChange)
+> 61 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  62 |   const parsedRef = useRef(parsed)
+  63 |   parsedRef.current = parsed
+  64 |                                                              react-hooks/refs
+  63:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\IncreasingImpactSection.tsx:63:3
+  61 |   onChangeRef.current = onChange
+  62 |   const parsedRef = useRef(parsed)
+> 63 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  64 |
+  65 |   const emitChange = useCallback((data: IncreasingImpactContent) => {
+  66 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\RichTextEditor.tsx
+  48:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\RichTextEditor.tsx:48:3
+  46 |   const isExternalUpdate = useRef(false)
+  47 |   const onChangeRef = useRef(onChange)
+> 48 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  49 |
+  50 |   const editor = useEditor({
+  51 |     extensions: [  react-hooks/refs
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\TemplateContent.tsx
+  44:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\TemplateContent.tsx:44:5
+  42 |
+  43 |   useEffect(() => {
+> 44 |     setActiveTab(isReceiptTemplate ? "receipt" : "about")
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  45 |   }, [isReceiptTemplate])
+  46 |
+  47 |   const getPage = (pageType: PageType) => pages.find((p) => p.pageType === pageType)  react-hooks/set-state-in-effect
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\TranslationContent.tsx
+  44:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\TranslationContent.tsx:44:5
+  42 |
+  43 |   useEffect(() => {
+> 44 |     setActiveTab(isReceiptTemplate ? "receipt" : "cover")
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  45 |   }, [isReceiptTemplate])
+  46 |
+  47 |   const getPage = (pageType: PageType) => pages.find((p) => p.pageType === pageType)  react-hooks/set-state-in-effect
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\UspSection.tsx
+  40:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\UspSection.tsx:40:3
+  38 |
+  39 |   const onChangeRef = useRef(onChange)
+> 40 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  41 |   const parsedRef = useRef(parsed)
+  42 |   parsedRef.current = parsed
+  43 |                                                 react-hooks/refs
+  42:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\template\components\UspSection.tsx:42:3
+  40 |   onChangeRef.current = onChange
+  41 |   const parsedRef = useRef(parsed)
+> 42 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  43 |
+  44 |   const emitChange = useCallback((data: UspContent) => {
+  45 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\useful-resources\components\EditResourceDialog.tsx
+  33:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\features\useful-resources\components\EditResourceDialog.tsx:33:5
+  31 |     if (!resource) return
+  32 |
+> 33 |     setTitle(resource.title)
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  34 |     setDescription(resource.description)
+  35 |   }, [resource])
+  36 |  react-hooks/set-state-in-effect
+
+C:\Users\Admin\Projects\ReactProjects\Lofberg\src\store\services\exampleApi.ts
+  9:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 57 problems (29 errors, 28 warnings)
+

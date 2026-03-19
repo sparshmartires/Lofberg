@@ -1,0 +1,15 @@
+IS_NODE=1
+IS_PYTHON=0
+IS_DOTNET=0
+PKG_MGR=npm
+TEST_RUNNER=none
+LINT_CMD=npx eslint .
+SRC_DIRS=src
+EXCLUDE_DIRS=node_modules,.next,public,.git
+DOCSTRING_STYLE=jsdoc
+LINTER_FOUND=1
+BRANCH=feat/templates
+COMMIT=8744df5e5aa1c28cbbf2cb9ba241d8b9a0f85850 metrics translations 2026-03-19
+AUDIT_TS=20260319_1829
+AUDIT_DIR=audit-reports/20260319_1829
+SEMGREP_PATH=/c/Users/Admin/AppData/Roaming/Python/Python313/Scripts/semgrep
