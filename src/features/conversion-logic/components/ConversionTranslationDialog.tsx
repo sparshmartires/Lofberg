@@ -187,7 +187,8 @@ export default function ConversionTranslationDialog({
                   <input
                     value={row.metricText}
                     onChange={(e) => handleMetricTextChange(index, e.target.value)}
-                    className="flex-1 h-[40px] rounded-full bg-[#F4F4F4] px-4 text-sm"
+                    disabled={!row.languageId}
+                    className="flex-1 h-[40px] rounded-full bg-[#F4F4F4] px-4 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Translated metric"
                   />
 
