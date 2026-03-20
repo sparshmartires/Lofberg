@@ -1,0 +1,8 @@
+src/features/conversion-logic/components/ConversionTranslationDialog.tsx:127:      console.error("Failed to save translations:", err)
+src/features/template/components/VersionHistory.tsx:70:      console.error("Failed to create version:", err)
+src/features/template/components/VersionHistory.tsx:98:      console.error("Failed to restore version:", err)
+src/features/template/components/VersionHistory.tsx:111:      console.error("Failed to publish draft:", err)
+src/features/template/components/VersionHistory.tsx:125:      console.error("Failed to delete draft:", err)
+src/features/template/pages/TemplatePage.tsx:226:      console.error("Failed to save changes:", err)
+src/features/template/pages/TemplatePage.tsx:279:      console.error("Failed to save as draft:", err)
+src/features/template/pages/TranslatorTemplatePage.tsx:164:      console.error("Failed to save translations:", err)

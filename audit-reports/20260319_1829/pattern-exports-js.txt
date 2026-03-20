@@ -1,0 +1,241 @@
+src/app/(app)/conversion-logic/page.tsx:3:export default function Page() {
+src/app/(app)/customers/page.tsx:3:export default function Page() {
+src/app/(app)/dashboard/page.tsx:3:export default function Page() {
+src/app/(app)/historical-reports/page.tsx:3:export default function Page() {
+src/app/(app)/layout.tsx:3:export default function AppLayout({
+src/app/(app)/profile/page.tsx:3:export default function Page() {
+src/app/(app)/report-generation/page.tsx:3:export default function Page() {
+src/app/(app)/sales/page.tsx:3:export default function Page() {
+src/app/(app)/template/page.tsx:3:export default function Page() {
+src/app/(app)/template/translate/page.tsx:5:export default function Page() {
+src/app/(app)/useful-resources/page.tsx:3:export default function Page() {
+src/app/(app)/users/page.tsx:3:export default function Page() {
+src/app/(public)/forgot-password/page.tsx:15:export default function ForgotPasswordPage() {
+src/app/(public)/layout.tsx:3:export default function PublicLayout({
+src/app/(public)/login/page.tsx:17:export default function LoginPage() {
+src/app/(public)/reset-password/page.tsx:16:export default function ResetPasswordPage() {
+src/app/(public)/reset-password/[...slug]/page.tsx:24:export default async function LegacyResetPasswordRedirect({ params }: PageProps) {
+src/app/(public)/verify-code/page.tsx:9:export default function VerifyCodePage() {
+src/app/layout.tsx:27:export default function RootLayout({
+src/app/not-found.tsx:5:export default function NotFound() {
+src/app/page.tsx:10:export default function HomePage() {
+src/app/providers.tsx:6:export function Providers({ children }: { children: React.ReactNode }) {
+src/components/layout/AppHeader.tsx:30:export default function AppHeader() {
+src/components/layout/AppSideBar.tsx:16:export default function AppSidebar() {
+src/components/layout/PageHeaderWithAction.tsx:13:export function PageHeaderWithAction({
+src/components/layout/PageSectionTitle.tsx:5:export function PageSectionTitle({ title }: PageSectionTitleProps) {
+src/components/layout/PublicAppHeader.tsx:3:export default function PublicAppHeader() {
+src/components/layout/UserProfileDropdown.tsx:20:export function UserProfileDropdown({
+src/components/ui/app-pagination.tsx:28:export function AppPagination({
+src/components/ui/button.tsx:57:export interface ButtonProps
+src/components/ui/date-range-picker.tsx:18:export function DateRangePicker({ from, to, onFromChange, onToChange, className }: DateRangePickerProps) {
+src/components/ui/empty-state.tsx:7:export function EmptyState({ description }: EmptyStateProps) {
+src/components/ui/feedback-dialog.tsx:29:export function FeedbackDialog({
+src/components/ui/history-dialog.tsx:9:export interface HistoryDialogItem {
+src/components/ui/history-dialog.tsx:64:export function HistoryDialog({
+src/components/ui/input.tsx:4:export interface InputProps
+src/components/ui/user-feedback-dialog.tsx:31:export function UserFeedbackDialog({
+src/features/conversion-logic/components/CO2Conversions.tsx:19:export default function CO2Conversions() {
+src/features/conversion-logic/components/ConversionTranslationDialog.tsx:40:export default function ConversionTranslationDialog({
+src/features/conversion-logic/components/SegmentBasedConversions.tsx:22:export default function SegmentBasedConversions() {
+src/features/conversion-logic/pages/ConversionLogicPage.tsx:7:export function ConversionLogicPage() {
+src/features/customers/components/AddCustomerPage.tsx:26:export function AddCustomerDialog({
+src/features/customers/components/CustomerDialogForm.tsx:17:export interface CustomerFormValues {
+src/features/customers/components/CustomerDialogForm.tsx:49:export function CustomerDialogForm({
+src/features/customers/components/CustomerFilter.tsx:30:export function CustomerFilters({
+src/features/customers/components/CustomerHistoryDialog.tsx:12:export function CustomerHistoryDialog({
+src/features/customers/components/CustomerReportUploader.tsx:17:export default function CustomerReportUploader() {
+src/features/customers/components/CustomerTable.tsx:66:export function CustomersTable({ customers }: CustomersTableProps) {
+src/features/customers/components/EditCustomerPage.tsx:30:export function EditCustomerDialog({
+src/features/customers/pages/CustomerPage.tsx:17:export function CustomersPage() {
+src/features/dashboard/components/DashboardHeader.tsx:6:export default function DashboardHeader() {
+src/features/dashboard/components/ReportsByMarkets.tsx:37:export function ReportsByMarkets() {
+src/features/dashboard/components/ReportsBySegments.tsx:1:export function ReportsByMarketSegments() {
+src/features/dashboard/components/ReportTypeDistribution.tsx:13:export default function ReportTypeDistribution() {
+src/features/dashboard/components/SalesRepPerformance.tsx:13:export function SalesRepPerformance() {
+src/features/dashboard/components/TopCustomers.tsx:12:export function TopCustomers() {
+src/features/dashboard/pages/DashboardPage.tsx:8:export function DashboardPage() {
+src/features/historical-reports/components/HistoricalReportsFilters.tsx:15:export interface FilterOption {
+src/features/historical-reports/components/HistoricalReportsFilters.tsx:49:export function HistoricalReportsFilters({
+src/features/historical-reports/components/HistoricalReportsTable.tsx:77:export function HistoricalReportsTable({
+src/features/historical-reports/pages/HistoricalReportsPage.tsx:18:export function HistoricalReportsPage() {
+src/features/profile/components/ChangePasswordDialog.tsx:41:export function ChangePasswordDialog({
+src/features/profile/pages/ProfilePage.tsx:42:export default function MyProfilePage() {
+src/features/report-generation/components/AddOnBlockSelector.tsx:17:export function AddOnBlockSelector({
+src/features/report-generation/components/CustomerSearchCombobox.tsx:19:export function CustomerSearchCombobox({
+src/features/report-generation/components/DataSourceTable.tsx:20:export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
+src/features/report-generation/components/FileDropZone.tsx:16:export function FileDropZone({
+src/features/report-generation/components/ReportSummary.tsx:8:export function ReportSummary() {
+src/features/report-generation/components/ReportWizard.tsx:14:export function ReportWizard() {
+src/features/report-generation/components/StepProgressTracker.tsx:10:export function StepProgressTracker({
+src/features/report-generation/components/steps/Step1CustomerDetails.tsx:25:export function Step1CustomerDetails() {
+src/features/report-generation/components/steps/Step2DataSource.tsx:16:export function Step2DataSource() {
+src/features/report-generation/components/steps/Step3ReportType.tsx:9:export function Step3ReportType() {
+src/features/report-generation/components/steps/Step4ContentSelection.tsx:24:export function Step4ContentSelection() {
+src/features/report-generation/components/steps/Step5OutputExport.tsx:23:export function Step5OutputExport() {
+src/features/report-generation/customerLogoRef.ts:7:export function getCustomerLogoFile(): File | null {
+src/features/report-generation/customerLogoRef.ts:11:export function setCustomerLogoFile(file: File | null) {
+src/features/report-generation/hooks/useWizardNavigation.ts:8:export function useWizardNavigation() {
+src/features/report-generation/pages/ReportGenerationPage.tsx:11:export function ReportGenerationPage() {
+src/features/report-generation/types/index.ts:46:export const ADD_ON_BLOCK_LABELS: Record<AddOnBlock, string> = {
+src/features/report-generation/types/index.ts:59:export const CERTIFICATION_LABELS: Record<CertificationType, string> = {
+src/features/report-generation/types/index.ts:69:export const FT_PREMIER_TYPES = [
+src/features/report-generation/types/index.ts:74:export interface CertificationDataRow {
+src/features/report-generation/types/index.ts:83:export const DEFAULT_DATA_ROWS: CertificationDataRow[] = [
+src/features/report-generation/types/index.ts:93:export interface Step1Data {
+src/features/report-generation/types/index.ts:109:export interface Step2Data {
+src/features/report-generation/types/index.ts:115:export interface Step3Data {
+src/features/report-generation/types/index.ts:121:export type QuantityUnit = "cups_of_coffee" | "kilograms"
+src/features/report-generation/types/index.ts:123:export interface Step4Data {
+src/features/report-generation/types/index.ts:132:export interface Step5Data {
+src/features/report-generation/types/index.ts:137:export interface ReportWizardState {
+src/features/report-generation/types/index.ts:151:export type StatusLabel = "Draft" | "Latest" | "Past" | "Archived" | "In Progress" | "Failed"
+src/features/report-generation/types/index.ts:153:export interface ReportDto {
+src/features/report-generation/types/index.ts:174:export interface SaveDraftRequest {
+src/features/report-generation/types/index.ts:179:export interface GenerateReportRequest {
+src/features/report-generation/types/index.ts:188:export interface GetReportsParams {
+src/features/report-generation/types/index.ts:205:export interface PaginatedReportsResponse {
+src/features/report-generation/types/index.ts:213:export const STEP_LABELS = [
+src/features/sales/components/AddSalesDialog.tsx:25:export function AddSalesDialog({ open, onOpenChange, onSaleCreated }: AddSalesDialogProps) {
+src/features/sales/components/EditSalesDialog.tsx:27:export function EditSalesDialog({
+src/features/sales/components/EditSalesDialog.tsx:108:export type { SalesFormValues }
+src/features/sales/components/SalesDialogForm.tsx:23:export interface DialogSalesRoleOption {
+src/features/sales/components/SalesDialogForm.tsx:28:export interface SalesFormValues {
+src/features/sales/components/SalesDialogForm.tsx:57:export function SalesDialogForm({
+src/features/sales/components/SalesEmptyState.tsx:5:export function SalesEmptyState() {
+src/features/sales/components/SalesHistoryDialog.tsx:12:export function SalesHistoryDialog({
+src/features/sales/components/SalesRepFilters.tsx:28:export function SalesRepFilters({
+src/features/sales/components/SalesTable.tsx:78:export function SalesTable({ salesReps }: SalesTableProps) {
+src/features/sales/pages/SalesPage.tsx:21:export function SalesPage() {
+src/features/template/components/AboutSustainabilitySection.tsx:39:export default function AboutSustainabilitySection({
+src/features/template/components/CertificationSection.tsx:37:export default function CertificationsSection({
+src/features/template/components/CompiledReceiptSection.tsx:25:export default function CompiledReceiptSection({
+src/features/template/components/CoverPageSection.tsx:45:export default function CoverPageSection({ contentJson, onChange }: CoverPageSectionProps) {
+src/features/template/components/IncreasingImpactSection.tsx:47:export default function IncreasingImpactSection({
+src/features/template/components/ReceiptSection.tsx:67:export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSectionProps) {
+src/features/template/components/RichTextEditor.tsx:40:export function RichTextEditor({
+src/features/template/components/TemplateConfiguration.tsx:20:export function TemplateConfiguration({
+src/features/template/components/TemplateContent.tsx:19:export default function SustainabilitySection({
+src/features/template/components/TemplateTable.tsx:1:export function TemplateTable() {
+src/features/template/components/translation/AboutSustainabilityTranslation.tsx:22:export default function AboutSustainabilityTranslation({ contentJson, translationJson, onChange }: Props) {
+src/features/template/components/translation/CertificationsTranslation.tsx:25:export default function CertificationsTranslation({ contentJson, translationJson, onChange }: Props) {
+src/features/template/components/translation/CompiledReceiptTranslation.tsx:18:export default function CompiledReceiptTranslation({ contentJson, translationJson, onChange }: Props) {
+src/features/template/components/translation/CoverPageTranslation.tsx:15:export default function CoverPageTranslation({
+src/features/template/components/translation/IncreasingImpactTranslation.tsx:21:export default function IncreasingImpactTranslation({ contentJson, translationJson, onChange }: Props) {
+src/features/template/components/translation/ReceiptTranslation.tsx:15:export default function ReceiptTranslation({ pages, onPageChange }: Props) {
+src/features/template/components/translation/TranslationFieldPair.tsx:18:export function TranslationFieldPair({
+src/features/template/components/translation/UspTranslation.tsx:21:export default function UspTranslation({ contentJson, translationJson, onChange }: Props) {
+src/features/template/components/TranslationContent.tsx:19:export default function TranslationContent({
+src/features/template/components/UspSection.tsx:25:export default function UspSection({ contentJson, onChange }: UspSectionProps) {
+src/features/template/components/VersionHistory.tsx:45:export default function VersionHistory({ templateIds, label }: VersionHistoryProps) {
+src/features/template/pages/TemplatePage.tsx:37:export function TemplatePage() {
+src/features/template/pages/TranslatorTemplatePage.tsx:25:export function TranslatorTemplatePage() {
+src/features/template/types.ts:5:export interface CoverPageContent {
+src/features/template/types.ts:11:export interface AboutSustainabilityContent {
+src/features/template/types.ts:27:export interface UspContent {
+src/features/template/types.ts:39:export interface IncreasingImpactContent {
+src/features/template/types.ts:66:export interface CertificationsContent {
+src/features/template/types.ts:92:export type ReceiptContent = Record<string, string | undefined>
+src/features/template/types.ts:98:export interface CompiledReceiptContent {
+src/features/template/types.ts:111:export function parseContentJson<T>(json: string | null | undefined, fallback: T): T {
+src/features/useful-resources/components/AddResourceDialog.tsx:19:export default function AddNewResourceDialog({
+src/features/useful-resources/components/EditResourceDialog.tsx:21:export default function EditResourceDialog({
+src/features/useful-resources/components/UsefulResourcesTable.tsx:13:export interface UsefulResourceItem {
+src/features/useful-resources/components/UsefulResourcesTable.tsx:26:export function UsefulResourcesTable({ resources, onEditResource }: UsefulResourcesTableProps) {
+src/features/useful-resources/pages/UsefulResourcesPage.tsx:101:export function UsefulResourcesPage() {
+src/features/users/components/AddUserDialog.tsx:13:export function AddUserDialog({ open, onOpenChange, onUserCreated }: AddUserDialogProps) {
+src/features/users/components/EditUserDialog.tsx:15:export function EditUserDialog({
+src/features/users/components/EditUserDialog.tsx:94:export type { UserFormValues }
+src/features/users/components/UserDialogForm.tsx:24:export interface DialogRoleOption {
+src/features/users/components/UserDialogForm.tsx:29:export interface UserFormValues {
+src/features/users/components/UserDialogForm.tsx:62:export function UserDialogForm({
+src/features/users/components/UserMobileCard.tsx:7:export interface UserMobileCardData {
+src/features/users/components/UserMobileCard.tsx:24:export function UserMobileCard({ user, onEdit, onDelete }: UserMobileCardProps) {
+src/features/users/components/UsersEmptyState.tsx:5:export function UsersEmptyState() {
+src/features/users/components/UsersHeaderActions.tsx:21:export function UsersHeaderActions({
+src/features/users/components/UsersTable.tsx:79:export function UsersTable({ users }: UsersTableProps) {
+src/features/users/pages/UsersPage.tsx:15:export function UsersPage() {
+src/icons/disclaimer.tsx:7:export function DisclaimerIcon({ className }: DisclaimerIconProps) {
+src/icons/success.tsx:7:export function SuccessIcon({ className }: SuccessIconProps) {
+src/lib/utils.ts:4:export function cn(...inputs: ClassValue[]) {
+src/middleware.ts:4:export function middleware(request: NextRequest) {
+src/middleware.ts:33:export const config = {
+src/store/hooks/useAuth.ts:8:export const useAuth = () => {
+src/store/hooks.ts:4:export const useAppDispatch = () => useDispatch<AppDispatch>();
+src/store/hooks.ts:5:export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+src/store/index.ts:14:export const store = configureStore({
+src/store/index.ts:40:export type RootState = ReturnType<typeof store.getState>;
+src/store/index.ts:41:export type AppDispatch = typeof store.dispatch;
+src/store/services/authApi.ts:3:export interface LoginRequest {
+src/store/services/authApi.ts:8:export interface LoginResponse {
+src/store/services/authApi.ts:21:export interface ForgotPasswordRequest {
+src/store/services/authApi.ts:25:export interface ForgotPasswordResponse {
+src/store/services/authApi.ts:29:export interface VerifyCodeRequest {
+src/store/services/authApi.ts:34:export interface VerifyCodeResponse {
+src/store/services/authApi.ts:39:export interface ResetPasswordRequest {
+src/store/services/authApi.ts:45:export interface ResetPasswordResponse {
+src/store/services/authApi.ts:49:export interface MeResponse {
+src/store/services/authApi.ts:63:export interface UpdateMeRequest {
+src/store/services/authApi.ts:70:export interface ChangePasswordRequest {
+src/store/services/authApi.ts:75:export interface ChangePasswordResponse {
+src/store/services/authApi.ts:231:export const authApi = createApi({
+src/store/services/authApi.ts:396:export const {
+src/store/services/conversionLogicApi.ts:5:export interface SegmentConversionItem {
+src/store/services/conversionLogicApi.ts:16:export interface CO2ConversionItem {
+src/store/services/conversionLogicApi.ts:24:export interface CreateSegmentConversionRequest {
+src/store/services/conversionLogicApi.ts:30:export interface UpdateSegmentConversionRequest {
+src/store/services/conversionLogicApi.ts:35:export interface CreateCO2ConversionRequest {
+src/store/services/conversionLogicApi.ts:40:export interface UpdateCO2ConversionRequest {
+src/store/services/conversionLogicApi.ts:45:export interface ConversionTranslationItem {
+src/store/services/conversionLogicApi.ts:52:export interface SaveConversionTranslationsRequest {
+src/store/services/conversionLogicApi.ts:139:export const conversionLogicApi = createApi({
+src/store/services/conversionLogicApi.ts:329:export const {
+src/store/services/customersApi.ts:5:export interface CustomerOption {
+src/store/services/customersApi.ts:10:export interface CustomerItem {
+src/store/services/customersApi.ts:31:export interface GetCustomersParams {
+src/store/services/customersApi.ts:40:export interface PaginatedCustomersResponse {
+src/store/services/customersApi.ts:48:export interface CreateCustomerRequest {
+src/store/services/customersApi.ts:64:export interface UpdateCustomerRequest extends CreateCustomerRequest {
+src/store/services/customersApi.ts:316:export const customersApi = createApi({
+src/store/services/customersApi.ts:446:export const {
+src/store/services/exampleApi.ts:3:export const exampleApi = createApi({
+src/store/services/exampleApi.ts:15:export const { useGetPostsQuery } = exampleApi;
+src/store/services/reportsApi.ts:113:export const reportsApi = createApi({
+src/store/services/reportsApi.ts:313:export const {
+src/store/services/salesRepresentativesApi.ts:5:export interface SalesRoleOption {
+src/store/services/salesRepresentativesApi.ts:10:export interface SalesFilterOption {
+src/store/services/salesRepresentativesApi.ts:15:export interface SalesRepresentativeItem {
+src/store/services/salesRepresentativesApi.ts:29:export interface GetSalesRepresentativesParams {
+src/store/services/salesRepresentativesApi.ts:38:export interface PaginatedSalesRepresentativesResponse {
+src/store/services/salesRepresentativesApi.ts:46:export interface CreateSalesRepresentativeRequest {
+src/store/services/salesRepresentativesApi.ts:56:export type UpdateSalesRepresentativeRequest = CreateSalesRepresentativeRequest
+src/store/services/salesRepresentativesApi.ts:224:export const salesRepresentativesApi = createApi({
+src/store/services/salesRepresentativesApi.ts:349:export const {
+src/store/services/templatesApi.ts:40:export interface TemplateVersionSummaryDto {
+src/store/services/templatesApi.ts:52:export interface TemplateDto {
+src/store/services/templatesApi.ts:62:export interface TemplatePageContentDto {
+src/store/services/templatesApi.ts:70:export interface TemplateVersionDto {
+src/store/services/templatesApi.ts:87:export interface UpdatePageContentRequest {
+src/store/services/templatesApi.ts:92:export interface CreateDraftRequest {
+src/store/services/templatesApi.ts:96:export interface UpdateDraftRequest {
+src/store/services/templatesApi.ts:101:export interface SaveActiveChangesRequest {
+src/store/services/templatesApi.ts:112:export interface TemplatePageTranslationDto {
+src/store/services/templatesApi.ts:122:export interface TranslationPageUpdate {
+src/store/services/templatesApi.ts:127:export interface SaveTranslationsRequest {
+src/store/services/templatesApi.ts:133:export interface LanguageDto {
+src/store/services/templatesApi.ts:166:export const templatesApi = createApi({
+src/store/services/templatesApi.ts:390:export const {
+src/store/services/usersApi.ts:5:export interface RoleOption {
+src/store/services/usersApi.ts:10:export interface UserItem {
+src/store/services/usersApi.ts:24:export interface GetUsersParams {
+src/store/services/usersApi.ts:31:export interface PaginatedUsersResponse {
+src/store/services/usersApi.ts:39:export interface CreateUserRequest {
+src/store/services/usersApi.ts:48:export interface UpdateUserRequest extends CreateUserRequest {
+src/store/services/usersApi.ts:206:export const usersApi = createApi({
+src/store/services/usersApi.ts:296:export const {
+src/store/slices/authSlice.ts:4:export interface User {
+src/store/slices/authSlice.ts:13:export interface AuthState {
+src/store/slices/authSlice.ts:144:export const {
+src/store/slices/authSlice.ts:153:export default authSlice.reducer;
+src/store/slices/reportWizardSlice.ts:116:export const {
+src/store/slices/reportWizardSlice.ts:130:export default reportWizardSlice.reducer

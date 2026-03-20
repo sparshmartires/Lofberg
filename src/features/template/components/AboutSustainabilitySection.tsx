@@ -1,44 +1,233 @@
 "use client"
 
-import { Upload } from "lucide-react"
+import { useCallback, useMemo, useRef, useState } from "react"
+import { parseContentJson, type AboutSustainabilityContent } from "../types"
+import { RichTextEditor } from "./RichTextEditor"
+import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
+import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
-export default function AboutSustainabilitySection() {
+const RIGHT_BLOCKS = [
+  { index: 1, label: "Icon + Textblock 1 (right)" },
+  { index: 2, label: "Icon + Textblock 2 (right)" },
+] as const
+
+const BOTTOM_BLOCKS = [
+  { index: 3, label: "Icon + Textblock 3 (bottom left)" },
+  { index: 4, label: "Icon + Textblock 4 (bottom right)" },
+] as const
+
+const ALL_BLOCKS = [...RIGHT_BLOCKS, ...BOTTOM_BLOCKS] as const
+
+type BlockIndex = (typeof ALL_BLOCKS)[number]["index"]
+type ImageField = "intro_hero_image" | "intro_circle_image" | `intro_icon_${BlockIndex}`
+type TextField = "headerText" | "introText" | `intro_textblock_${BlockIndex}`
+
+const DEFAULT_CONTENT: AboutSustainabilityContent = {
+  headerText: "",
+  introText: "",
+  intro_textblock_1: "",
+  intro_textblock_2: "",
+  intro_textblock_3: "",
+  intro_textblock_4: "",
+}
+
+interface AboutSustainabilitySectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function AboutSustainabilitySection({
+  contentJson,
+  onChange,
+}: AboutSustainabilitySectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+  const [imageFiles, setImageFiles] = useState<Record<string, File | null>>({})
+  const [uploadImage] = useUploadTemplateImageMutation()
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<AboutSustainabilityContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+  const parsedRef = useRef(parsed)
+  parsedRef.current = parsed
+
+  const emitChange = useCallback((data: AboutSustainabilityContent) => {
+    if (onChangeRef.current) {
+      onChangeRef.current(JSON.stringify(data))
+    } else {
+      setLocalContent(data)
+    }
+  }, [])
+
+  const updateText = useCallback(
+    (field: TextField, value: string) => {
+      emitChange({ ...parsedRef.current, [field]: value })
+    },
+    [emitChange]
+  )
+
+  const handleImageChange = useCallback(
+    async (field: ImageField, file: File | null) => {
+      setImageFiles((prev) => ({ ...prev, [field]: file }))
+      if (!file) {
+        emitChange({ ...parsedRef.current, [field]: undefined })
+        return
+      }
+      try {
+        const result = await uploadImage({ file }).unwrap()
+        emitChange({ ...parsedRef.current, [field]: result.url })
+      } catch {
+        setImageFiles((prev) => ({ ...prev, [field]: null }))
+      }
+    },
+    [uploadImage, emitChange]
+  )
+
   return (
-    <div className="grid lg:grid-cols-2 gap-8">
-      <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-        <p className="text-sm mb-2">Upload banner image</p>
+    <div className="space-y-8">
+      <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
+        About sustainability section
+      </h3>
 
-        <div className="w-full min-w-0 h-[125px] border-2 border-dashed border-[#D8B4F8] rounded-xl p-4 flex flex-col items-center justify-center gap-3">
-          <Upload className="text-[#5B2D91]" />
-          <p className="text-sm text-[#4E4E4E]">Upload a file or drag and drop</p>
+      <div className="grid lg:grid-cols-2 gap-8">
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Banner image</p>
+          <FileDropZone
+            accept=".jpg,.jpeg,.png,.svg,.webp"
+            acceptLabel="Recommended size: 1920x1080px, Max 2MB"
+            file={imageFiles["intro_hero_image"] ?? null}
+            previewUrl={parsed.intro_hero_image}
+            onFileChange={(file) => handleImageChange("intro_hero_image", file)}
+            className="h-[125px]"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Header text</p>
+          <textarea
+            placeholder="Enter header text"
+            value={parsed.headerText}
+            onChange={(e) => updateText("headerText", e.target.value)}
+            className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Circle image (graph/chart)</p>
+          <FileDropZone
+            accept=".jpg,.jpeg,.png,.svg,.webp"
+            acceptLabel="Recommended size: 800x800px, Max 2MB"
+            file={imageFiles["intro_circle_image"] ?? null}
+            previewUrl={parsed.intro_circle_image}
+            onFileChange={(file) => handleImageChange("intro_circle_image", file)}
+            className="h-[125px]"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-sm mb-2">Intro text</p>
+          <RichTextEditor
+            value={parsed.introText}
+            onChange={(html) => updateText("introText", html)}
+            placeholder="Enter introduction text"
+            className="h-[125px]"
+          />
         </div>
       </div>
 
-      <div className="min-w-0 lg:col-start-2 lg:row-start-1">
-        <p className="text-sm mb-2">Header text</p>
+      <p className="text-xs text-[#9CA3AF]">
+        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
+        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
+        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
+      </p>
 
-        <textarea
-          placeholder="Enter header text"
-          className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
-        />
+      <div className="border-t border-[#EDEDED]" />
+
+      <p className="text-sm font-medium text-[#8A8A8A]">Right-side blocks</p>
+      <div className="space-y-6">
+        {RIGHT_BLOCKS.map((block) => {
+          const iconField = `intro_icon_${block.index}` as ImageField
+          const textField = `intro_textblock_${block.index}` as TextField
+
+          return (
+            <div
+              key={block.index}
+              className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
+            >
+              <p className="text-sm font-medium">{block.label}</p>
+
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Icon image</p>
+                  <FileDropZone
+                    accept=".jpg,.jpeg,.png,.svg,.webp"
+                    acceptLabel="Max 2MB, JPG/PNG/SVG"
+                    file={imageFiles[iconField] ?? null}
+                    previewUrl={parsed[iconField]}
+                    onFileChange={(file) => handleImageChange(iconField, file)}
+                    className="h-[110px]"
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Text block</p>
+                  <RichTextEditor
+                    value={parsed[textField] ?? ""}
+                    onChange={(html) => updateText(textField, html)}
+                    placeholder="Enter text content"
+                    className="h-[110px]"
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
-      <div className="min-w-0 lg:col-start-1 lg:row-start-2">
-        <p className="text-sm mb-2">Graph/chart image</p>
+      <div className="border-t border-[#EDEDED]" />
 
-        <div className="w-full min-w-0 h-[125px] border-2 border-dashed border-[#D8B4F8] rounded-xl p-4 flex flex-col items-center justify-center gap-3">
-          <Upload className="text-[#5B2D91]" />
-          <p className="text-sm text-[#4E4E4E]">Upload a file or drag and drop</p>
-        </div>
-      </div>
+      <p className="text-sm font-medium text-[#8A8A8A]">Bottom blocks</p>
+      <div className="space-y-6">
+        {BOTTOM_BLOCKS.map((block) => {
+          const iconField = `intro_icon_${block.index}` as ImageField
+          const textField = `intro_textblock_${block.index}` as TextField
 
-      <div className="min-w-0 lg:col-start-2 lg:row-start-2">
-        <p className="text-sm mb-2">Intro text</p>
+          return (
+            <div
+              key={block.index}
+              className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
+            >
+              <p className="text-sm font-medium">{block.label}</p>
 
-        <textarea
-          placeholder="Enter introduction text"
-          className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
-        />
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Icon image</p>
+                  <FileDropZone
+                    accept=".jpg,.jpeg,.png,.svg,.webp"
+                    acceptLabel="Max 2MB, JPG/PNG/SVG"
+                    file={imageFiles[iconField] ?? null}
+                    previewUrl={parsed[iconField]}
+                    onFileChange={(file) => handleImageChange(iconField, file)}
+                    className="h-[110px]"
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Text block</p>
+                  <RichTextEditor
+                    value={parsed[textField] ?? ""}
+                    onChange={(html) => updateText(textField, html)}
+                    placeholder="Enter text content"
+                    className="h-[110px]"
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

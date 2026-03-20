@@ -4,7 +4,11 @@ import { authApi } from "./services/authApi";
 import { usersApi } from "./services/usersApi";
 import { salesRepresentativesApi } from "./services/salesRepresentativesApi";
 import { customersApi } from "./services/customersApi";
+import { templatesApi } from "./services/templatesApi";
+import { reportsApi } from "./services/reportsApi";
+import { conversionLogicApi } from "./services/conversionLogicApi";
 import authReducer from "./slices/authSlice";
+import reportWizardReducer from "./slices/reportWizardSlice";
 
 
 export const store = configureStore({
@@ -14,7 +18,11 @@ export const store = configureStore({
     [usersApi.reducerPath]: usersApi.reducer,
     [salesRepresentativesApi.reducerPath]: salesRepresentativesApi.reducer,
     [customersApi.reducerPath]: customersApi.reducer,
+    [templatesApi.reducerPath]: templatesApi.reducer,
+    [reportsApi.reducerPath]: reportsApi.reducer,
+    [conversionLogicApi.reducerPath]: conversionLogicApi.reducer,
     auth: authReducer,
+    reportWizard: reportWizardReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -22,7 +30,10 @@ export const store = configureStore({
       authApi.middleware,
       usersApi.middleware,
       salesRepresentativesApi.middleware,
-      customersApi.middleware
+      customersApi.middleware,
+      templatesApi.middleware,
+      reportsApi.middleware,
+      conversionLogicApi.middleware
     ),
 });
 

@@ -80,26 +80,7 @@ export function EditCustomerDialog({
   useEffect(() => {
     if (!open || !customerId) return
 
-    reset({
-      customerName: "",
-      accountCode: "",
-      industry: "",
-      serviceTier: "",
-      region: "",
-      isSubCustomer: false,
-      contactPerson: "",
-      contactEmail: "",
-      contactPhone: "",
-      address: "",
-      status: "active",
-      notes: "",
-      logo: null,
-    })
-  }, [customerId, open, reset])
-
-  useEffect(() => {
-    if (!customer || customer.id !== customerId) return
-
+    if (customer && customer.id === customerId) {
       reset({
         customerName: customer.name || "",
         accountCode: customer.accountCode || "",
@@ -115,7 +96,24 @@ export function EditCustomerDialog({
         notes: customer.notes || "",
         logo: null,
       })
-  }, [customer, customerId, reset, serviceTierDefaultValue])
+    } else {
+      reset({
+        customerName: "",
+        accountCode: "",
+        industry: "",
+        serviceTier: "",
+        region: "",
+        isSubCustomer: false,
+        contactPerson: "",
+        contactEmail: "",
+        contactPhone: "",
+        address: "",
+        status: "active",
+        notes: "",
+        logo: null,
+      })
+    }
+  }, [open, customerId, customer, reset, serviceTierDefaultValue])
 
   const logoFile = useWatch({ control, name: "logo" })
 

@@ -1,0 +1,11 @@
+src/features/report-generation/components/steps/Step2DataSource.tsx:113:/**
+src/features/report-generation/customerLogoRef.ts:1:/**
+src/features/template/types.ts:4:/** CoverPage (PageType 0) */
+src/features/template/types.ts:10:/** AboutSustainability (PageType 2) */
+src/features/template/types.ts:26:/** LofbergsUSPs (PageType 3) */
+src/features/template/types.ts:38:/** IncreasingPositiveImpact (PageType 4) */
+src/features/template/types.ts:65:/** CertificationsOverview (PageType 5) */
+src/features/template/types.ts:90:/** Receipt pages (PageTypes 6–9) — one per certification.
+src/features/template/types.ts:94:/** CompiledReceiptSummary (PageType 10).
+src/store/hooks/useAuth.ts:4:/**
+src/store/services/customersApi.ts:68:/** Convert a request object to FormData with PascalCase keys for [FromForm] binding */

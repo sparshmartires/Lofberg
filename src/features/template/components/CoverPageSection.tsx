@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   AlignCenter,
   AlignLeft,
@@ -10,7 +10,6 @@ import {
   List,
   ListOrdered,
   Underline as UnderlineIcon,
-  Upload,
 } from "lucide-react"
 import Placeholder from "@tiptap/extension-placeholder"
 import TextAlign from "@tiptap/extension-text-align"
@@ -19,6 +18,13 @@ import StarterKit from "@tiptap/starter-kit"
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { parseContentJson, type CoverPageContent } from "../types"
+import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
+import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
+
+const DEFAULT_CONTENT: CoverPageContent = {
+  headerText: "<p>Sustainability report</p>",
+}
 
 const defaultToolbarState = {
   isBold: false,
@@ -31,8 +37,52 @@ const defaultToolbarState = {
   isAlignRight: false,
 }
 
-export default function CoverPageSection() {
-  const [headerText, setHeaderText] = useState("<p>Sustainability report</p>")
+interface CoverPageSectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function CoverPageSection({ contentJson, onChange }: CoverPageSectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploadImage] = useUploadTemplateImageMutation()
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<CoverPageContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+  const isExternalUpdate = useRef(false)
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+  const parsedRef = useRef(parsed)
+  parsedRef.current = parsed
+
+  const emitChange = useCallback((data: CoverPageContent) => {
+    if (onChangeRef.current) {
+      onChangeRef.current(JSON.stringify(data))
+    } else {
+      setLocalContent(data)
+    }
+  }, [])
+
+  const handleImageChange = useCallback(
+    async (file: File | null) => {
+      setImageFile(file)
+      if (!file) {
+        // Remove image
+        emitChange({ ...parsedRef.current, cover_image: undefined })
+        return
+      }
+      try {
+        const result = await uploadImage({ file }).unwrap()
+        emitChange({ ...parsedRef.current, cover_image: result.url })
+      } catch {
+        // Upload failed — reset file state
+        setImageFile(null)
+      }
+    },
+    [uploadImage, emitChange]
+  )
 
   const editor = useEditor({
     extensions: [
@@ -45,12 +95,22 @@ export default function CoverPageSection() {
         placeholder: "Sustainability report",
       }),
     ],
-    content: headerText,
+    content: parsed.headerText,
     immediatelyRender: false,
     onUpdate: ({ editor: currentEditor }) => {
-      setHeaderText(currentEditor.getHTML())
+      if (isExternalUpdate.current) return
+      emitChange({ ...parsedRef.current, headerText: currentEditor.getHTML() })
     },
   })
+
+  // Sync editor content when contentJson changes externally
+  useEffect(() => {
+    if (editor && parsed.headerText !== editor.getHTML()) {
+      isExternalUpdate.current = true
+      editor.commands.setContent(parsed.headerText)
+      isExternalUpdate.current = false
+    }
+  }, [parsed.headerText, editor])
 
   const toolbarState = useEditorState({
     editor,
@@ -82,15 +142,14 @@ export default function CoverPageSection() {
         <div className="min-w-0">
         <p className="text-sm mb-2">Background image</p>
 
-        <div className="w-full min-w-0 h-[125px] border-2 border-dashed border-[#D8B4F8] rounded-xl p-4 flex flex-col items-center justify-center gap-3">
-          <Upload className="text-[#5B2D91]" />
-
-          <p className="text-sm text-[#4E4E4E]">Upload a file or drag and drop</p>
-
-          <p className="text-xs text-[#8A8A8A] text-center">
-            Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG
-          </p>
-        </div>
+        <FileDropZone
+          accept=".jpg,.jpeg,.png,.svg,.webp"
+          acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
+          file={imageFile}
+          previewUrl={parsed.cover_image}
+          onFileChange={handleImageChange}
+          className="h-[125px]"
+        />
         </div>
 
         <div className="min-w-0">
@@ -210,6 +269,12 @@ export default function CoverPageSection() {
         </div>
         </div>
       </div>
+
+      <p className="text-xs text-[#9CA3AF]">
+        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
+        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
+        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
+      </p>
     </div>
   )
 }

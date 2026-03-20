@@ -1,0 +1,8 @@
+src/app/(public)/forgot-password/page.tsx:37:    } catch (err: any) {
+src/app/(public)/login/page.tsx:38:    } catch (err: any) {
+src/app/(public)/login/page.tsx:128:          {error && "data" in error && (error as any).data?.error && (
+src/app/(public)/login/page.tsx:130:              {(error as any).data?.error}
+src/app/(public)/reset-password/page.tsx:84:    } catch (err: any) {
+src/app/(public)/verify-code/page.tsx:52:    } catch (err: any) {
+src/app/(public)/verify-code/page.tsx:103:    } catch (err: any) {
+src/features/dashboard/components/ReportsByMarkets.tsx:22:function CustomTooltip({ active, payload }: any) {

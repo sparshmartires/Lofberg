@@ -1,123 +1,195 @@
 "use client"
 
-import { useState } from "react"
-import { Upload, Plus } from "lucide-react"
+import { useCallback, useMemo, useRef, useState } from "react"
+import { parseContentJson, type IncreasingImpactContent } from "../types"
+import { RichTextEditor } from "./RichTextEditor"
+import { FileDropZone } from "@/features/report-generation/components/FileDropZone"
+import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
-export default function IncreasingImpactSection() {
-  const [steps, setSteps] = useState([
-    { id: 1, name: "", text: "" },
-  ])
+const ACTION_BLOCKS = [
+  { index: 1, label: "Water conservation" },
+  { index: 2, label: "Fair wages" },
+  { index: 3, label: "Biodiversity protection" },
+  { index: 4, label: "Community development" },
+  { index: 5, label: "Sustainable farming" },
+  { index: 6, label: "Climate action" },
+  { index: 7, label: "Educational programs" },
+  { index: 8, label: "Health & safety" },
+  { index: 9, label: "Women empowerment" },
+  { index: 10, label: "Forest protection" },
+] as const
 
-  const addStep = () => {
-    if (steps.length >= 10) return
+type ActionIndex = (typeof ACTION_BLOCKS)[number]["index"]
+type TextFieldKey = "headerText" | "introText" | "wantMoreText" | `actionText${ActionIndex}`
+type ImageFieldKey = `actionImage${ActionIndex}`
 
-    setSteps([
-      ...steps,
-      { id: steps.length + 1, name: "", text: "" },
-    ])
-  }
+const DEFAULT_CONTENT: IncreasingImpactContent = {
+  headerText: "",
+  introText: "",
+  wantMoreText: "",
+  actionText1: "",
+  actionText2: "",
+  actionText3: "",
+  actionText4: "",
+  actionText5: "",
+  actionText6: "",
+  actionText7: "",
+  actionText8: "",
+  actionText9: "",
+  actionText10: "",
+}
+
+interface IncreasingImpactSectionProps {
+  contentJson?: string | null
+  onChange?: (json: string) => void
+}
+
+export default function IncreasingImpactSection({
+  contentJson,
+  onChange,
+}: IncreasingImpactSectionProps) {
+  const [localContent, setLocalContent] = useState(DEFAULT_CONTENT)
+  const [imageFiles, setImageFiles] = useState<Record<string, File | null>>({})
+  const [uploadImage] = useUploadTemplateImageMutation()
+
+  const parsed = useMemo(
+    () => contentJson ? parseContentJson<IncreasingImpactContent>(contentJson, DEFAULT_CONTENT) : localContent,
+    [contentJson, localContent]
+  )
+
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+  const parsedRef = useRef(parsed)
+  parsedRef.current = parsed
+
+  const emitChange = useCallback((data: IncreasingImpactContent) => {
+    if (onChangeRef.current) {
+      onChangeRef.current(JSON.stringify(data))
+    } else {
+      setLocalContent(data)
+    }
+  }, [])
+
+  const updateText = useCallback(
+    (field: TextFieldKey, value: string) => {
+      emitChange({ ...parsedRef.current, [field]: value })
+    },
+    [emitChange]
+  )
+
+  const handleImageChange = useCallback(
+    async (field: ImageFieldKey, file: File | null) => {
+      setImageFiles((prev) => ({ ...prev, [field]: file }))
+      if (!file) {
+        emitChange({ ...parsedRef.current, [field]: undefined })
+        return
+      }
+      try {
+        const result = await uploadImage({ file }).unwrap()
+        emitChange({ ...parsedRef.current, [field]: result.url })
+      } catch {
+        setImageFiles((prev) => ({ ...prev, [field]: null }))
+      }
+    },
+    [uploadImage, emitChange]
+  )
 
   return (
     <div className="space-y-8">
       <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
-       Increasing positive impact section
+        Increasing positive impact section
       </h3>
 
-      {/* HEADER TEXT */}
       <div>
         <p className="text-sm mb-2">Header text</p>
-
         <textarea
           placeholder="Enter header text"
+          value={parsed.headerText}
+          onChange={(e) => updateText("headerText", e.target.value)}
           className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
 
-      {/* INTRO TEXT */}
       <div>
         <p className="text-sm mb-2">Intro text</p>
-
-        <textarea
+        <RichTextEditor
+          value={parsed.introText}
+          onChange={(html) => updateText("introText", html)}
           placeholder="Enter introduction text"
-          className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="h-[110px]"
         />
       </div>
 
-      {/* STEP SECTION HEADER */}
-      <div className="flex items-center justify-between max-[799px]:flex-col max-[799px]:items-start max-[799px]:gap-6">
-        <div>
-          <p className="text-sm font-medium">
-            Report / Receipt template
-          </p>
-          <p className="text-xs text-[#8A8A8A]">
-            Configure multiple impact steps. Users are taken to a landing report generation.
-          </p>
-        </div>
+      <p className="text-xs text-[#9CA3AF]">
+        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
+        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
+        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
+      </p>
 
-        <button
-          onClick={addStep}
-          className="flex items-center gap-1 bg-[#4A145F] text-white text-sm px-[20px] py-[10px] rounded-[99px] max-[799px]:w-full max-[799px]:justify-center"
-        >
-          <Plus size={14} /> Add step
-        </button>
+      <div className="border-t border-[#EDEDED]" />
+
+      <div>
+        <p className="text-sm font-medium">
+          Report / Receipt template
+        </p>
+        <p className="text-xs text-[#8A8A8A]">
+          Configure the 10 impact action blocks. Users select up to 3 during report generation.
+        </p>
       </div>
 
-      {/* STEPS */}
       <div className="space-y-6">
+        {ACTION_BLOCKS.map((block) => {
+          const textField = `actionText${block.index}` as TextFieldKey
+          const imageField = `actionImage${block.index}` as ImageFieldKey
 
-        {steps.map((step, index) => (
-          <div
-            key={step.id}
-            className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
-          >
-            <p className="text-sm font-medium">
-              Step {index + 1}
-            </p>
-
-            {/* SECTION NAME */}
-            <div>
-              <p className="text-sm mb-2">
-                Section name (for selection)
+          return (
+            <div
+              key={block.index}
+              className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
+            >
+              <p className="text-sm font-medium">
+                {block.index}. {block.label}
               </p>
 
-              <input
-                placeholder="Eg. Reduce waste"
-                className="w-full min-w-0 h-[40px] rounded-full border border-[#EDEDED] px-4 text-sm"
-              />
-            </div>
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Section image</p>
+                  <FileDropZone
+                    accept=".jpg,.jpeg,.png,.svg,.webp"
+                    acceptLabel="Max 2MB, JPG/PNG/SVG"
+                    file={imageFiles[imageField] ?? null}
+                    previewUrl={parsed[imageField]}
+                    onFileChange={(file) => handleImageChange(imageField, file)}
+                    className="h-[110px]"
+                  />
+                </div>
 
-            {/* IMAGE + TEXT */}
-            <div className="grid lg:grid-cols-2 gap-8">
-
-              {/* IMAGE */}
-              <div className="min-w-0">
-                <p className="text-sm mb-2">Section image</p>
-
-                <div className="w-full min-w-0 h-[110px] border-2 border-dashed border-[#D8B4F8] rounded-xl flex flex-col items-center justify-center gap-2">
-                  <Upload className="text-[#5B2D91]" />
-
-                  <p className="text-sm text-[#4E4E4E]">
-                    Upload a file or drag and drop
-                  </p>
+                <div className="min-w-0">
+                  <p className="text-sm mb-2">Section text</p>
+                  <RichTextEditor
+                    value={parsed[textField] ?? ""}
+                    onChange={(html) => updateText(textField, html)}
+                    placeholder="Enter section text"
+                    className="h-[110px]"
+                  />
                 </div>
               </div>
-
-              {/* TEXT */}
-              <div className="min-w-0">
-                <p className="text-sm mb-2">Section text</p>
-
-                <textarea
-                  placeholder="Enter section text"
-                  className="w-full min-w-0 h-[110px] rounded-xl border border-[#EDEDED] p-3 resize-none"
-                />
-              </div>
-
             </div>
-          </div>
-        ))}
-
+          )
+        })}
       </div>
 
+      <div className="border-t border-[#EDEDED]" />
+
+      <div>
+        <p className="text-sm mb-2">Want to know more text</p>
+        <RichTextEditor
+          value={parsed.wantMoreText}
+          onChange={(html) => updateText("wantMoreText", html)}
+          placeholder="Enter 'want to know more' text"
+          className="h-[90px]"
+        />
+      </div>
     </div>
   )
 }

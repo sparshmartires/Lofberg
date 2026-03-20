@@ -11,18 +11,25 @@ import {
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useAuth } from "@/store/hooks/useAuth"
 
 export default function AppSidebar() {
     const pathname = usePathname()
+    const { user } = useAuth()
+
+    const roles = user?.roles ?? []
+    const isAdmin = !user || roles.includes("Administrator")
+    const isTranslator = roles.includes("Translator")
 
     const menuItems = [
         { label: "Dashboard", href: "/dashboard" },
-        { label: "Generate Report/Receipt", href: "/template" },
+        { label: "Generate Report/Receipt", href: "/report-generation" },
         { label: "Historical reports", href: "/historical-reports" },
         { label: "Customer Management", href: "/customers" },
         { label: "Sales Representative", href: "/sales" },
         { label: "User Management", href: "/users" },
-        { label: "Report receipt template", href: "#" },
+        ...(isAdmin ? [{ label: "Report receipt template", href: "/template" }] : []),
+        ...(isAdmin || isTranslator ? [{ label: "Template translation", href: "/template/translate" }] : []),
         { label: "Useful resources", href: "/useful-resources" },
         { label: "Conversion logic", href: "/conversion-logic" },
     ]

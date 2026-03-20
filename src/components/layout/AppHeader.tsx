@@ -64,6 +64,7 @@ export default function AppHeader() {
           variant="accent"
           size="md"
           className="gap-2 font-medium px-5 py-3"
+          onClick={() => router.push("/report-generation")}
         >
           <FileText className="w-4 h-4" />
           Generate report

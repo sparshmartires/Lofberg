@@ -49,21 +49,21 @@ export function TemplateConfiguration({
             onValueChange={onTemplateTypeChange}
           >
             <SelectTrigger className={fieldClass}>
-              <SelectValue placeholder="Report template (A4)" />
+              <SelectValue placeholder="Report template" />
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="report-a4">
-                Report template (A4)
+              <SelectItem value="report">
+                Report template
               </SelectItem>
-              <SelectItem value="receipt-a4">
-                Receipt template (A4)
+              <SelectItem value="receipt">
+                Receipt template
               </SelectItem>
             </SelectContent>
           </Select>
 
           <p className={styles.helper}>
-            Configure sustainability report templates (A4 format)
+            Configure sustainability report and receipt templates
           </p>
         </div>
 
