@@ -1,0 +1,1160 @@
+
+Running 120 tests using 1 worker
+
+[1A[2K[1/120] e2e\auth.spec.ts:5:7 › Authentication Tests › AU1: Admin login navigates away from /login
+[1A[2Ke2e\auth.spec.ts:5:7 › Authentication Tests › AU1: Admin login navigates away from /login
+AU1: Admin post-login URL: http://localhost:3000/users
+
+[1A[2K[2/120] e2e\auth.spec.ts:11:7 › Authentication Tests › AU2: Sales login navigates away from /login
+[1A[2Ke2e\auth.spec.ts:11:7 › Authentication Tests › AU2: Sales login navigates away from /login
+AU2: Sales post-login URL: http://localhost:3000/users
+
+[1A[2K[3/120] e2e\auth.spec.ts:17:7 › Authentication Tests › AU3: Translator login navigates away from /login
+[1A[2Ke2e\auth.spec.ts:17:7 › Authentication Tests › AU3: Translator login navigates away from /login
+AU3: Translator post-login URL: http://localhost:3000/users
+
+[1A[2K[4/120] e2e\auth.spec.ts:23:7 › Authentication Tests › AU4: Wrong password shows error
+[1A[2Ke2e\auth.spec.ts:23:7 › Authentication Tests › AU4: Wrong password shows error
+AU4: Error found with selector "[role="alert"]", count: 1
+
+[1A[2K[5/120] e2e\auth.spec.ts:65:7 › Authentication Tests › AU5: Empty form submit shows validation
+[1A[2Ke2e\auth.spec.ts:65:7 › Authentication Tests › AU5: Empty form submit shows validation
+AU5: Validation found with selector "[role="alert"]", count: 1
+
+[1A[2KAU5: validationFound: [33mtrue[39m emailInvalid: [33mfalse[39m pwInvalid: [33mfalse[39m
+
+[1A[2K[6/120] e2e\auth.spec.ts:110:7 › Authentication Tests › AU6: Logout redirects to /login
+[1A[2K  1) e2e\auth.spec.ts:110:7 › Authentication Tests › AU6: Logout redirects to /login ───────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.allTextContents: Target page, context or browser has been closed
+
+      183 |     } else {
+      184 |       // Dump page nav items for debugging
+    > 185 |       const allButtons = await page.locator('button, a').allTextContents();
+          |                                                          ^
+      186 |       console.log('AU6: Could not find logout. All buttons/links:', allButtons.slice(0, 30));
+      187 |       test.info().annotations.push({ type: 'note', description: 'Logout button not found with any strategy. See console for available elements.' });
+      188 |     }
+        at C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\auth.spec.ts:185:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\auth-Authentication-Tests-AU6-Logout-redirects-to-login\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\auth-Authentication-Tests-AU6-Logout-redirects-to-login\error-context.md
+
+
+[1A[2K[7/120] e2e\auth.spec.ts:191:7 › Authentication Tests › AU7: Login page has forgot password link
+[1A[2Ke2e\auth.spec.ts:191:7 › Authentication Tests › AU7: Login page has forgot password link
+AU7: Forgot password link visible: [33mtrue[39m
+
+[1A[2K[8/120] e2e\auth.spec.ts:208:7 › Authentication Tests › AU8: Forgot password page has email input
+[1A[2Ke2e\auth.spec.ts:208:7 › Authentication Tests › AU8: Forgot password page has email input
+AU8: Forgot password page URL: http://localhost:3000/login
+
+[1A[2K[9/120] e2e\conversion-logic.spec.ts:33:7 › Conversion Logic Tests › CL1: Admin can access conversions page
+[1A[2Ke2e\conversion-logic.spec.ts:33:7 › Conversion Logic Tests › CL1: Admin can access conversions page
+CL1: Conversions URL: http://localhost:3000/conversions
+
+[1A[2KCL1: Conversion content found: [33mtrue[39m
+
+[1A[2KCL1: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="Jtf9igs3yVCYsb1OzxDot"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[10/120] e2e\conversion-logic.spec.ts:46:7 › Conversion Logic Tests › CL2: CO2 conversion section visible
+[1A[2Ke2e\conversion-logic.spec.ts:46:7 › Conversion Logic Tests › CL2: CO2 conversion section visible
+CL2: CO2 section found: [33mfalse[39m
+
+[1A[2KCL2: Tables on page: [33m0[39m
+
+[1A[2K[11/120] e2e\conversion-logic.spec.ts:61:7 › Conversion Logic Tests › CL3: Segment conversion section visible
+[1A[2Ke2e\conversion-logic.spec.ts:61:7 › Conversion Logic Tests › CL3: Segment conversion section visible
+CL3: Segment section found: [33mtrue[39m
+
+[1A[2K[12/120] e2e\conversion-logic.spec.ts:72:7 › Conversion Logic Tests › CL4: Admin can add CO2 conversion
+[1A[2Ke2e\conversion-logic.spec.ts:72:7 › Conversion Logic Tests › CL4: Admin can add CO2 conversion
+CL4: Add button visible: [33mtrue[39m
+
+[1A[2KCL4: Form inputs: [33m0[39m Labels: []
+
+[1A[2KCL4: All buttons: [ [32m'Let’s brew a new batch'[39m, [32m'Compiling...'[39m ]
+
+[1A[2K[13/120] e2e\conversion-logic.spec.ts:96:7 › Conversion Logic Tests › CL5: Admin can edit conversion
+[1A[2Ke2e\conversion-logic.spec.ts:96:7 › Conversion Logic Tests › CL5: Admin can edit conversion
+CL5: Edit button visible: [33mfalse[39m
+
+[1A[2K[14/120] e2e\conversion-logic.spec.ts:117:7 › Conversion Logic Tests › CL6: Admin can delete conversion
+[1A[2Ke2e\conversion-logic.spec.ts:117:7 › Conversion Logic Tests › CL6: Admin can delete conversion
+CL6: Delete button visible: [33mfalse[39m
+
+[1A[2K[15/120] e2e\conversion-logic.spec.ts:130:7 › Conversion Logic Tests › CL7: Conversion factor field
+[1A[2Ke2e\conversion-logic.spec.ts:130:7 › Conversion Logic Tests › CL7: Conversion factor field
+CL7: Factor field/text: [33mtrue[39m
+
+[1A[2KCL7: Table headers: []
+
+[1A[2K[16/120] e2e\conversion-logic.spec.ts:146:7 › Conversion Logic Tests › CL8: Metric translation
+[1A[2Ke2e\conversion-logic.spec.ts:146:7 › Conversion Logic Tests › CL8: Metric translation
+CL8: Translation mentioned: [33mfalse[39m
+
+[1A[2K[17/120] e2e\conversion-logic.spec.ts:158:7 › Conversion Logic Tests › CL9: Translator can view conversions (read-only)
+[1A[2Ke2e\conversion-logic.spec.ts:158:7 › Conversion Logic Tests › CL9: Translator can view conversions (read-only)
+CL9: Translator conversions URL: http://localhost:3000/conversions
+
+[1A[2KCL9: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="g5U9huGocsLYT1AWIIPN4"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2KCL9: Translator sees - Add: [33mtrue[39m Edit: [33mfalse[39m Delete: [33mfalse[39m
+
+[1A[2K[18/120] e2e\conversion-logic.spec.ts:180:7 › Conversion Logic Tests › CL10: Metric text change clears translations
+[1A[2Ke2e\conversion-logic.spec.ts:180:7 › Conversion Logic Tests › CL10: Metric text change clears translations
+CL10: Page content for translation clearing: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="Si8_BPHHSZmyq9R3xs3DJ"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[19/120] e2e\customers.spec.ts:5:7 › Customer Management Tests › CU1: Admin can see customers table
+[1A[2Ke2e\customers.spec.ts:5:7 › Customer Management Tests › CU1: Admin can see customers table
+CU1: Table visible: [33mtrue[39m
+
+[1A[2KCU1: URL: http://localhost:3000/customers
+
+[1A[2K[20/120] e2e\customers.spec.ts:25:7 › Customer Management Tests › CU2: Sales can see customers table
+[1A[2Ke2e\customers.spec.ts:25:7 › Customer Management Tests › CU2: Sales can see customers table
+CU2: Table visible: [33mfalse[39m URL: http://localhost:3000/customers
+
+[1A[2KCU2: Body snippet: Generate reportAdmin UserCustomer ManagementCreatesustainability reports and and receipts for customersAdd CustomerSearchSegmentAll SegmentsRegionAll RegionStatusAll StatusCustomerFailed to load customers.Results: 0–0 of 01Rows per page11Results: 0–0 of 0Load moreself.__next_r="grI0kguJ0HHBsQWUG6CyH"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"7:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/sta
+
+[1A[2K[21/120] e2e\customers.spec.ts:43:7 › Customer Management Tests › CU3: Customer table has expected columns
+[1A[2Ke2e\customers.spec.ts:43:7 › Customer Management Tests › CU3: Customer table has expected columns
+CU3: Table headers: [
+  [32m'Name'[39m,
+  [32m'Segment'[39m,
+  [32m'Service tier'[39m,
+  [32m'Last report date'[39m,
+  [32m'Status'[39m,
+  [32m'Actions'[39m
+]
+
+[1A[2K[22/120] e2e\customers.spec.ts:56:7 › Customer Management Tests › CU4: Admin sees Add/Create customer button
+[1A[2Ke2e\customers.spec.ts:56:7 › Customer Management Tests › CU4: Admin sees Add/Create customer button
+CU4: Add customer button visible: [33mtrue[39m
+
+[1A[2K[23/120] e2e\customers.spec.ts:77:7 › Customer Management Tests › CU5: Add customer form has required fields
+[1A[2Ke2e\customers.spec.ts:77:7 › Customer Management Tests › CU5: Add customer form has required fields
+CU5: Form URL: http://localhost:3000/customers
+
+[1A[2K  2) e2e\customers.spec.ts:77:7 › Customer Management Tests › CU5: Add customer form has required fields 
+
+    TypeError: page.locator(...).allAttributes is not a function
+
+      100 |
+      101 |     // Look for form fields
+    > 102 |     const inputs = await page.locator('input, select, textarea').allAttributes('name');
+          |                                                                  ^
+      103 |     const placeholders = await page.locator('input, select, textarea').allAttributes('placeholder');
+      104 |     const labels = await page.locator('label').allTextContents();
+      105 |
+        at C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\customers.spec.ts:102:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\customers-Customer-Managem-2fee9-er-form-has-required-fields\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\customers-Customer-Managem-2fee9-er-form-has-required-fields\error-context.md
+
+
+[1A[2K[24/120] e2e\customers.spec.ts:113:7 › Customer Management Tests › CU6: Create a customer with unique name
+[1A[2Ke2e\customers.spec.ts:113:7 › Customer Management Tests › CU6: Create a customer with unique name
+CU6: Creating customer with name: TestCust_1774005504407
+
+[1A[2KCU6: Filled customer name
+
+[1A[2KCU6: ERP field not found
+
+[1A[2KCU6: Submit button not found
+
+[1A[2K  3) e2e\customers.spec.ts:113:7 › Customer Management Tests › CU6: Create a customer with unique name 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\customers-Customer-Managem-8652f-a-customer-with-unique-name\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\customers-Customer-Managem-8652f-a-customer-with-unique-name\error-context.md
+
+
+[1A[2K[25/120] e2e\customers.spec.ts:190:7 › Customer Management Tests › CU7: Customer search works
+[1A[2Ke2e\customers.spec.ts:190:7 › Customer Management Tests › CU7: Customer search works
+CU7: Search input visible: [33mtrue[39m
+
+[1A[2KCU7: Rows after search "test": [33m0[39m
+
+[1A[2K[26/120] e2e\customers.spec.ts:212:7 › Customer Management Tests › CU8: Customer table pagination
+[1A[2Ke2e\customers.spec.ts:212:7 › Customer Management Tests › CU8: Customer table pagination
+CU8: Pagination visible: [33mtrue[39m Page size selector: [33mfalse[39m
+
+[1A[2K[27/120] e2e\customers.spec.ts:229:7 › Customer Management Tests › CU9: Customer detail view
+[1A[2Ke2e\customers.spec.ts:229:7 › Customer Management Tests › CU9: Customer detail view
+CU9: Detail URL: http://localhost:3000/customers
+
+[1A[2KCU9: Detail body snippet: Generate reportAdmin UserCustomer ManagementCreatesustainability reports and and receipts for customersAdd CustomerSearchSegmentAll SegmentsRegionAll RegionStatusAll StatusCustomerNameSegmentService tierLast report dateStatusActionsQA Customer d4089ad507474a6f875eef9805620ba3 UpdatedArenaType A-InactiveQA Customer 58283591c6124f73bfa3018c91b0d519 UpdatedArenaType A-InactiveQA Customer 6c4f15ef6e464880a2e88600f0306bb9ArenaType A-InactiveQA Customer 56cd57d5d6f740b99c42996fc6f5782cArenaType A-Inac
+
+[1A[2K[28/120] e2e\customers.spec.ts:257:7 › Customer Management Tests › CU10: Customer sorting
+[1A[2Ke2e\customers.spec.ts:257:7 › Customer Management Tests › CU10: Customer sorting
+CU10: Number of headers: [33m6[39m
+
+[1A[2KCU10: Clicked first header for sorting
+
+[1A[2KCU10: Sort indicators found: [33m41[39m
+
+[1A[2K[29/120] e2e\customers.spec.ts:280:7 › Customer Management Tests › CU11: Customer filtering
+[1A[2Ke2e\customers.spec.ts:280:7 › Customer Management Tests › CU11: Customer filtering
+CU11: Filter button visible: [33mfalse[39m
+
+[1A[2K[30/120] e2e\customers.spec.ts:303:7 › Customer Management Tests › CU12: Subcustomer / parent relationship
+[1A[2Ke2e\customers.spec.ts:303:7 › Customer Management Tests › CU12: Subcustomer / parent relationship
+CU12: Subcustomer checkbox: [33mfalse[39m Parent dropdown: [33mfalse[39m
+
+[1A[2K[31/120] e2e\dashboard.spec.ts:5:7 › Dashboard Tests › DB1: Dashboard loads after login
+[1A[2Ke2e\dashboard.spec.ts:5:7 › Dashboard Tests › DB1: Dashboard loads after login
+DB1: Post-login URL (dashboard): http://localhost:3000/users
+
+[1A[2KDB1: Dashboard content: self.__next_r="rLPr8t0ZYGqqG6LfmnGBB"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"7:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n9:\"$Sreact.fragment\"\n1b:I[\"[project]/src/app/providers.tsx [app-client] (ecmascript)\",[\"/_next/static/chunks/src_7a2cb02a.
+
+[1A[2K[32/120] e2e\dashboard.spec.ts:19:7 › Dashboard Tests › DB2: Dashboard has widgets/cards
+[1A[2Ke2e\dashboard.spec.ts:19:7 › Dashboard Tests › DB2: Dashboard has widgets/cards
+DB2: Widget/card count: [33m14[39m
+
+[1A[2KDB2: Widget texts: [
+  [32m'CustomerVolume (kg)Reports'[39m,
+  [32m'Hotel Nordic4,50012'[39m,
+  [32m'Café Chain AB3,80024'[39m,
+  [32m'Restaurant Group DK3,20018'[39m,
+  [32m'Nordic Hotels AS2,90015'[39m,
+  [32m'Coffee Central2,60020'[39m,
+  [32m'Hotel Dreams AS1,02012'[39m,
+  [32m'Sales repRegionReports'[39m,
+  [32m'Karin BergstromNorway92'[39m,
+  [32m'Cecilia HolmPoland88'[39m,
+  [32m'Helena SjöbergSweden76'[39m,
+  [32m'Anna NeilsonFinland56'[39m,
+  [32m'Maya OlssonDenmark48'[39m,
+  [32m'Ingrid LarssonSweden44'[39m
+]
+
+[1A[2K[33/120] e2e\dashboard.spec.ts:40:7 › Dashboard Tests › DB3: Dashboard has charts or data visualization
+[1A[2Ke2e\dashboard.spec.ts:40:7 › Dashboard Tests › DB3: Dashboard has charts or data visualization
+DB3: Chart element found with "svg", count: 16
+
+[1A[2KDB3: Chart element found with "[class*="chart" i]", count: 76
+
+[1A[2KDB3: Chart element found with "[class*="recharts"]", count: 75
+
+[1A[2KDB3: Charts found: [33mtrue[39m
+
+[1A[2K[34/120] e2e\dashboard.spec.ts:69:7 › Dashboard Tests › DB4: No JavaScript errors on dashboard
+[1A[2Ke2e\dashboard.spec.ts:69:7 › Dashboard Tests › DB4: No JavaScript errors on dashboard
+DB4: JavaScript errors: None
+
+[1A[2K[35/120] e2e\dashboard.spec.ts:92:7 › Dashboard Tests › DB5: Dashboard accessible to all roles
+[1A[2Ke2e\dashboard.spec.ts:92:7 › Dashboard Tests › DB5: Dashboard accessible to all roles
+DB5: Dashboard URLs by role: {
+  admin: [32m'http://localhost:3000/dashboard'[39m,
+  sales: [32m'http://localhost:3000/dashboard'[39m,
+  translator: [32m'http://localhost:3000/dashboard'[39m
+}
+
+[1A[2K[36/120] e2e\historical-reports.spec.ts:22:7 › Historical Reports Tests › HR1: Admin can see reports table
+[1A[2Ke2e\historical-reports.spec.ts:22:7 › Historical Reports Tests › HR1: Admin can see reports table
+HR1: Reports table visible: [33mtrue[39m URL: http://localhost:3000/historical-reports
+
+[1A[2K[37/120] e2e\historical-reports.spec.ts:38:7 › Historical Reports Tests › HR2: Reports table has expected columns
+[1A[2Ke2e\historical-reports.spec.ts:38:7 › Historical Reports Tests › HR2: Reports table has expected columns
+HR2: Report table headers: [
+  [32m'Report title/ID'[39m,
+  [32m'Customer name'[39m,
+  [32m'Sales representative'[39m,
+  [32m'Segment'[39m,
+  [32m'Status'[39m,
+  [32m'Report date'[39m,
+  [32m'Created at'[39m,
+  [32m'Actions'[39m
+]
+
+[1A[2KHR2: Expected columns found: [ [32m'name'[39m, [32m'customer'[39m, [32m'segment'[39m, [32m'date'[39m, [32m'status'[39m ]
+
+[1A[2K[38/120] e2e\historical-reports.spec.ts:54:7 › Historical Reports Tests › HR3: Status filter
+[1A[2Ke2e\historical-reports.spec.ts:54:7 › Historical Reports Tests › HR3: Status filter
+HR3: Status filter visible: [33mtrue[39m
+
+[1A[2KHR3: Filter options: [
+  [32m''[39m,      [32m'1'[39m,
+  [32m'2'[39m,     [32m'3'[39m,
+  [32m'...'[39m,   [32m'11'[39m,
+  [32m''[39m,      [32m'All Status'[39m,
+  [32m'Draft'[39m, [32m'Latest'[39m,
+  [32m'Past'[39m,  [32m'Archived'[39m
+]
+
+[1A[2K[39/120] e2e\historical-reports.spec.ts:73:7 › Historical Reports Tests › HR4: Report search
+[1A[2Ke2e\historical-reports.spec.ts:73:7 › Historical Reports Tests › HR4: Report search
+HR4: Search input visible: [33mtrue[39m
+
+[1A[2KHR4: Rows after search: [33m4[39m
+
+[1A[2K[40/120] e2e\historical-reports.spec.ts:94:7 › Historical Reports Tests › HR5: Download action on reports
+[1A[2Ke2e\historical-reports.spec.ts:94:7 › Historical Reports Tests › HR5: Download action on reports
+HR5: Download button visible: [33mfalse[39m
+
+[1A[2KHR5: Action buttons: [33m69[39m
+
+[1A[2K[41/120] e2e\historical-reports.spec.ts:113:7 › Historical Reports Tests › HR6: Edit action opens wizard
+[1A[2Ke2e\historical-reports.spec.ts:113:7 › Historical Reports Tests › HR6: Edit action opens wizard
+HR6: Edit button visible: [33mtrue[39m
+
+[1A[2KHR6: After edit click URL: http://localhost:3000/report-generation?draftId=cd4212b6-a74b-4069-af01-0298e94e8b58
+
+[1A[2K[42/120] e2e\historical-reports.spec.ts:135:7 › Historical Reports Tests › HR7: Archive action (admin)
+[1A[2Ke2e\historical-reports.spec.ts:135:7 › Historical Reports Tests › HR7: Archive action (admin)
+HR7: Archive button visible: [33mfalse[39m
+
+[1A[2KHR7: Action menu items: []
+
+[1A[2K[43/120] e2e\historical-reports.spec.ts:159:7 › Historical Reports Tests › HR8: Restore action (admin, archived)
+[1A[2Ke2e\historical-reports.spec.ts:159:7 › Historical Reports Tests › HR8: Restore action (admin, archived)
+HR8: Restore button visible: [33mfalse[39m
+
+[1A[2K[44/120] e2e\historical-reports.spec.ts:182:7 › Historical Reports Tests › HR9: Sales can see reports
+[1A[2Ke2e\historical-reports.spec.ts:182:7 › Historical Reports Tests › HR9: Sales can see reports
+HR9: Sales reports table visible: [33mtrue[39m
+
+[1A[2KHR9: Salesperson column visible for sales: [33mfalse[39m
+
+[1A[2K[45/120] e2e\historical-reports.spec.ts:198:7 › Historical Reports Tests › HR10: Sales can only archive own drafts
+[1A[2Ke2e\historical-reports.spec.ts:198:7 › Historical Reports Tests › HR10: Sales can only archive own drafts
+HR10: Sales reports body snippet: self.__next_r="6iQ6Hd0Znkr45dvwy2jfN"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"7:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n9:\"$Sreact.fragment\"\n1b:I[\"[project]/src/app/providers.tsx [app-client] (ecmascript)\",[\"/_next/static/chunks/src_7a2cb02a.
+
+[1A[2KHR10: Archive/delete buttons visible for sales: [33m0[39m
+
+[1A[2K[46/120] e2e\historical-reports.spec.ts:213:7 › Historical Reports Tests › HR11: Date range filter
+[1A[2Ke2e\historical-reports.spec.ts:213:7 › Historical Reports Tests › HR11: Date range filter
+HR11: Date inputs: [33m0[39m
+
+[1A[2KHR11: Filter button: [33mfalse[39m
+
+[1A[2K[47/120] e2e\historical-reports.spec.ts:228:7 › Historical Reports Tests › HR12: Reports table pagination
+[1A[2Ke2e\historical-reports.spec.ts:228:7 › Historical Reports Tests › HR12: Reports table pagination
+HR12: Pagination visible: [33mtrue[39m
+
+[1A[2K[48/120] e2e\navigation-rbac.spec.ts:20:7 › Navigation & RBAC Tests › NR1: Admin sees all navigation items
+[1A[2Ke2e\navigation-rbac.spec.ts:20:7 › Navigation & RBAC Tests › NR1: Admin sees all navigation items
+NR1: Admin nav items: []
+
+[1A[2K  4) e2e\navigation-rbac.spec.ts:20:7 › Navigation & RBAC Tests › NR1: Admin sees all navigation items 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      25 |     test.info().annotations.push({ type: 'note', description: `Admin nav items: ${JSON.stringify(navItems)}` });
+      26 |     // Admin should have the most nav items
+    > 27 |     expect(navItems.length).toBeGreaterThan(0);
+         |                             ^
+      28 |   });
+      29 |
+      30 |   test('NR2: Sales sees limited navigation', async ({ page }) => {
+        at C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\navigation-rbac.spec.ts:27:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-rbac-Navigation-2a52c-n-sees-all-navigation-items\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-rbac-Navigation-2a52c-n-sees-all-navigation-items\error-context.md
+
+
+[1A[2K[49/120] e2e\navigation-rbac.spec.ts:30:7 › Navigation & RBAC Tests › NR2: Sales sees limited navigation
+[1A[2Ke2e\navigation-rbac.spec.ts:30:7 › Navigation & RBAC Tests › NR2: Sales sees limited navigation
+NR2: Sales nav items: []
+
+[1A[2K  5) e2e\navigation-rbac.spec.ts:30:7 › Navigation & RBAC Tests › NR2: Sales sees limited navigation 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      34 |     console.log('NR2: Sales nav items:', navItems);
+      35 |     test.info().annotations.push({ type: 'note', description: `Sales nav items: ${JSON.stringify(navItems)}` });
+    > 36 |     expect(navItems.length).toBeGreaterThan(0);
+         |                             ^
+      37 |
+      38 |     // Sales should NOT see user management
+      39 |     const hasUsers = navItems.some(item => /user/i.test(item));
+        at C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\navigation-rbac.spec.ts:36:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-rbac-Navigation-3704e-les-sees-limited-navigation\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-rbac-Navigation-3704e-les-sees-limited-navigation\error-context.md
+
+
+[1A[2K[50/120] e2e\navigation-rbac.spec.ts:44:7 › Navigation & RBAC Tests › NR3: Translator sees limited navigation
+[1A[2Ke2e\navigation-rbac.spec.ts:44:7 › Navigation & RBAC Tests › NR3: Translator sees limited navigation
+NR3: Translator nav items: []
+
+[1A[2K  6) e2e\navigation-rbac.spec.ts:44:7 › Navigation & RBAC Tests › NR3: Translator sees limited navigation 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      48 |     console.log('NR3: Translator nav items:', navItems);
+      49 |     test.info().annotations.push({ type: 'note', description: `Translator nav items: ${JSON.stringify(navItems)}` });
+    > 50 |     expect(navItems.length).toBeGreaterThan(0);
+         |                             ^
+      51 |   });
+      52 |
+      53 |   test('NR4: Sales cannot access /users', async ({ page }) => {
+        at C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\navigation-rbac.spec.ts:50:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-rbac-Navigation-7ae23-tor-sees-limited-navigation\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-rbac-Navigation-7ae23-tor-sees-limited-navigation\error-context.md
+
+
+[1A[2K[51/120] e2e\navigation-rbac.spec.ts:53:7 › Navigation & RBAC Tests › NR4: Sales cannot access /users
+[1A[2Ke2e\navigation-rbac.spec.ts:53:7 › Navigation & RBAC Tests › NR4: Sales cannot access /users
+NR4: Sales /users URL: http://localhost:3000/users
+
+[1A[2KNR4: Sales /users body snippet: Generate reportAdmin UserUser ManagementManage system administrators and usersAdd UserSystem UsersAll StatusFailed to load users.Results: 0–0 of 01Rows per page11Results: 0–0 of 0Load moreself.__next_r="me3nDo3_scTnu9pELX4bF"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"8:I[\"[pr
+
+[1A[2KNR4: Access blocked: [33mtrue[39m
+
+[1A[2K[52/120] e2e\navigation-rbac.spec.ts:71:7 › Navigation & RBAC Tests › NR5: Translator cannot access /customers
+[1A[2Ke2e\navigation-rbac.spec.ts:71:7 › Navigation & RBAC Tests › NR5: Translator cannot access /customers
+NR5: Translator /customers URL: http://localhost:3000/customers
+
+[1A[2KNR5: Translator /customers body snippet: Generate reportAdmin UserCustomer ManagementCreatesustainability reports and and receipts for customersAdd CustomerSearchSegmentAll SegmentsRegionAll RegionStatusAll StatusCustomerFailed to load customers.Results: 0–0 of 01Rows per page11Results: 0–0 of 0Load moreself.__next_r="PqaaD4cqwgDNvIihrZxc2
+
+[1A[2KNR5: Access blocked: [33mtrue[39m
+
+[1A[2K[53/120] e2e\navigation-rbac.spec.ts:89:7 › Navigation & RBAC Tests › NR6: Translator cannot access report generation
+[1A[2Ke2e\navigation-rbac.spec.ts:89:7 › Navigation & RBAC Tests › NR6: Translator cannot access report generation
+NR6: Translator report generation result: Blocked at /reports/generate with error message
+
+[1A[2K[54/120] e2e\report-wizard.spec.ts:26:7 › Report Wizard - Step 1: Customer & Report Details › RW1: Navigate to report generation wizard
+[1A[2Ke2e\report-wizard.spec.ts:26:7 › Report Wizard - Step 1: Customer & Report Details › RW1: Navigate to report generation wizard
+RW1: Report wizard URL: http://localhost:3000/reports/generate
+
+[1A[2KRW1: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="6h-c_XnPr2wuMd8wf9461"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[55/120] e2e\report-wizard.spec.ts:36:7 › Report Wizard - Step 1: Customer & Report Details › RW2: Step 1 - Customer search/select
+[1A[2Ke2e\report-wizard.spec.ts:36:7 › Report Wizard - Step 1: Customer & Report Details › RW2: Step 1 - Customer search/select
+RW2: Customer input visible: [33mfalse[39m
+
+[1A[2KRW2: Labels: []
+
+[1A[2K[56/120] e2e\report-wizard.spec.ts:54:7 › Report Wizard - Step 1: Customer & Report Details › RW3: Step 1 - Report date field
+[1A[2Ke2e\report-wizard.spec.ts:54:7 › Report Wizard - Step 1: Customer & Report Details › RW3: Step 1 - Report date field
+RW3: Date input visible: [33mfalse[39m
+
+[1A[2K[57/120] e2e\report-wizard.spec.ts:70:7 › Report Wizard - Step 1: Customer & Report Details › RW4: Step 1 - Language selection
+[1A[2Ke2e\report-wizard.spec.ts:70:7 › Report Wizard - Step 1: Customer & Report Details › RW4: Step 1 - Language selection
+RW4: Language selector visible: [33mfalse[39m
+
+[1A[2KRW4: Language mentioned on page: [33mfalse[39m
+
+[1A[2K[58/120] e2e\report-wizard.spec.ts:86:7 › Report Wizard - Step 1: Customer & Report Details › RW5: Step 1 - Salesperson dropdown (admin sees it)
+[1A[2Ke2e\report-wizard.spec.ts:86:7 › Report Wizard - Step 1: Customer & Report Details › RW5: Step 1 - Salesperson dropdown (admin sees it)
+RW5: Salesperson selector visible: [33mfalse[39m mentioned: [33mfalse[39m
+
+[1A[2K[59/120] e2e\report-wizard.spec.ts:100:7 › Report Wizard - Step 1: Customer & Report Details › RW6: Step 1 - Salesperson hidden for sales role
+[1A[2Ke2e\report-wizard.spec.ts:100:7 › Report Wizard - Step 1: Customer & Report Details › RW6: Step 1 - Salesperson hidden for sales role
+RW6: Salesperson field for sales user: [33mfalse[39m
+
+[1A[2K[60/120] e2e\report-wizard.spec.ts:113:7 › Report Wizard - Step Navigation › RW7: Next button moves to step 2
+[1A[2Ke2e\report-wizard.spec.ts:113:7 › Report Wizard - Step Navigation › RW7: Next button moves to step 2
+RW7: Next button visible: [33mtrue[39m
+
+[1A[2KRW7: After next, body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="iy7S1DIFlA4H8Dq1Rz99k"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[61/120] e2e\report-wizard.spec.ts:132:7 › Report Wizard - Step Navigation › RW8: Back button returns to previous step
+[1A[2Ke2e\report-wizard.spec.ts:132:7 › Report Wizard - Step Navigation › RW8: Back button returns to previous step
+RW8: Back button visible: [33mfalse[39m
+
+[1A[2K[62/120] e2e\report-wizard.spec.ts:157:7 › Report Wizard - Step Navigation › RW9: Step indicators present
+[1A[2Ke2e\report-wizard.spec.ts:157:7 › Report Wizard - Step Navigation › RW9: Step indicators present
+RW9: Step indicators found: [33m0[39m
+
+[1A[2KRW9: Step numbers in text: [33mfalse[39m
+
+[1A[2K[63/120] e2e\report-wizard.spec.ts:176:7 › Report Wizard - Step 2: Data Source › RW10: Step 2 has file upload area
+[1A[2Ke2e\report-wizard.spec.ts:176:7 › Report Wizard - Step 2: Data Source › RW10: Step 2 has file upload area
+RW10: File inputs: [33m0[39m Drop zones: [33m0[39m
+
+[1A[2K[64/120] e2e\report-wizard.spec.ts:199:7 › Report Wizard - Step 2: Data Source › RW11: Data table displayed after entering step 2
+[1A[2Ke2e\report-wizard.spec.ts:199:7 › Report Wizard - Step 2: Data Source › RW11: Data table displayed after entering step 2
+RW11: Data table visible: [33mfalse[39m
+
+[1A[2KRW11: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="JRIMpo2mk1xl_1HPgl_fI"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[65/120] e2e\report-wizard.spec.ts:219:7 › Report Wizard - Step 2: Data Source › RW12: Upload valid CSV
+[1A[2Ke2e\report-wizard.spec.ts:219:7 › Report Wizard - Step 2: Data Source › RW12: Upload valid CSV
+RW12: No file input found
+
+[1A[2K[66/120] e2e\report-wizard.spec.ts:247:7 › Report Wizard - Step 2: Data Source › RW13: Upload invalid CSV shows error
+[1A[2Ke2e\report-wizard.spec.ts:247:7 › Report Wizard - Step 2: Data Source › RW13: Upload invalid CSV shows error
+RW13: No file input found
+
+[1A[2K[67/120] e2e\report-wizard.spec.ts:277:7 › Report Wizard - Step 3: Report Type › RW14: Report type radio buttons
+[1A[2Ke2e\report-wizard.spec.ts:277:7 › Report Wizard - Step 3: Report Type › RW14: Report type radio buttons
+RW14: Radio buttons found: [33m0[39m
+
+[1A[2KRW14: Report type text found: [33mfalse[39m
+
+[1A[2KRW14: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="aCmxFwfYi695rdOJ6eDer"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[68/120] e2e\report-wizard.spec.ts:303:7 › Report Wizard - Step 3: Report Type › RW15: Compiled receipt checkbox
+[1A[2Ke2e\report-wizard.spec.ts:303:7 › Report Wizard - Step 3: Report Type › RW15: Compiled receipt checkbox
+RW15: Checkboxes found: [33m0[39m
+
+[1A[2KRW15: Compiled receipt mentioned: [33mfalse[39m
+
+[1A[2K[69/120] e2e\report-wizard.spec.ts:327:7 › Report Wizard - Step 3: Report Type › RW16: Media screen options
+[1A[2Ke2e\report-wizard.spec.ts:327:7 › Report Wizard - Step 3: Report Type › RW16: Media screen options
+RW16: Media screen options found: [33mtrue[39m
+
+[1A[2KRW16: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="U2TEQU8XknunDeklLd44x"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[70/120] e2e\report-wizard.spec.ts:350:7 › Report Wizard - Step 4: Content Customization › RW17: Navigate to step 4
+[1A[2Ke2e\report-wizard.spec.ts:350:7 › Report Wizard - Step 4: Content Customization › RW17: Navigate to step 4
+RW17: Step 4 body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="BLtphxqtv0251Gi1nX1gF"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[71/120] e2e\report-wizard.spec.ts:368:7 › Report Wizard - Step 4: Content Customization › RW18: ToC toggle
+[1A[2Ke2e\report-wizard.spec.ts:368:7 › Report Wizard - Step 4: Content Customization › RW18: ToC toggle
+RW18: ToC text: [33mfalse[39m Toggles: [33m0[39m
+
+[1A[2K[72/120] e2e\report-wizard.spec.ts:389:7 › Report Wizard - Step 4: Content Customization › RW19: Impact blocks selection (up to 3)
+[1A[2Ke2e\report-wizard.spec.ts:389:7 › Report Wizard - Step 4: Content Customization › RW19: Impact blocks selection (up to 3)
+RW19: Impact mentioned: [33mfalse[39m
+
+[1A[2KRW19: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="UN6iV0T_q3FhMWo2ykFlQ"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2KRW19: Checkboxes: [33m0[39m
+
+[1A[2K[73/120] e2e\report-wizard.spec.ts:413:7 › Report Wizard - Step 4: Content Customization › RW20: Receipt unit selection (cups/kg)
+[1A[2Ke2e\report-wizard.spec.ts:413:7 › Report Wizard - Step 4: Content Customization › RW20: Receipt unit selection (cups/kg)
+RW20: Unit selection text: [33mtrue[39m
+
+[1A[2KRW20: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="9A4ce5j37UUqdU3htLz5J"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[74/120] e2e\report-wizard.spec.ts:434:7 › Report Wizard - Step 4: Content Customization › RW21: CO2 unit selection
+[1A[2Ke2e\report-wizard.spec.ts:434:7 › Report Wizard - Step 4: Content Customization › RW21: CO2 unit selection
+RW21: CO2 unit text: [33mfalse[39m
+
+[1A[2K[75/120] e2e\report-wizard.spec.ts:456:7 › Report Wizard - Step 5: Output & Export › RW22: Navigate to step 5
+[1A[2Ke2e\report-wizard.spec.ts:456:7 › Report Wizard - Step 5: Output & Export › RW22: Navigate to step 5
+RW22: Step 5 body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="zzq7dhuyBAkAFECPswRNs"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[76/120] e2e\report-wizard.spec.ts:474:7 › Report Wizard - Step 5: Output & Export › RW23: Receipt JPEG checkbox
+[1A[2Ke2e\report-wizard.spec.ts:474:7 › Report Wizard - Step 5: Output & Export › RW23: Receipt JPEG checkbox
+RW23: JPEG text: [33mtrue[39m Checkboxes: [33m0[39m
+
+[1A[2K[77/120] e2e\report-wizard.spec.ts:495:7 › Report Wizard - Step 5: Output & Export › RW24: Receipt size selection (A4/A3)
+[1A[2Ke2e\report-wizard.spec.ts:495:7 › Report Wizard - Step 5: Output & Export › RW24: Receipt size selection (A4/A3)
+RW24: Size selection text: [33mfalse[39m
+
+[1A[2K[78/120] e2e\report-wizard.spec.ts:515:7 › Report Wizard - Step 5: Output & Export › RW25: Preview button
+[1A[2Ke2e\report-wizard.spec.ts:515:7 › Report Wizard - Step 5: Output & Export › RW25: Preview button
+RW25: Preview button visible: [33mfalse[39m
+
+[1A[2KRW25: All buttons: [ [32m'Let’s brew a new batch'[39m ]
+
+[1A[2K[79/120] e2e\report-wizard.spec.ts:538:7 › Report Wizard - Step 5: Output & Export › RW26: Generate button
+[1A[2Ke2e\report-wizard.spec.ts:538:7 › Report Wizard - Step 5: Output & Export › RW26: Generate button
+RW26: Generate button visible: [33mfalse[39m
+
+[1A[2K[80/120] e2e\report-wizard.spec.ts:558:7 › Report Wizard - Step 5: Output & Export › RW27: Finish button
+[1A[2Ke2e\report-wizard.spec.ts:558:7 › Report Wizard - Step 5: Output & Export › RW27: Finish button
+RW27: Finish button visible: [33mfalse[39m
+
+[1A[2K[81/120] e2e\report-wizard.spec.ts:580:7 › Report Wizard - Save as Draft › RW28: Save as Draft button exists
+[1A[2Ke2e\report-wizard.spec.ts:580:7 › Report Wizard - Save as Draft › RW28: Save as Draft button exists
+RW28: Save as Draft button visible: [33mfalse[39m
+
+[1A[2KRW28: All buttons: [ [32m'Let’s brew a new batch'[39m ]
+
+[1A[2K[82/120] e2e\report-wizard.spec.ts:594:7 › Report Wizard - Save as Draft › RW29: Draft button disabled initially (before customer details)
+[1A[2Ke2e\report-wizard.spec.ts:594:7 › Report Wizard - Save as Draft › RW29: Draft button disabled initially (before customer details)
+RW29: Draft button not found
+
+[1A[2K[83/120] e2e\report-wizard.spec.ts:609:7 › Report Wizard - Save as Draft › RW30: Draft button enabled after customer details
+[1A[2Ke2e\report-wizard.spec.ts:609:7 › Report Wizard - Save as Draft › RW30: Draft button enabled after customer details
+RW30: Draft button not found
+
+[1A[2K[84/120] e2e\report-wizard.spec.ts:641:7 › Report Wizard - Save as Draft › RW31: Save as Draft preserves data
+[1A[2Ke2e\report-wizard.spec.ts:641:7 › Report Wizard - Save as Draft › RW31: Save as Draft preserves data
+RW31: Draft save functionality available: [33mfalse[39m
+
+[1A[2K[85/120] e2e\report-wizard.spec.ts:656:7 › Report Wizard - Validation › RW32: Cannot proceed without required fields
+[1A[2Ke2e\report-wizard.spec.ts:656:7 › Report Wizard - Validation › RW32: Cannot proceed without required fields
+RW32: Validation errors shown: [33mtrue[39m
+
+[1A[2KRW32: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="n0oOSv0bNs5a0mami6KqE"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[86/120] e2e\report-wizard.spec.ts:677:7 › Report Wizard - Validation › RW33: Manual customer entry
+[1A[2Ke2e\report-wizard.spec.ts:677:7 › Report Wizard - Validation › RW33: Manual customer entry
+RW33: Manual entry option: [33mfalse[39m
+
+[1A[2KRW33: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="_59eSLKmoCftjqCFfim3T"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[87/120] e2e\report-wizard.spec.ts:693:7 › Report Wizard - Validation › RW34: Full wizard smoke test (admin)
+[1A[2Ke2e\report-wizard.spec.ts:693:7 › Report Wizard - Validation › RW34: Full wizard smoke test (admin)
+RW34: Starting wizard at: http://localhost:3000/reports/generate
+
+[1A[2KRW34: Steps traversed: [33m6[39m
+
+[1A[2KStep 1: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="MtZQnsZzlu6GziZSYrlm4"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[p
+
+[1A[2KStep 2: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="MtZQnsZzlu6GziZSYrlm4"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[p
+
+[1A[2KStep 3: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="MtZQnsZzlu6GziZSYrlm4"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[p
+
+[1A[2KStep 4: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="MtZQnsZzlu6GziZSYrlm4"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[p
+
+[1A[2KStep 5: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="MtZQnsZzlu6GziZSYrlm4"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[p
+
+[1A[2K[88/120] e2e\resources.spec.ts:29:7 › Resources Tests › RS1: Admin can see resource list
+[1A[2Ke2e\resources.spec.ts:29:7 › Resources Tests › RS1: Admin can see resource list
+RS1: Resources URL: http://localhost:3000/resources
+
+[1A[2KRS1: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="Px5Wiw1i9b2WgK4h3gFrI"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[89/120] e2e\resources.spec.ts:41:7 › Resources Tests › RS2: Admin sees Add Resource button
+[1A[2Ke2e\resources.spec.ts:41:7 › Resources Tests › RS2: Admin sees Add Resource button
+RS2: Add resource button visible: [33mtrue[39m
+
+[1A[2K[90/120] e2e\resources.spec.ts:60:7 › Resources Tests › RS3: Add resource form - file/link toggle
+[1A[2Ke2e\resources.spec.ts:60:7 › Resources Tests › RS3: Add resource form - file/link toggle
+RS3: Radios: [33m0[39m File/link text: [33mtrue[39m
+
+[1A[2KRS3: Form content: self.__next_r="zJd0FBY9FHHt2a62eVULu"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project]/src/app/providers.tsx [app-client] (ecmascript)\",[\"/_next/static/chunks/src_7a2cb02a.
+
+[1A[2K[91/120] e2e\resources.spec.ts:88:7 › Resources Tests › RS4: File upload in resource form
+[1A[2Ke2e\resources.spec.ts:88:7 › Resources Tests › RS4: File upload in resource form
+RS4: File inputs: [33m0[39m
+
+[1A[2KRS4: Drop zones: [33m0[39m
+
+[1A[2K[92/120] e2e\resources.spec.ts:113:7 › Resources Tests › RS5: Link URL input in resource form
+[1A[2Ke2e\resources.spec.ts:113:7 › Resources Tests › RS5: Link URL input in resource form
+RS5: URL input visible: [33mfalse[39m
+
+[1A[2K[93/120] e2e\resources.spec.ts:143:7 › Resources Tests › RS6: Sales can view resources
+[1A[2Ke2e\resources.spec.ts:143:7 › Resources Tests › RS6: Sales can view resources
+RS6: Sales resources URL: http://localhost:3000/resources
+
+[1A[2KRS6: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="bcncIRTyM1ksRHmMHinuI"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ec
+
+[1A[2K[94/120] e2e\resources.spec.ts:155:7 › Resources Tests › RS7: Sales cannot add/delete resources
+[1A[2Ke2e\resources.spec.ts:155:7 › Resources Tests › RS7: Sales cannot add/delete resources
+RS7: Sales sees Add: [33mtrue[39m Delete: [33mfalse[39m
+
+[1A[2K[95/120] e2e\resources.spec.ts:169:7 › Resources Tests › RS8: Translator can view resources
+[1A[2Ke2e\resources.spec.ts:169:7 › Resources Tests › RS8: Translator can view resources
+RS8: Translator resources URL: http://localhost:3000/resources
+
+[1A[2K[96/120] e2e\resources.spec.ts:178:7 › Resources Tests › RS9: Download resource
+[1A[2Ke2e\resources.spec.ts:178:7 › Resources Tests › RS9: Download resource
+RS9: Download button visible: [33mfalse[39m
+
+[1A[2K[97/120] e2e\resources.spec.ts:191:7 › Resources Tests › RS10: Admin can archive/delete resource
+[1A[2Ke2e\resources.spec.ts:191:7 › Resources Tests › RS10: Admin can archive/delete resource
+RS10: Delete/archive button visible: [33mfalse[39m
+
+[1A[2K[98/120] e2e\smoke.spec.ts:5:7 › Smoke Tests › S1: Login page has email, password, and submit
+[1A[2K[99/120] e2e\smoke.spec.ts:18:7 › Smoke Tests › S2: Admin can log in successfully
+[1A[2Ke2e\smoke.spec.ts:18:7 › Smoke Tests › S2: Admin can log in successfully
+S2: Post-login URL: http://localhost:3000/users
+
+[1A[2K[100/120] e2e\smoke.spec.ts:24:7 › Smoke Tests › S3: Unauthenticated user redirected to login
+[1A[2Ke2e\smoke.spec.ts:24:7 › Smoke Tests › S3: Unauthenticated user redirected to login
+S3: Redirect URL for unauthenticated access: http://localhost:3000/login
+
+[1A[2K[101/120] e2e\templates.spec.ts:5:7 › Template Management Tests › TM1: Admin can see template list
+[1A[2Ke2e\templates.spec.ts:5:7 › Template Management Tests › TM1: Admin can see template list
+TM1: Template list visible: [33mfalse[39m URL: http://localhost:3000/templates
+
+[1A[2KTM1: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="hOTb2HFreUR23dd0-tq56"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[102/120] e2e\templates.spec.ts:22:7 › Template Management Tests › TM2: Template list shows template names
+[1A[2Ke2e\templates.spec.ts:22:7 › Template Management Tests › TM2: Template list shows template names
+TM2: Templates page content snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="tT9srAA9N7K3oPfuDeZiL"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project]/src/app/providers.tsx [app-client] (ecmascript)\",[\"/_next/static/chunks/src_7a2cb02a._.js\",\"/_next/static/chunks/node_modules_10e75c74._.js\",\"/_next/static/chunks/src_app_layout_tsx_1cf6b850._.js\"],\"Providers\"]\n1b:I[\"[project]/node_modules/next/dist/client/components/layout-router.js [a
+
+[1A[2KTM2: Links on page: [ [32m'Let’s brew a new batch'[39m ]
+
+[1A[2K[103/120] e2e\templates.spec.ts:37:7 › Template Management Tests › TM3: Template detail view
+[1A[2Ke2e\templates.spec.ts:37:7 › Template Management Tests › TM3: Template detail view
+TM3: Could not click into template detail: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, ul li a, table tbody tr').first()[22m
+
+    at [90mC:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\[39me2e\templates.spec.ts:47:27 {
+  [[32mSymbol(step)[39m]: {
+    location: {
+      file: [32m'C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts'[39m,
+      line: [33m47[39m,
+      column: [33m27[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, ul li a, table tbody tr').first()`[39m,
+    apiName: [32m'locator.click'[39m,
+    params: {
+      selector: [32m'table tbody tr a, [class*="template"] a, .grid a, ul li a, table tbody tr >> nth=0'[39m,
+      strict: [33mtrue[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@39'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@39'[39m,
+      _title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, ul li a, table tbody tr').first()`[39m,
+      _parentStep: [90mundefined[39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1774005864240[39m,
+    error: {
+      message: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, ul li a, table tbody tr').first()\x1B[22m\n`[39m,
+      stack: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, ul li a, table tbody tr').first()\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts:47:27'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+
+[1A[2K  7) e2e\templates.spec.ts:37:7 › Template Management Tests › TM3: Template detail view ────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\templates-Template-Management-Tests-TM3-Template-detail-view\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\templates-Template-Management-Tests-TM3-Template-detail-view\error-context.md
+
+
+[1A[2K[104/120] e2e\templates.spec.ts:60:7 › Template Management Tests › TM4: Template version information displayed
+[1A[2Ke2e\templates.spec.ts:60:7 › Template Management Tests › TM4: Template version information displayed
+TM4: Version info found: [33mfalse[39m
+
+[1A[2KTM4: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="7OHAZWw0ugcPK_R9tjzo4"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[105/120] e2e\templates.spec.ts:87:7 › Template Management Tests › TM5: Template status badges
+[1A[2Ke2e\templates.spec.ts:87:7 › Template Management Tests › TM5: Template status badges
+TM5: Badge count: [33m0[39m Texts: []
+
+[1A[2K[106/120] e2e\templates.spec.ts:99:7 › Template Management Tests › TM6: Create draft template version
+[1A[2Ke2e\templates.spec.ts:99:7 › Template Management Tests › TM6: Create draft template version
+TM6: Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()[22m
+
+    at [90mC:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\[39me2e\templates.spec.ts:108:23 {
+  [[32mSymbol(step)[39m]: {
+    location: {
+      file: [32m'C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts'[39m,
+      line: [33m108[39m,
+      column: [33m23[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+    apiName: [32m'locator.click'[39m,
+    params: {
+      selector: [32m'table tbody tr a, [class*="template"] a, .grid a, table tbody tr >> nth=0'[39m,
+      strict: [33mtrue[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@39'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@39'[39m,
+      _title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+      _parentStep: [90mundefined[39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1774005899254[39m,
+    error: {
+      message: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m,
+      stack: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts:108:23'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+
+[1A[2K  8) e2e\templates.spec.ts:99:7 › Template Management Tests › TM6: Create draft template version ───
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\templates-Template-Managem-6a4b6-eate-draft-template-version\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\templates-Template-Managem-6a4b6-eate-draft-template-version\error-context.md
+
+
+[1A[2K[107/120] e2e\templates.spec.ts:132:7 › Template Management Tests › TM7: Template editor (TipTap/rich text)
+[1A[2Ke2e\templates.spec.ts:132:7 › Template Management Tests › TM7: Template editor (TipTap/rich text)
+TM7: Error navigating to editor: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()[22m
+
+    at [90mC:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\[39me2e\templates.spec.ts:141:23 {
+  [[32mSymbol(step)[39m]: {
+    location: {
+      file: [32m'C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts'[39m,
+      line: [33m141[39m,
+      column: [33m23[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+    apiName: [32m'locator.click'[39m,
+    params: {
+      selector: [32m'table tbody tr a, [class*="template"] a, .grid a, table tbody tr >> nth=0'[39m,
+      strict: [33mtrue[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@47'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@47'[39m,
+      _title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+      _parentStep: [90mundefined[39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1774005930515[39m,
+    error: {
+      message: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m,
+      stack: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts:141:23'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+
+[1A[2K  9) e2e\templates.spec.ts:132:7 › Template Management Tests › TM7: Template editor (TipTap/rich text) 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\templates-Template-Managem-5b29b-te-editor-TipTap-rich-text-\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\templates-Template-Managem-5b29b-te-editor-TipTap-rich-text-\error-context.md
+
+
+[1A[2K[108/120] e2e\templates.spec.ts:189:7 › Template Management Tests › TM8: Publish template version
+[1A[2Ke2e\templates.spec.ts:189:7 › Template Management Tests › TM8: Publish template version
+TM8: Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()[22m
+
+    at [90mC:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\[39me2e\templates.spec.ts:197:23 {
+  [[32mSymbol(step)[39m]: {
+    location: {
+      file: [32m'C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts'[39m,
+      line: [33m197[39m,
+      column: [33m23[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+    apiName: [32m'locator.click'[39m,
+    params: {
+      selector: [32m'table tbody tr a, [class*="template"] a, .grid a, table tbody tr >> nth=0'[39m,
+      strict: [33mtrue[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@47'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@47'[39m,
+      _title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+      _parentStep: [90mundefined[39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1774005961808[39m,
+    error: {
+      message: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m,
+      stack: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts:197:23'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+
+[1A[2K  10) e2e\templates.spec.ts:189:7 › Template Management Tests › TM8: Publish template version ──────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\templates-Template-Managem-fa0c5-M8-Publish-template-version\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\templates-Template-Managem-fa0c5-M8-Publish-template-version\error-context.md
+
+
+[1A[2K[109/120] e2e\templates.spec.ts:214:7 › Template Management Tests › TM9: Template page types
+[1A[2Ke2e\templates.spec.ts:214:7 › Template Management Tests › TM9: Template page types
+TM9: Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()[22m
+
+    at [90mC:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\[39me2e\templates.spec.ts:222:23 {
+  [[32mSymbol(step)[39m]: {
+    location: {
+      file: [32m'C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts'[39m,
+      line: [33m222[39m,
+      column: [33m23[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+    apiName: [32m'locator.click'[39m,
+    params: {
+      selector: [32m'table tbody tr a, [class*="template"] a, .grid a, table tbody tr >> nth=0'[39m,
+      strict: [33mtrue[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@47'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@47'[39m,
+      _title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+      _parentStep: [90mundefined[39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1774005993154[39m,
+    error: {
+      message: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m,
+      stack: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts:222:23'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+
+[1A[2K  11) e2e\templates.spec.ts:214:7 › Template Management Tests › TM9: Template page types ───────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\templates-Template-Management-Tests-TM9-Template-page-types\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\templates-Template-Management-Tests-TM9-Template-page-types\error-context.md
+
+
+[1A[2K[110/120] e2e\templates.spec.ts:242:7 › Template Management Tests › TM10: Translator can view templates
+[1A[2Ke2e\templates.spec.ts:242:7 › Template Management Tests › TM10: Translator can view templates
+TM10: Translator templates URL: http://localhost:3000/templates
+
+[1A[2KTM10: Has content: [33mtrue[39m
+
+[1A[2KTM10: Body snippet: 404 Coffee Not FoundLooks like you've reached the bottom of the potLet’s brew a new batchself.__next_r="sTjBtb7tTMy5IUK6ZmlHh"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"5:I[\"[project]/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\",[\"/_next/static/chunks/node_modules_next_dist_be32b49c._.js\",\"/_next/static/chunks/src_app_favicon_ico_mjs_81d86e48._.js\"],\"SegmentViewNode\"]\n7:\"$Sreact.fragment\"\n19:I[\"[project
+
+[1A[2K[111/120] e2e\templates.spec.ts:258:7 › Template Management Tests › TM11: Translator can edit text fields only
+[1A[2Ke2e\templates.spec.ts:258:7 › Template Management Tests › TM11: Translator can edit text fields only
+TM11: Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()[22m
+
+    at [90mC:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\[39me2e\templates.spec.ts:266:23 {
+  [[32mSymbol(step)[39m]: {
+    location: {
+      file: [32m'C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts'[39m,
+      line: [33m266[39m,
+      column: [33m23[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+    apiName: [32m'locator.click'[39m,
+    params: {
+      selector: [32m'table tbody tr a, [class*="template"] a, .grid a, table tbody tr >> nth=0'[39m,
+      strict: [33mtrue[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@39'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@39'[39m,
+      _title: [32m`Click locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()`[39m,
+      _parentStep: [90mundefined[39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1774006026247[39m,
+    error: {
+      message: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m,
+      stack: [32m'Error: locator.click: Test timeout of 30000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('table tbody tr a, [class*="template"] a, .grid a, table tbody tr').first()\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\Admin\\Projects\\Others\\LofbergsWorkspace\\Lofberg\\e2e\\templates.spec.ts:266:23'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+
+[1A[2K  12) e2e\templates.spec.ts:258:7 › Template Management Tests › TM11: Translator can edit text fields only 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\templates-Template-Managem-a026a-r-can-edit-text-fields-only\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\templates-Template-Managem-a026a-r-can-edit-text-fields-only\error-context.md
+
+
+[1A[2K[112/120] e2e\templates.spec.ts:287:7 › Template Management Tests › TM12: Template type filtering
+[1A[2Ke2e\templates.spec.ts:287:7 › Template Management Tests › TM12: Template type filtering
+TM12: Filter controls found: [33m0[39m
+
+[1A[2K[113/120] e2e\users.spec.ts:5:7 › User Management Tests › US1: Admin can see user management table
+[1A[2Ke2e\users.spec.ts:5:7 › User Management Tests › US1: Admin can see user management table
+US1: User table visible: [33mtrue[39m URL: http://localhost:3000/users
+
+[1A[2K[114/120] e2e\users.spec.ts:22:7 › User Management Tests › US2: Sales cannot access user management
+[1A[2Ke2e\users.spec.ts:22:7 › User Management Tests › US2: Sales cannot access user management
+US2: Sales /users URL: http://localhost:3000/users
+
+[1A[2KUS2: Body snippet: Generate reportAdmin UserUser ManagementManage system administrators and usersAdd UserSystem UsersAll StatusFailed to load users.Results: 0–0 of 01Rows per page11Results: 0–0 of 0Load moreself.__next_r="wVCMm-1v5gqz0lpRgNTPe"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"8:I[\"[pr
+
+[1A[2K[115/120] e2e\users.spec.ts:37:7 › User Management Tests › US3: Translator cannot access user management
+[1A[2Ke2e\users.spec.ts:37:7 › User Management Tests › US3: Translator cannot access user management
+US3: Translator /users URL: http://localhost:3000/users
+
+[1A[2K[116/120] e2e\users.spec.ts:51:7 › User Management Tests › US4: Admin sees Add User button
+[1A[2Ke2e\users.spec.ts:51:7 › User Management Tests › US4: Admin sees Add User button
+US4: Add user button visible: [33mtrue[39m
+
+[1A[2K[117/120] e2e\users.spec.ts:71:7 › User Management Tests › US5: User table has expected columns
+[1A[2Ke2e\users.spec.ts:71:7 › User Management Tests › US5: User table has expected columns
+US5: User table headers: [
+  [32m'Name'[39m,
+  [32m'Email'[39m,
+  [32m'Role'[39m,
+  [32m'Status'[39m,
+  [32m'Reports'[39m,
+  [32m'Last login'[39m,
+  [32m'Actions'[39m
+]
+
+[1A[2K[118/120] e2e\users.spec.ts:83:7 › User Management Tests › US6: Add user form has role selection
+[1A[2Ke2e\users.spec.ts:83:7 › User Management Tests › US6: Add user form has role selection
+US6: Add user form URL: http://localhost:3000/users
+
+[1A[2KUS6: Labels: [
+  [32m'First Name *'[39m,
+  [32m'Last Name *'[39m,
+  [32m'Email'[39m,
+  [32m'Role *'[39m,
+  [32m'Phone Number'[39m,
+  [32m'Preferred Language'[39m,
+  [32m'Password'[39m,
+  [32m'Notes/Comments'[39m
+]
+
+[1A[2KUS6: Input count: [33m9[39m
+
+[1A[2KUS6: Has role field: [33mtrue[39m
+
+[1A[2K[119/120] e2e\users.spec.ts:115:7 › User Management Tests › US7: User search
+[1A[2Ke2e\users.spec.ts:115:7 › User Management Tests › US7: User search
+US7: Search input visible: [33mtrue[39m
+
+[1A[2KUS7: Rows after search "admin": [33m1[39m
+
+[1A[2K[120/120] e2e\users.spec.ts:137:7 › User Management Tests › US8: User table pagination
+[1A[2Ke2e\users.spec.ts:137:7 › User Management Tests › US8: User table pagination
+US8: Pagination visible: [33mtrue[39m
+
+[1A[2K  12 failed
+    e2e\auth.spec.ts:110:7 › Authentication Tests › AU6: Logout redirects to /login ────────────────
+    e2e\customers.spec.ts:77:7 › Customer Management Tests › CU5: Add customer form has required fields 
+    e2e\customers.spec.ts:113:7 › Customer Management Tests › CU6: Create a customer with unique name 
+    e2e\navigation-rbac.spec.ts:20:7 › Navigation & RBAC Tests › NR1: Admin sees all navigation items 
+    e2e\navigation-rbac.spec.ts:30:7 › Navigation & RBAC Tests › NR2: Sales sees limited navigation 
+    e2e\navigation-rbac.spec.ts:44:7 › Navigation & RBAC Tests › NR3: Translator sees limited navigation 
+    e2e\templates.spec.ts:37:7 › Template Management Tests › TM3: Template detail view ─────────────
+    e2e\templates.spec.ts:99:7 › Template Management Tests › TM6: Create draft template version ────
+    e2e\templates.spec.ts:132:7 › Template Management Tests › TM7: Template editor (TipTap/rich text) 
+    e2e\templates.spec.ts:189:7 › Template Management Tests › TM8: Publish template version ────────
+    e2e\templates.spec.ts:214:7 › Template Management Tests › TM9: Template page types ─────────────
+    e2e\templates.spec.ts:258:7 › Template Management Tests › TM11: Translator can edit text fields only 
+  108 passed (10.5m)
