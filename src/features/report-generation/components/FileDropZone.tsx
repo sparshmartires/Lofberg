@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Upload, X } from "lucide-react"
 import Image from "next/image"
 
@@ -65,6 +65,22 @@ export function FileDropZone({
   const isImage = previewUrl || (file && file.type.startsWith("image/"))
   const localPreview = file && file.type.startsWith("image/") ? URL.createObjectURL(file) : null
   const displayUrl = previewUrl || localPreview
+
+  // Revoke the object URL when the component unmounts or the preview changes
+  const prevLocalPreviewRef = useRef<string | null>(null)
+  useEffect(() => {
+    // Revoke previous local preview URL if it changed
+    if (prevLocalPreviewRef.current && prevLocalPreviewRef.current !== localPreview) {
+      URL.revokeObjectURL(prevLocalPreviewRef.current)
+    }
+    prevLocalPreviewRef.current = localPreview
+
+    return () => {
+      if (localPreview) {
+        URL.revokeObjectURL(localPreview)
+      }
+    }
+  }, [localPreview])
 
   return (
     <div

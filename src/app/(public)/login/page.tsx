@@ -18,6 +18,7 @@ export default function LoginPage() {
   const router = useRouter()
   const [login, { isLoading, error }] = useLoginMutation()
   const [showPassword, setShowPassword] = useState(false)
+  const [loginError, setLoginError] = useState<string | null>(null)
 
   const {
     register,
@@ -27,16 +28,17 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
+      setLoginError(null)
       await login({
         email: data.email,
         password: data.password,
       }).unwrap()
-      
+
 //document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
       // Navigate on success
       router.push("/users")
     } catch (err: any) {
-   
+      setLoginError(err?.data?.error || err?.message || "Login failed. Please try again.")
     }
   }
 
@@ -99,8 +101,8 @@ export default function LoginPage() {
                 {...register("password", {
                   required: "Password is required",
                   minLength: {
-                    value: 6,
-                    message: "Minimum 6 characters",
+                    value: 8,
+                    message: "Minimum 8 characters",
                   },
                 })}
                 className="login-password-input"
@@ -125,6 +127,11 @@ export default function LoginPage() {
               Forgot Password?
             </Link>
           </div>
+          {loginError && (
+            <p className="login-error-text">
+              {loginError}
+            </p>
+          )}
           {error && "data" in error && (error as any).data?.error && (
             <p className="login-error-text">
               {(error as any).data?.error}

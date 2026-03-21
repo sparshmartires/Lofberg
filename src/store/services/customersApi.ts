@@ -396,7 +396,7 @@ export const customersApi = createApi({
 
     createCustomer: builder.mutation<unknown, CreateCustomerRequest>({
       query: (body) => {
-        const formData = toFormData(body)
+        const formData = toFormData(body as unknown as Record<string, unknown>)
         return { url: "/customers", method: "POST", body: formData }
       },
       invalidatesTags: [{ type: "Customers", id: "LIST" }],
@@ -404,7 +404,7 @@ export const customersApi = createApi({
 
     updateCustomer: builder.mutation<unknown, { id: string; body: UpdateCustomerRequest }>({
       query: ({ id, body }) => {
-        const formData = toFormData(body)
+        const formData = toFormData(body as unknown as Record<string, unknown>)
         return { url: `/customers/${id}`, method: "PUT", body: formData }
       },
       invalidatesTags: (_result, _error, arg) => [
