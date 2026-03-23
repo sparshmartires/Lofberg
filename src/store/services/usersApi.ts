@@ -1,6 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5215";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { createBaseQuery } from "./baseApi";
 
 export interface RoleOption {
   id: string;
@@ -122,8 +121,8 @@ const toArray = (value: unknown): ApiObject[] => {
 
 const mapUser = (item: ApiObject): UserItem => {
   const role = asObject(item.role);
-  const firstName = item.firstName ?? item.firstname ?? "";
-  const lastName = item.lastName ?? item.lastname ?? "";
+  const firstName = String(item.firstName ?? item.firstname ?? "");
+  const lastName = String(item.lastName ?? item.lastname ?? "");
   const fullName = item.name ?? item.fullName ?? `${firstName} ${lastName}`.trim();
 
   const [fallbackFirstName, ...rest] = String(fullName || "").split(" ");
@@ -134,13 +133,13 @@ const mapUser = (item: ApiObject): UserItem => {
     firstName: firstName || fallbackFirstName || "",
     lastName: lastName || fallbackLastName || "",
     email: String(item.email ?? ""),
-    phoneNumber: item.phoneNumber ?? item.phone ?? null,
-    notes: item.notes ?? item.comment ?? null,
+    phoneNumber: (item.phoneNumber ?? item.phone ?? null) as string | null,
+    notes: (item.notes ?? item.comment ?? null) as string | null,
     roleId: String(item.roleId ?? role.id ?? ""),
     roleName: String(item.roleName ?? role.name ?? item.role ?? "-"),
     isActive: Boolean(item.isActive ?? item.active ?? true),
     reportsCount: Number(item.reportsCount ?? item.reports ?? 0),
-    lastLogin: item.lastLogin ?? item.lastLoginAt ?? null,
+    lastLogin: (item.lastLogin ?? item.lastLoginAt ?? null) as string | null,
   };
 };
 
@@ -205,29 +204,7 @@ const normalizeRolesResponse = (payload: unknown): RoleOption[] => {
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    prepareHeaders: (headers) => {
-      const tokenFromStorage =
-        typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
-      const tokenFromCookie =
-        typeof document !== "undefined"
-          ? document.cookie
-              .split("; ")
-              .find((entry) => entry.startsWith("auth_token="))
-              ?.split("=")[1] ?? null
-          : null;
-
-      const token = tokenFromStorage || tokenFromCookie;
-
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-
-      headers.set("ngrok-skip-browser-warning", "true");
-      return headers;
-    },
-  }),
+  baseQuery: createBaseQuery(),
   tagTypes: ["Users", "Roles"],
   endpoints: (builder) => ({
     getUsers: builder.query<PaginatedUsersResponse, GetUsersParams>({

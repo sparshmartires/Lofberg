@@ -1,5 +1,6 @@
 "use client"
 
+import DOMPurify from "dompurify"
 import { RichTextEditor } from "../RichTextEditor"
 
 type FieldType = "richtext" | "textarea" | "input"
@@ -31,7 +32,7 @@ export function TranslationFieldPair({
           <div className={readOnlyBase}>
             <div
               className="[&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-0.5"
-              dangerouslySetInnerHTML={{ __html: englishHtml || "<p></p>" }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(englishHtml || "<p></p>") }}
             />
           </div>
         ) : fieldType === "textarea" ? (
