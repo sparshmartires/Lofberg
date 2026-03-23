@@ -70,7 +70,11 @@ const toFormData = (obj: Record<string, unknown>): FormData => {
   for (const [key, value] of Object.entries(obj)) {
     if (value === null || value === undefined) continue
     const pascalKey = key.charAt(0).toUpperCase() + key.slice(1)
-    formData.append(pascalKey, String(value))
+    if (value instanceof File || value instanceof Blob) {
+      formData.append(pascalKey, value)
+    } else {
+      formData.append(pascalKey, String(value))
+    }
   }
   return formData
 }

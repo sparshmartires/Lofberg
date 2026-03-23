@@ -123,10 +123,12 @@ export function Step2DataSource() {
   const dispatch = useAppDispatch()
   const step2 = useAppSelector((state) => state.reportWizard.step2)
   const [localFile, setLocalFile] = useState<File | null>(null)
+  const [parseError, setParseError] = useState<string | null>(null)
 
   const parseFile = useCallback(
     (file: File | null) => {
       setLocalFile(file)
+      setParseError(null)
       if (!file) {
         dispatch(updateStep2({ dataFileName: null, rows: DEFAULT_DATA_ROWS }))
         return
@@ -145,8 +147,9 @@ export function Step2DataSource() {
             const { json, timePeriod } = parseCsvText(text)
             const rows = mapExcelToRows(json)
             dispatch(updateStep2({ rows, timePeriod }))
-          } catch {
-            // If parsing fails, keep default rows
+          } catch (err) {
+            console.error("CSV parsing failed:", err)
+            setParseError("Failed to parse the uploaded file. Please check the format and try again.")
           }
         }
         reader.readAsText(file)
@@ -159,8 +162,9 @@ export function Step2DataSource() {
             const { json, timePeriod } = await parseExcelBuffer(buffer)
             const rows = mapExcelToRows(json)
             dispatch(updateStep2({ rows, timePeriod }))
-          } catch {
-            // If parsing fails, keep default rows
+          } catch (err) {
+            console.error("Excel parsing failed:", err)
+            setParseError("Failed to parse the uploaded file. Please check the format and try again.")
           }
         }
         reader.readAsArrayBuffer(file)
@@ -200,6 +204,9 @@ export function Step2DataSource() {
           file={localFile}
           onFileChange={parseFile}
         />
+        {parseError && (
+          <p className="text-sm text-red-500 mt-2">{parseError}</p>
+        )}
       </div>
 
       {/* Data Table */}

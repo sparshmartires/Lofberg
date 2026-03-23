@@ -18,7 +18,7 @@ export default function AppSidebar() {
     const { user } = useAuth()
 
     const roles = user?.roles ?? []
-    const isAdmin = !user || roles.includes("Administrator")
+    const isAdmin = roles.includes("Administrator")
     const isTranslator = roles.includes("Translator")
 
     const menuItems = [
