@@ -1,0 +1,136 @@
+trigger:
+  branches:
+    include:
+      - main
+      - development
+
+pr:
+  branches:
+    include:
+      - main
+      - development
+
+variables:
+  nodeVersion: '20.x'
+  serviceConnection: 'sc-lofberg-dev'
+  webAppName: 'app-lofberg-dev-frontend'
+  NEXT_PUBLIC_API_URL: 'https://app-lofberg-dev-backend.azurewebsites.net'
+
+stages:
+
+# ─────────────────────────────────────────
+# STAGE 1: BUILD & TEST
+# ─────────────────────────────────────────
+- stage: Build
+  displayName: 'Build & Test'
+  jobs:
+  - job: BuildAndTest
+    displayName: 'Build and Run Tests'
+    pool:
+      name: 'LocalAgent'
+
+    steps:
+
+    # Step 1: Use Node.js 20
+    - task: NodeTool@0
+      displayName: 'Use Node.js 20'
+      inputs:
+        versionSpec: '$(nodeVersion)'
+
+    # Step 2: Install dependencies
+    - script: npm ci
+      displayName: 'Install Dependencies'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    # Step 3: Set environment variables for build
+    - script: |
+        echo "NEXT_PUBLIC_API_URL=$(NEXT_PUBLIC_API_URL)" >> .env.production
+      displayName: 'Set Environment Variables'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    # Step 4: Build Next.js app
+    - script: npm run build
+      displayName: 'Build Next.js App'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    # Step 5: Run Tests (uncomment when tests are implemented)
+    # - script: npm test -- --watchAll=false
+    #   displayName: 'Run Tests'
+    #   workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    # Step 6: Create deployment package
+    - task: ArchiveFiles@2
+      displayName: 'Package Build Output'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/frontend.zip'
+        replaceExistingArchive: true
+        excludePaths: |
+          .git
+          node_modules/.cache
+          **/*.test.*
+          **/*.spec.*
+
+    # Step 7: Upload build artifact for next stage
+    - task: PublishBuildArtifacts@1
+      displayName: 'Upload Build Artifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'lofberg-frontend-drop'
+        publishLocation: 'Container'
+
+# ─────────────────────────────────────────
+# STAGE 2: DEPLOY TO AZURE APP SERVICE
+# ─────────────────────────────────────────
+- stage: Deploy
+  displayName: 'Deploy to Azure'
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+
+  jobs:
+  - deployment: DeployToAppService
+    displayName: 'Deploy to App Service'
+    pool:
+      name: 'LocalAgent'
+    environment: 'dev'
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          # Step 1: Download the artifact from Build stage
+          - task: DownloadBuildArtifacts@1
+            displayName: 'Download Build Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'lofberg-frontend-drop'
+              downloadPath: '$(System.ArtifactsDirectory)'
+
+          # Step 2: Deploy to Azure App Service
+          - task: AzureWebApp@1
+            displayName: 'Deploy to Azure App Service'
+            inputs:
+              azureSubscription: '$(serviceConnection)'
+              appType: 'webApp'
+              appName: '$(webAppName)'
+              package: '$(System.ArtifactsDirectory)/lofberg-frontend-drop/frontend.zip'
+              deploymentMethod: 'auto'
+
+          # Step 3: Set Frontend App Settings
+          - task: AzureAppServiceSettings@1
+            displayName: 'Set Frontend App Settings'
+            inputs:
+              azureSubscription: '$(serviceConnection)'
+              appName: '$(webAppName)'
+              appSettings: |
+                [
+                  {
+                    "name": "NEXT_PUBLIC_API_URL",
+                    "value": "$(NEXT_PUBLIC_API_URL)",
+                    "slotSetting": false
+                  }
+                ]
