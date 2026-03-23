@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { createBaseQuery } from "./baseApi";
 
 export interface LoginRequest {
   email: string;
@@ -213,36 +214,10 @@ const normalizeMeResponse = (payload: unknown): MeResponse => {
   };
 };
 
-const FALLBACK_API_BASE_URL = "http://localhost:5215";
-
-const normalizeApiBaseUrl = (value: string | undefined): string => {
-  const raw = (value || "").trim();
-  const candidate = raw || FALLBACK_API_BASE_URL;
-
-  if (candidate.startsWith("http://") || candidate.startsWith("https://")) {
-    return candidate.replace(/\/+$/, "");
-  }
-
-  return `https://${candidate.replace(/^\/+/, "").replace(/\/+$/, "")}`;
-};
-
-const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
-
 export const authApi = createApi({
   reducerPath: "authApi",
   tagTypes: ["Me"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    prepareHeaders: (headers) => {
-      const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      // Add ngrok bypass header
-      headers.set("ngrok-skip-browser-warning", "true");
-      return headers;
-    },
-  }),
+  baseQuery: createBaseQuery(),
   endpoints: (builder) => ({
     // Login endpoint
     login: builder.mutation<LoginResponse, LoginRequest>({
@@ -255,13 +230,11 @@ export const authApi = createApi({
       async onQueryStarted(_arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.token) {
-            const expires = new Date(Date.now() + data.expiresIn * 1000);
-            document.cookie = `auth_token=${data.token}; path=/; expires=${expires.toUTCString()}; SameSite=Strict`;
-            localStorage.setItem("auth_token", data.token);
+          // Token is now set as an HttpOnly cookie by the backend.
+          // Only store user metadata in localStorage for UI hydration.
+          if (typeof window !== "undefined") {
+            localStorage.setItem("user", JSON.stringify(data.user));
           }
-
-          localStorage.setItem("user", JSON.stringify(data.user));
         } catch {
           // Error handling is done in the component
         }
@@ -317,9 +290,11 @@ export const authApi = createApi({
       async onQueryStarted(_arg, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          // Clear stored data
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("user");
+          // HttpOnly cookie is cleared by the backend.
+          // Only clear user metadata from localStorage.
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("user");
+          }
         } catch {
           // Error handling
         }

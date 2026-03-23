@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { createBaseQuery } from "./baseApi"
 import type {
   ReportDto,
   StatusLabel,
@@ -8,8 +9,6 @@ import type {
   GenerateReportRequest,
   ReportWizardState,
 } from "@/features/report-generation/types"
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5215"
 
 type ApiObject = Record<string, unknown>
 
@@ -112,29 +111,7 @@ const normalizeReportsResponse = (
 
 export const reportsApi = createApi({
   reducerPath: "reportsApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    prepareHeaders: (headers) => {
-      const tokenFromStorage =
-        typeof window !== "undefined" ? localStorage.getItem("auth_token") : null
-      const tokenFromCookie =
-        typeof document !== "undefined"
-          ? document.cookie
-              .split("; ")
-              .find((entry) => entry.startsWith("auth_token="))
-              ?.split("=")[1] ?? null
-          : null
-
-      const token = tokenFromStorage || tokenFromCookie
-
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`)
-      }
-
-      headers.set("ngrok-skip-browser-warning", "true")
-      return headers
-    },
-  }),
+  baseQuery: createBaseQuery(),
   tagTypes: ["Reports", "ReportDrafts"],
   endpoints: (builder) => ({
     getReports: builder.query<PaginatedReportsResponse, GetReportsParams>({

@@ -127,7 +127,7 @@ Stored in all languages. Replaced at generation time:
 ## Related systems
 
 ### .NET Backend API (`LofbergServices`)
-- **Repo:** `C:\Users\Admin\Projects\DotNetProjects\LofbergServices`
+- **Repo:** `C:\Users\Admin\Projects\Others\LofbergsWorkspace\LofbergServices`
 - **Architecture:** Clean Architecture — Api / Application (CQRS) / Domain / Infrastructure (EF Core + Identity)
 - **Auth:** JWT Bearer (HS256), role-based policies (`AdministratorOnly`, `SalesOrAdmin`, `AdminOrTranslator`, etc.)
 - **Base URL:** `NEXT_PUBLIC_API_URL` (default `http://localhost:5215`)

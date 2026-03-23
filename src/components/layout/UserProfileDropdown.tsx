@@ -28,6 +28,7 @@ export function UserProfileDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
+          data-testid="user-menu"
           className={cn(
             "flex items-center gap-2",
             "h-[48px]",
@@ -101,6 +102,7 @@ export function UserProfileDropdown({
 
         {/* Logout */}
         <DropdownMenuItem
+          data-testid="logout-button"
           onClick={onLogout}
           className="text-sm cursor-pointer"
         >

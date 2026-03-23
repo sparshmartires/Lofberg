@@ -1,6 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5215"
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { createBaseQuery } from "./baseApi"
 
 export interface SalesRoleOption {
   id: string
@@ -223,29 +222,7 @@ const normalizeFilterOptionsResponse = (payload: unknown): SalesFilterOption[] =
 
 export const salesRepresentativesApi = createApi({
   reducerPath: "salesRepresentativesApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    prepareHeaders: (headers) => {
-      const tokenFromStorage =
-        typeof window !== "undefined" ? localStorage.getItem("auth_token") : null
-      const tokenFromCookie =
-        typeof document !== "undefined"
-          ? document.cookie
-              .split("; ")
-              .find((entry) => entry.startsWith("auth_token="))
-              ?.split("=")[1] ?? null
-          : null
-
-      const token = tokenFromStorage || tokenFromCookie
-
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`)
-      }
-
-      headers.set("ngrok-skip-browser-warning", "true")
-      return headers
-    },
-  }),
+  baseQuery: createBaseQuery(),
   tagTypes: ["SalesRepresentatives", "SalesRoles"],
   endpoints: (builder) => ({
     getSalesRepresentatives: builder.query<

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/store/hooks"
 import { logout } from "@/store/slices/authSlice"
+import { useLogoutMutation } from "@/store/services/authApi"
 
 import {
   Select,
@@ -32,14 +33,17 @@ export default function AppHeader() {
   const router = useRouter()
   const dispatch = useAppDispatch()
 
-  const handleLogout = React.useCallback(() => {
-    document.cookie =
-      "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; Max-Age=0; SameSite=Strict"
-    localStorage.removeItem("auth_token")
-    localStorage.removeItem("user")
+  const [triggerLogout] = useLogoutMutation()
+
+  const handleLogout = React.useCallback(async () => {
+    try {
+      await triggerLogout().unwrap()
+    } catch {
+      // Even if the API call fails, clear local state
+    }
     dispatch(logout())
     router.replace("/login")
-  }, [dispatch, router])
+  }, [dispatch, router, triggerLogout])
 
   return (
     <header className="w-full bg-primary text-primary-foreground px-10 flex items-center justify-between py-4">

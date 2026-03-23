@@ -9,6 +9,7 @@ export enum ReportStatus {
   Generating = 1,
   Completed = 2,
   Failed = 3,
+  Archived = 4,
 }
 
 export enum OutputFormat {
