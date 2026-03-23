@@ -1,7 +1,8 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
-import * as XLSX from "xlsx"
+import { useCallback, useState } from "react"
+import Papa from "papaparse"
+import ExcelJS from "exceljs"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep2 } from "@/store/slices/reportWizardSlice"
 import { FileDropZone } from "../FileDropZone"
@@ -13,14 +14,121 @@ import {
   DEFAULT_DATA_ROWS,
 } from "../../types"
 
+/**
+ * Parse an Excel (.xlsx/.xls) file buffer and return the header-based JSON rows
+ * plus an optional timePeriod extracted from metadata rows above the header.
+ */
+async function parseExcelBuffer(
+  buffer: ArrayBuffer
+): Promise<{ json: Record<string, unknown>[]; timePeriod: string | null }> {
+  const workbook = new ExcelJS.Workbook()
+  await workbook.xlsx.load(buffer)
+  const worksheet = workbook.worksheets[0]
+  if (!worksheet) return { json: [], timePeriod: null }
+
+  let timePeriod: string | null = null
+  let headerRowNumber = 1
+
+  // Scan the first 11 rows for metadata ("date") and the header row ("name")
+  const maxScan = Math.min(worksheet.rowCount, 11)
+  for (let r = 1; r <= maxScan; r++) {
+    const row = worksheet.getRow(r)
+    const firstCellVal = row.getCell(1).value
+    const cellStr = firstCellVal != null ? String(firstCellVal).trim().toLowerCase() : ""
+
+    if (cellStr === "date") {
+      const dateVal = row.getCell(2).value
+      if (dateVal != null) timePeriod = String(dateVal).trim()
+    }
+    if (cellStr === "name") {
+      headerRowNumber = r
+      break
+    }
+  }
+
+  // Read headers from the identified header row
+  const headerRow = worksheet.getRow(headerRowNumber)
+  const headers: string[] = []
+  headerRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+    headers[colNumber] = cell.value != null ? String(cell.value).trim() : ""
+  })
+
+  // Build JSON array from subsequent rows
+  const json: Record<string, unknown>[] = []
+  for (let r = headerRowNumber + 1; r <= worksheet.rowCount; r++) {
+    const row = worksheet.getRow(r)
+    // Skip completely empty rows
+    let hasValue = false
+    const record: Record<string, unknown> = {}
+    row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+      const key = headers[colNumber]
+      if (key) {
+        record[key] = cell.value
+        if (cell.value != null && String(cell.value).trim() !== "") hasValue = true
+      }
+    })
+    if (hasValue) json.push(record)
+  }
+
+  return { json, timePeriod }
+}
+
+/**
+ * Parse a CSV file string and return header-based JSON rows
+ * plus an optional timePeriod extracted from metadata rows above the header.
+ */
+function parseCsvText(
+  text: string
+): { json: Record<string, unknown>[]; timePeriod: string | null } {
+  // First parse without headers to inspect raw rows for metadata
+  const raw = Papa.parse<string[]>(text, { header: false, skipEmptyLines: true })
+  const rawData = raw.data
+
+  let timePeriod: string | null = null
+  let headerRowIndex = 0
+
+  const maxScan = Math.min(rawData.length, 11)
+  for (let r = 0; r < maxScan; r++) {
+    const firstCell = (rawData[r][0] ?? "").trim().toLowerCase()
+    if (firstCell === "date") {
+      const dateVal = rawData[r][1]
+      if (dateVal != null) timePeriod = String(dateVal).trim()
+    }
+    if (firstCell === "name") {
+      headerRowIndex = r
+      break
+    }
+  }
+
+  // Use the identified header row as column names
+  const headers = rawData[headerRowIndex].map((h) => h.trim())
+  const json: Record<string, unknown>[] = []
+  for (let r = headerRowIndex + 1; r < rawData.length; r++) {
+    const row = rawData[r]
+    const record: Record<string, unknown> = {}
+    let hasValue = false
+    for (let c = 0; c < headers.length; c++) {
+      if (headers[c]) {
+        record[headers[c]] = row[c]
+        if (row[c] != null && String(row[c]).trim() !== "") hasValue = true
+      }
+    }
+    if (hasValue) json.push(record)
+  }
+
+  return { json, timePeriod }
+}
+
 export function Step2DataSource() {
   const dispatch = useAppDispatch()
   const step2 = useAppSelector((state) => state.reportWizard.step2)
   const [localFile, setLocalFile] = useState<File | null>(null)
+  const [parseError, setParseError] = useState<string | null>(null)
 
   const parseFile = useCallback(
     (file: File | null) => {
       setLocalFile(file)
+      setParseError(null)
       if (!file) {
         dispatch(updateStep2({ dataFileName: null, rows: DEFAULT_DATA_ROWS }))
         return
@@ -28,42 +136,39 @@ export function Step2DataSource() {
 
       dispatch(updateStep2({ dataFileName: file.name }))
 
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        try {
-          const data = e.target?.result
-          const workbook = XLSX.read(data, { type: "array" })
-          const sheet = workbook.Sheets[workbook.SheetNames[0]]
+      const isCsv = file.name.toLowerCase().endsWith(".csv")
 
-          // Extract metadata from rows before the data header
-          const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1")
-          let timePeriod: string | null = null
-          let headerRow = 0
-
-          for (let r = range.s.r; r <= Math.min(range.e.r, 10); r++) {
-            const cell = sheet[XLSX.utils.encode_cell({ r, c: 0 })]
-            const cellVal = cell ? String(cell.v).trim().toLowerCase() : ""
-            if (cellVal === "date") {
-              const dateCell = sheet[XLSX.utils.encode_cell({ r, c: 1 })]
-              if (dateCell) timePeriod = String(dateCell.v).trim()
-            }
-            if (cellVal === "name") {
-              headerRow = r
-              break
-            }
+      if (isCsv) {
+        // CSV path: read as text, parse with PapaParse
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          try {
+            const text = e.target?.result as string
+            const { json, timePeriod } = parseCsvText(text)
+            const rows = mapExcelToRows(json)
+            dispatch(updateStep2({ rows, timePeriod }))
+          } catch (err) {
+            console.error("CSV parsing failed:", err)
+            setParseError("Failed to parse the uploaded file. Please check the format and try again.")
           }
-
-          const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
-            range: headerRow,
-          })
-
-          const rows = mapExcelToRows(json)
-          dispatch(updateStep2({ rows, timePeriod }))
-        } catch {
-          // If parsing fails, keep default rows
         }
+        reader.readAsText(file)
+      } else {
+        // Excel path: read as ArrayBuffer, parse with ExcelJS
+        const reader = new FileReader()
+        reader.onload = async (e) => {
+          try {
+            const buffer = e.target?.result as ArrayBuffer
+            const { json, timePeriod } = await parseExcelBuffer(buffer)
+            const rows = mapExcelToRows(json)
+            dispatch(updateStep2({ rows, timePeriod }))
+          } catch (err) {
+            console.error("Excel parsing failed:", err)
+            setParseError("Failed to parse the uploaded file. Please check the format and try again.")
+          }
+        }
+        reader.readAsArrayBuffer(file)
       }
-      reader.readAsArrayBuffer(file)
     },
     [dispatch]
   )
@@ -99,6 +204,9 @@ export function Step2DataSource() {
           file={localFile}
           onFileChange={parseFile}
         />
+        {parseError && (
+          <p className="text-sm text-red-500 mt-2">{parseError}</p>
+        )}
       </div>
 
       {/* Data Table */}

@@ -1,0 +1,59 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
+    - img [ref=e8]
+  - alert [ref=e11]: User Management
+  - generic [ref=e12]:
+    - banner [ref=e13]:
+      - generic [ref=e14]:
+        - button "Open menu" [ref=e15]:
+          - img [ref=e16]
+        - img "Löfbergs Logo" [ref=e17]
+      - generic [ref=e18]:
+        - button "Generate report" [ref=e19]:
+          - img [ref=e20]
+          - text: Generate report
+        - button "Admin User" [ref=e23]:
+          - img [ref=e24]
+          - generic [ref=e27]: Admin User
+          - img [ref=e28]
+    - main [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - heading "User Management" [level=1] [ref=e34]
+            - paragraph [ref=e35]: Manage system administrators and users
+          - button "Add User" [ref=e36]:
+            - img [ref=e37]
+            - text: Add User
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - heading "System Users" [level=2] [ref=e40]
+            - generic [ref=e42]:
+              - generic [ref=e43]:
+                - img [ref=e44]
+                - textbox "Search" [ref=e47]
+              - combobox [ref=e49]:
+                - generic: All Status
+                - img
+          - generic [ref=e50]: Failed to load users.
+        - generic [ref=e52]:
+          - paragraph [ref=e54]: "Results: 0–0 of 0"
+          - navigation "pagination" [ref=e56]:
+            - list [ref=e57]:
+              - listitem [ref=e58]:
+                - button [disabled] [ref=e59]:
+                  - img [ref=e60]
+              - listitem [ref=e62]:
+                - button "1" [ref=e63]
+              - listitem [ref=e64]:
+                - button [disabled] [ref=e65]:
+                  - img [ref=e66]
+          - generic [ref=e68]:
+            - generic [ref=e69]: Rows per page
+            - combobox [ref=e70]:
+              - generic: "11"
+              - img
+```

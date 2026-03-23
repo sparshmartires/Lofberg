@@ -58,9 +58,11 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
   const [deleteDraft] = useDeleteDraftMutation()
   const [isCreating, setIsCreating] = useState(false)
   const [actionInProgress, setActionInProgress] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleCreateVersion = async () => {
     setIsCreating(true)
+    setErrorMessage(null)
     try {
       for (const id of templateIds) {
         await createDraft({ templateId: id }).unwrap()
@@ -68,6 +70,7 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
       }
     } catch (err) {
       console.error("Failed to create version:", err)
+      setErrorMessage("Failed to create version. Please try again.")
     } finally {
       setIsCreating(false)
     }
@@ -78,6 +81,7 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
       return
     }
     setActionInProgress(versionId)
+    setErrorMessage(null)
     try {
       // Restore primary template
       await rollbackVersion({ templateId: primaryId, versionId }).unwrap()
@@ -96,6 +100,7 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
       }
     } catch (err) {
       console.error("Failed to restore version:", err)
+      setErrorMessage("Failed to restore version. Please try again.")
     } finally {
       setActionInProgress(null)
     }
@@ -103,12 +108,14 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
 
   const handlePublishDraft = async () => {
     setActionInProgress("publish")
+    setErrorMessage(null)
     try {
       for (const id of templateIds) {
         await publishDraft({ templateId: id }).unwrap()
       }
     } catch (err) {
       console.error("Failed to publish draft:", err)
+      setErrorMessage("Failed to publish draft. Please try again.")
     } finally {
       setActionInProgress(null)
     }
@@ -117,12 +124,14 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
   const handleDeleteDraft = async () => {
     if (!window.confirm("Are you sure you want to delete this draft?")) return
     setActionInProgress("delete")
+    setErrorMessage(null)
     try {
       for (const id of templateIds) {
         await deleteDraft({ templateId: id }).unwrap()
       }
     } catch (err) {
       console.error("Failed to delete draft:", err)
+      setErrorMessage("Failed to delete draft. Please try again.")
     } finally {
       setActionInProgress(null)
     }
@@ -138,6 +147,12 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
 
   return (
     <div className="rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 mt-[20px]">
+      {errorMessage && (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {errorMessage}
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-6 max-[649px]:flex-col max-[649px]:items-start max-[649px]:gap-4">
         <h3 className="text-lg font-medium text-[#1F1F1F]">{label ?? "Version history"}</h3>
         <Button
@@ -162,6 +177,7 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
             return (
               <div
                 key={version.id}
+                data-testid="template-item"
                 className="flex items-center justify-between p-4 rounded-xl border border-[#EDEDED] max-[799px]:flex-col max-[799px]:items-start max-[799px]:gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">

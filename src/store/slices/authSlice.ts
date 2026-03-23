@@ -52,6 +52,10 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
+      // Clear user metadata from localStorage
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("user");
+      }
     },
     clearError: (state) => {
       state.error = null;
@@ -60,28 +64,21 @@ const authSlice = createSlice({
       state.error = action.payload;
     },
     initializeAuth: (state) => {
-      // Initialize from localStorage and cookies on app load
+      // Initialize from localStorage on app load.
+      // The auth_token is now an HttpOnly cookie managed by the browser
+      // and cannot be read via JavaScript. We only check for cached user
+      // metadata to hydrate the UI before the /auth/me call completes.
       if (typeof window !== "undefined") {
-        // Check for auth token in cookies
-        const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
-          const [key, value] = cookie.split("=");
-          acc[key] = value;
-          return acc;
-        }, {} as Record<string, string>);
-        
-        const token = cookies["auth_token"];
         const userStr = localStorage.getItem("user");
-        
-        if (token && userStr) {
+
+        if (userStr) {
           try {
             const user = JSON.parse(userStr);
-            state.token = token;
             state.user = user;
             state.isAuthenticated = true;
           } catch {
             // Invalid stored data
             localStorage.removeItem("user");
-            document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
           }
         }
       }
@@ -106,9 +103,9 @@ const authSlice = createSlice({
       )
       .addMatcher(
         authApi.endpoints.login.matchRejected,
-        (state, action: RejectedAction) => {
+        (state, action) => {
           state.loading = false;
-          state.error = action.error?.message || "Login failed";
+          state.error = (action as unknown as RejectedAction).error?.message || "Login failed";
           state.isAuthenticated = false;
         }
       )
@@ -130,8 +127,9 @@ const authSlice = createSlice({
         };
         state.isAuthenticated = true;
       })
-      .addMatcher(authApi.endpoints.getMe.matchRejected, (state, action: RejectedAction) => {
-        const status = action?.payload?.status ?? action?.error?.status;
+      .addMatcher(authApi.endpoints.getMe.matchRejected, (state, action) => {
+        const rejected = action as unknown as RejectedAction;
+        const status = rejected?.payload?.status ?? rejected?.error?.status;
         if (status === 401 || status === 403) {
           state.user = null;
           state.token = null;

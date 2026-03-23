@@ -22,15 +22,15 @@ export function HistoricalReportsPage() {
   // Read roles from Redux state first, fall back to localStorage for page reload
   const isAdmin = useMemo(() => {
     if (user?.roles) return user.roles.includes("Administrator")
-    if (typeof window === "undefined") return true
+    if (typeof window === "undefined") return false
     try {
       const stored = localStorage.getItem("user")
       if (stored) {
         const parsed = JSON.parse(stored)
-        return parsed?.roles?.includes("Administrator") ?? true
+        return parsed?.roles?.includes("Administrator") ?? false
       }
     } catch { /* ignore */ }
-    return true
+    return false
   }, [user])
 
   const [search, setSearch] = useState("")
