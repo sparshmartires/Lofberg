@@ -106,9 +106,9 @@ const authSlice = createSlice({
       )
       .addMatcher(
         authApi.endpoints.login.matchRejected,
-        (state, action: RejectedAction) => {
+        (state, action) => {
           state.loading = false;
-          state.error = action.error?.message || "Login failed";
+          state.error = (action as unknown as RejectedAction).error?.message || "Login failed";
           state.isAuthenticated = false;
         }
       )
@@ -130,8 +130,9 @@ const authSlice = createSlice({
         };
         state.isAuthenticated = true;
       })
-      .addMatcher(authApi.endpoints.getMe.matchRejected, (state, action: RejectedAction) => {
-        const status = action?.payload?.status ?? action?.error?.status;
+      .addMatcher(authApi.endpoints.getMe.matchRejected, (state, action) => {
+        const rejected = action as unknown as RejectedAction;
+        const status = rejected?.payload?.status ?? rejected?.error?.status;
         if (status === 401 || status === 403) {
           state.user = null;
           state.token = null;

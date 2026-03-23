@@ -89,7 +89,7 @@ export default function AppSidebar() {
 
                 {/* MENU */}
                 <div className="px-8 py-8">
-                    <nav className="flex flex-col gap-4">
+                    <nav data-testid="sidebar-nav" className="flex flex-col gap-4">
 
                         {menuItems.map((item) => {
                             const isActive = pathname === item.href
@@ -98,6 +98,7 @@ export default function AppSidebar() {
                                 <Link
                                     key={item.label}
                                     href={item.href}
+                                    data-testid={`nav-link-${item.href.replace(/^\//, "")}`}
                                     className={`
                     flex items-center
                     ${isActive

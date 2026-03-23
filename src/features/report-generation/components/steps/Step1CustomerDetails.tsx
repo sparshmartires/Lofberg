@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import {
@@ -92,14 +92,31 @@ export function Step1CustomerDetails() {
     }))
   }, [dispatch])
 
+  const prevLogoUrlRef = useRef<string | null>(null)
+
   const handleLogoChange = useCallback(
     (file: File | null) => {
+      // Revoke the previous object URL to prevent memory leaks
+      if (prevLogoUrlRef.current) {
+        URL.revokeObjectURL(prevLogoUrlRef.current)
+        prevLogoUrlRef.current = null
+      }
       setCustomerLogoFile(file)
       const logoUrl = file ? URL.createObjectURL(file) : null
+      prevLogoUrlRef.current = logoUrl
       dispatch(updateStep1({ customerLogoUrl: logoUrl }))
     },
     [dispatch]
   )
+
+  // Revoke the object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (prevLogoUrlRef.current) {
+        URL.revokeObjectURL(prevLogoUrlRef.current)
+      }
+    }
+  }, [])
 
   const salesReps = salesRepsData?.items ?? []
   const languages = languagesData ?? []
