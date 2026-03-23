@@ -302,6 +302,14 @@ export const authApi = createApi({
       },
     }),
 
+    // Refresh token — extends session for active users
+    refreshToken: builder.mutation<void, void>({
+      query: () => ({
+        url: "/auth/refresh",
+        method: "POST",
+      }),
+    }),
+
     getMe: builder.query<MeResponse, void>({
       query: () => ({
         url: "/auth/me",
@@ -376,6 +384,7 @@ export const {
   useResetPasswordMutation,
   useResendCodeMutation,
   useLogoutMutation,
+  useRefreshTokenMutation,
   useGetMeQuery,
   useUpdateMeMutation,
   useChangePasswordMutation,
