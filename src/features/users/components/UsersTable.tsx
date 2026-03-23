@@ -273,7 +273,7 @@ export function UsersTable({ users }: UsersTableProps) {
         onOpenChange={setDeleteOpen}
         type="error"
         title="Are you sure?"
-        description={`${userToDelete?.name || "This user"} will no longer have access to Lofberg, and their profile will be archived.`}
+        description={`${userToDelete?.name || "This user"} will no longer have access to Löfbergs, and their profile will be archived.`}
         primaryActionLabel="Cancel"
         onPrimaryAction={() => setDeleteOpen(false)}
         secondaryActionLabel="Revoke"

@@ -28,7 +28,7 @@ export default function SustainabilitySection({
   const reportTabs = [
     { value: "cover", label: "Cover page" },
     { value: "about", label: "About sustainability" },
-    { value: "usp", label: "Lofbergs USP's" },
+    { value: "usp", label: "Löfbergs USP's" },
     { value: "impact", label: "Increasing impact" },
     { value: "cert", label: "Certifications" },
   ]
