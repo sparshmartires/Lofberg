@@ -169,7 +169,7 @@ export function HistoricalReportsPage() {
       <PageHeaderWithAction
         title="Historical reports"
         description="Review and download previously generated reports"
-        actionLabel="Generate report"
+        actionLabel="Generate"
         onActionClick={handleGenerateReport}
       />
 

@@ -46,7 +46,7 @@ export function UsersHeaderActions({
       {/* Status Dropdown */}
       <div className="users-header-actions-status-wrap">
         <Select value={status} onValueChange={onStatusChange}>
-          <SelectTrigger className="users-header-actions-status-trigger">
+          <SelectTrigger className="users-header-actions-status-trigger" showClear={status !== "all"} onClear={() => onStatusChange("all")}>
             <SelectValue placeholder="All status" />
           </SelectTrigger>
 

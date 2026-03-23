@@ -71,7 +71,7 @@ export default function AppHeader() {
           onClick={() => router.push("/report-generation")}
         >
           <FileText className="w-4 h-4" />
-          Generate report
+          Generate
         </Button>
 
         {/* Language Select */}

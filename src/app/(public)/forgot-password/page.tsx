@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
-import { ArrowLeft } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 import { useForgotPasswordMutation } from "@/store/services/authApi"
 import { useState } from "react"
 
@@ -50,13 +50,7 @@ export default function ForgotPasswordPage() {
 
       <div className="forgot-password-card">
         {/* Back */}
-        <button
-          onClick={() => router.back()}
-          className="forgot-password-back-btn"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
+        <BackButton onClick={() => router.back()} />
 
         {/* Title Section */}
         <div className="forgot-password-title-wrap">

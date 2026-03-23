@@ -98,7 +98,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field">
             <label>Customer</label>
             <Select value={customer} onValueChange={onCustomerChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={customer !== "all"} onClear={() => onCustomerChange("all")}>
                 <SelectValue placeholder="All customers" />
               </SelectTrigger>
               <SelectContent>
@@ -116,7 +116,7 @@ export function HistoricalReportsFilters({
             <div className="filter-field">
               <label>Sales representative</label>
               <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
-                <SelectTrigger className={fieldClass}>
+                <SelectTrigger className={fieldClass} showClear={salesRepresentative !== "all"} onClear={() => onSalesRepresentativeChange("all")}>
                   <SelectValue placeholder="All sales representatives" />
                 </SelectTrigger>
                 <SelectContent>
@@ -134,7 +134,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field">
             <label>Type</label>
             <Select value={type} onValueChange={onTypeChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={type !== "all"} onClear={() => onTypeChange("all")}>
                 <SelectValue placeholder="All types" />
               </SelectTrigger>
               <SelectContent>
@@ -151,7 +151,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field">
             <label>Status</label>
             <Select value={status} onValueChange={onStatusChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
                 <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>
@@ -171,7 +171,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field">
             <label>Segment</label>
             <Select value={segment} onValueChange={onSegmentChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
                 <SelectValue placeholder="All segments" />
               </SelectTrigger>
               <SelectContent>
@@ -223,7 +223,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field mb-4">
             <label>Customer</label>
             <Select value={customer} onValueChange={onCustomerChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={customer !== "all"} onClear={() => onCustomerChange("all")}>
                 <SelectValue placeholder="All customers" />
               </SelectTrigger>
               <SelectContent>
@@ -241,7 +241,7 @@ export function HistoricalReportsFilters({
             <div className="filter-field mb-4">
               <label>Sales representative</label>
               <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
-                <SelectTrigger className={fieldClass}>
+                <SelectTrigger className={fieldClass} showClear={salesRepresentative !== "all"} onClear={() => onSalesRepresentativeChange("all")}>
                   <SelectValue placeholder="All sales representatives" />
                 </SelectTrigger>
                 <SelectContent>
@@ -259,7 +259,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field mb-4">
             <label>Type</label>
             <Select value={type} onValueChange={onTypeChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={type !== "all"} onClear={() => onTypeChange("all")}>
                 <SelectValue placeholder="All types" />
               </SelectTrigger>
               <SelectContent>
@@ -276,7 +276,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field mb-4">
             <label>Status</label>
             <Select value={status} onValueChange={onStatusChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
                 <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>
@@ -293,7 +293,7 @@ export function HistoricalReportsFilters({
           <div className="filter-field mb-4">
             <label>Segment</label>
             <Select value={segment} onValueChange={onSegmentChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
                 <SelectValue placeholder="All segments" />
               </SelectTrigger>
               <SelectContent>

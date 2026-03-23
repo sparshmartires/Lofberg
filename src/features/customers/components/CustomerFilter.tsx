@@ -93,6 +93,8 @@ export function CustomerFilters({
                   border-[#E6E6E6]
                   focus:ring-0
                 "
+                showClear={segment !== "all"}
+                onClear={() => onSegmentChange("all")}
               >
                 <SelectValue placeholder="All segments" />
               </SelectTrigger>
@@ -125,6 +127,8 @@ export function CustomerFilters({
                   border-[#E6E6E6]
                   focus:ring-0
                 "
+                showClear={region !== "all"}
+                onClear={() => onRegionChange("all")}
               >
                 <SelectValue placeholder="All regions" />
               </SelectTrigger>
@@ -157,6 +161,8 @@ export function CustomerFilters({
                   border-[#E6E6E6]
                   focus:ring-0
                 "
+                showClear={status !== "all"}
+                onClear={() => onStatusChange("all")}
               >
                 <SelectValue placeholder="All status" />
               </SelectTrigger>

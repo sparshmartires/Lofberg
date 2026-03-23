@@ -125,7 +125,7 @@ const [errorOpen, setErrorOpen] = useState(false)
           <div className="flex flex-wrap gap-4">
             <Button variant="accent">
               <FileText className="mr-2 h-4 w-4" />
-              Generate Report
+              Generate
             </Button>
 
             <Button variant="accent" size="sm">

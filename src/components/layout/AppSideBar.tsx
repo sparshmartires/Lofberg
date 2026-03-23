@@ -23,7 +23,7 @@ export default function AppSidebar() {
 
     const menuItems = [
         { label: "Dashboard", href: "/dashboard" },
-        { label: "Generate report/receipt", href: "/report-generation" },
+        { label: "Generate", href: "/report-generation" },
         { label: "Historical reports", href: "/historical-reports" },
         { label: "Customer management", href: "/customers" },
         { label: "Sales representative", href: "/sales" },

@@ -129,7 +129,7 @@ export function SalesRepFilters({
           <div className="filter-field">
             <label>Segment</label>
             <Select value={segment} onValueChange={onSegmentChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
                 <SelectValue placeholder="All segments" />
               </SelectTrigger>
               <SelectContent>
@@ -146,7 +146,7 @@ export function SalesRepFilters({
           <div className="filter-field">
             <label>Region</label>
             <Select value={region} onValueChange={onRegionChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={region !== "all"} onClear={() => onRegionChange("all")}>
                 <SelectValue placeholder="All regions" />
               </SelectTrigger>
               <SelectContent>
@@ -163,7 +163,7 @@ export function SalesRepFilters({
           <div className="filter-field">
             <label>Status</label>
             <Select value={status} onValueChange={onStatusChange}>
-              <SelectTrigger className={fieldClass}>
+              <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
                 <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>

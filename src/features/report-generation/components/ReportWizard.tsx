@@ -45,22 +45,19 @@ export function ReportWizard() {
         </div>
       </div>
 
-      {/* Navigation Bar */}
+      {/* Navigation Bar — same width as content grid above */}
       <div className="rounded-[24px] bg-white shadow-sm px-6 py-4 flex items-center justify-between">
-        {/* Back */}
-        <button
+        {/* Back — same variant/size as Save as draft */}
+        <Button
           type="button"
+          variant="outlineBrand"
           onClick={goBack}
           disabled={isFirstStep}
-          className={`flex items-center gap-1 text-sm font-medium transition-colors ${
-            isFirstStep
-              ? "text-[#9CA3AF] cursor-not-allowed"
-              : "text-[#1F1F1F] hover:text-primary"
-          }`}
+          className="gap-2"
         >
           <ChevronLeft className="h-4 w-4" />
           Back
-        </button>
+        </Button>
 
         {/* Right actions */}
         <div className="flex items-center gap-3">
