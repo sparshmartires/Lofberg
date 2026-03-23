@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 import { Badge } from "@/components/ui/badge"
+import { formatPhoneDisplay } from "@/lib/phone"
 import { Loader2, Save } from "lucide-react"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { useGetMeQuery, useUpdateMeMutation } from "@/store/services/authApi"
@@ -216,11 +217,13 @@ export default function MyProfilePage() {
                 <p className="text-[14px]">Contact number</p>
 
                 <Input
+                  type="tel"
                   placeholder="+XX XXXXX XXXXX"
-                  value={phoneNumber}
+                  value={formatPhoneDisplay(phoneNumber)}
                   onChange={(event) => {
+                    const digits = event.target.value.replace(/\D/g, "").slice(0, 12)
                     setTouched((previous) => ({ ...previous, phoneNumber: true }))
-                    setDraft((previous) => ({ ...previous, phoneNumber: event.target.value }))
+                    setDraft((previous) => ({ ...previous, phoneNumber: digits }))
                   }}
                   className="rounded-full"
                 />

@@ -3,6 +3,7 @@
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { formatPhoneDisplay } from "@/lib/phone"
 import {
   Select,
   SelectTrigger,
@@ -201,10 +202,18 @@ export function CustomerDialogForm({
 
           <div className="space-y-2 min-[700px]:col-span-2">
             <label>Contact phone</label>
-            <Input
-              placeholder="Enter phone number"
-              className={fieldClass}
-              {...register("contactPhone")}
+            <Controller
+              name="contactPhone"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="tel"
+                  placeholder="+XX XXXXX XXXXX"
+                  className={fieldClass}
+                  value={formatPhoneDisplay(field.value)}
+                  onChange={(e) => field.onChange(e.target.value.replace(/\D/g, "").slice(0, 12))}
+                />
+              )}
             />
           </div>
 

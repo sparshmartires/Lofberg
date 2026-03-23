@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { formatPhoneDisplay } from "@/lib/phone"
 import { Loader2, Plus } from "lucide-react"
 
 import {
@@ -174,8 +175,19 @@ export function UserDialogForm({
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>Phone Number</label>
-              <Input type="tel" placeholder="+46 70 123 4567" {...register("phone")} />
+              <label className={styles.label}>Phone number</label>
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="tel"
+                    placeholder="+XX XXXXX XXXXX"
+                    value={formatPhoneDisplay(field.value)}
+                    onChange={(e) => field.onChange(e.target.value.replace(/\D/g, "").slice(0, 12))}
+                  />
+                )}
+              />
             </div>
 
             <div className={styles.fieldGroup}>
