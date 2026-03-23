@@ -23,11 +23,11 @@ export default function AppSidebar() {
 
     const menuItems = [
         { label: "Dashboard", href: "/dashboard" },
-        { label: "Generate Report/Receipt", href: "/report-generation" },
+        { label: "Generate report/receipt", href: "/report-generation" },
         { label: "Historical reports", href: "/historical-reports" },
-        { label: "Customer Management", href: "/customers" },
-        { label: "Sales Representative", href: "/sales" },
-        { label: "User Management", href: "/users" },
+        { label: "Customer management", href: "/customers" },
+        { label: "Sales representative", href: "/sales" },
+        { label: "User management", href: "/users" },
         ...(isAdmin ? [{ label: "Report receipt template", href: "/template" }] : []),
         ...(isAdmin || isTranslator ? [{ label: "Template translation", href: "/template/translate" }] : []),
         { label: "Useful resources", href: "/useful-resources" },

@@ -61,10 +61,10 @@ export function CustomerDialogForm({
   return (
     <div className="space-y-8 mt-6">
       <div className="space-y-6">
-        <h3 className="text-lg font-medium">Customer Information</h3>
+        <h3 className="text-lg font-medium">Customer information</h3>
 
         <div className="space-y-2">
-          <label>Customer Name *</label>
+          <label>Customer name *</label>
           <Input
             placeholder="Eg. cafe Aroma oslo"
             className={fieldClass}
@@ -79,7 +79,7 @@ export function CustomerDialogForm({
 
         <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label>Account Code / ERP ID</label>
+            <label>Account code / ERP ID</label>
             <Input
               placeholder="CA-001"
               className={fieldClass}
@@ -110,7 +110,7 @@ export function CustomerDialogForm({
           </div>
 
           <div className="space-y-2">
-            <label>Service Tier</label>
+            <label>Service tier</label>
             <Controller
               name="serviceTier"
               control={control}
@@ -171,7 +171,7 @@ export function CustomerDialogForm({
 
         <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label>Contact Person</label>
+            <label>Contact person</label>
             <Input
               placeholder="Add name"
               className={fieldClass}
@@ -180,7 +180,7 @@ export function CustomerDialogForm({
           </div>
 
           <div className="space-y-2">
-            <label>Contact Email</label>
+            <label>Contact email</label>
             <Input
               type="email"
               placeholder="Enter email id"
@@ -200,7 +200,7 @@ export function CustomerDialogForm({
           </div>
 
           <div className="space-y-2 min-[700px]:col-span-2">
-            <label>Contact Phone</label>
+            <label>Contact phone</label>
             <Input
               placeholder="Enter phone number"
               className={fieldClass}

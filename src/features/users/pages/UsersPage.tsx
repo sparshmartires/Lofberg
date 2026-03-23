@@ -18,7 +18,7 @@ export function UsersPage() {
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(11)
+  const [pageSize, setPageSize] = useState(10)
 
   const isActiveFilter = useMemo(() => {
     if (status === "active") return true
@@ -70,9 +70,9 @@ export function UsersPage() {
 
         {/* Header */}
         <PageHeaderWithAction
-          title="User Management"
+          title="User management"
           description="Manage system administrators and users"
-          actionLabel="Add User"
+          actionLabel="Add user"
           onActionClick={() => setOpen(true)}
         />
 

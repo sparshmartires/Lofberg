@@ -47,11 +47,11 @@ export function UsersHeaderActions({
       <div className="users-header-actions-status-wrap">
         <Select value={status} onValueChange={onStatusChange}>
           <SelectTrigger className="users-header-actions-status-trigger">
-            <SelectValue placeholder="All Status" />
+            <SelectValue placeholder="All status" />
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="all">All status</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="inactive">Inactive</SelectItem>
           </SelectContent>

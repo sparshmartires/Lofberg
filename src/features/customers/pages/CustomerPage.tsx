@@ -22,7 +22,7 @@ export function CustomersPage() {
   const [segment, setSegment] = useState("all")
   const [region, setRegion] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(11)
+  const [pageSize, setPageSize] = useState(10)
 
   const isActiveFilter = useMemo(() => {
     if (status === "active") return true
@@ -74,9 +74,9 @@ export function CustomersPage() {
 
         {/* Header */}
         <PageHeaderWithAction
-          title="Customer Management"
-          description="Createsustainability reports and and receipts for customers"
-          actionLabel="Add Customer"
+          title="Customer management"
+          description="Create sustainability reports and receipts for customers"
+          actionLabel="Add customer"
           onActionClick={() => setOpen(true)}
         />
 

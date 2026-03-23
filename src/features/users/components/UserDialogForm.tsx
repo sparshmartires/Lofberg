@@ -97,7 +97,7 @@ export function UserDialogForm({
       >
         <div className={styles.header}>
           <DialogTitle className={styles.title}>
-            {isAddMode ? "Add New User" : "Edit User Details"}
+            {isAddMode ? "Add new user" : "Edit user details"}
           </DialogTitle>
 
           <DialogDescription className={styles.description}>
@@ -235,7 +235,7 @@ export function UserDialogForm({
                 ) : (
                   <Plus className="h-4 w-4 mr-2" />
                 )}
-                {isSubmitting ? "Saving..." : isAddMode ? "Create User" : "Save Changes"}
+                {isSubmitting ? "Saving..." : isAddMode ? "Create user" : "Save changes"}
               </Button>
             </div>
           </div>

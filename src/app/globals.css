@@ -249,30 +249,43 @@
   .pagination-arrow-icon {
     @apply h-4 w-4 text-[#778394];
   }
-/* Hide mobile by default */
-.pagination-mobile {
-  display: none;
-}
-
-/* Mobile layout */
+/* Mobile: stacked pagination layout */
 @media (max-width: 649px) {
-
   .pagination-desktop {
-    display: none;
+    display: block !important;
   }
 
-  .pagination-mobile {
-    display: flex;
+  .pagination-container {
     flex-direction: column;
+    gap: 8px;
     align-items: center;
-    gap: 16px;
-    padding-top: 16px;
+    margin-top: 24px;
   }
 
-  .pagination-load-more {
-    font-size: 16px;
-    color: #5B2D91;
-    font-weight: 500;
+  .pagination-side {
+    flex: none;
+    width: 100%;
+    text-align: center;
+  }
+
+  .pagination-center {
+    flex: none;
+    width: 100%;
+    overflow-x: auto;
+    justify-content: center;
+  }
+
+  .pagination-right {
+    flex: none;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pagination-page-btn,
+  .pagination-page-btn-active {
+    height: 32px;
+    width: 32px;
+    min-width: 32px;
   }
 }
   .empty-state-container {

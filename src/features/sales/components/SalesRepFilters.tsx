@@ -130,10 +130,10 @@ export function SalesRepFilters({
             <label>Segment</label>
             <Select value={segment} onValueChange={onSegmentChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Segments" />
+                <SelectValue placeholder="All segments" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Segments</SelectItem>
+                <SelectItem value="all">All segments</SelectItem>
                 {segmentOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -147,10 +147,10 @@ export function SalesRepFilters({
             <label>Region</label>
             <Select value={region} onValueChange={onRegionChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Region" />
+                <SelectValue placeholder="All regions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Region</SelectItem>
+                <SelectItem value="all">All regions</SelectItem>
                 {regionOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -164,10 +164,10 @@ export function SalesRepFilters({
             <label>Status</label>
             <Select value={status} onValueChange={onStatusChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Status" />
+                <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">All status</SelectItem>
               </SelectContent>
             </Select>
           </div>

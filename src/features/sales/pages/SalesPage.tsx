@@ -26,7 +26,7 @@ export function SalesPage() {
   const [region, setRegion] = useState("all")
   const [status, setStatus] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(11)
+  const [pageSize, setPageSize] = useState(10)
   const preferredLanguageId = useAppSelector((state) => state.auth.user?.preferredLanguageId)
 
   const isActiveFilter = useMemo(() => {
@@ -97,9 +97,9 @@ export function SalesPage() {
     <>
       <div className="min-h-screen bg-background py-10">
         <PageHeaderWithAction
-          title="Sales Representatives"
+          title="Sales representatives"
           description="Create sustainability reports and receipts for customers"
-          actionLabel="Add Sales Representative"
+          actionLabel="Add sales representative"
           onActionClick={() => setOpen(true)}
         />
 

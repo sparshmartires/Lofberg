@@ -100,7 +100,7 @@ const resourcesData: UsefulResourceItem[] = [
 
 export function UsefulResourcesPage() {
   const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(11)
+  const [pageSize, setPageSize] = useState(10)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [selectedResource, setSelectedResource] = useState<UsefulResourceItem | null>(null)
@@ -133,9 +133,9 @@ export function UsefulResourcesPage() {
     <>
       <div className="min-h-screen bg-background py-10">
         <PageHeaderWithAction
-          title="Useful Resources"
+          title="Useful resources"
           description="Browse shared documents and materials"
-          actionLabel="Add Resource"
+          actionLabel="Add resource"
           onActionClick={() => setAddDialogOpen(true)}
         />
 

@@ -94,11 +94,11 @@ export function CustomerFilters({
                   focus:ring-0
                 "
               >
-                <SelectValue placeholder="All Segments" />
+                <SelectValue placeholder="All segments" />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All Segments</SelectItem>
+                <SelectItem value="all">All segments</SelectItem>
                 {segmentOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -126,11 +126,11 @@ export function CustomerFilters({
                   focus:ring-0
                 "
               >
-                <SelectValue placeholder="All Region" />
+                <SelectValue placeholder="All regions" />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All Region</SelectItem>
+                <SelectItem value="all">All regions</SelectItem>
                 {regionOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -158,11 +158,11 @@ export function CustomerFilters({
                   focus:ring-0
                 "
               >
-                <SelectValue placeholder="All Status" />
+                <SelectValue placeholder="All status" />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">All status</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>

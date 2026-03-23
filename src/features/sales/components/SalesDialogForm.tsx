@@ -99,7 +99,7 @@ export function SalesDialogForm({
               text-[#1F1F1F]
             "
           >
-            {isAddMode ? "Add Sales Representative" : "Edit Sales Representative"}
+            {isAddMode ? "Add sales representative" : "Edit sales representative"}
           </DialogTitle>
 
           <DialogDescription
@@ -274,7 +274,7 @@ export function SalesDialogForm({
                   ? "Saving..."
                   : isAddMode
                     ? "Create"
-                    : "Save Changes"}
+                    : "Save changes"}
               </Button>
             </div>
           </div>

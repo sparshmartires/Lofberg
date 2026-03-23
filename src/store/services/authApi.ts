@@ -111,7 +111,8 @@ const normalizeLoginResponse = (payload: unknown): LoginResponse => {
   const fullName = String(userSource.fullName ?? userSource.name ?? "").trim();
   const [fallbackFirstName, ...restNames] = fullName.split(" ");
 
-  const rawRoles = userSource.roles ?? userSource.roleNames ?? userSource.permissions ?? [];
+  // Roles may be at the top level (data.roles) or nested under user (userSource.roles)
+  const rawRoles = userSource.roles ?? data.roles ?? userSource.roleNames ?? data.roleNames ?? userSource.permissions ?? [];
   const roles = Array.isArray(rawRoles)
     ? rawRoles.map((role) => String(role)).filter(Boolean)
     : typeof rawRoles === "string"
@@ -131,8 +132,8 @@ const normalizeLoginResponse = (payload: unknown): LoginResponse => {
     token: String(data.token ?? data.accessToken ?? data.jwt ?? root.token ?? root.accessToken ?? ""),
     expiresIn: Number.isFinite(expiresInValue) && expiresInValue > 0 ? expiresInValue : 1800,
     user: {
-      id: String(userSource.id ?? userSource.userId ?? ""),
-      email: String(userSource.email ?? userSource.userEmail ?? ""),
+      id: String(userSource.id ?? userSource.userId ?? data.id ?? ""),
+      email: String(userSource.email ?? userSource.userEmail ?? data.email ?? ""),
       firstName: firstName || fallbackFirstName || "",
       lastName: lastName || restNames.join(" ").trim(),
       roles,

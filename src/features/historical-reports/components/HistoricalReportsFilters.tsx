@@ -99,10 +99,10 @@ export function HistoricalReportsFilters({
             <label>Customer</label>
             <Select value={customer} onValueChange={onCustomerChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Customers" />
+                <SelectValue placeholder="All customers" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Customers</SelectItem>
+                <SelectItem value="all">All customers</SelectItem>
                 {customerOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -114,13 +114,13 @@ export function HistoricalReportsFilters({
 
           {showSalesRepFilter && (
             <div className="filter-field">
-              <label>Sales Representative</label>
+              <label>Sales representative</label>
               <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
                 <SelectTrigger className={fieldClass}>
-                  <SelectValue placeholder="All Sales Representative" />
+                  <SelectValue placeholder="All sales representatives" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Sales Representative</SelectItem>
+                  <SelectItem value="all">All sales representatives</SelectItem>
                   {salesRepresentativeOptions.map((option) => (
                     <SelectItem key={option.id} value={option.id}>
                       {option.name}
@@ -135,10 +135,10 @@ export function HistoricalReportsFilters({
             <label>Type</label>
             <Select value={type} onValueChange={onTypeChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Types" />
+                <SelectValue placeholder="All types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="all">All types</SelectItem>
                 {typeOptions.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
@@ -152,10 +152,10 @@ export function HistoricalReportsFilters({
             <label>Status</label>
             <Select value={status} onValueChange={onStatusChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Status" />
+                <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">All status</SelectItem>
                 {statusOptions.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
@@ -172,10 +172,10 @@ export function HistoricalReportsFilters({
             <label>Segment</label>
             <Select value={segment} onValueChange={onSegmentChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Segments" />
+                <SelectValue placeholder="All segments" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Segments</SelectItem>
+                <SelectItem value="all">All segments</SelectItem>
                 {segmentOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -186,7 +186,7 @@ export function HistoricalReportsFilters({
           </div>
 
           <div className="filter-field">
-            <label>Report Date</label>
+            <label>Report date</label>
             <DateRangePicker
               from={reportDateFrom}
               to={reportDateTo}
@@ -196,7 +196,7 @@ export function HistoricalReportsFilters({
           </div>
 
           <div className="filter-field">
-            <label>Created At</label>
+            <label>Created at</label>
             <DateRangePicker
               from={createdFrom}
               to={createdTo}
@@ -224,10 +224,10 @@ export function HistoricalReportsFilters({
             <label>Customer</label>
             <Select value={customer} onValueChange={onCustomerChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Customers" />
+                <SelectValue placeholder="All customers" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Customers</SelectItem>
+                <SelectItem value="all">All customers</SelectItem>
                 {customerOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -239,13 +239,13 @@ export function HistoricalReportsFilters({
 
           {showSalesRepFilter && (
             <div className="filter-field mb-4">
-              <label>Sales Representative</label>
+              <label>Sales representative</label>
               <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
                 <SelectTrigger className={fieldClass}>
-                  <SelectValue placeholder="All Sales Representative" />
+                  <SelectValue placeholder="All sales representatives" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Sales Representative</SelectItem>
+                  <SelectItem value="all">All sales representatives</SelectItem>
                   {salesRepresentativeOptions.map((option) => (
                     <SelectItem key={option.id} value={option.id}>
                       {option.name}
@@ -260,10 +260,10 @@ export function HistoricalReportsFilters({
             <label>Type</label>
             <Select value={type} onValueChange={onTypeChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Types" />
+                <SelectValue placeholder="All types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="all">All types</SelectItem>
                 {typeOptions.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
@@ -277,10 +277,10 @@ export function HistoricalReportsFilters({
             <label>Status</label>
             <Select value={status} onValueChange={onStatusChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Status" />
+                <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">All status</SelectItem>
                 {statusOptions.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
@@ -294,10 +294,10 @@ export function HistoricalReportsFilters({
             <label>Segment</label>
             <Select value={segment} onValueChange={onSegmentChange}>
               <SelectTrigger className={fieldClass}>
-                <SelectValue placeholder="All Segments" />
+                <SelectValue placeholder="All segments" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Segments</SelectItem>
+                <SelectItem value="all">All segments</SelectItem>
                 {segmentOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -308,7 +308,7 @@ export function HistoricalReportsFilters({
           </div>
 
           <div className="filter-field mb-4">
-            <label>Report Date</label>
+            <label>Report date</label>
             <DateRangePicker
               from={reportDateFrom}
               to={reportDateTo}
@@ -318,7 +318,7 @@ export function HistoricalReportsFilters({
           </div>
 
           <div className="filter-field">
-            <label>Created At</label>
+            <label>Created at</label>
             <DateRangePicker
               from={createdFrom}
               to={createdTo}
