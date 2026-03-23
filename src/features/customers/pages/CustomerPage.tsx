@@ -23,6 +23,8 @@ export function CustomersPage() {
   const [region, setRegion] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [sortBy, setSortBy] = useState("")
+  const [sortDirection, setSortDirection] = useState("asc")
 
   const isActiveFilter = useMemo(() => {
     if (status === "active") return true
@@ -42,6 +44,8 @@ export function CustomersPage() {
     ...(segment !== "all" ? { segmentId: segment } : {}),
     ...(region !== "all" ? { regionId: region } : {}),
     ...(typeof isActiveFilter === "boolean" ? { isActive: isActiveFilter } : {}),
+    ...(sortBy ? { sortBy } : {}),
+    ...(sortBy ? { sortDirection } : {}),
   })
 
   const { data: segmentOptions = [] } = useGetCustomerSegmentsQuery()
@@ -60,6 +64,16 @@ export function CustomersPage() {
 
   const handleFilterChange = (setter: (value: string) => void) => (value: string) => {
     setter(value)
+    setPageNumber(1)
+  }
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortBy(column)
+      setSortDirection("asc")
+    }
     setPageNumber(1)
   }
 
@@ -115,7 +129,7 @@ export function CustomersPage() {
                 </div>
               ) : null}
               <div className={isLoading || isFetching ? "opacity-70" : ""}>
-                <CustomersTable customers={customers} />
+                <CustomersTable customers={customers} sortBy={sortBy} sortDirection={sortDirection} onSort={handleSort} />
               </div>
             </div>
           )}

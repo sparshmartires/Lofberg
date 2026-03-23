@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table"
 
 import { Badge } from "@/components/ui/badge"
-import { EyeIcon, Pencil } from "lucide-react"
+import { ArrowUpDown, EyeIcon, Pencil } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { EditSalesDialog } from "./EditSalesDialog"
@@ -19,6 +19,9 @@ import { SalesRepresentativeItem } from "@/store/services/salesRepresentativesAp
 
 interface SalesTableProps {
   salesReps: SalesRepresentativeItem[]
+  sortBy?: string
+  sortDirection?: string
+  onSort?: (column: string) => void
 }
 
 interface ViewSalesRep {
@@ -75,7 +78,7 @@ const mapSalesRepForView = (salesRep: SalesRepresentativeItem): ViewSalesRep => 
   }
 }
 
-export function SalesTable({ salesReps }: SalesTableProps) {
+export function SalesTable({ salesReps, sortBy, sortDirection, onSort }: SalesTableProps) {
   const [editOpen, setEditOpen] = useState(false)
   const [selectedSalesRep, setSelectedSalesRep] = useState<ViewSalesRep | null>(null)
   const [historyOpen, setHistoryOpen] = useState(false)
@@ -92,6 +95,18 @@ export function SalesTable({ salesReps }: SalesTableProps) {
     lastLogin: "w-[110px]",
     actions: "w-[90px]",
   }
+
+  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+    <TableHead
+      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      onClick={() => onSort?.(column)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#8A8A8A]"}`} />
+      </div>
+    </TableHead>
+  )
 
   const handleEdit = (salesRep: ViewSalesRep) => {
     setSelectedSalesRep(salesRep)
@@ -110,24 +125,24 @@ export function SalesTable({ salesReps }: SalesTableProps) {
           <Table className="table-fixed">
             <TableHeader>
               <TableRow className="table-header-row-bordered">
-                <TableHead className={`table-header-cell ${columnWidths.name}`}>
+                <SortableHeader column="name" className={columnWidths.name}>
                   Name
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.email}`}>
                   Email
                 </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.role}`}>
+                <SortableHeader column="role" className={columnWidths.role}>
                   Role
-                </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.status}`}>
+                </SortableHeader>
+                <SortableHeader column="status" className={columnWidths.status}>
                   Status
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.reports}`}>
                   Reports
                 </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
+                <SortableHeader column="lastlogin" className={columnWidths.lastLogin}>
                   Last login
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.actions}`}>
                   Actions
                 </TableHead>

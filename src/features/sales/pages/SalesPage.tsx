@@ -27,6 +27,8 @@ export function SalesPage() {
   const [status, setStatus] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [sortBy, setSortBy] = useState("")
+  const [sortDirection, setSortDirection] = useState("asc")
   const preferredLanguageId = useAppSelector((state) => state.auth.user?.preferredLanguageId)
 
   const isActiveFilter = useMemo(() => {
@@ -47,6 +49,8 @@ export function SalesPage() {
     ...(typeof isActiveFilter === "boolean" ? { isActive: isActiveFilter } : {}),
     ...(segment !== "all" ? { segmentId: segment } : {}),
     ...(region !== "all" ? { regionId: region } : {}),
+    ...(sortBy ? { sortBy } : {}),
+    ...(sortBy ? { sortDirection } : {}),
   })
 
   const salesReps = salesResponse?.items ?? []
@@ -85,6 +89,16 @@ export function SalesPage() {
 
   const handleRegionChange = (value: string) => {
     setRegion(value)
+    setPageNumber(1)
+  }
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortBy(column)
+      setSortDirection("asc")
+    }
     setPageNumber(1)
   }
 
@@ -133,7 +147,7 @@ export function SalesPage() {
                 </div>
               ) : null}
               <div className={isLoading || isFetching ? "opacity-70" : ""}>
-                <SalesTable salesReps={salesReps} />
+                <SalesTable salesReps={salesReps} sortBy={sortBy} sortDirection={sortDirection} onSort={handleSort} />
               </div>
             </div>
           )}

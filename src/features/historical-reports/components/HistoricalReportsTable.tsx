@@ -180,20 +180,20 @@ export function HistoricalReportsTable({
                 <SortableHeader column="title" className="min-w-[180px]">
                   Report title/ID
                 </SortableHeader>
-                <TableHead className="table-header-cell min-w-[160px]">
+                <SortableHeader column="customer" className="min-w-[160px]">
                   Customer name
-                </TableHead>
+                </SortableHeader>
                 {showSalesRepColumn && (
-                  <TableHead className="table-header-cell min-w-[160px]">
+                  <SortableHeader column="salesperson" className="min-w-[160px]">
                     Sales representative
-                  </TableHead>
+                  </SortableHeader>
                 )}
-                <TableHead className="table-header-cell min-w-[120px]">
+                <SortableHeader column="segment" className="min-w-[120px]">
                   Segment
-                </TableHead>
-                <TableHead className="table-header-cell min-w-[100px]">
+                </SortableHeader>
+                <SortableHeader column="status" className="min-w-[100px]">
                   Status
-                </TableHead>
+                </SortableHeader>
                 <SortableHeader column="reportdate" className="min-w-[120px]">
                   Report date
                 </SortableHeader>

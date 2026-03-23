@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table"
 
 import { Badge } from "@/components/ui/badge"
-import { Pencil, Trash2 } from "lucide-react"
+import { ArrowUpDown, Pencil, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { EditUserDialog } from "./EditUserDialog"
@@ -20,6 +20,9 @@ import { UserItem, useDeleteUserMutation } from "@/store/services/usersApi"
 
 interface UsersTableProps {
   users: UserItem[]
+  sortBy?: string
+  sortDirection?: string
+  onSort?: (column: string) => void
 }
 
 interface ViewUser {
@@ -76,7 +79,7 @@ const mapUserForView = (user: UserItem): ViewUser => {
   }
 }
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableProps) {
   const [editOpen, setEditOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<ViewUser | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -94,6 +97,18 @@ export function UsersTable({ users }: UsersTableProps) {
     lastLogin: "w-[110px]",
     actions: "w-[90px]",
   }
+
+  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+    <TableHead
+      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      onClick={() => onSort?.(column)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#8A8A8A]"}`} />
+      </div>
+    </TableHead>
+  )
 
   const handleEdit = (user: ViewUser) => {
     setSelectedUser(user)
@@ -128,18 +143,18 @@ export function UsersTable({ users }: UsersTableProps) {
                 <TableHead className={`table-header-cell ${columnWidths.email}`}>
                   Email
                 </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.role}`}>
+                <SortableHeader column="role" className={columnWidths.role}>
                   Role
-                </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.status}`}>
+                </SortableHeader>
+                <SortableHeader column="status" className={columnWidths.status}>
                   Status
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.reports}`}>
                   Reports
                 </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
+                <SortableHeader column="lastlogin" className={columnWidths.lastLogin}>
                   Last login
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.actions}`}>
                   Actions
                 </TableHead>

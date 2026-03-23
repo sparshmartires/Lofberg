@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { Pencil, Eye } from "lucide-react"
+import { ArrowUpDown, Pencil, Eye } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { EditCustomerDialog } from "./EditCustomerPage"
@@ -28,6 +28,9 @@ interface CustomerRow {
 
 interface CustomersTableProps {
   customers: CustomerItem[]
+  sortBy?: string
+  sortDirection?: string
+  onSort?: (column: string) => void
 }
 
 const getServiceTierLabel = (serviceTier: number | null) => {
@@ -63,7 +66,7 @@ const mapCustomerForView = (customer: CustomerItem): CustomerRow => ({
     `https://ui-avatars.com/api/?name=${encodeURIComponent(customer.name || "Customer")}&background=F2F2F2&color=6B6B6B`,
 })
 
-export function CustomersTable({ customers }: CustomersTableProps) {
+export function CustomersTable({ customers, sortBy, sortDirection, onSort }: CustomersTableProps) {
   const [editOpen, setEditOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerRow | null>(null)
@@ -88,6 +91,19 @@ export function CustomersTable({ customers }: CustomersTableProps) {
     lastLogin: "w-[110px]",
     actions: "w-[90px]",
   }
+
+  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+    <TableHead
+      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      onClick={() => onSort?.(column)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#8A8A8A]"}`} />
+      </div>
+    </TableHead>
+  )
+
   return (
     <>
       <div className="table-card border-[0px]">
@@ -96,21 +112,21 @@ export function CustomersTable({ customers }: CustomersTableProps) {
           {/* HEADER */}
           <TableHeader>
             <TableRow className="table-header-row-bordered">
-              <TableHead className={`table-header-cell ${columnWidths.name}`}>
+              <SortableHeader column="name" className={columnWidths.name}>
                 Name
-              </TableHead>
-              <TableHead className="table-header-cell">
+              </SortableHeader>
+              <SortableHeader column="segment">
                 Segment
-              </TableHead>
-              <TableHead className="table-header-cell">
+              </SortableHeader>
+              <SortableHeader column="servicetier">
                 Service tier
-              </TableHead>
+              </SortableHeader>
               <TableHead className="table-header-cell">
                 Last report date
               </TableHead>
-              <TableHead className="table-header-cell">
+              <SortableHeader column="status">
                 Status
-              </TableHead>
+              </SortableHeader>
               <TableHead className="table-header-cell">
                 Actions
               </TableHead>

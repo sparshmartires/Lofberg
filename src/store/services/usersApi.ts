@@ -25,6 +25,8 @@ export interface GetUsersParams {
   pageSize: number;
   searchTerm?: string;
   isActive?: boolean;
+  sortBy?: string;
+  sortDirection?: string;
 }
 
 export interface PaginatedUsersResponse {
@@ -208,13 +210,15 @@ export const usersApi = createApi({
   tagTypes: ["Users", "Roles"],
   endpoints: (builder) => ({
     getUsers: builder.query<PaginatedUsersResponse, GetUsersParams>({
-      query: ({ pageNumber, pageSize, searchTerm, isActive }) => ({
+      query: ({ pageNumber, pageSize, searchTerm, isActive, sortBy, sortDirection }) => ({
         url: "/users",
         params: {
           pageNumber,
           pageSize,
           ...(searchTerm ? { searchTerm } : {}),
           ...(typeof isActive === "boolean" ? { isActive } : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortBy ? { sortDirection } : {}),
         },
       }),
       transformResponse: (response: unknown, _meta, args) =>

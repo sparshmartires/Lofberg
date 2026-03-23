@@ -19,6 +19,8 @@ export function UsersPage() {
   const [status, setStatus] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [sortBy, setSortBy] = useState("")
+  const [sortDirection, setSortDirection] = useState("asc")
 
   const isActiveFilter = useMemo(() => {
     if (status === "active") return true
@@ -36,6 +38,8 @@ export function UsersPage() {
     pageSize,
     ...(search.trim() ? { searchTerm: search.trim() } : {}),
     ...(typeof isActiveFilter === "boolean" ? { isActive: isActiveFilter } : {}),
+    ...(sortBy ? { sortBy } : {}),
+    ...(sortBy ? { sortDirection } : {}),
   })
 
   const users = usersResponse?.items ?? []
@@ -56,6 +60,16 @@ export function UsersPage() {
 
   const handleStatusChange = (value: string) => {
     setStatus(value)
+    setPageNumber(1)
+  }
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortBy(column)
+      setSortDirection("asc")
+    }
     setPageNumber(1)
   }
 
@@ -105,7 +119,7 @@ export function UsersPage() {
                 </div>
               ) : null}
               <div className={isLoading || isFetching ? "opacity-70" : ""}>
-                <UsersTable users={users} />
+                <UsersTable users={users} sortBy={sortBy} sortDirection={sortDirection} onSort={handleSort} />
               </div>
             </div>
           )}

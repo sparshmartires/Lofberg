@@ -34,6 +34,8 @@ export interface GetCustomersParams {
   segmentId?: string
   regionId?: string
   isActive?: boolean
+  sortBy?: string
+  sortDirection?: string
 }
 
 export interface PaginatedCustomersResponse {
@@ -322,7 +324,7 @@ export const customersApi = createApi({
   tagTypes: ["Customers"],
   endpoints: (builder) => ({
     getCustomers: builder.query<PaginatedCustomersResponse, GetCustomersParams>({
-      query: ({ pageNumber, pageSize, searchTerm, segmentId, regionId, isActive }) => ({
+      query: ({ pageNumber, pageSize, searchTerm, segmentId, regionId, isActive, sortBy, sortDirection }) => ({
         url: "/customers",
         params: {
           pageNumber,
@@ -331,6 +333,8 @@ export const customersApi = createApi({
           ...(segmentId ? { segmentId } : {}),
           ...(regionId ? { regionId } : {}),
           ...(typeof isActive === "boolean" ? { isActive } : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortBy ? { sortDirection } : {}),
         },
       }),
       transformResponse: (response: unknown, _meta, args) =>
