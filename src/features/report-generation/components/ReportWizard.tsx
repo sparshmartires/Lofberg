@@ -20,6 +20,7 @@ export function ReportWizard() {
     goBack,
     saveDraft,
     isSaving,
+    stepError,
   } = useWizardNavigation()
 
   const handleSaveDraft = useCallback(async () => {
@@ -44,6 +45,11 @@ export function ReportWizard() {
           <ReportSummary />
         </div>
       </div>
+
+      {/* Validation error */}
+      {stepError && (
+        <p className="text-sm text-red-500 text-center">{stepError}</p>
+      )}
 
       {/* Navigation Bar — same width as content grid above */}
       <div className="rounded-[24px] bg-white shadow-sm px-6 py-4 flex items-center justify-between">
