@@ -34,7 +34,6 @@ export default function LoginPage() {
         password: data.password,
       }).unwrap()
 
-//document.cookie = `auth_token=${"jr"}; path=/; SameSite=Strict`;
       // Navigate on success
       router.push("/users")
     } catch (err: any) {
@@ -130,11 +129,6 @@ export default function LoginPage() {
           {loginError && (
             <p className="login-error-text">
               {loginError}
-            </p>
-          )}
-          {error && "data" in error && (error as any).data?.error && (
-            <p className="login-error-text">
-              {(error as any).data?.error}
             </p>
           )}
           {/* LOGIN BUTTON */}
