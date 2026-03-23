@@ -1,6 +1,7 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
+import { useState, useEffect } from "react"
+import { SearchInput } from "@/components/ui/search-input"
 import {
   Select,
   SelectTrigger,
@@ -8,7 +9,8 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
-import { Loader2, Search } from "lucide-react"
+import { Loader2 } from "lucide-react"
+import { useDebounce } from "@/hooks/useDebounce"
 
 interface UsersHeaderActionsProps {
   search: string
@@ -25,40 +27,41 @@ export function UsersHeaderActions({
   onSearchChange,
   onStatusChange,
 }: UsersHeaderActionsProps) {
+  const [searchInput, setSearchInput] = useState(search)
+  const debouncedSearch = useDebounce(searchInput)
+
+  useEffect(() => {
+    onSearchChange(debouncedSearch)
+  }, [debouncedSearch, onSearchChange])
+
+  const fieldClass =
+    "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm focus:outline-none"
+
   return (
-    <div className="users-header-actions">
-
-      {/* Search */}
-      <div className="users-header-actions-search-wrap">
-        <Search
-          size={16}
-          className="users-header-actions-search-icon"
-        />
-
-        <Input
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
+    <div className="flex flex-wrap gap-3 items-end">
+      <div className="w-[200px]">
+        <SearchInput
           placeholder="Search"
-          className="users-header-actions-search-input"
+          value={searchInput}
+          onChange={setSearchInput}
+          className={fieldClass}
         />
       </div>
 
-      {/* Status Dropdown */}
-      <div className="users-header-actions-status-wrap">
+      <div className="w-[160px]">
         <Select value={status} onValueChange={onStatusChange}>
-          <SelectTrigger className="users-header-actions-status-trigger" showClear={status !== "all"} onClear={() => onStatusChange("all")}>
-            <SelectValue placeholder="All status" />
+          <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
+            <SelectValue placeholder="All statuses" />
           </SelectTrigger>
-
           <SelectContent>
-            <SelectItem value="all">All status</SelectItem>
+            <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="inactive">Inactive</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {isLoading ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : null}
+      {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
     </div>
   )
 }
