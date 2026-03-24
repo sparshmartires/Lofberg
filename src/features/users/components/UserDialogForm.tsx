@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import styles from "./UserDialogForm.module.css"
+import { useGetLanguagesQuery } from "@/store/services/salesRepresentativesApi"
 
 export interface DialogRoleOption {
   id: string
@@ -34,7 +35,6 @@ export interface UserFormValues {
   role: string
   phone: string
   language: string
-  password: string
   notes: string
 }
 
@@ -56,7 +56,6 @@ const EMPTY_VALUES: UserFormValues = {
   role: "",
   phone: "",
   language: "",
-  password: "",
   notes: "",
 }
 
@@ -71,6 +70,8 @@ export function UserDialogForm({
   onSubmit,
 }: UserDialogFormProps) {
   const values = defaultValues ?? EMPTY_VALUES
+  const filteredRoles = roleOptions.filter((r) => r.name !== "KeyAccountManager")
+  const { data: languages = [] } = useGetLanguagesQuery()
 
   const {
     register,
@@ -162,7 +163,7 @@ export function UserDialogForm({
                     </SelectTrigger>
 
                     <SelectContent>
-                      {roleOptions.map((role) => (
+                      {filteredRoles.map((role) => (
                         <SelectItem key={role.id} value={role.id}>
                           {role.name}
                         </SelectItem>
@@ -202,8 +203,11 @@ export function UserDialogForm({
                     </SelectTrigger>
 
                     <SelectContent>
-                      <SelectItem value="english">English</SelectItem>
-                      <SelectItem value="swedish">Swedish</SelectItem>
+                      {languages.map((lang) => (
+                        <SelectItem key={lang.id} value={lang.id}>
+                          {lang.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -212,12 +216,7 @@ export function UserDialogForm({
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Password</label>
-            <Input type="password" placeholder="Enter password" {...register("password")} />
-          </div>
-
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Notes/Comments</label>
+            <label className={styles.label}>Notes/comments</label>
             <textarea
               rows={4}
               placeholder="Internal notes about this user"

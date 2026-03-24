@@ -314,7 +314,6 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
             role: selectedUser.roleId,
             phone: selectedUser.phone || "",
             language: "",
-            password: "",
             notes: selectedUser.notes || "",
           }}
         />
