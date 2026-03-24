@@ -89,7 +89,6 @@ export function CustomersPage() {
         {/* Header */}
         <PageHeaderWithAction
           title="Customer management"
-          description="Create sustainability reports and receipts for customers"
           actionLabel="Add customer"
           onActionClick={() => setOpen(true)}
         />
@@ -113,7 +112,7 @@ export function CustomersPage() {
         <div className="rounded-[24px] border border-border bg-white p-8 shadow-sm">
 
           <div className="mb-6">
-            <PageSectionTitle title="Customer" />
+            <PageSectionTitle title="Customers" />
 
           </div>
 

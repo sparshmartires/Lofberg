@@ -22,6 +22,7 @@ interface EditCustomerDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   customerId: string
+  readOnly?: boolean
 }
 
 const UUID_REGEX =
@@ -31,6 +32,7 @@ export function EditCustomerDialog({
   open,
   onOpenChange,
   customerId,
+  readOnly = false,
 }: EditCustomerDialogProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState("")
@@ -199,31 +201,49 @@ export function EditCustomerDialog({
       >
         <div className="space-y-2">
           <DialogTitle className="text-[24px] font-normal">
-            Edit Customer
+            {readOnly ? "Customer details" : "Edit customer"}
           </DialogTitle>
           <DialogDescription className="text-[14px] text-[#747474]">
-            Update customer information in your system
+            {readOnly ? "View customer information" : "Update customer information in your system"}
           </DialogDescription>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CustomerDialogForm
-            mode="edit"
-            control={control}
-            register={register}
-            errors={errors}
-            segmentOptions={segmentOptions}
-            regionOptions={regionOptions}
-            logoPreview={
-              logoFile && logoFile.length > 0
-                ? logoPreview
-                : customer?.logoUrl || null
-            }
-            submitError={submitError}
-            isSubmitting={isUpdating}
-            onCancel={() => handleDialogOpenChange(false)}
-          />
-        </form>
+        {readOnly ? (
+          <fieldset disabled className="opacity-100">
+            <CustomerDialogForm
+              mode="edit"
+              control={control}
+              register={register}
+              errors={{}}
+              segmentOptions={segmentOptions}
+              regionOptions={regionOptions}
+              logoPreview={customer?.logoUrl || null}
+              submitError=""
+              isSubmitting={false}
+              onCancel={() => handleDialogOpenChange(false)}
+              hideActions
+            />
+          </fieldset>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CustomerDialogForm
+              mode="edit"
+              control={control}
+              register={register}
+              errors={errors}
+              segmentOptions={segmentOptions}
+              regionOptions={regionOptions}
+              logoPreview={
+                logoFile && logoFile.length > 0
+                  ? logoPreview
+                  : customer?.logoUrl || null
+              }
+              submitError={submitError}
+              isSubmitting={isUpdating}
+              onCancel={() => handleDialogOpenChange(false)}
+            />
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   )

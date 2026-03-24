@@ -54,7 +54,7 @@ export function CustomerFilters({
     "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm focus:outline-none"
 
   const searchField = (
-    <div className="filter-field w-[240px] max-[649px]:w-full">
+    <div className="filter-field flex-1 min-w-[220px] max-[649px]:w-full">
       <label>Search</label>
       <SearchInput
         placeholder="Search by name or code"
@@ -67,7 +67,7 @@ export function CustomerFilters({
 
   const filterFields = (
     <>
-      <div className="filter-field w-[180px] max-[649px]:w-full">
+      <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
         <label>Segment</label>
         <Select value={segment} onValueChange={onSegmentChange}>
           <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
@@ -82,7 +82,7 @@ export function CustomerFilters({
         </Select>
       </div>
 
-      <div className="filter-field w-[180px] max-[649px]:w-full">
+      <div className="filter-field flex-1 min-w-[200px] max-[649px]:w-full">
         <label>Region</label>
         <Select value={region} onValueChange={onRegionChange}>
           <SelectTrigger className={fieldClass} showClear={region !== "all"} onClear={() => onRegionChange("all")}>
@@ -97,7 +97,7 @@ export function CustomerFilters({
         </Select>
       </div>
 
-      <div className="filter-field w-[160px] max-[649px]:w-full">
+      <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
         <label>Status</label>
         <Select value={status} onValueChange={onStatusChange}>
           <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
@@ -106,7 +106,7 @@ export function CustomerFilters({
           <SelectContent>
             <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="inactive">Archived</SelectItem>
           </SelectContent>
         </Select>
       </div>

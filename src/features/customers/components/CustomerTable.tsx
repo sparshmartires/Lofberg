@@ -9,12 +9,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { ArrowUpDown, Pencil, Eye } from "lucide-react"
+import { ArrowUpDown, Pencil, Eye, Archive, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { EditCustomerDialog } from "./EditCustomerPage"
-import { CustomerHistoryDialog } from "./CustomerHistoryDialog"
-import { CustomerItem } from "@/store/services/customersApi"
+import { CustomerItem, useUpdateCustomerMutation, useDeleteCustomerMutation } from "@/store/services/customersApi"
+import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 
 interface CustomerRow {
   id: string
@@ -22,7 +23,9 @@ interface CustomerRow {
   segment: string
   serviceTier: string
   lastReportDate: string | null
-  status: "Active" | "Inactive"
+  status: "Active" | "Archived"
+  isActive: boolean
+  reportsGenerated: number
   avatar: string
 }
 
@@ -60,16 +63,23 @@ const mapCustomerForView = (customer: CustomerItem): CustomerRow => ({
   segment: customer.segmentName || "-",
   serviceTier: getServiceTierLabel(customer.serviceTier),
   lastReportDate: formatDate(customer.lastReportDate),
-  status: customer.isActive ? "Active" : "Inactive",
+  status: customer.isActive ? "Active" : "Archived",
+  isActive: customer.isActive,
+  reportsGenerated: customer.reportsGenerated ?? 0,
   avatar:
     customer.logoUrl ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(customer.name || "Customer")}&background=F2F2F2&color=6B6B6B`,
 })
 
 export function CustomersTable({ customers, sortBy, sortDirection, onSort }: CustomersTableProps) {
+  const router = useRouter()
   const [editOpen, setEditOpen] = useState(false)
-  const [historyOpen, setHistoryOpen] = useState(false)
+  const [viewOpen, setViewOpen] = useState(false)
+  const [confirmArchive, setConfirmArchive] = useState<CustomerRow | null>(null)
+  const [confirmRestore, setConfirmRestore] = useState<CustomerRow | null>(null)
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerRow | null>(null)
+  const [deleteCustomer] = useDeleteCustomerMutation()
+  const [updateCustomer] = useUpdateCustomerMutation()
 
   const customerRows = customers.map(mapCustomerForView)
 
@@ -78,18 +88,22 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
     setEditOpen(true)
   }
 
-  const handleHistory = (customer: CustomerRow) => {
+  const handleView = (customer: CustomerRow) => {
     setSelectedCustomer(customer)
-    setHistoryOpen(true)
+    setViewOpen(true)
   }
-  const columnWidths = {
-    name: "w-[220px]",
-    email: "w-[230px]",
-    role: "w-[140px]",
-    status: "w-[120px]",
-    reports: "w-[100px]",
-    lastLogin: "w-[110px]",
-    actions: "w-[90px]",
+  const handleArchive = async (customer: CustomerRow) => {
+    try {
+      await deleteCustomer(customer.id).unwrap()
+    } catch { /* handled by RTK */ }
+    setConfirmArchive(null)
+  }
+
+  const handleRestore = async (customer: CustomerRow) => {
+    try {
+      await updateCustomer({ id: customer.id, body: { isActive: true } as any }).unwrap()
+    } catch { /* handled by RTK */ }
+    setConfirmRestore(null)
   }
 
   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
@@ -108,11 +122,11 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
     <>
       <div className="table-card border-[0px]">
         <div className="customers-desktop overflow-x-auto">
-        <Table className="table-fixed min-w-[760px]">
+        <Table className="w-full min-w-[860px]">
           {/* HEADER */}
           <TableHeader>
             <TableRow className="table-header-row-bordered">
-              <SortableHeader column="name" className={columnWidths.name}>
+              <SortableHeader column="name">
                 Name
               </SortableHeader>
               <SortableHeader column="segment">
@@ -123,6 +137,9 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
               </SortableHeader>
               <TableHead className="table-header-cell">
                 Last report date
+              </TableHead>
+              <TableHead className="table-header-cell">
+                Reports
               </TableHead>
               <SortableHeader column="status">
                 Status
@@ -141,16 +158,16 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
                 className="table-body-row"
               >
                 {/* NAME */}
-                <TableCell className={`table-name-cell ${columnWidths.name}`}>
+                <TableCell className="table-name-cell max-w-[280px]">
                   <div className="flex items-center gap-[8px]">
                     <Image
                       src={customer.avatar}
                       alt={customer.name}
                       width={24}
                       height={24}
-                      className="rounded-full object-cover"
+                      className="rounded-full object-cover shrink-0"
                     />
-                    <span className="table-name-text">
+                    <span className="table-name-text truncate" title={customer.name}>
                       {customer.name}
                     </span>
                   </div>
@@ -171,20 +188,22 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
                   {customer.lastReportDate}
                 </TableCell>
 
+                {/* REPORTS */}
+                <TableCell>
+                  <button
+                    className="text-[#5B2D91] hover:underline cursor-pointer"
+                    onClick={() => router.push(`/historical-reports?customerId=${customer.id}`)}
+                  >
+                    {customer.reportsGenerated}
+                  </button>
+                </TableCell>
+
                 {/* STATUS */}
                 <TableCell>
                   <span
                     className={`
-    w-[84px]
-    h-[32px]
-    inline-flex
-    items-center
-    justify-center
-    rounded-[99px]
-    px-[8px]
-    py-[4px]
-    text-[12px]
-    font-medium
+    w-[84px] h-[32px] inline-flex items-center justify-center rounded-[99px]
+    px-[8px] py-[4px] text-[12px] font-medium
     ${customer.status === "Active"
                         ? "bg-[#7DB356] text-white"
                         : "bg-[#E5E5E5] text-[#6B6B6B]"
@@ -201,16 +220,36 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
                     <button
                       onClick={() => handleEdit(customer)}
                       className="table-action-btn"
+                      title="Edit"
                     >
                       <Pencil className="table-action-icon" />
                     </button>
 
                     <button
-                      onClick={() => handleHistory(customer)}
+                      onClick={() => handleView(customer)}
                       className="table-action-btn"
+                      title="View details"
                     >
                       <Eye className="table-action-icon" />
                     </button>
+
+                    {customer.isActive ? (
+                      <button
+                        onClick={() => setConfirmArchive(customer)}
+                        className="table-action-btn"
+                        title="Archive"
+                      >
+                        <Archive className="table-action-icon" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmRestore(customer)}
+                        className="table-action-btn"
+                        title="Restore"
+                      >
+                        <RotateCcw className="table-action-icon" />
+                      </button>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
@@ -260,6 +299,15 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
           <span className="label">Last report date</span>
           <div className="value">{customer.lastReportDate}</div>
         </div>
+        <div>
+          <span className="label">Reports: </span>
+          <button
+            className="text-[#5B2D91] hover:underline"
+            onClick={() => router.push(`/historical-reports?customerId=${customer.id}`)}
+          >
+            {customer.reportsGenerated}
+          </button>
+        </div>
       </div>
 
       {/* Service Tier */}
@@ -277,11 +325,27 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
         </button>
 
         <button
-          onClick={() => handleHistory(customer)}
+          onClick={() => handleView(customer)}
           className="view-link"
         >
-          View Details <Eye className="h-3 w-3 ml-1" />
+          View details <Eye className="h-3 w-3 ml-1" />
         </button>
+
+        {customer.isActive ? (
+          <button
+            onClick={() => setConfirmArchive(customer)}
+            className="edit-link"
+          >
+            Archive <Archive className="h-3 w-3 ml-1" />
+          </button>
+        ) : (
+          <button
+            onClick={() => setConfirmRestore(customer)}
+            className="edit-link"
+          >
+            Restore <RotateCcw className="h-3 w-3 ml-1" />
+          </button>
+        )}
       </div>
 
     </div>
@@ -296,15 +360,41 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
         />
       )}
 
-      {/* HISTORY DIALOG */}
+      {/* VIEW DETAILS DIALOG (read-only) */}
       {selectedCustomer && (
-        <CustomerHistoryDialog
-          open={historyOpen}
-          onOpenChange={setHistoryOpen}
-          userName={selectedCustomer.name}
-          avatar={selectedCustomer.avatar}
+        <EditCustomerDialog
+          open={viewOpen}
+          onOpenChange={setViewOpen}
+          customerId={selectedCustomer.id}
+          readOnly
         />
       )}
+
+      {/* ARCHIVE CONFIRM */}
+      <UserFeedbackDialog
+        open={!!confirmArchive}
+        onOpenChange={() => setConfirmArchive(null)}
+        type="error"
+        title="Archive customer"
+        description={`${confirmArchive?.name || "This customer"} will be archived and hidden from active lists.`}
+        primaryActionLabel="Archive"
+        onPrimaryAction={() => confirmArchive && handleArchive(confirmArchive)}
+        secondaryActionLabel="Cancel"
+        onSecondaryAction={() => setConfirmArchive(null)}
+      />
+
+      {/* RESTORE CONFIRM */}
+      <UserFeedbackDialog
+        open={!!confirmRestore}
+        onOpenChange={() => setConfirmRestore(null)}
+        type="success"
+        title="Restore customer"
+        description={`${confirmRestore?.name || "This customer"} will be restored to active status.`}
+        primaryActionLabel="Restore"
+        onPrimaryAction={() => confirmRestore && handleRestore(confirmRestore)}
+        secondaryActionLabel="Cancel"
+        onSecondaryAction={() => setConfirmRestore(null)}
+      />
     </>
   )
 }

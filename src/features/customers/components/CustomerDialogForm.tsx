@@ -42,6 +42,7 @@ interface CustomerDialogFormProps {
   submitError?: string
   isSubmitting?: boolean
   onCancel: () => void
+  hideActions?: boolean
 }
 
 const fieldClass =
@@ -58,6 +59,7 @@ export function CustomerDialogForm({
   submitError,
   isSubmitting = false,
   onCancel,
+  hideActions = false,
 }: CustomerDialogFormProps) {
   return (
     <div className="space-y-8 mt-6">
@@ -244,7 +246,7 @@ export function CustomerDialogForm({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="inactive">Archived</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -318,42 +320,44 @@ export function CustomerDialogForm({
         <p className="text-sm text-destructive">{submitError}</p>
       ) : null}
 
-      <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
-        <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
-          <Button
-            type="button"
-            variant="outlineBrand"
-            onClick={onCancel}
-            disabled={isSubmitting}
-            className="w-full px-[20px] py-[10px]"
-          >
-            Cancel
-          </Button>
-        </div>
+      {!hideActions && (
+        <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
+          <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
+            <Button
+              type="button"
+              variant="outlineBrand"
+              onClick={onCancel}
+              disabled={isSubmitting}
+              className="w-full px-[20px] py-[10px]"
+            >
+              Cancel
+            </Button>
+          </div>
 
-        <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting}
-            className="w-full px-[20px] py-[10px]"
-          >
-            {isSubmitting ? (
-              mode === "add" ? "Adding..." : "Saving..."
-            ) : mode === "add" ? (
-              <>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Customer
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Save Customer
-              </>
-            )}
-          </Button>
+          <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+              className="w-full px-[20px] py-[10px]"
+            >
+              {isSubmitting ? (
+                mode === "add" ? "Adding..." : "Saving..."
+              ) : mode === "add" ? (
+                <>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add customer
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save changes
+                </>
+              )}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
