@@ -93,8 +93,7 @@ export default function ChangePasswordPage() {
 
           <div className="space-y-2">
             <label className="text-[16px] text-[#1F1F1F]">
-              New password<span className="text-red-500">*</span>
-            </label>
+              New password            </label>
 
             <div className="relative">
               <Input
@@ -134,8 +133,7 @@ export default function ChangePasswordPage() {
 
           <div className="space-y-2">
             <label className="text-[16px] text-[#1F1F1F]">
-              Confirm new password<span className="text-red-500">*</span>
-            </label>
+              Confirm new password            </label>
 
             <div className="relative">
               <Input

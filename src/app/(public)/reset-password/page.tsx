@@ -93,13 +93,13 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-[880px] bg-white rounded-[28px] border border-[#EDEDED] px-8 py-12">
 
         {/* Back */}
-        <div className="mb-8">
+        <div className="self-start mb-4">
           <BackButton onClick={() => router.back()} />
         </div>
 
         {/* Title */}
         <h1 className="text-[40px] leading-[120%] tracking-[-0.04em] text-[#1F1F1F] mb-10">
-          Reset Password
+          Reset password
         </h1>
 
       
@@ -108,8 +108,7 @@ export default function ResetPasswordPage() {
           {/* NEW PASSWORD */}
           <div className="space-y-2">
             <label className="text-[16px] text-[#1F1F1F]">
-              New Password<span className="text-red-500">*</span>
-            </label>
+              New Password            </label>
 
             <div className="relative">
               <Input
@@ -154,8 +153,7 @@ export default function ResetPasswordPage() {
           {/* CONFIRM PASSWORD */}
           <div className="space-y-2">
             <label className="text-[16px] text-[#1F1F1F]">
-              Confirm New Password<span className="text-red-500">*</span>
-            </label>
+              Confirm New Password            </label>
 
             <div className="relative">
               <Input
