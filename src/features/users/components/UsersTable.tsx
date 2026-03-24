@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/table"
 
 import { Badge } from "@/components/ui/badge"
-import { ArrowUpDown, Pencil, Trash2 } from "lucide-react"
+import { ArrowUpDown, Pencil, Archive, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { EditUserDialog } from "./EditUserDialog"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { UserMobileCard } from "./UserMobileCard"
-import { UserItem, useDeleteUserMutation } from "@/store/services/usersApi"
+import { UserItem, useDeleteUserMutation, useUpdateUserMutation } from "@/store/services/usersApi"
 
 interface UsersTableProps {
   users: UserItem[]
@@ -33,7 +33,7 @@ interface ViewUser {
   email: string
   roleId: string
   role: string
-  status: "Active" | "Inactive"
+  status: "Active" | "Archived"
   reports: number
   lastLogin: string | null
   phone: string
@@ -69,7 +69,7 @@ const mapUserForView = (user: UserItem): ViewUser => {
     email: user.email,
     roleId: user.roleId,
     role: user.roleName,
-    status: user.isActive ? "Active" : "Inactive",
+    status: user.isActive ? "Active" : "Archived",
     reports: user.reportsCount,
     lastLogin: user.lastLogin,
     phone: user.phoneNumber || "",
@@ -83,8 +83,11 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
   const [editOpen, setEditOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<ViewUser | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [restoreOpen, setRestoreOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState<ViewUser | null>(null)
+  const [userToRestore, setUserToRestore] = useState<ViewUser | null>(null)
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+  const [updateUser, { isLoading: isRestoring }] = useUpdateUserMutation()
 
   const userRows = users.map(mapUserForView)
 
@@ -126,6 +129,28 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
     await deleteUser(userToDelete.id).unwrap()
     setDeleteOpen(false)
     setUserToDelete(null)
+  }
+
+  const handleRestoreClick = (user: ViewUser) => {
+    setUserToRestore(user)
+    setRestoreOpen(true)
+  }
+
+  const handleConfirmRestore = async () => {
+    if (!userToRestore) return
+
+    await updateUser({
+      id: userToRestore.id,
+      body: {
+        firstName: userToRestore.firstName,
+        lastName: userToRestore.lastName,
+        email: userToRestore.email,
+        roleId: userToRestore.roleId,
+        isActive: true,
+      } as any,
+    }).unwrap()
+    setRestoreOpen(false)
+    setUserToRestore(null)
   }
 
   return (
@@ -185,8 +210,8 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
                   </TableCell>
 
                   {/* EMAIL */}
-                  <TableCell className={`table-muted-text ${columnWidths.email} truncate`} data-label="Email">
-                    {user.email}
+                  <TableCell className={`table-muted-text ${columnWidths.email}`} data-label="Email">
+                    <span className="block truncate max-w-[280px]" title={user.email}>{user.email}</span>
                   </TableCell>
 
                   {/* ROLE */}
@@ -236,13 +261,24 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
                         />
                       </button>
 
-                      {/* DELETE BUTTON */}
-                      <button
-                        onClick={() => handleDeleteClick(user)}
-                        className="table-action-btn"
-                      >
-                        <Trash2 className="table-action-icon" />
-                      </button>
+                      {/* ARCHIVE/RESTORE BUTTON */}
+                      {user.isActive ? (
+                        <button
+                          onClick={() => handleDeleteClick(user)}
+                          className="table-action-btn"
+                          title="Archive"
+                        >
+                          <Archive className="table-action-icon" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleRestoreClick(user)}
+                          className="table-action-btn"
+                          title="Restore"
+                        >
+                          <RotateCcw className="table-action-icon" />
+                        </button>
+                      )}
 
                     </div>
                   </TableCell>
@@ -260,7 +296,7 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
               key={user.id}
               user={user}
               onEdit={() => handleEdit(user)}
-              onDelete={() => handleDeleteClick(user)}
+              onDelete={() => user.isActive ? handleDeleteClick(user) : handleRestoreClick(user)}
             />
           ))}
         </div>
@@ -287,13 +323,25 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         type="error"
-        title="Are you sure?"
-        description={`${userToDelete?.name || "This user"} will no longer have access to Löfbergs, and their profile will be archived.`}
+        title="Archive user"
+        description={`${userToDelete?.name || "This user"} will no longer have access to the platform and their profile will be archived.`}
         primaryActionLabel="Cancel"
         onPrimaryAction={() => setDeleteOpen(false)}
-        secondaryActionLabel="Revoke"
+        secondaryActionLabel="Archive"
         secondaryActionLoading={isDeleting}
         onSecondaryAction={handleConfirmDelete}
+      />
+      <UserFeedbackDialog
+        open={restoreOpen}
+        onOpenChange={setRestoreOpen}
+        type="success"
+        title="Restore user"
+        description={`${userToRestore?.name || "This user"} will be restored and will be able to access the platform again.`}
+        primaryActionLabel="Cancel"
+        onPrimaryAction={() => setRestoreOpen(false)}
+        secondaryActionLabel="Restore"
+        secondaryActionLoading={isRestoring}
+        onSecondaryAction={handleConfirmRestore}
       />
     </>
   )
