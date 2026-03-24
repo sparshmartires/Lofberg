@@ -331,9 +331,5 @@ export const {
   useGetSalesRepresentativesQuery,
   useGetSalesRolesQuery,
   useGetSalesSegmentsQuery,
-  useGetLanguagesQuery,
   useGetSalesRegionsQuery,
-  useCreateSalesRepresentativeMutation,
-  useUpdateSalesRepresentativeMutation,
-  useDeleteSalesRepresentativeMutation,
 } = salesRepresentativesApi

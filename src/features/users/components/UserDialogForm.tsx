@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import styles from "./UserDialogForm.module.css"
-import { useGetLanguagesQuery } from "@/store/services/salesRepresentativesApi"
+import { useGetTemplateLanguagesQuery } from "@/store/services/templatesApi"
 
 export interface DialogRoleOption {
   id: string
@@ -71,7 +71,7 @@ export function UserDialogForm({
 }: UserDialogFormProps) {
   const values = defaultValues ?? EMPTY_VALUES
   const filteredRoles = roleOptions.filter((r) => r.name !== "KeyAccountManager")
-  const { data: languages = [] } = useGetLanguagesQuery()
+  const { data: languages = [] } = useGetTemplateLanguagesQuery()
 
   const {
     register,

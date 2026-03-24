@@ -26,7 +26,6 @@ export default function AppSidebar() {
         { label: "Generate", href: "/report-generation" },
         { label: "Reports", href: "/historical-reports" },
         { label: "Customers", href: "/customers" },
-        { label: "Sales representative", href: "/sales" },
         { label: "Users", href: "/users" },
         ...(isAdmin ? [{ label: "Templates", href: "/template" }] : []),
         ...(isAdmin || isTranslator ? [{ label: "Template translation", href: "/template/translate" }] : []),

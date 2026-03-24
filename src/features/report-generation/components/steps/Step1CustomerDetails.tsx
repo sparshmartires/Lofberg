@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/select"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep1 } from "@/store/slices/reportWizardSlice"
-import { useGetSalesRepresentativesQuery, useGetLanguagesQuery } from "@/store/services/salesRepresentativesApi"
+import { useGetSalesRepresentativesQuery } from "@/store/services/salesRepresentativesApi"
+import { useGetTemplateLanguagesQuery } from "@/store/services/templatesApi"
 import { CustomerItem, useGetCustomerSegmentsQuery } from "@/store/services/customersApi"
 import { CustomerSearchCombobox } from "../CustomerSearchCombobox"
 import { FileDropZone } from "../FileDropZone"
@@ -37,7 +38,7 @@ export function Step1CustomerDetails() {
     { skip: isSalesperson }
   )
 
-  const { data: languagesData } = useGetLanguagesQuery()
+  const { data: languagesData } = useGetTemplateLanguagesQuery()
   const { data: segments = [] } = useGetCustomerSegmentsQuery()
 
   const { control } = useForm<Step1Data>({

@@ -205,7 +205,6 @@ export function EditCustomerDialog({
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent
         showCloseButton={false}
-        showCloseButton={false}
         className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-h-[calc(100vh-2rem)] overflow-y-auto"
       >
         <div className="space-y-2">

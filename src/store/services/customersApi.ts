@@ -25,6 +25,7 @@ export interface CustomerItem {
   notes: string | null
   logoUrl: string | null
   lastReportDate: string | null
+  reportsGenerated: number
 }
 
 export interface GetCustomersParams {
@@ -230,6 +231,7 @@ const mapCustomer = (item: ApiObject): CustomerItem => {
     notes: toNullableString(item.notes),
     logoUrl: toNullableString(item.logoUrl ?? item.logo),
     lastReportDate: toNullableString(item.lastReportDate ?? item.lastReportAt),
+    reportsGenerated: Number(item.reportsGenerated ?? item.reportsCount ?? 0),
   }
 }
 
