@@ -94,7 +94,7 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
   }
   const handleArchive = async (customer: CustomerRow) => {
     try {
-      await deleteCustomer(customer.id).unwrap()
+      await updateCustomer({ id: customer.id, body: { isActive: false } as any }).unwrap()
     } catch { /* handled by RTK */ }
     setConfirmArchive(null)
   }
