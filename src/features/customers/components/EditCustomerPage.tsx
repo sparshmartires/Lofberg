@@ -15,7 +15,6 @@ import {
   useGetCustomerRegionsQuery,
   useGetCustomerSegmentsQuery,
   useUpdateCustomerMutation,
-  useUploadCustomerLogoMutation,
 } from "@/store/services/customersApi"
 
 interface EditCustomerDialogProps {
@@ -35,10 +34,10 @@ export function EditCustomerDialog({
   readOnly = false,
 }: EditCustomerDialogProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
+  const [logoRemoved, setLogoRemoved] = useState(false)
   const [submitError, setSubmitError] = useState("")
 
   const [updateCustomer, { isLoading: isUpdating }] = useUpdateCustomerMutation()
-  const [uploadCustomerLogo] = useUploadCustomerLogoMutation()
   const { data: segmentOptions = [] } = useGetCustomerSegmentsQuery()
   const { data: regionOptions = [] } = useGetCustomerRegionsQuery()
   const hasValidCustomerId = UUID_REGEX.test(customerId)
@@ -60,12 +59,15 @@ export function EditCustomerDialog({
     register,
     handleSubmit,
     control,
+    trigger,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<CustomerFormValues>({
     defaultValues: {
       status: "active",
       isSubCustomer: false,
+      parentCustomerId: "",
       logo: null,
     },
   })
@@ -73,6 +75,7 @@ export function EditCustomerDialog({
   const handleDialogOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
       setLogoPreview(null)
+      setLogoRemoved(false)
       setSubmitError("")
     }
 
@@ -90,6 +93,7 @@ export function EditCustomerDialog({
         serviceTier: serviceTierDefaultValue,
         region: customer.regionId || "",
         isSubCustomer: customer.isSubCustomer,
+        parentCustomerId: customer.parentCustomerId || "",
         contactPerson: customer.contactName || "",
         contactEmail: customer.contactEmail || "",
         contactPhone: customer.contactPhone || "",
@@ -130,6 +134,12 @@ export function EditCustomerDialog({
     }
   }, [logoFile])
 
+  const handleLogoRemove = () => {
+    setValue("logo", null)
+    setLogoPreview(null)
+    setLogoRemoved(true)
+  }
+
   const getApiErrorMessage = (error: unknown) => {
     if (typeof error === "object" && error !== null) {
       const errorObj = error as { data?: unknown; error?: string }
@@ -161,6 +171,7 @@ export function EditCustomerDialog({
     setSubmitError("")
 
     try {
+      const logoFile = data.logo?.[0]
       await updateCustomer({
         id: customer.id,
         body: {
@@ -170,20 +181,17 @@ export function EditCustomerDialog({
           serviceTier: Number(data.serviceTier),
           regionId: data.region,
           isSubCustomer: data.isSubCustomer,
-          parentCustomerId: customer.parentCustomerId || null,
+          parentCustomerId: data.isSubCustomer ? data.parentCustomerId || null : null,
           contactName: data.contactPerson || null,
           contactEmail: data.contactEmail || null,
           contactPhone: data.contactPhone || null,
           address: data.address || null,
           isActive: data.status === "active",
           notes: data.notes || null,
-        },
+          ...(logoFile ? { logo: logoFile } : {}),
+          ...(logoRemoved && !logoFile ? { removeLogo: true } : {}),
+        } as any,
       }).unwrap()
-
-      const logoFile = data.logo?.[0]
-      if (logoFile) {
-        await uploadCustomerLogo({ id: customer.id, file: logoFile }).unwrap()
-      }
 
       onOpenChange(false)
     } catch (error) {
@@ -197,7 +205,7 @@ export function EditCustomerDialog({
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-h-[calc(100vh-2rem)] overflow-y-auto max-[600px]:p-8"
+        className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-h-[calc(100vh-2rem)] overflow-y-auto max-[649px]:w-screen max-[649px]:h-screen max-[649px]:max-w-none max-[649px]:max-h-none max-[649px]:rounded-none max-[649px]:m-0 max-[649px]:p-6"
       >
         <div className="space-y-2">
           <DialogTitle className="text-[24px] font-normal">
@@ -230,14 +238,16 @@ export function EditCustomerDialog({
               mode="edit"
               control={control}
               register={register}
+              trigger={trigger}
               errors={errors}
               segmentOptions={segmentOptions}
               regionOptions={regionOptions}
               logoPreview={
                 logoFile && logoFile.length > 0
                   ? logoPreview
-                  : customer?.logoUrl || null
+                  : logoRemoved ? null : (customer?.logoUrl || null)
               }
+              onLogoRemove={handleLogoRemove}
               submitError={submitError}
               isSubmitting={isUpdating}
               onCancel={() => handleDialogOpenChange(false)}
