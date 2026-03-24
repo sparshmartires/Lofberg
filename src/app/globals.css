@@ -883,20 +883,22 @@
     background: #fff;
     border: 1px solid #EDEDED;
     border-radius: 20px;
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 12px;
+    margin-bottom: 8px;
   }
 
   .customer-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 12px;
+    gap: 8px;
   }
 
   .customer-name {
     font-size: 16px;
     color: #1F1F1F;
+    word-break: break-word;
   }
 
   .customer-status {

@@ -109,7 +109,7 @@ export function CustomersPage() {
         </div>
 
         {/* Card Container */}
-        <div className="rounded-[24px] border border-border bg-white p-8 shadow-sm">
+        <div className="rounded-[24px] border border-border bg-white p-8 max-[649px]:p-3 shadow-sm">
 
           <div className="mb-6">
             <PageSectionTitle title="Customers" />
