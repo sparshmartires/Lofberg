@@ -650,8 +650,8 @@
   display: none;
 }
 
-/* Mobile styles */
-@media (max-width: 649px) {
+/* Tablet + Mobile styles: switch to card view */
+@media (max-width: 768px) {
 
   .users-table-desktop {
     display: none;
