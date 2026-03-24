@@ -37,7 +37,15 @@ export default function LoginPage() {
       // Navigate on success
       router.push("/users")
     } catch (err: any) {
-      setLoginError(err?.data?.error || err?.message || "Login failed. Please try again.")
+      // Check for first-login password change requirement (403 with requirePasswordChange)
+      const errData = err?.data?.data || err?.data
+      if (errData?.requirePasswordChange && errData?.userId) {
+        sessionStorage.setItem("firstLoginUserId", errData.userId)
+        sessionStorage.setItem("firstLoginPassword", data.password)
+        router.push("/change-password")
+        return
+      }
+      setLoginError(err?.data?.error || err?.data?.message || err?.message || "Login failed. Please try again.")
     }
   }
 
