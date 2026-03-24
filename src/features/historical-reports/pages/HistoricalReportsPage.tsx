@@ -167,8 +167,8 @@ export function HistoricalReportsPage() {
   return (
     <div className="min-h-screen bg-background py-10">
       <PageHeaderWithAction
-        title="Historical reports"
-        description="Review and download previously generated reports"
+        title="Reports"
+        description="Past reports, receipts and drafts"
         actionLabel="Generate"
         onActionClick={handleGenerateReport}
       />

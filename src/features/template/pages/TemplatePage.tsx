@@ -291,7 +291,7 @@ export function TemplatePage() {
       <div className="page-header-with-action">
         <div>
           <h1 className="page-header-with-action-title">
-            Report / Receipt template
+            Manage report and receipt templates
           </h1>
           <p className="page-header-with-action-description">
             Configure and customize report and receipt templates
