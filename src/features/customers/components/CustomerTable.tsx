@@ -288,19 +288,12 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
         </span>
       </div>
   <div className="customer-divider" />
-      {/* Segment + Date */}
       <div className="customer-info">
-        <div className="customer-row">
-          <span className="label">Segment: {customer.segment}</span>
-           <span className="label">Service tier:{customer.serviceTier}</span>
-        </div>
-
-        <div className="text-right">
-          <span className="label">Last report date</span>
-          <div className="value">{customer.lastReportDate}</div>
-        </div>
+        <div><span className="label">Segment:</span> <span className="value">{customer.segment}</span></div>
+        <div><span className="label">Service tier:</span> <span className="value">{customer.serviceTier}</span></div>
+        <div><span className="label">Last report date:</span> <span className="value">{customer.lastReportDate}</span></div>
         <div>
-          <span className="label">Reports: </span>
+          <span className="label">Reports:</span>{" "}
           <button
             className="text-[#5B2D91] hover:underline"
             onClick={() => router.push(`/historical-reports?customerId=${customer.id}`)}
@@ -309,10 +302,6 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
           </button>
         </div>
       </div>
-
-      {/* Service Tier */}
-     
-
       <div className="customer-divider" />
 
       {/* Actions */}

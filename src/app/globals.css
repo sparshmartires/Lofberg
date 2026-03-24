@@ -737,6 +737,7 @@
   .filters-card {
     width: 100%;
   }
+
 }
 
 .filter-field label {
@@ -913,9 +914,11 @@
     background: #E5E5E5;
     color: #6B6B6B;
   }
-.customer-info{
+.customer-info {
   display: flex;
-justify-content: space-between;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
 }
   .customer-row {
     display: flex;
