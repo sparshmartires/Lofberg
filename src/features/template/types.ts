@@ -40,24 +40,34 @@ export interface IncreasingImpactContent {
   headerText: string
   introText: string
   wantMoreText: string
+  actionName1?: string
   actionText1: string
   actionImage1?: string
+  actionName2?: string
   actionText2: string
   actionImage2?: string
+  actionName3?: string
   actionText3: string
   actionImage3?: string
+  actionName4?: string
   actionText4: string
   actionImage4?: string
+  actionName5?: string
   actionText5: string
   actionImage5?: string
+  actionName6?: string
   actionText6: string
   actionImage6?: string
+  actionName7?: string
   actionText7: string
   actionImage7?: string
+  actionName8?: string
   actionText8: string
   actionImage8?: string
+  actionName9?: string
   actionText9: string
   actionImage9?: string
+  actionName10?: string
   actionText10: string
   actionImage10?: string
 }

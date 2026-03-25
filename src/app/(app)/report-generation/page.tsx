@@ -1,5 +1,10 @@
+import { Suspense } from "react"
 import { ReportGenerationPage } from "@/features/report-generation/pages/ReportGenerationPage"
 
 export default function Page() {
-  return <ReportGenerationPage />
+  return (
+    <Suspense>
+      <ReportGenerationPage />
+    </Suspense>
+  )
 }

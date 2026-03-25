@@ -8,6 +8,7 @@ interface AddOnBlockSelectorProps {
   selected: AddOnBlock[]
   onChange: (selected: AddOnBlock[]) => void
   max?: number
+  labels?: Partial<Record<AddOnBlock, string>>
 }
 
 const ALL_BLOCKS = Object.values(AddOnBlock).filter(
@@ -18,6 +19,7 @@ export function AddOnBlockSelector({
   selected,
   onChange,
   max = 3,
+  labels,
 }: AddOnBlockSelectorProps) {
   const handleToggle = useCallback(
     (block: AddOnBlock, checked: boolean) => {
@@ -51,7 +53,7 @@ export function AddOnBlockSelector({
                   isDisabled ? "text-[#9CA3AF] cursor-not-allowed" : "text-[#1F1F1F] cursor-pointer"
                 }`}
               >
-                {ADD_ON_BLOCK_LABELS[block]}
+                {labels?.[block] || ADD_ON_BLOCK_LABELS[block]}
               </label>
             </div>
           )

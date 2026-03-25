@@ -134,10 +134,6 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
 
   return (
     <div className="space-y-6">
-      <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
-        Cover page configuration
-      </h3>
-
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="min-w-0">
         <p className="text-sm mb-2">Background image</p>
@@ -155,126 +151,16 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
         <div className="min-w-0">
         <p className="text-sm mb-2">Header text</p>
 
-        <div className="h-[125px] w-full min-w-0 rounded-xl border border-border bg-white overflow-hidden flex flex-col">
-          <div className="flex items-center gap-1 border-b border-border px-2 py-1 bg-white">
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isBold && "bg-primary/10"
-              )}
-              aria-label="Bold"
-              onClick={() => editor?.chain().focus().toggleBold().run()}
-            >
-              <Bold className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isItalic && "bg-primary/10"
-              )}
-              aria-label="Italic"
-              onClick={() => editor?.chain().focus().toggleItalic().run()}
-            >
-              <Italic className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isUnderline && "bg-primary/10"
-              )}
-              aria-label="Underline"
-              onClick={() => editor?.chain().focus().toggleUnderline().run()}
-            >
-              <UnderlineIcon className="h-4 w-4" />
-            </Button>
-
-            <span className="mx-1 h-5 w-px bg-border" />
-
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isAlignLeft && "bg-primary/10"
-              )}
-              aria-label="Align left"
-              onClick={() => editor?.chain().focus().setTextAlign("left").run()}
-            >
-              <AlignLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isAlignCenter && "bg-primary/10"
-              )}
-              aria-label="Align center"
-              onClick={() => editor?.chain().focus().setTextAlign("center").run()}
-            >
-              <AlignCenter className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isAlignRight && "bg-primary/10"
-              )}
-              aria-label="Align right"
-              onClick={() => editor?.chain().focus().setTextAlign("right").run()}
-            >
-              <AlignRight className="h-4 w-4" />
-            </Button>
-
-            <span className="mx-1 h-5 w-px bg-border" />
-
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isBulletList && "bg-primary/10"
-              )}
-              aria-label="Bulleted list"
-              onClick={() => editor?.chain().focus().toggleBulletList().run()}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghostBrand"
-              className={cn(
-                "h-7 min-w-0 rounded-md px-2",
-                toolbarState?.isOrderedList && "bg-primary/10"
-              )}
-              aria-label="Numbered list"
-              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-            >
-              <ListOrdered className="h-4 w-4" />
-            </Button>
-
-          </div>
-
-          <EditorContent
-            editor={editor}
-            className="flex-1 overflow-y-auto bg-white p-3 text-sm leading-6 [&_.ProseMirror]:h-full [&_.ProseMirror]:outline-none [&_.ProseMirror]:whitespace-pre-wrap [&_.ProseMirror_ul]:list-disc [&_.ProseMirror_ul]:pl-5 [&_.ProseMirror_ol]:list-decimal [&_.ProseMirror_ol]:pl-5 [&_.ProseMirror_li]:my-0.5 [&_.ProseMirror_p.is-editor-empty:first-child::before]:text-muted-foreground [&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)] [&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left [&_.ProseMirror_p.is-editor-empty:first-child::before]:pointer-events-none"
-          />
-        </div>
+        <input
+          type="text"
+          value={parsed.headerText || ""}
+          onChange={(e) => emitChange({ ...parsedRef.current, headerText: e.target.value })}
+          placeholder="Enter header text"
+          className="w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm"
+        />
         </div>
       </div>
 
-      <p className="text-xs text-[#9CA3AF]">
-        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
-        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
-        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
-      </p>
     </div>
   )
 }

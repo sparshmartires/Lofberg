@@ -32,6 +32,8 @@ export interface GetSalesRepresentativesParams {
   isActive?: boolean
   segmentId?: string
   regionId?: string
+  sortBy?: string
+  sortDirection?: string
 }
 
 export interface PaginatedSalesRepresentativesResponse {
@@ -229,7 +231,7 @@ export const salesRepresentativesApi = createApi({
       PaginatedSalesRepresentativesResponse,
       GetSalesRepresentativesParams
     >({
-      query: ({ pageNumber, pageSize, searchTerm, isActive, segmentId, regionId }) => ({
+      query: ({ pageNumber, pageSize, searchTerm, isActive, segmentId, regionId, sortBy, sortDirection }) => ({
         url: "/sales-representatives",
         params: {
           pageNumber,
@@ -238,6 +240,8 @@ export const salesRepresentativesApi = createApi({
           ...(typeof isActive === "boolean" ? { isActive } : {}),
           ...(segmentId ? { segmentId } : {}),
           ...(regionId ? { regionId } : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortBy ? { sortDirection } : {}),
         },
       }),
       transformResponse: (response: unknown, _meta, args) =>
@@ -327,9 +331,5 @@ export const {
   useGetSalesRepresentativesQuery,
   useGetSalesRolesQuery,
   useGetSalesSegmentsQuery,
-  useGetLanguagesQuery,
   useGetSalesRegionsQuery,
-  useCreateSalesRepresentativeMutation,
-  useUpdateSalesRepresentativeMutation,
-  useDeleteSalesRepresentativeMutation,
 } = salesRepresentativesApi

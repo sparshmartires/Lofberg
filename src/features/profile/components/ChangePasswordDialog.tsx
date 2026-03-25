@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { X, Loader2 } from "lucide-react"
 import { useChangePasswordMutation } from "@/store/services/authApi"
+import { useAuth } from "@/store/hooks/useAuth"
 
 interface ChangePasswordDialogProps {
   open: boolean
@@ -49,6 +50,7 @@ export function ChangePasswordDialog({
   const [successMessage, setSuccessMessage] = useState("")
 
   const [changePassword, { isLoading }] = useChangePasswordMutation()
+  const { user } = useAuth()
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -82,6 +84,7 @@ export function ChangePasswordDialog({
 
     try {
       await changePassword({
+        userId: user?.id || "",
         currentPassword,
         newPassword,
       }).unwrap()

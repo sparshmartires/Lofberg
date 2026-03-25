@@ -23,15 +23,14 @@ export default function AppSidebar() {
 
     const menuItems = [
         { label: "Dashboard", href: "/dashboard" },
-        { label: "Generate Report/Receipt", href: "/report-generation" },
-        { label: "Historical reports", href: "/historical-reports" },
-        { label: "Customer Management", href: "/customers" },
-        { label: "Sales Representative", href: "/sales" },
-        { label: "User Management", href: "/users" },
-        ...(isAdmin ? [{ label: "Report receipt template", href: "/template" }] : []),
+        { label: "Generate", href: "/report-generation" },
+        { label: "Reports", href: "/historical-reports" },
+        { label: "Customers", href: "/customers" },
+        { label: "Users", href: "/users" },
+        ...(isAdmin ? [{ label: "Templates", href: "/template" }] : []),
         ...(isAdmin || isTranslator ? [{ label: "Template translation", href: "/template/translate" }] : []),
         { label: "Useful resources", href: "/useful-resources" },
-        { label: "Conversion logic", href: "/conversion-logic" },
+        { label: "Conversions", href: "/conversion-logic" },
     ]
 
     return (
@@ -95,8 +94,8 @@ export default function AppSidebar() {
                             const isActive = pathname === item.href
 
                             return (
+                                <SheetClose asChild key={item.label}>
                                 <Link
-                                    key={item.label}
                                     href={item.href}
                                     data-testid={`nav-link-${item.href.replace(/^\//, "")}`}
                                     className={`
@@ -123,6 +122,7 @@ export default function AppSidebar() {
                                 >
                                     {item.label}
                                 </Link>
+                                </SheetClose>
                             )
                         })}
 

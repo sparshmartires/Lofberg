@@ -7,10 +7,10 @@ import { FileDropZone } from "@/features/report-generation/components/FileDropZo
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
 const CERT_BLOCKS = [
-  { key: "general", label: "General certification" },
-  { key: "rainforest", label: "Rainforest Alliance certification" },
-  { key: "fairtrade", label: "Fairtrade certification" },
-  { key: "organic", label: "Organic certification" },
+  { key: "general", label: "General" },
+  { key: "rainforest", label: "Rainforest Alliance" },
+  { key: "fairtrade", label: "Fairtrade" },
+  { key: "organic", label: "Organic" },
 ] as const
 
 type CertKey = (typeof CERT_BLOCKS)[number]["key"]
@@ -86,10 +86,6 @@ export default function CertificationsSection({
 
   return (
     <div className="space-y-8">
-      <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
-        Certifications report section
-      </h3>
-
       <div>
         <p className="text-sm mb-2">Header Text</p>
         <textarea
@@ -99,12 +95,6 @@ export default function CertificationsSection({
           className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
         />
       </div>
-
-      <p className="text-xs text-[#9CA3AF]">
-        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
-        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
-        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
-      </p>
 
       <div className="border-t border-[#EDEDED]" />
 

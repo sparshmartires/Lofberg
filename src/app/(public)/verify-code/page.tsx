@@ -1,12 +1,21 @@
 "use client"
 
+import { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 import { useVerifyCodeMutation, useResendCodeMutation } from "@/store/services/authApi"
 
 export default function VerifyCodePage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8">Loading...</div>}>
+      <VerifyCodeForm />
+    </Suspense>
+  )
+}
+
+function VerifyCodeForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get("email")
@@ -117,13 +126,9 @@ export default function VerifyCodePage() {
       <div className="w-full max-w-[720px] bg-white rounded-[28px] border border-[#EDEDED] px-8 py-12">
 
         {/* Back */}
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-[14px] text-[#1F1F1F] mb-8"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
+        <div className="mb-8">
+          <BackButton onClick={() => router.back()} />
+        </div>
 
         {/* Title */}
         <h1 className="text-[40px] leading-[120%] tracking-[-0.04em] text-[#1F1F1F] mb-4">

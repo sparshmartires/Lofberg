@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { formatPhoneDisplay } from "@/lib/phone"
 import { Loader2, Plus } from "lucide-react"
 
 import {
@@ -20,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import styles from "./UserDialogForm.module.css"
+import { useGetTemplateLanguagesQuery } from "@/store/services/templatesApi"
 
 export interface DialogRoleOption {
   id: string
@@ -33,7 +35,6 @@ export interface UserFormValues {
   role: string
   phone: string
   language: string
-  password: string
   notes: string
 }
 
@@ -55,7 +56,6 @@ const EMPTY_VALUES: UserFormValues = {
   role: "",
   phone: "",
   language: "",
-  password: "",
   notes: "",
 }
 
@@ -70,6 +70,8 @@ export function UserDialogForm({
   onSubmit,
 }: UserDialogFormProps) {
   const values = defaultValues ?? EMPTY_VALUES
+  const filteredRoles = roleOptions.filter((r) => r.name !== "KeyAccountManager")
+  const { data: languages = [] } = useGetTemplateLanguagesQuery()
 
   const {
     register,
@@ -97,7 +99,7 @@ export function UserDialogForm({
       >
         <div className={styles.header}>
           <DialogTitle className={styles.title}>
-            {isAddMode ? "Add New User" : "Edit User Details"}
+            {isAddMode ? "Add new user" : "Edit user details"}
           </DialogTitle>
 
           <DialogDescription className={styles.description}>
@@ -161,7 +163,7 @@ export function UserDialogForm({
                     </SelectTrigger>
 
                     <SelectContent>
-                      {roleOptions.map((role) => (
+                      {filteredRoles.map((role) => (
                         <SelectItem key={role.id} value={role.id}>
                           {role.name}
                         </SelectItem>
@@ -174,8 +176,19 @@ export function UserDialogForm({
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>Phone Number</label>
-              <Input type="tel" placeholder="+46 70 123 4567" {...register("phone")} />
+              <label className={styles.label}>Phone number</label>
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="tel"
+                    placeholder="+XX XXXXX XXXXX"
+                    value={formatPhoneDisplay(field.value)}
+                    onChange={(e) => field.onChange(e.target.value.replace(/\D/g, "").slice(0, 12))}
+                  />
+                )}
+              />
             </div>
 
             <div className={styles.fieldGroup}>
@@ -190,8 +203,11 @@ export function UserDialogForm({
                     </SelectTrigger>
 
                     <SelectContent>
-                      <SelectItem value="english">English</SelectItem>
-                      <SelectItem value="swedish">Swedish</SelectItem>
+                      {languages.map((lang) => (
+                        <SelectItem key={lang.id} value={lang.id}>
+                          {lang.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -200,12 +216,7 @@ export function UserDialogForm({
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Password</label>
-            <Input type="password" placeholder="Enter password" {...register("password")} />
-          </div>
-
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Notes/Comments</label>
+            <label className={styles.label}>Notes/comments</label>
             <textarea
               rows={4}
               placeholder="Internal notes about this user"
@@ -235,7 +246,7 @@ export function UserDialogForm({
                 ) : (
                   <Plus className="h-4 w-4 mr-2" />
                 )}
-                {isSubmitting ? "Saving..." : isAddMode ? "Create User" : "Save Changes"}
+                {isSubmitting ? "Saving..." : isAddMode ? "Create user" : "Save changes"}
               </Button>
             </div>
           </div>

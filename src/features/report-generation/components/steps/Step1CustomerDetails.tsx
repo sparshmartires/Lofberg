@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/select"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep1 } from "@/store/slices/reportWizardSlice"
-import { useGetSalesRepresentativesQuery, useGetLanguagesQuery } from "@/store/services/salesRepresentativesApi"
+import { useGetSalesRepresentativesQuery } from "@/store/services/salesRepresentativesApi"
+import { useGetTemplateLanguagesQuery } from "@/store/services/templatesApi"
 import { CustomerItem, useGetCustomerSegmentsQuery } from "@/store/services/customersApi"
 import { CustomerSearchCombobox } from "../CustomerSearchCombobox"
 import { FileDropZone } from "../FileDropZone"
@@ -37,7 +38,7 @@ export function Step1CustomerDetails() {
     { skip: isSalesperson }
   )
 
-  const { data: languagesData } = useGetLanguagesQuery()
+  const { data: languagesData } = useGetTemplateLanguagesQuery()
   const { data: segments = [] } = useGetCustomerSegmentsQuery()
 
   const { control } = useForm<Step1Data>({
@@ -54,12 +55,16 @@ export function Step1CustomerDetails() {
     }
   }, [isSalesperson, authUser, step1.salesRepresentativeId, dispatch])
 
-  // Auto-set language from user preference (once)
+  // Auto-set language: user preference → English fallback
   useEffect(() => {
-    if (authUser?.preferredLanguageId && !step1.languageId) {
+    if (step1.languageId) return
+    if (authUser?.preferredLanguageId) {
       dispatch(updateStep1({ languageId: authUser.preferredLanguageId }))
+    } else if (languagesData?.length) {
+      const english = languagesData.find((l) => l.name?.toLowerCase() === "english")
+      if (english) dispatch(updateStep1({ languageId: english.id }))
     }
-  }, [authUser?.preferredLanguageId, step1.languageId, dispatch])
+  }, [authUser?.preferredLanguageId, step1.languageId, languagesData, dispatch])
 
   const handleCustomerSelect = useCallback(
     (customer: CustomerItem) => {

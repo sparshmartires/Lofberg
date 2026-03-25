@@ -74,17 +74,13 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
   )
 
   const sections: { label: string; textKey: TextFieldKey; imageKey: ImageFieldKey }[] = [
-    { label: "USP sections (up to 3)", textKey: "sectionText1", imageKey: "sectionImage1" },
+    { label: "Section 1", textKey: "sectionText1", imageKey: "sectionImage1" },
     { label: "Section 2", textKey: "sectionText2", imageKey: "sectionImage2" },
     { label: "Section 3", textKey: "sectionText3", imageKey: "sectionImage3" },
   ]
 
   return (
     <div className="space-y-8">
-      <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
-        Lofbers USP&apos;s section
-      </h3>
-
       <div>
         <p className="text-sm mb-2">Header text</p>
         <textarea
@@ -105,12 +101,6 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
         />
       </div>
 
-      <p className="text-xs text-[#9CA3AF]">
-        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
-        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
-        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
-      </p>
-
       <div className="border-t border-[#EDEDED]" />
 
       <div className="space-y-6">
@@ -120,7 +110,7 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
 
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="min-w-0">
-                <p className="text-sm mb-2">Section image</p>
+                <p className="text-sm mb-2">Image</p>
 
                 <FileDropZone
                   accept=".jpg,.jpeg,.png,.svg,.webp"
@@ -133,7 +123,7 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
               </div>
 
               <div className="min-w-0">
-                <p className="text-sm mb-2">Section text</p>
+                <p className="text-sm mb-2">Text</p>
 
                 <RichTextEditor
                   value={parsed[section.textKey]}

@@ -69,6 +69,7 @@ export interface UpdateMeRequest {
 }
 
 export interface ChangePasswordRequest {
+  userId: string;
   currentPassword: string;
   newPassword: string;
 }
@@ -111,7 +112,8 @@ const normalizeLoginResponse = (payload: unknown): LoginResponse => {
   const fullName = String(userSource.fullName ?? userSource.name ?? "").trim();
   const [fallbackFirstName, ...restNames] = fullName.split(" ");
 
-  const rawRoles = userSource.roles ?? userSource.roleNames ?? userSource.permissions ?? [];
+  // Roles may be at the top level (data.roles) or nested under user (userSource.roles)
+  const rawRoles = userSource.roles ?? data.roles ?? userSource.roleNames ?? data.roleNames ?? userSource.permissions ?? [];
   const roles = Array.isArray(rawRoles)
     ? rawRoles.map((role) => String(role)).filter(Boolean)
     : typeof rawRoles === "string"
@@ -131,8 +133,8 @@ const normalizeLoginResponse = (payload: unknown): LoginResponse => {
     token: String(data.token ?? data.accessToken ?? data.jwt ?? root.token ?? root.accessToken ?? ""),
     expiresIn: Number.isFinite(expiresInValue) && expiresInValue > 0 ? expiresInValue : 1800,
     user: {
-      id: String(userSource.id ?? userSource.userId ?? ""),
-      email: String(userSource.email ?? userSource.userEmail ?? ""),
+      id: String(userSource.id ?? userSource.userId ?? data.id ?? ""),
+      email: String(userSource.email ?? userSource.userEmail ?? data.email ?? ""),
       firstName: firstName || fallbackFirstName || "",
       lastName: lastName || restNames.join(" ").trim(),
       roles,
@@ -301,6 +303,14 @@ export const authApi = createApi({
       },
     }),
 
+    // Refresh token — extends session for active users
+    refreshToken: builder.mutation<void, void>({
+      query: () => ({
+        url: "/auth/refresh",
+        method: "POST",
+      }),
+    }),
+
     getMe: builder.query<MeResponse, void>({
       query: () => ({
         url: "/auth/me",
@@ -375,6 +385,7 @@ export const {
   useResetPasswordMutation,
   useResendCodeMutation,
   useLogoutMutation,
+  useRefreshTokenMutation,
   useGetMeQuery,
   useUpdateMeMutation,
   useChangePasswordMutation,

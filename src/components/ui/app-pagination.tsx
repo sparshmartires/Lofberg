@@ -27,7 +27,7 @@ interface AppPaginationProps {
 
 export function AppPagination({
   currentPage = 1,
-  pageSize = 11,
+  pageSize = 10,
   totalCount = 150,
   onPageChange,
   onPageSizeChange,
@@ -138,7 +138,8 @@ export function AppPagination({
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="11">11</SelectItem>
+            <SelectItem value="10">10</SelectItem>
+            <SelectItem value="15">15</SelectItem>
             <SelectItem value="25">25</SelectItem>
             <SelectItem value="50">50</SelectItem>
           </SelectContent>
@@ -146,19 +147,6 @@ export function AppPagination({
       </div>
     </div>
     </div>
-    <div className="pagination-mobile">
-        <p className="pagination-results-text">
-          Results: {start}–{end} of {totalCount}
-        </p>
-
-        <button
-          className="pagination-load-more"
-          onClick={() => handlePageChange(clampedPage + 1)}
-          disabled={disabled || clampedPage >= totalPages}
-        >
-          Load more
-        </button>
-      </div>
     </>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, X } from "lucide-react"
 import { Select as SelectPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
@@ -28,9 +28,13 @@ function SelectTrigger({
   className,
   size = "default",
   children,
+  showClear,
+  onClear,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default"
+  showClear?: boolean
+  onClear?: () => void
 }) {
   return (
     <SelectPrimitive.Trigger
@@ -43,9 +47,23 @@ function SelectTrigger({
       {...props}
     >
       {children}
-      <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 opacity-50" />
-      </SelectPrimitive.Icon>
+      <div className="flex items-center gap-1 ml-auto shrink-0">
+        {showClear && onClear && (
+          <span
+            role="button"
+            tabIndex={0}
+            onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); onClear(); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); onClear(); } }}
+            className="[&>svg]:pointer-events-auto pointer-events-auto text-muted-foreground hover:text-foreground cursor-pointer"
+          >
+            <X className="size-3.5 pointer-events-auto" />
+          </span>
+        )}
+        <SelectPrimitive.Icon asChild>
+          <ChevronDownIcon className="size-4 opacity-50" />
+        </SelectPrimitive.Icon>
+      </div>
     </SelectPrimitive.Trigger>
   )
 }

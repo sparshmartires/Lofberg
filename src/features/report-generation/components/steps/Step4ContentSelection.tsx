@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Select,
@@ -17,6 +17,12 @@ import {
   useGetSegmentConversionsBySegmentQuery,
   useGetCO2ConversionsQuery,
 } from "@/store/services/conversionLogicApi"
+import {
+  useGetTemplatesQuery,
+  useGetTemplateVersionQuery,
+  PageType,
+} from "@/store/services/templatesApi"
+import { parseContentJson, type IncreasingImpactContent } from "@/features/template/types"
 
 const fieldClass =
   "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-body focus:ring-0 focus:outline-none"
@@ -28,6 +34,34 @@ export function Step4ContentSelection() {
   const step1 = useAppSelector((state) => state.reportWizard.step1)
 
   const segmentId = step1.customerSegmentId
+
+  // Fetch templates to get active version's impact block names
+  const { data: templates = [] } = useGetTemplatesQuery()
+  const reportTemplate = templates.find((t) => t.type === 0) // Report type
+  const activeVersionId = reportTemplate?.activeVersion?.id
+  const { data: versionData } = useGetTemplateVersionQuery(
+    { templateId: reportTemplate?.id ?? "", versionId: activeVersionId ?? "" },
+    { skip: !reportTemplate?.id || !activeVersionId }
+  )
+
+  // Extract custom action block names from the IncreasingImpact page content
+  const addOnLabels = useMemo(() => {
+    if (!versionData?.pages) return undefined
+    const impactPage = versionData.pages.find(
+      (p) => p.pageType === PageType.IncreasingPositiveImpact
+    )
+    if (!impactPage?.contentJson) return undefined
+    const content = parseContentJson<IncreasingImpactContent>(
+      impactPage.contentJson,
+      {} as IncreasingImpactContent
+    )
+    const labels: Partial<Record<AddOnBlock, string>> = {}
+    for (let i = 0; i < 10; i++) {
+      const name = (content as unknown as Record<string, string>)[`actionName${i + 1}`]
+      if (name) labels[i as AddOnBlock] = name
+    }
+    return Object.keys(labels).length > 0 ? labels : undefined
+  }, [versionData])
 
   // Fetch segment conversions for the customer's segment (skip if no segment)
   const { data: segmentConversions = [] } = useGetSegmentConversionsBySegmentQuery(
@@ -127,6 +161,7 @@ export function Step4ContentSelection() {
           selected={step4.selectedAddOnBlocks}
           onChange={handleAddOnChange}
           max={3}
+          labels={addOnLabels}
         />
       </div>
 

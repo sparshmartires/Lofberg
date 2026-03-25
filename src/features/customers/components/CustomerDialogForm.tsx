@@ -1,8 +1,9 @@
 "use client"
 
-import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form"
+import { Control, Controller, FieldErrors, UseFormRegister, UseFormTrigger, useWatch } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { formatPhoneDisplay } from "@/lib/phone"
 import {
   Select,
   SelectTrigger,
@@ -11,8 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Plus, Save, Upload } from "lucide-react"
+import { Plus, Save, Upload, X } from "lucide-react"
 import Image from "next/image"
+import { useGetCustomersQuery } from "@/store/services/customersApi"
 
 export interface CustomerFormValues {
   customerName: string
@@ -21,6 +23,7 @@ export interface CustomerFormValues {
   serviceTier: string
   region: string
   isSubCustomer: boolean
+  parentCustomerId: string
   contactPerson: string
   contactEmail: string
   contactPhone: string
@@ -35,12 +38,15 @@ interface CustomerDialogFormProps {
   control: Control<CustomerFormValues>
   register: UseFormRegister<CustomerFormValues>
   errors: FieldErrors<CustomerFormValues>
+  trigger?: UseFormTrigger<CustomerFormValues>
   segmentOptions: Array<{ id: string; name: string }>
   regionOptions: Array<{ id: string; name: string }>
   logoPreview?: string | null
+  onLogoRemove?: () => void
   submitError?: string
   isSubmitting?: boolean
   onCancel: () => void
+  hideActions?: boolean
 }
 
 const fieldClass =
@@ -51,22 +57,31 @@ export function CustomerDialogForm({
   control,
   register,
   errors,
+  trigger,
   segmentOptions,
   regionOptions,
   logoPreview,
+  onLogoRemove,
   submitError,
   isSubmitting = false,
   onCancel,
+  hideActions = false,
 }: CustomerDialogFormProps) {
+  const isSubCustomer = useWatch({ control, name: "isSubCustomer" })
+  const { data: parentOptions } = useGetCustomersQuery(
+    { pageNumber: 1, pageSize: 200, isActive: true },
+    { skip: !isSubCustomer }
+  )
+
   return (
     <div className="space-y-8 mt-6">
       <div className="space-y-6">
-        <h3 className="text-lg font-medium">Customer Information</h3>
+        <h3 className="text-lg font-medium">Customer information</h3>
 
         <div className="space-y-2">
-          <label>Customer Name *</label>
+          <label>Customer name</label>
           <Input
-            placeholder="Eg. cafe Aroma oslo"
+            placeholder="Eg. Cafe Aroma Oslo"
             className={fieldClass}
             {...register("customerName", {
               required: "Customer name is required",
@@ -79,7 +94,7 @@ export function CustomerDialogForm({
 
         <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label>Account Code / ERP ID</label>
+            <label>Account code / ERP ID</label>
             <Input
               placeholder="CA-001"
               className={fieldClass}
@@ -88,7 +103,7 @@ export function CustomerDialogForm({
           </div>
 
           <div className="space-y-2">
-            <label>Industry / Segment</label>
+            <label>Market segment</label>
             <Controller
               name="industry"
               control={control}
@@ -110,7 +125,7 @@ export function CustomerDialogForm({
           </div>
 
           <div className="space-y-2">
-            <label>Service Tier</label>
+            <label>Service tier</label>
             <Controller
               name="serviceTier"
               control={control}
@@ -162,16 +177,46 @@ export function CustomerDialogForm({
               />
             )}
           />
-          <label>Enable as subcustomer</label>
+          <label>Sub-customer</label>
         </div>
+
+        {isSubCustomer && (
+          <div className="space-y-2">
+            <label>Parent customer</label>
+            <Controller
+              name="parentCustomerId"
+              control={control}
+              rules={{ required: isSubCustomer ? "Parent customer is required" : false }}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className={fieldClass}>
+                    <SelectValue placeholder="Select parent customer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(parentOptions?.items ?? [])
+                      .filter((c) => !c.isSubCustomer)
+                      .map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.parentCustomerId && (
+              <p className="text-xs text-red-500">{errors.parentCustomerId.message}</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="space-y-6">
-        <h3 className="text-lg font-medium">Contact Information</h3>
+        <h3 className="text-lg font-medium">Contact information</h3>
 
         <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label>Contact Person</label>
+            <label>Contact person</label>
             <Input
               placeholder="Add name"
               className={fieldClass}
@@ -180,10 +225,10 @@ export function CustomerDialogForm({
           </div>
 
           <div className="space-y-2">
-            <label>Contact Email</label>
+            <label>Contact email</label>
             <Input
               type="email"
-              placeholder="Enter email id"
+              placeholder="Enter email"
               className={fieldClass}
               {...register("contactEmail", {
                 pattern: {
@@ -191,6 +236,7 @@ export function CustomerDialogForm({
                   message: "Invalid email address",
                 },
               })}
+              onBlur={() => trigger?.("contactEmail")}
             />
             {errors.contactEmail && (
               <p className="text-xs text-red-500">
@@ -200,18 +246,37 @@ export function CustomerDialogForm({
           </div>
 
           <div className="space-y-2 min-[700px]:col-span-2">
-            <label>Contact Phone</label>
-            <Input
-              placeholder="Enter phone number"
-              className={fieldClass}
-              {...register("contactPhone")}
+            <label>Contact phone</label>
+            <Controller
+              name="contactPhone"
+              control={control}
+              rules={{
+                validate: (val) => {
+                  if (!val) return true
+                  const digits = val.replace(/\D/g, "")
+                  return digits.length >= 10 || "Phone number must be at least 10 digits"
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  type="tel"
+                  placeholder="+XX XXXXX XXXXX"
+                  className={fieldClass}
+                  value={formatPhoneDisplay(field.value)}
+                  onChange={(e) => field.onChange(e.target.value.replace(/\D/g, "").slice(0, 12))}
+                  onBlur={() => trigger?.("contactPhone")}
+                />
+              )}
             />
+            {errors.contactPhone && (
+              <p className="text-xs text-red-500">{errors.contactPhone.message}</p>
+            )}
           </div>
 
           <div className="space-y-2 min-[700px]:col-span-2">
             <label>Address</label>
             <Input
-              placeholder="Add Address"
+              placeholder="Add address"
               className={fieldClass}
               {...register("address")}
             />
@@ -220,10 +285,8 @@ export function CustomerDialogForm({
       </div>
 
       <div className="space-y-6">
-        <h3 className="text-lg font-medium">Admin controls / Metadata</h3>
-
         <div className="space-y-2">
-          <label>Status *</label>
+          <label>Status</label>
           <Controller
             name="status"
             control={control}
@@ -235,7 +298,7 @@ export function CustomerDialogForm({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="inactive">Archived</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -246,7 +309,7 @@ export function CustomerDialogForm({
         </div>
 
         <div className="space-y-2">
-          <label>Notes / Comments</label>
+          <label>Notes / comments</label>
           <textarea
             rows={4}
             placeholder="Internal admin notes"
@@ -256,49 +319,54 @@ export function CustomerDialogForm({
         </div>
 
         <div className="space-y-4">
-          <div>
-            <h3 className="text-lg font-medium text-[#1F1F1F]">
-              Customer logo
-            </h3>
-            <p className="text-sm text-[#747474] mt-1">Upload Logo</p>
-          </div>
+          <label>Customer logo</label>
 
           <Controller
             name="logo"
             control={control}
             render={({ field }) => (
               <div className="relative">
-                <input
-                  type="file"
-                  accept=".png,.jpg,.jpeg,.svg"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                  onChange={(e) => field.onChange(e.target.files)}
-                />
-
-                <div className="flex flex-col items-center justify-center text-center px-6 py-12 rounded-[28px] border-2 border-dashed border-[#D9C2F3] bg-[#FAF7FF] transition-colors hover:bg-[#F5EDFF]">
-                  {logoPreview ? (
+                {logoPreview ? (
+                  <div className="relative inline-block">
                     <Image
                       src={logoPreview}
-                      alt="Logo Preview"
+                      alt="Logo preview"
                       width={160}
                       height={80}
-                      className="h-20 w-auto object-contain mb-4"
+                      className="h-20 w-auto object-contain rounded-lg border border-[#F0F0F0] p-2"
                       unoptimized
                     />
-                  ) : (
-                    <>
+                    {onLogoRemove && (
+                      <button
+                        type="button"
+                        onClick={onLogoRemove}
+                        className="absolute -top-1 -right-1 w-5 h-5 rounded-full border border-[#D1D5DB] text-[#D1D5DB] flex items-center justify-center hover:border-[#9CA3AF] hover:text-[#9CA3AF] bg-white"
+                      >
+                        <X className="h-3 w-3" strokeWidth={2} />
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept=".png,.jpg,.jpeg,.svg"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      onChange={(e) => field.onChange(e.target.files)}
+                    />
+                    <div className="flex flex-col items-center justify-center text-center px-6 py-12 rounded-[28px] border-2 border-dashed border-[#D9C2F3] bg-[#FAF7FF] transition-colors hover:bg-[#F5EDFF]">
                       <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#F3E8FF] mb-4">
                         <Upload className="h-6 w-6 text-[#6B21A8]" />
                       </div>
                       <p className="text-[15px] font-medium text-[#374151]">
-                        Upload a File or Drag and Drop
+                        Upload a file or drag and drop
                       </p>
                       <p className="text-sm text-[#9CA3AF] mt-1">
                         PNG, JPG or SVG recommended
                       </p>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           />
@@ -309,42 +377,44 @@ export function CustomerDialogForm({
         <p className="text-sm text-destructive">{submitError}</p>
       ) : null}
 
-      <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
-        <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
-          <Button
-            type="button"
-            variant="outlineBrand"
-            onClick={onCancel}
-            disabled={isSubmitting}
-            className="w-full px-[20px] py-[10px]"
-          >
-            Cancel
-          </Button>
-        </div>
+      {!hideActions && (
+        <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">
+          <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
+            <Button
+              type="button"
+              variant="outlineBrand"
+              onClick={onCancel}
+              disabled={isSubmitting}
+              className="w-full px-[20px] py-[10px]"
+            >
+              Cancel
+            </Button>
+          </div>
 
-        <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting}
-            className="w-full px-[20px] py-[10px]"
-          >
-            {isSubmitting ? (
-              mode === "add" ? "Adding..." : "Saving..."
-            ) : mode === "add" ? (
-              <>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Customer
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Save Customer
-              </>
-            )}
-          </Button>
+          <div className="w-[200px] max-[600px]:w-auto max-[600px]:flex-1 min-w-0">
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+              className="w-full px-[20px] py-[10px]"
+            >
+              {isSubmitting ? (
+                mode === "add" ? "Adding..." : "Saving..."
+              ) : mode === "add" ? (
+                <>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add customer
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save changes
+                </>
+              )}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -5,7 +5,9 @@ import { useMemo, useState } from "react"
 import { AppPagination } from "@/components/ui/app-pagination"
 import { UsersTable } from "../components/UsersTable"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
-import { UsersHeaderActions } from "../components/UsersHeaderActions"
+import { SearchInput } from "@/components/ui/search-input"
+import { useDebounce } from "@/hooks/useDebounce"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
 import { useGetUsersQuery } from "@/store/services/usersApi"
@@ -15,10 +17,13 @@ import { Loader2 } from "lucide-react"
 export function UsersPage() {
   const [open, setOpen] = useState(false)
   const [successOpen, setSuccessOpen] = useState(false)
-  const [search, setSearch] = useState("")
+  const [searchInput, setSearchInput] = useState("")
+  const search = useDebounce(searchInput, 300)
   const [status, setStatus] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(11)
+  const [pageSize, setPageSize] = useState(10)
+  const [sortBy, setSortBy] = useState("")
+  const [sortDirection, setSortDirection] = useState("asc")
 
   const isActiveFilter = useMemo(() => {
     if (status === "active") return true
@@ -36,6 +41,8 @@ export function UsersPage() {
     pageSize,
     ...(search.trim() ? { searchTerm: search.trim() } : {}),
     ...(typeof isActiveFilter === "boolean" ? { isActive: isActiveFilter } : {}),
+    ...(sortBy ? { sortBy } : {}),
+    ...(sortBy ? { sortDirection } : {}),
   })
 
   const users = usersResponse?.items ?? []
@@ -49,13 +56,20 @@ export function UsersPage() {
     }, 200)
   }
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value)
+  const handleFilterChange = (setter: (v: string) => void) => (value: string) => {
+    setter(value)
     setPageNumber(1)
   }
 
-  const handleStatusChange = (value: string) => {
-    setStatus(value)
+  const fieldClass = "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-[#1F1F1F] focus:ring-0 focus:outline-none"
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortBy(column)
+      setSortDirection("asc")
+    }
     setPageNumber(1)
   }
 
@@ -70,27 +84,45 @@ export function UsersPage() {
 
         {/* Header */}
         <PageHeaderWithAction
-          title="User Management"
-          description="Manage system administrators and users"
-          actionLabel="Add User"
+          title="User management"
+          actionLabel="Add user"
           onActionClick={() => setOpen(true)}
         />
 
 
+        {/* Filters */}
+        <div className="filters-card">
+          <div className="flex flex-wrap gap-4 items-end max-[649px]:flex-col">
+            <div className="filter-field flex-[2] min-w-[280px] max-[649px]:min-w-0 max-[649px]:w-full">
+              <label>Search</label>
+              <SearchInput
+                placeholder="Search by name or email"
+                value={searchInput}
+                onChange={setSearchInput}
+                className={fieldClass}
+              />
+            </div>
+            <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+              <label>Status</label>
+              <Select value={status} onValueChange={handleFilterChange(setStatus)}>
+                <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => handleFilterChange(setStatus)("all")}>
+                  <SelectValue placeholder="All statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All statuses</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Archived</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
         {/* Card Container */}
         <div className="rounded-[24px] bg-white shadow-sm py-[32px] px-[24px] max-[649px]:p-[12px]">
 
-          <div className="flex items-center justify-between mb-[28px] max-[649px]:mb-[16px] gap-6">
-            <PageSectionTitle title="System Users" />
-            <div className="max-[649px]:hidden">
-              <UsersHeaderActions
-                search={search}
-                status={status}
-                isLoading={isFetching}
-                onSearchChange={handleSearchChange}
-                onStatusChange={handleStatusChange}
-              />
-            </div>
+          <div className="mb-[28px] max-[649px]:mb-[16px]">
+            <PageSectionTitle title="Users" />
           </div>
 
           {error ? (
@@ -105,7 +137,7 @@ export function UsersPage() {
                 </div>
               ) : null}
               <div className={isLoading || isFetching ? "opacity-70" : ""}>
-                <UsersTable users={users} />
+                <UsersTable users={users} sortBy={sortBy} sortDirection={sortDirection} onSort={handleSort} />
               </div>
             </div>
           )}
