@@ -9,6 +9,7 @@ interface FileDropZoneProps {
   acceptLabel?: string
   file: File | null
   previewUrl?: string | null
+  fallbackFileName?: string | null
   onFileChange: (file: File | null) => void
   className?: string
 }
@@ -18,6 +19,7 @@ export function FileDropZone({
   acceptLabel = "CSV or XLSX up to 100 MB",
   file,
   previewUrl,
+  fallbackFileName,
   onFileChange,
   className = "",
 }: FileDropZoneProps) {
@@ -101,7 +103,7 @@ export function FileDropZone({
       />
 
       <div className="flex flex-col items-center justify-center text-center px-6 py-3 h-full">
-        {file || displayUrl ? (
+        {file || displayUrl || fallbackFileName ? (
           <div className="relative">
             {isImage && displayUrl ? (
               <Image
@@ -114,7 +116,7 @@ export function FileDropZone({
               />
             ) : (
               <p className="text-[15px] font-medium text-[#374151]">
-                {file?.name ?? "Uploaded file"}
+                {file?.name ?? fallbackFileName ?? "Uploaded file"}
               </p>
             )}
             <button

@@ -110,14 +110,21 @@ export function Step1CustomerDetails() {
     [dispatch]
   )
 
-  // Revoke the object URL on unmount
+  // Restore preview URL on remount if file exists in ref
   useEffect(() => {
+    const existingFile = getCustomerLogoFile()
+    if (existingFile && !prevLogoUrlRef.current) {
+      const url = URL.createObjectURL(existingFile)
+      prevLogoUrlRef.current = url
+      dispatch(updateStep1({ customerLogoUrl: url }))
+    }
     return () => {
       if (prevLogoUrlRef.current) {
         URL.revokeObjectURL(prevLogoUrlRef.current)
+        prevLogoUrlRef.current = null
       }
     }
-  }, [])
+  }, [dispatch])
 
   const languages = languagesData ?? []
 

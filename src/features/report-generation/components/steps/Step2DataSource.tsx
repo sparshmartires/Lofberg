@@ -183,15 +183,8 @@ export function Step2DataSource() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-[#1F1F1F]">Customer and report details</h2>
-        <p className="text-sm text-[#747474] mt-1">
-          Illustrates the percentage breakdown of report types generated
-        </p>
+        <h2 className="text-lg font-semibold text-[#1F1F1F]">Purchase data</h2>
       </div>
-
-      <p className="text-sm text-[#1F1F1F]">
-        Fill in the form fields below to create a new sustainable offer!
-      </p>
 
       {/* File Upload */}
       <div className="space-y-2">
@@ -202,6 +195,7 @@ export function Step2DataSource() {
           accept=".csv,.xlsx,.xls"
           acceptLabel="CSV or XLSX up to 100 MB"
           file={localFile}
+          fallbackFileName={step2.dataFileName}
           onFileChange={parseFile}
         />
         {parseError && (
@@ -211,7 +205,6 @@ export function Step2DataSource() {
 
       {/* Data Table */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-[#1F1F1F]">Data display table</label>
         <DataSourceTable rows={step2.rows} onChange={handleRowsChange} />
       </div>
     </div>

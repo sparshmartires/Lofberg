@@ -1,7 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
-import { Input } from "@/components/ui/input"
+import { useCallback, useState } from "react"
 import {
   CertificationDataRow,
   CertificationType,
@@ -15,13 +14,66 @@ interface DataSourceTableProps {
 }
 
 const cellInputClass =
-  "w-[80px] h-[36px] rounded-[8px] border border-[#F0F0F0] px-2 py-1 text-sm text-center shadow-[0px_1px_2px_0px_#0000000A] focus:ring-0 focus:outline-none"
+  "w-[110px] h-[36px] rounded-[8px] border border-[#F0F0F0] px-2 py-1 text-sm text-center shadow-[0px_1px_2px_0px_#0000000A] focus:ring-0 focus:outline-none"
+
+/** Format a number for EU display (e.g., 1.234,56) */
+function formatEu(val: number | null): string {
+  if (val === null || val === undefined) return ""
+  return val.toLocaleString("de-DE", { maximumFractionDigits: 2 })
+}
+
+/** Parse an EU-formatted string back to a number */
+function parseEu(str: string): number | null {
+  if (!str.trim()) return null
+  // Replace dots (thousands) and convert comma (decimal) to dot
+  const normalized = str.replace(/\./g, "").replace(",", ".")
+  const n = Number(normalized)
+  return isNaN(n) ? null : n
+}
+
+/** Controlled EU-formatted input that shows raw number on focus */
+function EuNumberInput({
+  value,
+  onChange,
+  className,
+  step,
+}: {
+  value: number | null
+  onChange: (val: string) => void
+  className: string
+  step?: string
+}) {
+  const [editing, setEditing] = useState(false)
+  const [editValue, setEditValue] = useState("")
+
+  const handleFocus = () => {
+    setEditing(true)
+    setEditValue(value !== null && value !== undefined ? String(value) : "")
+  }
+
+  const handleBlur = () => {
+    setEditing(false)
+    onChange(editValue)
+  }
+
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      className={className}
+      value={editing ? editValue : formatEu(value)}
+      onChange={(e) => setEditValue(e.target.value)}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    />
+  )
+}
 
 export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
   const updateRow = useCallback(
     (index: number, field: keyof CertificationDataRow, value: string) => {
       const updated = [...rows]
-      const numVal = value === "" ? null : Number(value)
+      const numVal = parseEu(value)
       updated[index] = { ...updated[index], [field]: numVal }
       onChange(updated)
     },
@@ -38,8 +90,8 @@ export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
           <tr className="border-b border-[#F0F0F0]">
             <th className="text-left py-3 px-3 font-medium text-[#1F1F1F] min-w-[160px]">Name</th>
             <th className="text-center py-3 px-3 font-medium text-[#1F1F1F]">Qty (kg)</th>
-            <th className="text-center py-3 px-3 font-medium text-[#1F1F1F]">Football Fields</th>
-            <th className="text-center py-3 px-3 font-medium text-[#1F1F1F]">Cups of Coffee</th>
+            <th className="text-center py-3 px-3 font-medium text-[#1F1F1F]">Football fields</th>
+            <th className="text-center py-3 px-3 font-medium text-[#1F1F1F]">Cups of coffee</th>
             <th className="text-center py-3 px-3 font-medium text-[#1F1F1F]">Currency (&euro;)</th>
           </tr>
         </thead>
@@ -65,10 +117,9 @@ export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
                   {ftPremier ? (
                     <span className="text-[#9CA3AF]">&mdash;</span>
                   ) : (
-                    <Input
-                      type="number"
-                      value={row.quantityKg ?? ""}
-                      onChange={(e) => updateRow(index, "quantityKg", e.target.value)}
+                    <EuNumberInput
+                      value={row.quantityKg}
+                      onChange={(v) => updateRow(index, "quantityKg", v)}
                       className={cellInputClass}
                     />
                   )}
@@ -78,12 +129,11 @@ export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
                   {ftPremier || co2 ? (
                     <span className="text-[#9CA3AF]">{co2 ? "N/A" : "\u2014"}</span>
                   ) : (
-                    <Input
-                      type="number"
+                    <EuNumberInput
+                      value={row.footballFields}
+                      onChange={(v) => updateRow(index, "footballFields", v)}
+                      className={cellInputClass}
                       step="0.1"
-                      value={row.footballFields ?? ""}
-                      onChange={(e) => updateRow(index, "footballFields", e.target.value)}
-                      className={cellInputClass}
                     />
                   )}
                 </td>
@@ -92,10 +142,9 @@ export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
                   {ftPremier || co2 ? (
                     <span className="text-[#9CA3AF]">{co2 ? "N/A" : "\u2014"}</span>
                   ) : (
-                    <Input
-                      type="number"
-                      value={row.cupsOfCoffee ?? ""}
-                      onChange={(e) => updateRow(index, "cupsOfCoffee", e.target.value)}
+                    <EuNumberInput
+                      value={row.cupsOfCoffee}
+                      onChange={(v) => updateRow(index, "cupsOfCoffee", v)}
                       className={cellInputClass}
                     />
                   )}
@@ -103,12 +152,11 @@ export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
 
                 <td className="py-3 px-3 text-center">
                   {ftPremier ? (
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={row.currencyAmount ?? ""}
-                      onChange={(e) => updateRow(index, "currencyAmount", e.target.value)}
+                    <EuNumberInput
+                      value={row.currencyAmount}
+                      onChange={(v) => updateRow(index, "currencyAmount", v)}
                       className={cellInputClass}
+                      step="0.01"
                     />
                   ) : (
                     <span className="text-[#9CA3AF]">N/A</span>
@@ -119,11 +167,6 @@ export function DataSourceTable({ rows, onChange }: DataSourceTableProps) {
           })}
         </tbody>
       </table>
-
-      <p className="text-xs text-[#9CA3AF] mt-4 px-3">
-        FT Premier values represent financial impact: premiums paid to cooperatives and increased
-        income for organic farming.
-      </p>
     </div>
   )
 }
