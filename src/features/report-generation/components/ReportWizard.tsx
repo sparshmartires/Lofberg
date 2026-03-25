@@ -52,8 +52,8 @@ export function ReportWizard() {
       )}
 
       {/* Navigation Bar — same width as content grid above */}
-      <div className="rounded-[24px] bg-white shadow-sm px-6 py-4 flex items-center justify-between">
-        {/* Back — same variant/size as Save as draft */}
+      <div className="rounded-[24px] bg-white shadow-sm px-4 sm:px-6 py-4 flex items-center justify-between">
+        {/* Back */}
         <Button
           type="button"
           variant="outlineBrand"
@@ -62,11 +62,11 @@ export function ReportWizard() {
           className="gap-2"
         >
           <ChevronLeft className="h-4 w-4" />
-          Back
+          <span className="hidden sm:inline">Back</span>
         </Button>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Button
             type="button"
             variant="outlineBrand"
@@ -75,7 +75,7 @@ export function ReportWizard() {
             className="gap-2"
           >
             <Save className="h-4 w-4" />
-            {isSaving ? "Saving..." : "Save as draft"}
+            <span className="hidden sm:inline">{isSaving ? "Saving..." : "Save as draft"}</span>
           </Button>
 
           {!isLastStep && (
@@ -85,7 +85,7 @@ export function ReportWizard() {
               onClick={goNext}
               className="gap-2"
             >
-              Next
+              <span className="hidden sm:inline">Next</span>
               <ChevronRight className="h-4 w-4" />
             </Button>
           )}

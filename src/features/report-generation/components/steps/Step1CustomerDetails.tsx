@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/select"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep1 } from "@/store/slices/reportWizardSlice"
-import { useGetSalesRepresentativesQuery } from "@/store/services/salesRepresentativesApi"
 import { useGetTemplateLanguagesQuery } from "@/store/services/templatesApi"
 import { CustomerItem, useGetCustomerSegmentsQuery } from "@/store/services/customersApi"
 import { CustomerSearchCombobox } from "../CustomerSearchCombobox"
+import { SalespersonSearchCombobox } from "../SalespersonSearchCombobox"
 import { FileDropZone } from "../FileDropZone"
 import { getCustomerLogoFile, setCustomerLogoFile } from "../../customerLogoRef"
 import type { Step1Data } from "../../types"
@@ -33,10 +33,6 @@ export function Step1CustomerDetails() {
 
   const isSalesperson = authUser?.roles?.includes("Salesperson") ?? false
 
-  const { data: salesRepsData } = useGetSalesRepresentativesQuery(
-    { pageNumber: 1, pageSize: 100 },
-    { skip: isSalesperson }
-  )
 
   const { data: languagesData } = useGetTemplateLanguagesQuery()
   const { data: segments = [] } = useGetCustomerSegmentsQuery()
@@ -123,16 +119,12 @@ export function Step1CustomerDetails() {
     }
   }, [])
 
-  const salesReps = salesRepsData?.items ?? []
   const languages = languagesData ?? []
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-lg font-semibold text-[#1F1F1F]">Customer and report details</h2>
-        <p className="text-sm text-[#747474] mt-1">
-          Fill in the form fields below to create a new sustainable offer!
-        </p>
       </div>
 
       {/* Customer Name + Salesperson */}
@@ -140,7 +132,7 @@ export function Step1CustomerDetails() {
         <div className="space-y-2">
           {editingReportId ? (
             <>
-              <label className="text-sm font-medium text-[#1F1F1F]">Customer name</label>
+              <label className="text-sm font-medium text-[#1F1F1F]">Customer</label>
               <Input
                 value={step1.customerName}
                 disabled
@@ -150,7 +142,7 @@ export function Step1CustomerDetails() {
           ) : (
             <>
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-[#1F1F1F]">Customer name</label>
+                <label className="text-sm font-medium text-[#1F1F1F]">Customer</label>
                 <button
                   type="button"
                   onClick={() => {
@@ -225,35 +217,21 @@ export function Step1CustomerDetails() {
               className={fieldClass}
             />
           ) : (
-            <Controller
-              name="salesRepresentativeId"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  value={step1.salesRepresentativeId || field.value}
-                  onValueChange={(val) => {
-                    field.onChange(val)
-                    const rep = salesReps.find((r) => r.id === val)
-                    if (rep) {
-                      dispatch(updateStep1({
-                        salesRepresentativeId: val,
-                        salesRepresentativeName: `${rep.firstName} ${rep.lastName}`,
-                      }))
-                    }
-                  }}
-                >
-                  <SelectTrigger className={fieldClass}>
-                    <SelectValue placeholder="Select a salesperson" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {salesReps.map((rep) => (
-                      <SelectItem key={rep.id} value={rep.id}>
-                        {rep.firstName} {rep.lastName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+            <SalespersonSearchCombobox
+              value={step1.salesRepresentativeName || ""}
+              selectedId={step1.salesRepresentativeId || null}
+              onSelect={(rep) => {
+                dispatch(updateStep1({
+                  salesRepresentativeId: rep.id,
+                  salesRepresentativeName: `${rep.firstName} ${rep.lastName}`,
+                }))
+              }}
+              onClear={() => {
+                dispatch(updateStep1({
+                  salesRepresentativeId: "",
+                  salesRepresentativeName: "",
+                }))
+              }}
             />
           )}
         </div>
