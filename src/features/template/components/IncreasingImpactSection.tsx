@@ -123,7 +123,7 @@ export default function IncreasingImpactSection({
           const textField = `actionText${block.index}` as TextFieldKey
           const imageField = `actionImage${block.index}` as ImageFieldKey
           const nameField = `actionName${block.index}` as TextFieldKey
-          const currentName = (parsed as Record<string, string>)[nameField] || block.label
+          const currentName = (parsed as unknown as Record<string, string>)[nameField] || block.label
 
           return (
             <div

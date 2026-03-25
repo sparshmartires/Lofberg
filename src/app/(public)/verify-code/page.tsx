@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -7,6 +8,14 @@ import { BackButton } from "@/components/ui/back-button"
 import { useVerifyCodeMutation, useResendCodeMutation } from "@/store/services/authApi"
 
 export default function VerifyCodePage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8">Loading...</div>}>
+      <VerifyCodeForm />
+    </Suspense>
+  )
+}
+
+function VerifyCodeForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get("email")

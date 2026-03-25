@@ -57,7 +57,7 @@ export function Step4ContentSelection() {
     )
     const labels: Partial<Record<AddOnBlock, string>> = {}
     for (let i = 0; i < 10; i++) {
-      const name = (content as Record<string, string>)[`actionName${i + 1}`]
+      const name = (content as unknown as Record<string, string>)[`actionName${i + 1}`]
       if (name) labels[i as AddOnBlock] = name
     }
     return Object.keys(labels).length > 0 ? labels : undefined

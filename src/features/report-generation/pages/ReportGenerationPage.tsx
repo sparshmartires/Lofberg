@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { Suspense, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { loadDraft, resetWizard } from "@/store/slices/reportWizardSlice"
@@ -9,6 +9,14 @@ import { ReportWizard } from "../components/ReportWizard"
 import { StepProgressTracker } from "../components/StepProgressTracker"
 
 export function ReportGenerationPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8">Loading...</div>}>
+      <ReportGenerationContent />
+    </Suspense>
+  )
+}
+
+function ReportGenerationContent() {
   const dispatch = useAppDispatch()
   const currentStep = useAppSelector((state) => state.reportWizard.currentStep)
   const searchParams = useSearchParams()
