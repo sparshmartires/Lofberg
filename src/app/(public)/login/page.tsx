@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { useLoginMutation } from "@/store/services/authApi"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, Loader2 } from "lucide-react"
 
 interface LoginFormValues {
   email: string
@@ -35,9 +35,17 @@ export default function LoginPage() {
       }).unwrap()
 
       // Navigate on success
-      router.push("/users")
+      router.push("/dashboard")
     } catch (err: any) {
-      setLoginError(err?.data?.error || err?.message || "Login failed. Please try again.")
+      // Check for first-login password change requirement (403 with requirePasswordChange)
+      const errData = err?.data?.data || err?.data
+      if (errData?.requirePasswordChange && errData?.userId) {
+        sessionStorage.setItem("firstLoginUserId", errData.userId)
+        sessionStorage.setItem("firstLoginPassword", data.password)
+        router.push("/change-password")
+        return
+      }
+      setLoginError(err?.data?.error || err?.data?.message || err?.message || "Login failed. Please try again.")
     }
   }
 
@@ -139,7 +147,7 @@ export default function LoginPage() {
               className="login-submit-btn"
               disabled={isLoading || isSubmitting}
             >
-              {isLoading ? "Logging in..." : "Log in"}
+              {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" /> Logging in...</> : "Log in"}
             </Button>
           </div>
         </form>

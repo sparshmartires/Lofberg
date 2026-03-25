@@ -12,16 +12,10 @@ import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
 interface UserProfileDropdownProps {
-  currentRole?: string
-  onRoleChange?: (role: string) => void
   onLogout?: () => void
 }
 
-export function UserProfileDropdown({
-  currentRole = "Administrator",
-  onRoleChange,
-  onLogout,
-}: UserProfileDropdownProps) {
+export function UserProfileDropdown({ onLogout }: UserProfileDropdownProps) {
   const router = useRouter()
 
   return (
@@ -30,10 +24,10 @@ export function UserProfileDropdown({
         <button
           data-testid="user-menu"
           className={cn(
-            "flex items-center gap-2",
-            "h-[48px]",
-            "px-[20px]",
-            "rounded-[99px]",
+            "flex items-center gap-1.5",
+            "h-[40px]",
+            "px-[12px]",
+            "rounded-full",
             "bg-white",
             "text-[#1F1F1F]",
             "shadow-[0px_2px_4px_0px_#0000000A]",
@@ -43,68 +37,33 @@ export function UserProfileDropdown({
           )}
         >
           <User size={18} />
-          <span className="text-sm font-medium">Admin User</span>
-          <ChevronDown size={16} />
+          <ChevronDown size={14} />
         </button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
         align="end"
         className={cn(
-          "w-[190px]",
-          "rounded-[20px]",
-          "p-4",
+          "w-[160px]",
+          "rounded-[16px]",
+          "p-2",
           "bg-white",
           "shadow-lg"
         )}
       >
-        {/* My Profile */}
         <DropdownMenuItem
-          className="text-sm cursor-pointer"
+          className="text-sm cursor-pointer rounded-lg"
           onClick={() => router.push("/profile")}
         >
-          My Profile
+          My profile
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
-        <div className="text-sm text-muted-foreground px-2 py-1">
-          Switch role
-        </div>
-
-        {/* Administrator */}
-        <DropdownMenuItem
-          onClick={() => onRoleChange?.("Administrator")}
-          className={`text-sm cursor-pointer ${
-            currentRole === "Administrator"
-              ? "bg-purple-100 text-purple-700 rounded-lg"
-              : ""
-          }`}
-        >
-          Administrator
-        </DropdownMenuItem>
-
-        <DropdownMenuItem
-          onClick={() => onRoleChange?.("Sales Representative")}
-          className="text-sm cursor-pointer"
-        >
-          Sales Representative
-        </DropdownMenuItem>
-
-        <DropdownMenuItem
-          onClick={() => onRoleChange?.("Translator")}
-          className="text-sm cursor-pointer"
-        >
-          Translator
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        {/* Logout */}
         <DropdownMenuItem
           data-testid="logout-button"
           onClick={onLogout}
-          className="text-sm cursor-pointer"
+          className="text-sm cursor-pointer rounded-lg"
         >
           Logout
         </DropdownMenuItem>

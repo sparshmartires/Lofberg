@@ -11,6 +11,7 @@ export function middleware(request: NextRequest) {
     "/forgot-password",
     "/reset-password",
     "/verify-code",
+    "/change-password",
   ]
 
   const isPublicRoute = publicRoutes.some((route) =>

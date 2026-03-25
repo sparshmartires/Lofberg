@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useWatch } from "react-hook-form"
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,6 @@ import {
   useCreateCustomerMutation,
   useGetCustomerRegionsQuery,
   useGetCustomerSegmentsQuery,
-  useUploadCustomerLogoMutation,
 } from "@/store/services/customersApi"
 
 interface AddCustomerDialogProps {
@@ -29,23 +29,41 @@ export function AddCustomerDialog({
   onCustomerCreated,
 }: AddCustomerDialogProps) {
   const [createCustomer, { isLoading: isCreating }] = useCreateCustomerMutation()
-  const [uploadCustomerLogo] = useUploadCustomerLogoMutation()
   const { data: segmentOptions = [] } = useGetCustomerSegmentsQuery()
   const { data: regionOptions = [] } = useGetCustomerRegionsQuery()
   const [submitError, setSubmitError] = useState("")
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
     control,
+    trigger,
+    setValue,
     formState: { errors },
     reset,
   } = useForm<CustomerFormValues>({
     defaultValues: {
       status: "active",
       isSubCustomer: false,
+      parentCustomerId: "",
     },
   })
+
+  const logoFile = useWatch({ control, name: "logo" })
+
+  useEffect(() => {
+    if (logoFile && logoFile.length > 0) {
+      const reader = new FileReader()
+      reader.onloadend = () => setLogoPreview(reader.result as string)
+      reader.readAsDataURL(logoFile[0])
+    }
+  }, [logoFile])
+
+  const handleLogoRemove = () => {
+    setValue("logo", null)
+    setLogoPreview(null)
+  }
 
   const getApiErrorMessage = (error: unknown) => {
     if (typeof error === "object" && error !== null) {
@@ -98,28 +116,23 @@ export function AddCustomerDialog({
     setSubmitError("")
 
     try {
-      const createResult = await createCustomer({
+      const logoFile = data.logo?.[0]
+      await createCustomer({
         name: data.customerName,
         accountCode: data.accountCode || null,
         segmentId: data.industry,
         serviceTier: Number(data.serviceTier),
         regionId: data.region,
         isSubCustomer: data.isSubCustomer,
-        parentCustomerId: null,
+        parentCustomerId: data.isSubCustomer ? data.parentCustomerId || null : null,
         contactName: data.contactPerson || null,
         contactEmail: data.contactEmail || null,
         contactPhone: data.contactPhone || null,
         address: data.address || null,
         isActive: data.status === "active",
         notes: data.notes || null,
-      }).unwrap()
-
-      const logoFile = data.logo?.[0]
-      const createdCustomerId = extractEntityId(createResult)
-
-      if (logoFile && createdCustomerId) {
-        await uploadCustomerLogo({ id: createdCustomerId, file: logoFile }).unwrap()
-      }
+        ...(logoFile ? { logo: logoFile } : {}),
+      } as any).unwrap()
 
       onCustomerCreated()
       reset()
@@ -133,14 +146,14 @@ export function AddCustomerDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-h-[calc(100vh-2rem)] overflow-y-auto max-[600px]:p-8"
+        className="w-[calc(100%-2rem)] max-w-[880px] rounded-[32px] p-10 bg-white max-h-[calc(100vh-2rem)] overflow-y-auto"
       >
         <div className="space-y-2">
           <DialogTitle className="text-[24px] font-normal">
-            Add new Customer
+            Add new customer
           </DialogTitle>
           <DialogDescription className="text-[14px] text-[#747474]">
-            Add new customer to your system
+            Add a new customer to your system
           </DialogDescription>
         </div>
 
@@ -149,9 +162,12 @@ export function AddCustomerDialog({
             mode="add"
             register={register}
             control={control}
+            trigger={trigger}
             errors={errors}
             segmentOptions={segmentOptions}
             regionOptions={regionOptions}
+            logoPreview={logoPreview}
+            onLogoRemove={handleLogoRemove}
             submitError={submitError}
             isSubmitting={isCreating}
             onCancel={() => onOpenChange(false)}

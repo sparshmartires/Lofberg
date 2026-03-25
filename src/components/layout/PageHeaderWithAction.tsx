@@ -4,7 +4,7 @@ import { Plus } from "lucide-react"
 
 type PageHeaderWithActionProps = {
   title: string
-  description: string
+  description?: string
   actionLabel?: string
   onActionClick?: () => void
   className?: string

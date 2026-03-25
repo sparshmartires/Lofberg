@@ -46,7 +46,7 @@ export function HistoricalReportsPage() {
   const [sortBy, setSortBy] = useState<string | undefined>()
   const [sortDirection, setSortDirection] = useState<string | undefined>()
   const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(11)
+  const [pageSize, setPageSize] = useState(10)
 
   // Map FE type label to BE enum value
   const typeToEnum: Record<string, string> = {
@@ -167,9 +167,9 @@ export function HistoricalReportsPage() {
   return (
     <div className="min-h-screen bg-background py-10">
       <PageHeaderWithAction
-        title="Historical reports"
-        description="Review and download previously generated reports"
-        actionLabel="Generate report"
+        title="Reports"
+        description="Past reports, receipts and drafts"
+        actionLabel="Generate"
         onActionClick={handleGenerateReport}
       />
 

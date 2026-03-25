@@ -7,13 +7,13 @@ import { FileDropZone } from "@/features/report-generation/components/FileDropZo
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
 const RIGHT_BLOCKS = [
-  { index: 1, label: "Icon + Textblock 1 (right)" },
-  { index: 2, label: "Icon + Textblock 2 (right)" },
+  { index: 1, label: "Block 1 (Icon + Textblock1 (right))" },
+  { index: 2, label: "Block 2 (Icon + Textblock 2 (right))" },
 ] as const
 
 const BOTTOM_BLOCKS = [
-  { index: 3, label: "Icon + Textblock 3 (bottom left)" },
-  { index: 4, label: "Icon + Textblock 4 (bottom right)" },
+  { index: 3, label: "Block 3 (Icon + Textblock3 (bottom left))" },
+  { index: 4, label: "Block 4 (Icon + Textblock 4 (bottom right))" },
 ] as const
 
 const ALL_BLOCKS = [...RIGHT_BLOCKS, ...BOTTOM_BLOCKS] as const
@@ -88,10 +88,6 @@ export default function AboutSustainabilitySection({
 
   return (
     <div className="space-y-8">
-      <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
-        About sustainability section
-      </h3>
-
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="min-w-0">
           <p className="text-sm mb-2">Banner image</p>
@@ -116,7 +112,7 @@ export default function AboutSustainabilitySection({
         </div>
 
         <div className="min-w-0">
-          <p className="text-sm mb-2">Circle image (graph/chart)</p>
+          <p className="text-sm mb-2">Circle image</p>
           <FileDropZone
             accept=".jpg,.jpeg,.png,.svg,.webp"
             acceptLabel="Recommended size: 800x800px, Max 2MB"
@@ -138,12 +134,6 @@ export default function AboutSustainabilitySection({
         </div>
       </div>
 
-      <p className="text-xs text-[#9CA3AF]">
-        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
-        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
-        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
-      </p>
-
       <div className="border-t border-[#EDEDED]" />
 
       <p className="text-sm font-medium text-[#8A8A8A]">Right-side blocks</p>
@@ -161,7 +151,7 @@ export default function AboutSustainabilitySection({
 
               <div className="grid lg:grid-cols-2 gap-8">
                 <div className="min-w-0">
-                  <p className="text-sm mb-2">Icon image</p>
+                  <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
                     acceptLabel="Max 2MB, JPG/PNG/SVG"
@@ -173,7 +163,7 @@ export default function AboutSustainabilitySection({
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-sm mb-2">Text block</p>
+                  <p className="text-sm mb-2">Text</p>
                   <RichTextEditor
                     value={parsed[textField] ?? ""}
                     onChange={(html) => updateText(textField, html)}
@@ -204,7 +194,7 @@ export default function AboutSustainabilitySection({
 
               <div className="grid lg:grid-cols-2 gap-8">
                 <div className="min-w-0">
-                  <p className="text-sm mb-2">Icon image</p>
+                  <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
                     acceptLabel="Max 2MB, JPG/PNG/SVG"
@@ -216,7 +206,7 @@ export default function AboutSustainabilitySection({
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-sm mb-2">Text block</p>
+                  <p className="text-sm mb-2">Text</p>
                   <RichTextEditor
                     value={parsed[textField] ?? ""}
                     onChange={(html) => updateText(textField, html)}

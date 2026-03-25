@@ -60,69 +60,21 @@ export default function AppHeader() {
         />
       </div>
 
-      {/* RIGHT SECTION (hidden on mobile) */}
-      <div className="hidden md:flex items-center gap-4">
+      {/* RIGHT SECTION */}
+      <div className="flex items-center gap-4">
 
-        {/* Generate report */}
+        {/* Generate button — hidden on mobile */}
         <Button
           variant="accent"
           size="md"
-          className="gap-2 font-medium px-5 py-3"
+          className="hidden md:flex gap-2 font-medium px-5 py-3"
           onClick={() => router.push("/report-generation")}
         >
           <FileText className="w-4 h-4" />
-          Generate report
+          Generate
         </Button>
 
-        {/* Language Select */}
-     {/* <Select value={language} onValueChange={setLanguage}>
- <SelectTrigger
-  className="
-    w-[98px]
-    !h-[48px]
-    px-[20px]
-    py-[14px]
-    rounded-[99px]
-    border
-    border-white
-    bg-white
-    text-primary
-    focus:ring-0
-  "
->
- <SelectValue>
-  {language}
-</SelectValue>
-
-</SelectTrigger>
-
-
-  <SelectContent
-    align="end"
-    className="w-[116px] rounded-[10px] p-[10px]"
-  >
-    {languages.map((lang) => (
-      <SelectItem
-        key={lang.code}
-        value={lang.code}
-        className="
-          h-[37px]
-          rounded-[10px]
-          px-[10px]
-          py-[10px]
-          data-[state=checked]:bg-[#EADCF6]
-          data-[state=checked]:text-[#5B2D91]
-        "
-      >
-        {lang.label}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select> */}
-
-
-
-        {/* User Button (kept simple) */}
+        {/* User menu — visible on all screen sizes */}
         <UserProfileDropdown onLogout={handleLogout} />
 
       </div>

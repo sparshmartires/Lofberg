@@ -10,16 +10,19 @@ import {
 } from "@/components/ui/table"
 
 import { Badge } from "@/components/ui/badge"
-import { Pencil, Trash2 } from "lucide-react"
+import { ArrowUpDown, Pencil, Archive, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { EditUserDialog } from "./EditUserDialog"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { UserMobileCard } from "./UserMobileCard"
-import { UserItem, useDeleteUserMutation } from "@/store/services/usersApi"
+import { UserItem, useDeleteUserMutation, useUpdateUserMutation } from "@/store/services/usersApi"
 
 interface UsersTableProps {
   users: UserItem[]
+  sortBy?: string
+  sortDirection?: string
+  onSort?: (column: string) => void
 }
 
 interface ViewUser {
@@ -30,7 +33,7 @@ interface ViewUser {
   email: string
   roleId: string
   role: string
-  status: "Active" | "Inactive"
+  status: "Active" | "Archived"
   reports: number
   lastLogin: string | null
   phone: string
@@ -66,7 +69,7 @@ const mapUserForView = (user: UserItem): ViewUser => {
     email: user.email,
     roleId: user.roleId,
     role: user.roleName,
-    status: user.isActive ? "Active" : "Inactive",
+    status: user.isActive ? "Active" : "Archived",
     reports: user.reportsCount,
     lastLogin: user.lastLogin,
     phone: user.phoneNumber || "",
@@ -76,12 +79,15 @@ const mapUserForView = (user: UserItem): ViewUser => {
   }
 }
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableProps) {
   const [editOpen, setEditOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<ViewUser | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [restoreOpen, setRestoreOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState<ViewUser | null>(null)
+  const [userToRestore, setUserToRestore] = useState<ViewUser | null>(null)
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+  const [updateUser, { isLoading: isRestoring }] = useUpdateUserMutation()
 
   const userRows = users.map(mapUserForView)
 
@@ -94,6 +100,18 @@ export function UsersTable({ users }: UsersTableProps) {
     lastLogin: "w-[110px]",
     actions: "w-[90px]",
   }
+
+  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+    <TableHead
+      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      onClick={() => onSort?.(column)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#8A8A8A]"}`} />
+      </div>
+    </TableHead>
+  )
 
   const handleEdit = (user: ViewUser) => {
     setSelectedUser(user)
@@ -113,6 +131,28 @@ export function UsersTable({ users }: UsersTableProps) {
     setUserToDelete(null)
   }
 
+  const handleRestoreClick = (user: ViewUser) => {
+    setUserToRestore(user)
+    setRestoreOpen(true)
+  }
+
+  const handleConfirmRestore = async () => {
+    if (!userToRestore) return
+
+    await updateUser({
+      id: userToRestore.id,
+      body: {
+        firstName: userToRestore.firstName,
+        lastName: userToRestore.lastName,
+        email: userToRestore.email,
+        roleId: userToRestore.roleId,
+        isActive: true,
+      } as any,
+    }).unwrap()
+    setRestoreOpen(false)
+    setUserToRestore(null)
+  }
+
   return (
     <>
       <div className="table-card border-[#EDEDED]">
@@ -128,18 +168,18 @@ export function UsersTable({ users }: UsersTableProps) {
                 <TableHead className={`table-header-cell ${columnWidths.email}`}>
                   Email
                 </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.role}`}>
+                <SortableHeader column="role" className={columnWidths.role}>
                   Role
-                </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.status}`}>
+                </SortableHeader>
+                <SortableHeader column="status" className={columnWidths.status}>
                   Status
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.reports}`}>
                   Reports
                 </TableHead>
-                <TableHead className={`table-header-cell ${columnWidths.lastLogin}`}>
+                <SortableHeader column="lastlogin" className={columnWidths.lastLogin}>
                   Last login
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.actions}`}>
                   Actions
                 </TableHead>
@@ -170,8 +210,8 @@ export function UsersTable({ users }: UsersTableProps) {
                   </TableCell>
 
                   {/* EMAIL */}
-                  <TableCell className={`table-muted-text ${columnWidths.email} truncate`} data-label="Email">
-                    {user.email}
+                  <TableCell className={`table-muted-text ${columnWidths.email}`} data-label="Email">
+                    <span className="block truncate max-w-[280px]" title={user.email}>{user.email}</span>
                   </TableCell>
 
                   {/* ROLE */}
@@ -221,13 +261,24 @@ export function UsersTable({ users }: UsersTableProps) {
                         />
                       </button>
 
-                      {/* DELETE BUTTON */}
-                      <button
-                        onClick={() => handleDeleteClick(user)}
-                        className="table-action-btn"
-                      >
-                        <Trash2 className="table-action-icon" />
-                      </button>
+                      {/* ARCHIVE/RESTORE BUTTON */}
+                      {user.isActive ? (
+                        <button
+                          onClick={() => handleDeleteClick(user)}
+                          className="table-action-btn"
+                          title="Archive"
+                        >
+                          <Archive className="table-action-icon" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleRestoreClick(user)}
+                          className="table-action-btn"
+                          title="Restore"
+                        >
+                          <RotateCcw className="table-action-icon" />
+                        </button>
+                      )}
 
                     </div>
                   </TableCell>
@@ -245,7 +296,7 @@ export function UsersTable({ users }: UsersTableProps) {
               key={user.id}
               user={user}
               onEdit={() => handleEdit(user)}
-              onDelete={() => handleDeleteClick(user)}
+              onDelete={() => user.isActive ? handleDeleteClick(user) : handleRestoreClick(user)}
             />
           ))}
         </div>
@@ -263,7 +314,6 @@ export function UsersTable({ users }: UsersTableProps) {
             role: selectedUser.roleId,
             phone: selectedUser.phone || "",
             language: "",
-            password: "",
             notes: selectedUser.notes || "",
           }}
         />
@@ -272,13 +322,25 @@ export function UsersTable({ users }: UsersTableProps) {
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         type="error"
-        title="Are you sure?"
-        description={`${userToDelete?.name || "This user"} will no longer have access to Lofberg, and their profile will be archived.`}
+        title="Archive user"
+        description={`${userToDelete?.name || "This user"} will no longer have access to the platform and their profile will be archived.`}
         primaryActionLabel="Cancel"
         onPrimaryAction={() => setDeleteOpen(false)}
-        secondaryActionLabel="Revoke"
+        secondaryActionLabel="Archive"
         secondaryActionLoading={isDeleting}
         onSecondaryAction={handleConfirmDelete}
+      />
+      <UserFeedbackDialog
+        open={restoreOpen}
+        onOpenChange={setRestoreOpen}
+        type="success"
+        title="Restore user"
+        description={`${userToRestore?.name || "This user"} will be restored and will be able to access the platform again.`}
+        primaryActionLabel="Cancel"
+        onPrimaryAction={() => setRestoreOpen(false)}
+        secondaryActionLabel="Restore"
+        secondaryActionLoading={isRestoring}
+        onSecondaryAction={handleConfirmRestore}
       />
     </>
   )

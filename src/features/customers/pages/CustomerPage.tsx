@@ -22,7 +22,9 @@ export function CustomersPage() {
   const [segment, setSegment] = useState("all")
   const [region, setRegion] = useState("all")
   const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(11)
+  const [pageSize, setPageSize] = useState(10)
+  const [sortBy, setSortBy] = useState("")
+  const [sortDirection, setSortDirection] = useState("asc")
 
   const isActiveFilter = useMemo(() => {
     if (status === "active") return true
@@ -42,6 +44,8 @@ export function CustomersPage() {
     ...(segment !== "all" ? { segmentId: segment } : {}),
     ...(region !== "all" ? { regionId: region } : {}),
     ...(typeof isActiveFilter === "boolean" ? { isActive: isActiveFilter } : {}),
+    ...(sortBy ? { sortBy } : {}),
+    ...(sortBy ? { sortDirection } : {}),
   })
 
   const { data: segmentOptions = [] } = useGetCustomerSegmentsQuery()
@@ -63,6 +67,16 @@ export function CustomersPage() {
     setPageNumber(1)
   }
 
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortBy(column)
+      setSortDirection("asc")
+    }
+    setPageNumber(1)
+  }
+
   const handlePageSizeChange = (value: number) => {
     setPageSize(value)
     setPageNumber(1)
@@ -74,9 +88,8 @@ export function CustomersPage() {
 
         {/* Header */}
         <PageHeaderWithAction
-          title="Customer Management"
-          description="Createsustainability reports and and receipts for customers"
-          actionLabel="Add Customer"
+          title="Customer management"
+          actionLabel="Add customer"
           onActionClick={() => setOpen(true)}
         />
 
@@ -96,10 +109,10 @@ export function CustomersPage() {
         </div>
 
         {/* Card Container */}
-        <div className="rounded-[24px] border border-border bg-white p-8 shadow-sm">
+        <div className="rounded-[24px] border border-border bg-white p-8 max-[649px]:p-3 shadow-sm">
 
           <div className="mb-6">
-            <PageSectionTitle title="Customer" />
+            <PageSectionTitle title="Customers" />
 
           </div>
 
@@ -115,7 +128,7 @@ export function CustomersPage() {
                 </div>
               ) : null}
               <div className={isLoading || isFetching ? "opacity-70" : ""}>
-                <CustomersTable customers={customers} />
+                <CustomersTable customers={customers} sortBy={sortBy} sortDirection={sortDirection} onSort={handleSort} />
               </div>
             </div>
           )}

@@ -1,6 +1,7 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
+import { useState, useEffect } from "react"
+import { SearchInput } from "@/components/ui/search-input"
 import {
   Select,
   SelectTrigger,
@@ -8,6 +9,8 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
+import { ChevronDown, ChevronUp } from "lucide-react"
+import { useDebounce } from "@/hooks/useDebounce"
 
 interface FilterOption {
   id: string
@@ -39,136 +42,98 @@ export function CustomerFilters({
   onRegionChange,
   onStatusChange,
 }: CustomerFiltersProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchInput, setSearchInput] = useState(search)
+  const debouncedSearch = useDebounce(searchInput)
+
+  useEffect(() => {
+    onSearchChange(debouncedSearch)
+  }, [debouncedSearch, onSearchChange])
+
+  const fieldClass =
+    "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm focus:outline-none"
+
+  const searchField = (
+    <div className="filter-field flex-1 min-w-[220px] max-[649px]:w-full">
+      <label>Search</label>
+      <SearchInput
+        placeholder="Search by name or code"
+        value={searchInput}
+        onChange={setSearchInput}
+        className={fieldClass}
+      />
+    </div>
+  )
+
+  const filterFields = (
+    <>
+      <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+        <label>Segment</label>
+        <Select value={segment} onValueChange={onSegmentChange}>
+          <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
+            <SelectValue placeholder="All segments" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All segments</SelectItem>
+            {segmentOptions.map((option) => (
+              <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="filter-field flex-1 min-w-[200px] max-[649px]:w-full">
+        <label>Region</label>
+        <Select value={region} onValueChange={onRegionChange}>
+          <SelectTrigger className={fieldClass} showClear={region !== "all"} onClear={() => onRegionChange("all")}>
+            <SelectValue placeholder="All regions" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All regions</SelectItem>
+            {regionOptions.map((option) => (
+              <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+        <label>Status</label>
+        <Select value={status} onValueChange={onStatusChange}>
+          <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
+            <SelectValue placeholder="All statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All statuses</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="inactive">Archived</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  )
 
   return (
-    <div className="w-full max-w-[1360px] mx-auto">
-      <div
-        className="
-          w-full
-          p-[16px]
-          rounded-[20px]
-          border
-          border-[#E6E6E6]
-          bg-white
-        "
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[16px]">
+    <div className="filters-card">
+      {/* Desktop: left-aligned flex-wrap */}
+      <div className="hidden md:flex flex-wrap gap-4 items-end">
+        {searchField}
+        {filterFields}
+      </div>
 
-          {/* SEARCH */}
-          <div className="flex flex-col gap-[8px]">
-            <label className="text-[14px] text-[#1F1F1F]">
-              Search
-            </label>
+      {/* Mobile: search + collapsible filters */}
+      <div className="block md:hidden">
+        {searchField}
 
-            <Input
-              value={search}
-              onChange={(event) => onSearchChange(event.target.value)}
-              placeholder="Search by name or code"
-              className="
-                !h-[44px]
-                px-[20px]
-                py-[12px]
-                rounded-[99px]
-                border
-                border-[#E6E6E6]
-                focus-visible:ring-0
-              "
-            />
+        <div className={`mobile-advanced ${isOpen ? "open" : ""}`}>
+          <div className="flex flex-col gap-4 pt-4">
+            {filterFields}
           </div>
+        </div>
 
-          {/* SEGMENT */}
-          <div className="flex flex-col gap-[8px]">
-            <label className="text-[14px] text-[#1F1F1F]">
-              Segment
-            </label>
-
-            <Select value={segment} onValueChange={onSegmentChange}>
-              <SelectTrigger
-                className="
-                  !h-[44px]
-                  px-[20px]
-                  py-[12px]
-                  rounded-[99px]
-                  border
-                  border-[#E6E6E6]
-                  focus:ring-0
-                "
-              >
-                <SelectValue placeholder="All Segments" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectItem value="all">All Segments</SelectItem>
-                {segmentOptions.map((option) => (
-                  <SelectItem key={option.id} value={option.id}>
-                    {option.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* REGION */}
-          <div className="flex flex-col gap-[8px]">
-            <label className="text-[14px] text-[#1F1F1F]">
-              Region
-            </label>
-
-            <Select value={region} onValueChange={onRegionChange}>
-              <SelectTrigger
-                className="
-                  !h-[44px]
-                  px-[20px]
-                  py-[12px]
-                  rounded-[99px]
-                  border
-                  border-[#E6E6E6]
-                  focus:ring-0
-                "
-              >
-                <SelectValue placeholder="All Region" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectItem value="all">All Region</SelectItem>
-                {regionOptions.map((option) => (
-                  <SelectItem key={option.id} value={option.id}>
-                    {option.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* STATUS */}
-          <div className="flex flex-col gap-[8px]">
-            <label className="text-[14px] text-[#1F1F1F]">
-              Status
-            </label>
-
-            <Select value={status} onValueChange={onStatusChange}>
-              <SelectTrigger
-                className="
-                  !h-[44px]
-                  px-[20px]
-                  py-[12px]
-                  rounded-[99px]
-                  border
-                  border-[#E6E6E6]
-                  focus:ring-0
-                "
-              >
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
+        <div className="mobile-toggle" onClick={() => setIsOpen((prev) => !prev)}>
+          <span>Filters</span>
+          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </div>
       </div>
     </div>

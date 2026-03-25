@@ -67,7 +67,6 @@ export function EditUserDialog({
           notes: data.notes || null,
           roleId: data.role,
           isActive,
-          newPassword: data.password || null,
         },
       }).unwrap()
 

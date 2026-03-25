@@ -25,6 +25,7 @@ export interface CustomerItem {
   notes: string | null
   logoUrl: string | null
   lastReportDate: string | null
+  reportsGenerated: number
 }
 
 export interface GetCustomersParams {
@@ -34,6 +35,8 @@ export interface GetCustomersParams {
   segmentId?: string
   regionId?: string
   isActive?: boolean
+  sortBy?: string
+  sortDirection?: string
 }
 
 export interface PaginatedCustomersResponse {
@@ -228,6 +231,7 @@ const mapCustomer = (item: ApiObject): CustomerItem => {
     notes: toNullableString(item.notes),
     logoUrl: toNullableString(item.logoUrl ?? item.logo),
     lastReportDate: toNullableString(item.lastReportDate ?? item.lastReportAt),
+    reportsGenerated: Number(item.reportsGenerated ?? item.reportsCount ?? 0),
   }
 }
 
@@ -322,7 +326,7 @@ export const customersApi = createApi({
   tagTypes: ["Customers"],
   endpoints: (builder) => ({
     getCustomers: builder.query<PaginatedCustomersResponse, GetCustomersParams>({
-      query: ({ pageNumber, pageSize, searchTerm, segmentId, regionId, isActive }) => ({
+      query: ({ pageNumber, pageSize, searchTerm, segmentId, regionId, isActive, sortBy, sortDirection }) => ({
         url: "/customers",
         params: {
           pageNumber,
@@ -331,6 +335,8 @@ export const customersApi = createApi({
           ...(segmentId ? { segmentId } : {}),
           ...(regionId ? { regionId } : {}),
           ...(typeof isActive === "boolean" ? { isActive } : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortBy ? { sortDirection } : {}),
         },
       }),
       transformResponse: (response: unknown, _meta, args) =>

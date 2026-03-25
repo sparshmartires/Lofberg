@@ -8,8 +8,8 @@ export function ConversionLogicPage() {
   return (
     <div className="min-h-screen bg-background py-10">
       <PageHeaderWithAction
-        title="Conversion Logic"
-        description="Manage and configure conversion logic settings"
+        title="Conversions and units"
+        description="Manage segment-based area and CO2 quantity conversions"
       />
 
       <div className="mt-8">

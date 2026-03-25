@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
-import { ArrowLeft } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 import { useForgotPasswordMutation } from "@/store/services/authApi"
 import { useState } from "react"
 
@@ -38,10 +38,6 @@ export default function ForgotPasswordPage() {
       setSuccessMessage("")
       const errorMessage = err?.data?.message || err?.error || "Failed to send reset code"
       setApiError(errorMessage)
-      setError("emailOrPhone", {
-        type: "manual",
-        message: errorMessage,
-      })
     }
   }
 
@@ -50,18 +46,14 @@ export default function ForgotPasswordPage() {
 
       <div className="forgot-password-card">
         {/* Back */}
-        <button
-          onClick={() => router.back()}
-          className="forgot-password-back-btn"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
+        <div className="self-start mb-4">
+          <BackButton onClick={() => router.back()} />
+        </div>
 
         {/* Title Section */}
         <div className="forgot-password-title-wrap">
           <h1 className="forgot-password-title">
-            Reset Password
+            Reset password
           </h1>
 
           <p className="forgot-password-description">
@@ -74,7 +66,7 @@ export default function ForgotPasswordPage() {
 
           <div className="forgot-password-field-wrap">
             <label className="forgot-password-label">
-              Email<span className="text-red-500">*</span>
+              Email
             </label>
 
             <Input

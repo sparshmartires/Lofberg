@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { setStep, resetWizard, setDraftId } from "@/store/slices/reportWizardSlice"
 import { useSaveDraftMutation } from "@/store/services/reportsApi"
@@ -8,19 +8,41 @@ import { useSaveDraftMutation } from "@/store/services/reportsApi"
 export function useWizardNavigation() {
   const dispatch = useAppDispatch()
   const wizardState = useAppSelector((state) => state.reportWizard)
-  const { currentStep, draftId, editingReportId } = wizardState
+  const { currentStep, step1, step2, draftId, editingReportId } = wizardState
+  const [stepError, setStepError] = useState<string | null>(null)
 
   const [saveDraftMutation, { isLoading: isSaving }] = useSaveDraftMutation()
 
   const totalSteps = 5
 
+  const validateStep = useCallback((): string | null => {
+    if (currentStep === 1) {
+      if (!step1.customerName?.trim()) return "Please select or enter a customer name"
+      if (!step1.salesRepresentativeId) return "Please select a sales representative"
+      if (!step1.reportDate) return "Please set a report date"
+      if (!step1.languageId) return "Please select a language"
+    }
+    if (currentStep === 2) {
+      const hasData = step2.rows?.some((r) => r.quantityKg != null || r.currencyAmount != null)
+      if (!hasData) return "Please upload data or enter at least one row"
+    }
+    return null
+  }, [currentStep, step1, step2])
+
   const goNext = useCallback(() => {
+    const error = validateStep()
+    if (error) {
+      setStepError(error)
+      return
+    }
+    setStepError(null)
     if (currentStep < totalSteps) {
       dispatch(setStep(currentStep + 1))
     }
-  }, [currentStep, dispatch])
+  }, [currentStep, dispatch, validateStep])
 
   const goBack = useCallback(() => {
+    setStepError(null)
     if (currentStep > 1) {
       dispatch(setStep(currentStep - 1))
     }
@@ -68,5 +90,6 @@ export function useWizardNavigation() {
     saveDraft,
     isSaving,
     reset,
+    stepError,
   }
 }

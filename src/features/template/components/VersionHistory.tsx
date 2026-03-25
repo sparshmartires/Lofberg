@@ -180,8 +180,8 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
                 data-testid="template-item"
                 className="flex items-center justify-between p-4 rounded-xl border border-[#EDEDED] max-[799px]:flex-col max-[799px]:items-start max-[799px]:gap-3"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-sm font-medium text-[#1F1F1F] truncate">
+                <div className="flex items-center gap-3 min-w-0 flex-wrap">
+                  <span className="text-sm font-medium text-[#1F1F1F] break-all">
                     Version {version.versionNumber} — {version.versionName}
                   </span>
                   <span
@@ -191,8 +191,8 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 max-[799px]:w-full max-[799px]:justify-between">
-                  <span className="text-sm text-[#8A8A8A] whitespace-nowrap">
+                <div className="flex items-center gap-3 max-[799px]:w-full max-[799px]:flex-wrap">
+                  <span className="text-sm text-[#8A8A8A]">
                     {version.publishedAt
                       ? `Published on ${formatDate(version.publishedAt)} by ${version.publishedByUserName ?? "—"}`
                       : `Created on ${formatDate(version.createdAt)} by ${version.createdByUserName}`}

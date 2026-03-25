@@ -4,6 +4,8 @@ import Image from "next/image"
 import { useAppSelector } from "@/store/hooks"
 import { CertificationType, FT_PREMIER_TYPES } from "../types"
 import { useGetSegmentConversionsBySegmentQuery, useGetCO2ConversionsQuery } from "@/store/services/conversionLogicApi"
+import { formatPhoneDisplay } from "@/lib/phone"
+import { formatEuNumber, formatEuCompact } from "@/lib/format"
 
 export function ReportSummary() {
   const { step1, step2, step4, currentStep } = useAppSelector((state) => state.reportWizard)
@@ -25,8 +27,6 @@ export function ReportSummary() {
         <p className="text-sm text-[#9CA3AF]">Select a customer to view report summary</p>
       ) : (
         <div className="space-y-4">
-          <p className="text-sm font-medium text-[#747474]">Client information</p>
-
           {step1.customerLogoUrl && (
             <Image
               src={step1.customerLogoUrl}
@@ -58,7 +58,7 @@ export function ReportSummary() {
             {step1.customerPhone && (
               <p>
                 <span className="text-[#747474]">Phone: </span>
-                <span className="text-[#1F1F1F]">{step1.customerPhone}</span>
+                <span className="text-[#1F1F1F]">{formatPhoneDisplay(step1.customerPhone)}</span>
               </p>
             )}
             {step1.customerSegment && (
@@ -107,6 +107,7 @@ export function ReportSummary() {
           {/* Data table preview (from step 2+) */}
           {hasData && currentStep >= 2 && (
             <div className="mt-4">
+              <p className="text-sm font-medium text-[#747474] mb-2">Data table</p>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
@@ -133,21 +134,21 @@ export function ReportSummary() {
                             {shortName}
                           </td>
                           <td className="text-center py-1 px-1">
-                            {isFT ? "\u2014" : row.quantityKg ?? "\u2014"}
+                            {isFT ? "\u2014" : formatEuCompact(row.quantityKg)}
                           </td>
                           <td className="text-center py-1 px-1">
                             {isFT || isCO2
                               ? isCO2 ? "N/A" : "\u2014"
-                              : row.footballFields ?? "\u2014"}
+                              : formatEuCompact(row.footballFields)}
                           </td>
                           <td className="text-center py-1 px-1">
                             {isFT || isCO2
                               ? isCO2 ? "N/A" : "\u2014"
-                              : row.cupsOfCoffee ? `${(row.cupsOfCoffee / 1000).toFixed(0)}k` : "\u2014"}
+                              : formatEuCompact(row.cupsOfCoffee)}
                           </td>
                           <td className="text-center py-1 px-1">
                             {isFT
-                              ? row.currencyAmount?.toLocaleString() ?? "\u2014"
+                              ? formatEuCompact(row.currencyAmount)
                               : "N/A"}
                           </td>
                         </tr>
@@ -157,10 +158,6 @@ export function ReportSummary() {
                 </table>
               </div>
 
-              <p className="text-[10px] text-[#9CA3AF] mt-2">
-                FT Premier values represent financial impact: premiums paid to cooperatives and
-                increased income for organic farming.
-              </p>
             </div>
           )}
         </div>

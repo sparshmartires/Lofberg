@@ -89,6 +89,7 @@ export interface UpdatePageContentRequest {
 }
 
 export interface CreateDraftRequest {
+  versionName?: string
   changeNotes?: string
 }
 
@@ -253,10 +254,11 @@ export const templatesApi = createApi({
       ],
     }),
 
-    publishDraft: builder.mutation<TemplateVersionDto, { templateId: string }>({
-      query: ({ templateId }) => ({
+    publishDraft: builder.mutation<TemplateVersionDto, { templateId: string; body?: { versionName?: string; changeNotes?: string } }>({
+      query: ({ templateId, body }) => ({
         url: `/templates/${templateId}/versions/draft/publish`,
         method: "POST",
+        body: body ?? {},
       }),
       transformResponse: (response: unknown) =>
         unwrapPayload(response) as TemplateVersionDto,
