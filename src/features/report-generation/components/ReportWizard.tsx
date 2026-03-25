@@ -1,7 +1,8 @@
 "use client"
 
 import { useCallback } from "react"
-import { ChevronLeft, ChevronRight, Save } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ChevronLeft, ChevronRight, Save, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useWizardNavigation } from "../hooks/useWizardNavigation"
 import { ReportSummary } from "./ReportSummary"
@@ -12,6 +13,7 @@ import { Step4ContentSelection } from "./steps/Step4ContentSelection"
 import { Step5OutputExport } from "./steps/Step5OutputExport"
 
 export function ReportWizard() {
+  const router = useRouter()
   const {
     currentStep,
     isFirstStep,
@@ -78,7 +80,7 @@ export function ReportWizard() {
             <span className="hidden sm:inline">{isSaving ? "Saving..." : "Save as draft"}</span>
           </Button>
 
-          {!isLastStep && (
+          {!isLastStep ? (
             <Button
               type="button"
               variant="primary"
@@ -87,6 +89,16 @@ export function ReportWizard() {
             >
               <span className="hidden sm:inline">Next</span>
               <ChevronRight className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => router.push("/dashboard")}
+              className="gap-2"
+            >
+              <Check className="h-4 w-4" />
+              <span className="hidden sm:inline">Finish</span>
             </Button>
           )}
         </div>

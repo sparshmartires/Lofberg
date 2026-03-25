@@ -218,6 +218,20 @@ export const reportsApi = createApi({
       ],
     }),
 
+    previewReport: builder.mutation<{ previewPdfBase64: string }, GenerateReportRequest>({
+      query: (body) => ({
+        url: "/reports/preview",
+        method: "POST",
+        body,
+      }),
+      transformResponse: (response: unknown) => {
+        const unwrapped = asObject(unwrapPayload(response))
+        return {
+          previewPdfBase64: String(unwrapped.previewPdfBase64 ?? ""),
+        }
+      },
+    }),
+
     archiveReport: builder.mutation<void, { id: string }>({
       query: ({ id }) => ({
         url: `/reports/${id}/archive`,
@@ -296,6 +310,7 @@ export const {
   useSaveDraftMutation,
   useDeleteDraftMutation,
   useGenerateReportMutation,
+  usePreviewReportMutation,
   useArchiveReportMutation,
   useRestoreReportMutation,
   useGetSegmentsQuery,
