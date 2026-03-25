@@ -20,7 +20,7 @@ const ACTION_BLOCKS = [
 ] as const
 
 type ActionIndex = (typeof ACTION_BLOCKS)[number]["index"]
-type TextFieldKey = "headerText" | "introText" | "wantMoreText" | `actionText${ActionIndex}`
+type TextFieldKey = "headerText" | "introText" | "wantMoreText" | `actionText${ActionIndex}` | `actionName${ActionIndex}`
 type ImageFieldKey = `actionImage${ActionIndex}`
 
 const DEFAULT_CONTENT: IncreasingImpactContent = {
@@ -96,10 +96,6 @@ export default function IncreasingImpactSection({
 
   return (
     <div className="space-y-8">
-      <h3 className="font-sans font-normal text-[16px] leading-[24px] tracking-[0]">
-        Increasing positive impact section
-      </h3>
-
       <div>
         <p className="text-sm mb-2">Header text</p>
         <textarea
@@ -120,40 +116,35 @@ export default function IncreasingImpactSection({
         />
       </div>
 
-      <p className="text-xs text-[#9CA3AF]">
-        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
-        {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
-        {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
-      </p>
-
       <div className="border-t border-[#EDEDED]" />
-
-      <div>
-        <p className="text-sm font-medium">
-          Report / Receipt template
-        </p>
-        <p className="text-xs text-[#8A8A8A]">
-          Configure the 10 impact action blocks. Users select up to 3 during report generation.
-        </p>
-      </div>
 
       <div className="space-y-6">
         {ACTION_BLOCKS.map((block) => {
           const textField = `actionText${block.index}` as TextFieldKey
           const imageField = `actionImage${block.index}` as ImageFieldKey
+          const nameField = `actionName${block.index}` as TextFieldKey
+          const currentName = (parsed as Record<string, string>)[nameField] || block.label
 
           return (
             <div
               key={block.index}
               className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4"
             >
-              <p className="text-sm font-medium">
-                {block.index}. {block.label}
-              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">{block.index}.</span>
+                <input
+                  type="text"
+                  value={currentName}
+                  onChange={(e) => updateText(nameField, e.target.value)}
+                  placeholder={block.label}
+                  required
+                  className="flex-1 h-[36px] rounded-[99px] border border-[#F0F0F0] px-[16px] shadow-[0px_2px_4px_0px_#0000000A] text-sm font-medium"
+                />
+              </div>
 
               <div className="grid lg:grid-cols-2 gap-8">
                 <div className="min-w-0">
-                  <p className="text-sm mb-2">Section image</p>
+                  <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
                     acceptLabel="Max 2MB, JPG/PNG/SVG"
@@ -165,7 +156,7 @@ export default function IncreasingImpactSection({
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-sm mb-2">Section text</p>
+                  <p className="text-sm mb-2">Text</p>
                   <RichTextEditor
                     value={parsed[textField] ?? ""}
                     onChange={(html) => updateText(textField, html)}

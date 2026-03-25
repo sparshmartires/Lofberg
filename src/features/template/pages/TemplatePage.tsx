@@ -9,6 +9,7 @@ import VersionHistory from "../components/VersionHistory"
 import {
   useGetTemplatesQuery,
   useGetTemplateVersionQuery,
+  useGetTemplateLanguagesQuery,
   useSaveActiveChangesMutation,
   useCreateDraftMutation,
   useUpdateDraftMutation,
@@ -36,10 +37,21 @@ function mapPagesToA3(
 
 export function TemplatePage() {
   const [templateType, setTemplateType] = useState("report")
-  const [language, setLanguage] = useState("en")
+  const [language, setLanguage] = useState("")
+  const [templateName, setTemplateName] = useState("")
   const [localEdits, setLocalEdits] = useState<Record<string, string>>({})
   const [isSaving, setIsSaving] = useState(false)
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+
+  // Default language to English
+  const { data: allLanguages = [] } = useGetTemplateLanguagesQuery()
+  useEffect(() => {
+    if (!language && allLanguages.length > 0) {
+      const english = allLanguages.find(l => l.code === "en" || l.name === "English")
+      if (english) setLanguage(english.id)
+      else setLanguage(allLanguages[0].id)
+    }
+  }, [allLanguages, language])
 
   const isReceipt = templateType === "receipt"
 
@@ -233,7 +245,7 @@ export function TemplatePage() {
   // Helper: create draft if one doesn't already exist (ignore 409 Conflict)
   const ensureDraft = async (templateId: string) => {
     try {
-      await createDraft({ templateId }).unwrap()
+      await createDraft({ templateId, body: { versionName: templateName || undefined } }).unwrap()
     } catch (err: unknown) {
       const status = (err as { status?: number })?.status
       if (status !== 409) throw err
@@ -291,11 +303,8 @@ export function TemplatePage() {
       <div className="page-header-with-action">
         <div>
           <h1 className="page-header-with-action-title">
-            Manage report and receipt templates
+            Report + receipt templates
           </h1>
-          <p className="page-header-with-action-description">
-            Configure and customize report and receipt templates
-          </p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -343,8 +352,10 @@ export function TemplatePage() {
       <TemplateConfiguration
         templateType={templateType}
         language={language}
+        templateName={templateName}
         onTemplateTypeChange={setTemplateType}
         onLanguageChange={setLanguage}
+        onTemplateNameChange={setTemplateName}
       />
 
       <TemplateContent

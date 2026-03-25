@@ -16,7 +16,7 @@ interface ReceiptFieldMap {
 
 const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMap }[] = [
   {
-    label: "Rainforest alliance receipt",
+    label: "Rainforest alliance",
     pageType: PageType.ReceiptRAC,
     fields: {
       bgImage: "receipt_bg_image",
@@ -26,7 +26,7 @@ const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMa
     },
   },
   {
-    label: "CO2 receipt",
+    label: "CO2",
     pageType: PageType.ReceiptCO2,
     fields: {
       bgImage: "receipt_co2_bg_image",
@@ -36,7 +36,7 @@ const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMa
     },
   },
   {
-    label: "Fairtrade receipt",
+    label: "Fairtrade",
     pageType: PageType.ReceiptFairtrade,
     fields: {
       bgImage: "receipt_ft_bg_image",
@@ -46,7 +46,7 @@ const RECEIPT_TYPES: { label: string; pageType: PageType; fields: ReceiptFieldMa
     },
   },
   {
-    label: "Organic receipt",
+    label: "Organic",
     pageType: PageType.ReceiptOrganic,
     fields: {
       bgImage: "receipt_org_bg_image",
@@ -123,17 +123,6 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
   return (
     <div className="space-y-8">
 
-      {/* SECTION HEADER */}
-      <div>
-        <p className="text-sm font-medium">
-          Receipt section
-        </p>
-
-        <p className="text-xs text-[#8A8A8A]">
-          Configure individual receipt pages for each certification type
-        </p>
-      </div>
-
       {/* RECEIPT TYPES */}
       <div className="space-y-6">
 
@@ -149,7 +138,7 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
             </p>
 
             {/* IMAGES */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 max-[649px]:grid-cols-1 gap-4">
               <div>
                 <p className="text-sm mb-2">
                   Background image
@@ -208,13 +197,6 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
                 className="h-[110px]"
               />
             </div>
-
-            {/* INFO TEXT */}
-            <p className="text-xs text-[#9CA3AF] mt-1">
-              Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"},{" "}
-              {"{CO2 in KG}"}, {"{CO2 in equivalent units}"},{" "}
-              {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}
-            </p>
 
           </div>
         ))}
