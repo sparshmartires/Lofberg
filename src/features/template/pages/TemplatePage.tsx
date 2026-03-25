@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Save } from "lucide-react"
 import { TemplateConfiguration } from "../components/TemplateConfiguration"
@@ -10,7 +10,9 @@ import {
   useGetTemplatesQuery,
   useGetTemplateVersionQuery,
   useGetTemplateLanguagesQuery,
+  useGetTranslationsQuery,
   useSaveActiveChangesMutation,
+  useSaveTranslationsMutation,
   useCreateDraftMutation,
   useUpdateDraftMutation,
   TemplateType,
@@ -128,6 +130,24 @@ export function TemplatePage() {
     { skip: !a3CompiledTemplate?.id || !a3CompiledTemplate?.activeVersion?.id }
   )
 
+  // ── Determine if editing translations (non-English language) ────────
+  const isEditingTranslation = useMemo(() => {
+    if (!language || allLanguages.length === 0) return false
+    const selectedLang = allLanguages.find(l => l.id === language)
+    return selectedLang ? !selectedLang.isDefault : false
+  }, [language, allLanguages])
+
+  // ── Fetch translations for non-English languages ──────────────────
+  const { data: mainTranslations = [] } = useGetTranslationsQuery(
+    { templateId: selectedTemplate?.id ?? "", languageId: language },
+    { skip: !selectedTemplate?.id || !language || !isEditingTranslation }
+  )
+
+  const { data: compiledTranslations = [] } = useGetTranslationsQuery(
+    { templateId: compiledTemplate?.id ?? "", languageId: language },
+    { skip: !compiledTemplate?.id || !language || !isEditingTranslation }
+  )
+
   // ── Merge A4 pages from both sources ───────────────────────────────
   const allApiPages = useMemo(() => {
     const main = versionData?.pages ?? []
@@ -135,9 +155,37 @@ export function TemplatePage() {
     return [...main, ...compiled]
   }, [versionData, compiledVersionData])
 
-  // ── Initialize local edits from fetched versions ───────────────────
+  // ── Initialize local edits — only on language/template change ──────
+  const prevLangRef = useRef(language)
+  const prevTemplateRef = useRef(selectedTemplate?.id)
+  const initializedRef = useRef(false)
+
   useEffect(() => {
-    if (allApiPages.length > 0) {
+    const langChanged = prevLangRef.current !== language
+    const templateChanged = prevTemplateRef.current !== selectedTemplate?.id
+    prevLangRef.current = language
+    prevTemplateRef.current = selectedTemplate?.id
+
+    // Only re-initialize on language change, template change, or first load
+    if (!langChanged && !templateChanged && initializedRef.current) return
+
+    if (isEditingTranslation) {
+      const allTranslations = [...mainTranslations, ...compiledTranslations]
+      if (allTranslations.length === 0) {
+        // Translation data not yet loaded — wait for it
+        if (!langChanged && !templateChanged) return
+        setLocalEdits({})
+        return
+      }
+      const initial: Record<string, string> = {}
+      for (const page of allTranslations) {
+        if (page.translationJson) {
+          initial[page.templatePageId] = page.translationJson
+        }
+      }
+      setLocalEdits(initial)
+      initializedRef.current = true
+    } else if (allApiPages.length > 0) {
       const initial: Record<string, string> = {}
       for (const page of allApiPages) {
         if (page.contentJson) {
@@ -145,17 +193,27 @@ export function TemplatePage() {
         }
       }
       setLocalEdits(initial)
+      initializedRef.current = true
     }
-  }, [allApiPages])
+  }, [language, selectedTemplate?.id, isEditingTranslation, allApiPages, mainTranslations, compiledTranslations])
 
   // ── Merge API pages with local edits ───────────────────────────────
   const mergedPages: TemplatePageContentDto[] = useMemo(() => {
     if (allApiPages.length === 0) return []
+    if (isEditingTranslation) {
+      // When editing translations, overlay translation content onto the page structure
+      const allTranslations = [...mainTranslations, ...compiledTranslations]
+      const translationMap = new Map(allTranslations.map(t => [t.templatePageId, t.translationJson]))
+      return allApiPages.map((page) => ({
+        ...page,
+        contentJson: localEdits[page.templatePageId] ?? translationMap.get(page.templatePageId) ?? "",
+      }))
+    }
     return allApiPages.map((page) => ({
       ...page,
       contentJson: localEdits[page.templatePageId] ?? page.contentJson,
     }))
-  }, [allApiPages, localEdits])
+  }, [allApiPages, localEdits, isEditingTranslation, mainTranslations, compiledTranslations])
 
   // ── Page change handler ────────────────────────────────────────────
   const handlePageChange = useCallback(
@@ -179,8 +237,49 @@ export function TemplatePage() {
 
   // ── Mutations ──────────────────────────────────────────────────────
   const [saveActiveChanges] = useSaveActiveChangesMutation()
+  const [saveTranslations] = useSaveTranslationsMutation()
   const [createDraft] = useCreateDraftMutation()
   const [updateDraft] = useUpdateDraftMutation()
+
+  const handleSaveTranslations = async () => {
+    if (!selectedTemplate?.id || !language) return
+
+    const mainPages = Object.entries(localEdits)
+      .filter(([id]) => (versionData?.pages ?? []).some(p => p.templatePageId === id))
+      .map(([templatePageId, translationJson]) => ({ templatePageId, translationJson }))
+
+    const compiledPages = Object.entries(localEdits)
+      .filter(([id]) => (compiledVersionData?.pages ?? []).some(p => p.templatePageId === id))
+      .map(([templatePageId, translationJson]) => ({ templatePageId, translationJson }))
+
+    if (mainPages.length === 0 && compiledPages.length === 0) {
+      setStatusMessage({ type: "error", text: "No translation changes to save." })
+      return
+    }
+
+    setIsSaving(true)
+    setStatusMessage(null)
+    try {
+      if (mainPages.length > 0) {
+        await saveTranslations({
+          templateId: selectedTemplate.id,
+          body: { languageId: language, isDraft: false, pages: mainPages },
+        }).unwrap()
+      }
+      if (compiledPages.length > 0 && compiledTemplate?.id) {
+        await saveTranslations({
+          templateId: compiledTemplate.id,
+          body: { languageId: language, isDraft: false, pages: compiledPages },
+        }).unwrap()
+      }
+      setStatusMessage({ type: "success", text: "Translations saved successfully." })
+    } catch (err) {
+      console.error("Failed to save translations:", err)
+      setStatusMessage({ type: "error", text: "Failed to save translations." })
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   const handleSaveChanges = async () => {
     if (!selectedTemplate?.id) {
@@ -307,22 +406,24 @@ export function TemplatePage() {
           </h1>
         </div>
         <div className="flex gap-3">
-          <Button
-            variant="outlineBrand"
-            className="page-header-with-action-button"
-            onClick={handleSaveAsDraft}
-            disabled={isSaving || isLoading}
-          >
-            <Save className="page-header-with-action-icon" />
-            Save as draft
-          </Button>
+          {!isEditingTranslation && (
+            <Button
+              variant="outlineBrand"
+              className="page-header-with-action-button"
+              onClick={handleSaveAsDraft}
+              disabled={isSaving || isLoading}
+            >
+              <Save className="page-header-with-action-icon" />
+              Save as draft
+            </Button>
+          )}
           <Button
             variant="primary"
             className="page-header-with-action-button"
-            onClick={handleSaveChanges}
+            onClick={isEditingTranslation ? handleSaveTranslations : handleSaveChanges}
             disabled={isSaving || isLoading}
           >
-            Save changes
+            {isEditingTranslation ? "Save translations" : "Save changes"}
           </Button>
         </div>
       </div>
