@@ -156,7 +156,7 @@ export function Step4ContentSelection() {
 
       {/* Add on blocks */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">Add on</label>
+        <label className="text-sm font-medium text-[#1F1F1F]">Add ons</label>
         <AddOnBlockSelector
           selected={step4.selectedAddOnBlocks}
           onChange={handleAddOnChange}
