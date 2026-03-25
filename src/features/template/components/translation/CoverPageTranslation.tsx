@@ -34,6 +34,7 @@ export default function CoverPageTranslation({
         englishHtml={english.headerText}
         translationHtml={translation.headerText}
         onChange={(html) => update("headerText", html)}
+        fieldType="input"
       />
     </div>
   )

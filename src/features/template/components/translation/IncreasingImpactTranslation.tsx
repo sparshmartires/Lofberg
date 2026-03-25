@@ -26,8 +26,8 @@ export default function IncreasingImpactTranslation({ contentJson, translationJs
     onChange?.(JSON.stringify({ ...translation, [field]: html }))
   }
 
-  const fields: { key: keyof IncreasingImpactContent; label: string; fieldType?: "richtext" | "textarea" | "input" }[] = [
-    { key: "headerText", label: "Header text", fieldType: "textarea" },
+  const fields: { key: keyof IncreasingImpactContent; label: string; fieldType?: "richtext" | "input" }[] = [
+    { key: "headerText", label: "Header text", fieldType: "input" },
     { key: "introText", label: "Intro text" },
     { key: "wantMoreText", label: "Want more text" },
     { key: "actionText1", label: "Action text 1" },

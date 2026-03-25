@@ -30,8 +30,8 @@ export default function CertificationsTranslation({ contentJson, translationJson
     onChange?.(JSON.stringify({ ...translation, [field]: html }))
   }
 
-  const fields: { key: keyof CertificationsContent; label: string; fieldType?: "richtext" | "textarea" | "input" }[] = [
-    { key: "headerText", label: "Header text", fieldType: "textarea" },
+  const fields: { key: keyof CertificationsContent; label: string; fieldType?: "richtext" | "input" }[] = [
+    { key: "headerText", label: "Header text", fieldType: "input" },
     { key: "cert_general_header", label: "General certification header", fieldType: "input" },
     { key: "cert_general_text", label: "General certification text" },
     { key: "cert_rainforest_header", label: "Rainforest Alliance header", fieldType: "input" },

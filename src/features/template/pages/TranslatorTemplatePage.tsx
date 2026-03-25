@@ -179,11 +179,8 @@ export function TranslatorTemplatePage() {
       <div className="page-header-with-action">
         <div>
           <h1 className="page-header-with-action-title">
-            Report / Receipt template
+            Template translation
           </h1>
-          <p className="page-header-with-action-description">
-            Translate template content into different languages
-          </p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -201,7 +198,7 @@ export function TranslatorTemplatePage() {
             onClick={() => handleSave(false)}
             disabled={isSaving || isLoading || !selectedLanguageId}
           >
-            Save changes
+            Submit
           </Button>
         </div>
       </div>
@@ -223,7 +220,6 @@ export function TranslatorTemplatePage() {
 
       {/* Template Configuration */}
       <div className={styles.card}>
-        <h2 className={styles.title}>Template configuration</h2>
         <div className={styles.grid}>
           {/* Template Type */}
           <div className={styles.field}>
@@ -233,18 +229,15 @@ export function TranslatorTemplatePage() {
                 <SelectValue placeholder="Report template" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="report">Report template (A4)</SelectItem>
-                <SelectItem value="receipt">Receipt template (A4)</SelectItem>
+                <SelectItem value="report">Report</SelectItem>
+                <SelectItem value="receipt">Receipt</SelectItem>
               </SelectContent>
             </Select>
-            <p className={styles.helper}>
-              Configure sustainability report templates (A4 format)
-            </p>
           </div>
 
           {/* Translation Language */}
           <div className={styles.field}>
-            <label className={styles.label}>Translation language</label>
+            <label className={styles.label}>Language</label>
             <Select value={selectedLanguageId} onValueChange={setSelectedLanguageId}>
               <SelectTrigger className={fieldClass}>
                 <SelectValue placeholder="Select language" />
