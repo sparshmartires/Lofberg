@@ -4,6 +4,7 @@ import { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, ChevronRight, Save, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAppSelector } from "@/store/hooks"
 import { useWizardNavigation } from "../hooks/useWizardNavigation"
 import { ReportSummary } from "./ReportSummary"
 import { Step1CustomerDetails } from "./steps/Step1CustomerDetails"
@@ -24,6 +25,10 @@ export function ReportWizard() {
     isSaving,
     stepError,
   } = useWizardNavigation()
+
+  // Disable "Save as draft" until customer details are added (SRS requirement)
+  const step1 = useAppSelector((state) => state.reportWizard.step1)
+  const hasCustomer = !!(step1.customerId || step1.customerName)
 
   const handleSaveDraft = useCallback(async () => {
     await saveDraft()
@@ -73,7 +78,8 @@ export function ReportWizard() {
             type="button"
             variant="outlineBrand"
             onClick={handleSaveDraft}
-            disabled={isSaving}
+            disabled={isSaving || !hasCustomer}
+            title={!hasCustomer ? "Add customer details first" : undefined}
             className="gap-2"
           >
             <Save className="h-4 w-4" />
