@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const FALLBACK_API_BASE_URL = "http://localhost:5215";
+const FALLBACK_API_BASE_URL = "https://localhost:5215";
 
 const normalizeApiBaseUrl = (value: string | undefined): string => {
   const raw = (value || "").trim();
