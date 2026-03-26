@@ -102,11 +102,12 @@ export default function AboutSustainabilitySection({
 
         <div className="min-w-0">
           <p className="text-sm mb-2">Header text</p>
-          <textarea
+          <input
+            type="text"
             placeholder="Enter header text"
             value={parsed.headerText}
             onChange={(e) => updateText("headerText", e.target.value)}
-            className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+            className="w-full min-w-0 h-[44px] rounded-full border border-[#EDEDED] px-5 py-3"
           />
         </div>
 

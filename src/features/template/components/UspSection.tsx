@@ -83,11 +83,12 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
     <div className="space-y-8">
       <div>
         <p className="text-sm mb-2">Header text</p>
-        <textarea
+        <input
+          type="text"
           placeholder="Enter header text"
           value={parsed.headerText}
           onChange={(e) => updateField("headerText", e.target.value)}
-          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[44px] rounded-full border border-[#EDEDED] px-5 py-3"
         />
       </div>
 
