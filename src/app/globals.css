@@ -168,23 +168,23 @@
   }
 
   .table-header-cell {
-    @apply text-[14px] text-[#1F1F1F] font-normal;
+    @apply text-[14px] text-[#1F1F1F] font-normal px-[16px];
   }
 
   .table-header-cell:first-child{
-    @apply pl-[12px];
+    @apply pl-[16px];
   }
   .table-header-cell:last-child {
-    @apply pr-[12px];
+    @apply pr-[16px];
   }
 
   .table-name-cell {
-    @apply text-[14px] text-[#1F1F1F];
+    @apply text-[14px] text-[#1F1F1F] px-[16px];
   }
 
   .table-name-cell:first-child,
   .table-name-cell:last-child {
-    @apply px-[12px];
+    @apply px-[16px];
   }
 
   .table-body-row {
