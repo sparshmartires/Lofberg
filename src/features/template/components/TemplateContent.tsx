@@ -23,7 +23,7 @@ export default function SustainabilitySection({
 }: SustainabilitySectionProps) {
   const isReceiptTemplate = templateType === "receipt"
 
-  const [activeTab, setActiveTab] = useState(isReceiptTemplate ? "receipt" : "about")
+  const [activeTab, setActiveTab] = useState(isReceiptTemplate ? "receipt" : "cover")
 
   const reportTabs = [
     { value: "cover", label: "Cover page" },
@@ -41,7 +41,7 @@ export default function SustainabilitySection({
   const tabs = isReceiptTemplate ? receiptTabs : reportTabs
 
   useEffect(() => {
-    setActiveTab(isReceiptTemplate ? "receipt" : "about")
+    setActiveTab(isReceiptTemplate ? "receipt" : "cover")
   }, [isReceiptTemplate])
 
   const getPage = (pageType: PageType) => pages.find((p) => p.pageType === pageType)

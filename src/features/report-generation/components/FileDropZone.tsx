@@ -84,6 +84,40 @@ export function FileDropZone({
     }
   }, [localPreview])
 
+  const hasContent = !!(file || displayUrl || fallbackFileName)
+
+  if (hasContent) {
+    // File/preview selected — show preview only, no border
+    return (
+      <div className="relative inline-block">
+        {isImage && displayUrl ? (
+          <Image
+            src={displayUrl}
+            alt="Preview"
+            width={160}
+            height={80}
+            className="h-20 w-auto object-contain rounded-lg"
+            unoptimized
+          />
+        ) : (
+          <div className="flex items-center gap-2 px-4 py-2 bg-[#FAF7FF] rounded-lg border border-[#E5D5F5]">
+            <p className="text-[14px] text-[#374151] truncate max-w-[200px]">
+              {file?.name ?? fallbackFileName ?? "Uploaded file"}
+            </p>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={handleRemove}
+          className="absolute -top-1.5 -right-1.5 z-20 w-5 h-5 rounded-full bg-[#D1D5DB] flex items-center justify-center hover:bg-[#9CA3AF] transition-colors"
+        >
+          <X className="h-3 w-3 text-white" />
+        </button>
+      </div>
+    )
+  }
+
+  // No file — show dropzone with dashed border
   return (
     <div
       className={`relative rounded-[28px] border-2 border-dashed transition-colors ${
@@ -103,41 +137,13 @@ export function FileDropZone({
       />
 
       <div className="flex flex-col items-center justify-center text-center px-6 py-3 h-full">
-        {file || displayUrl || fallbackFileName ? (
-          <div className="relative">
-            {isImage && displayUrl ? (
-              <Image
-                src={displayUrl}
-                alt="Preview"
-                width={160}
-                height={80}
-                className="h-20 w-auto object-contain mb-2"
-                unoptimized
-              />
-            ) : (
-              <p className="text-[15px] font-medium text-[#374151]">
-                {file?.name ?? fallbackFileName ?? "Uploaded file"}
-              </p>
-            )}
-            <button
-              type="button"
-              onClick={handleRemove}
-              className="absolute -top-2 -right-2 z-20 w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
-            >
-              <X className="h-3 w-3 text-gray-600" />
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#F3E8FF] mb-4">
-              <Upload className="h-6 w-6 text-[#6B21A8]" />
-            </div>
-            <p className="text-[15px] font-medium text-[#374151]">
-              Upload a file or drag and drop
-            </p>
-            <p className="text-sm text-[#9CA3AF] mt-1">{acceptLabel}</p>
-          </>
-        )}
+        <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#F3E8FF] mb-4">
+          <Upload className="h-6 w-6 text-[#6B21A8]" />
+        </div>
+        <p className="text-[15px] font-medium text-[#374151]">
+          Upload a file or drag and drop
+        </p>
+        <p className="text-sm text-[#9CA3AF] mt-1">{acceptLabel}</p>
       </div>
     </div>
   )
