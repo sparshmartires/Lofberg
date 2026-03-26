@@ -352,7 +352,15 @@ export function CustomerDialogForm({
                       type="file"
                       accept=".png,.jpg,.jpeg,.svg"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                      onChange={(e) => field.onChange(e.target.files)}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file && file.size > 10 * 1024 * 1024) {
+                          alert(`File exceeds 10 MB limit (${(file.size / 1024 / 1024).toFixed(1)} MB)`)
+                          e.target.value = ""
+                          return
+                        }
+                        field.onChange(e.target.files)
+                      }}
                     />
                     <div className="flex flex-col items-center justify-center text-center px-6 py-12 rounded-[28px] border-2 border-dashed border-[#D9C2F3] bg-[#FAF7FF] transition-colors hover:bg-[#F5EDFF]">
                       <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#F3E8FF] mb-4">
@@ -362,7 +370,7 @@ export function CustomerDialogForm({
                         Upload a file or drag and drop
                       </p>
                       <p className="text-sm text-[#9CA3AF] mt-1">
-                        PNG, JPG or SVG recommended
+                        PNG, JPG or SVG (max 10 MB)
                       </p>
                     </div>
                   </div>

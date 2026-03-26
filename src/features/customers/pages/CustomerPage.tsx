@@ -93,7 +93,7 @@ export function CustomersPage() {
           onActionClick={() => setOpen(true)}
         />
 
-        <div className="mb-6">
+        <div>
           <CustomerFilters
             search={search}
             segment={segment}
