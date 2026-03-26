@@ -54,7 +54,7 @@ export function RichTextEditor({
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
-      Placeholder.configure({ placeholder }),
+      Placeholder.configure({ placeholder: "" }),
     ],
     content: value,
     immediatelyRender: false,

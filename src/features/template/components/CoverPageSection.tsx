@@ -92,7 +92,7 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
         types: ["heading", "paragraph"],
       }),
       Placeholder.configure({
-        placeholder: "Sustainability report",
+        placeholder: "",
       }),
     ],
     content: parsed.headerText,
