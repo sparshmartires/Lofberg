@@ -14,6 +14,7 @@ variables:
   nodeVersion: '20.x'
   serviceConnection: 'sc-lofberg-dev'
   webAppName: 'app-lofberg-dev-frontend'
+  resourceGroupName: 'rg-lofberg-dev'
   NEXT_PUBLIC_API_URL: 'https://app-lofberg-dev-backend.azurewebsites.net'
 
 stages:
@@ -110,22 +111,25 @@ stages:
               artifactName: 'lofberg-frontend-drop'
               downloadPath: '$(System.ArtifactsDirectory)'
 
-          # Step 2: Deploy to Azure App Service
+          # Step 2: Deploy to Azure App Service (with startup command set directly here)
           - task: AzureWebApp@1
             displayName: 'Deploy to Azure App Service'
             inputs:
               azureSubscription: '$(serviceConnection)'
-              appType: 'webApp'
+              appType: 'webAppLinux'
               appName: '$(webAppName)'
+              resourceGroupName: '$(resourceGroupName)'
               package: '$(System.ArtifactsDirectory)/lofberg-frontend-drop/frontend.zip'
-              deploymentMethod: 'auto'
+              deploymentMethod: 'zipDeploy'
+              startUpCommand: 'node node_modules/next/dist/bin/next start -p 8080'
 
-          # Step 3: Set Frontend App Settings and Startup Command
+          # Step 3: Set Frontend App Settings
           - task: AzureAppServiceSettings@1
             displayName: 'Set Frontend App Settings'
             inputs:
               azureSubscription: '$(serviceConnection)'
               appName: '$(webAppName)'
+              resourceGroupName: '$(resourceGroupName)'
               appSettings: |
                 [
                   {
@@ -137,12 +141,5 @@ stages:
                     "name": "WEBSITE_RUN_FROM_PACKAGE",
                     "value": "0",
                     "slotSetting": false
-                  }
-                ]
-              generalSettings: |
-                [
-                  {
-                    "name": "appCommandLine",
-                    "value": "node node_modules/next/dist/bin/next start -p 8080"
                   }
                 ]
