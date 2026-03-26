@@ -54,12 +54,17 @@ stages:
       displayName: 'Build Next.js App'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-    # Step 5: Run Tests (uncomment when tests are implemented)
-    # - script: npm test -- --watchAll=false
-    #   displayName: 'Run Tests'
-    #   workingDirectory: '$(System.DefaultWorkingDirectory)'
+    # Step 5: DEBUG - List zip contents to verify structure
+    - script: |
+        echo "=== Working directory ==="
+        echo $(System.DefaultWorkingDirectory)
+        echo "=== Files in working directory ==="
+        dir $(System.DefaultWorkingDirectory)
+        echo "=== Checking .next folder ==="
+        dir $(System.DefaultWorkingDirectory)\.next
+      displayName: 'DEBUG: Check build output'
 
-    # Step 6: Create deployment package (includes node_modules so app can run on Azure)
+    # Step 6: Create deployment package
     - task: ArchiveFiles@2
       displayName: 'Package Build Output'
       inputs:
@@ -74,7 +79,12 @@ stages:
           **/*.test.*
           **/*.spec.*
 
-    # Step 7: Upload build artifact for next stage
+    # Step 7: DEBUG - Verify zip contents
+    - script: |
+        powershell -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('$(Build.ArtifactStagingDirectory)/frontend.zip'); Write-Host 'Total files in zip:' $zip.Entries.Count; $zip.Entries | Select-Object -First 40 | ForEach-Object { $_.FullName }; $zip.Dispose()"
+      displayName: 'DEBUG: List zip contents'
+
+    # Step 8: Upload build artifact for next stage
     - task: PublishBuildArtifacts@1
       displayName: 'Upload Build Artifact'
       inputs:
@@ -111,7 +121,7 @@ stages:
               artifactName: 'lofberg-frontend-drop'
               downloadPath: '$(System.ArtifactsDirectory)'
 
-          # Step 2: Deploy to Azure App Service (with startup command set directly here)
+          # Step 2: Deploy to Azure App Service
           - task: AzureWebApp@1
             displayName: 'Deploy to Azure App Service'
             inputs:
