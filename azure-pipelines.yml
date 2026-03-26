@@ -58,7 +58,7 @@ stages:
     #   displayName: 'Run Tests'
     #   workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-    # Step 6: Create deployment package
+    # Step 6: Create deployment package (includes node_modules so app can run on Azure)
     - task: ArchiveFiles@2
       displayName: 'Package Build Output'
       inputs:
@@ -120,7 +120,7 @@ stages:
               package: '$(System.ArtifactsDirectory)/lofberg-frontend-drop/frontend.zip'
               deploymentMethod: 'auto'
 
-          # Step 3: Set Frontend App Settings
+          # Step 3: Set Frontend App Settings and Startup Command
           - task: AzureAppServiceSettings@1
             displayName: 'Set Frontend App Settings'
             inputs:
@@ -132,5 +132,17 @@ stages:
                     "name": "NEXT_PUBLIC_API_URL",
                     "value": "$(NEXT_PUBLIC_API_URL)",
                     "slotSetting": false
+                  },
+                  {
+                    "name": "WEBSITE_RUN_FROM_PACKAGE",
+                    "value": "0",
+                    "slotSetting": false
+                  }
+                ]
+              generalSettings: |
+                [
+                  {
+                    "name": "appCommandLine",
+                    "value": "node node_modules/next/dist/bin/next start -p 8080"
                   }
                 ]
