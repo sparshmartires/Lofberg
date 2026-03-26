@@ -19,18 +19,18 @@ export default function AppSidebar() {
 
     const roles = user?.roles ?? []
     const isAdmin = roles.includes("Administrator")
+    const isSales = roles.includes("Salesperson")
     const isTranslator = roles.includes("Translator")
 
     const menuItems = [
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Generate", href: "/report-generation" },
-        { label: "Reports", href: "/historical-reports" },
-        { label: "Customers", href: "/customers" },
-        { label: "Users", href: "/users" },
-        ...(isAdmin ? [{ label: "Templates", href: "/template" }] : []),
-        ...(isAdmin || isTranslator ? [{ label: "Template translation", href: "/template/translate" }] : []),
+        ...(isAdmin || isSales ? [{ label: "Dashboard", href: "/dashboard" }] : []),
+        ...(isAdmin || isSales ? [{ label: "Generate", href: "/report-generation" }] : []),
+        ...(isAdmin || isSales ? [{ label: "Reports", href: "/historical-reports" }] : []),
+        ...(isAdmin || isSales ? [{ label: "Customers", href: "/customers" }] : []),
+        ...(isAdmin ? [{ label: "Users", href: "/users" }] : []),
+        ...(isAdmin || isTranslator ? [{ label: "Templates", href: isAdmin ? "/template" : "/template/translate" }] : []),
         { label: "Useful resources", href: "/useful-resources" },
-        { label: "Conversions", href: "/conversion-logic" },
+        ...(isAdmin || isTranslator ? [{ label: "Conversions", href: "/conversion-logic" }] : []),
     ]
 
     return (

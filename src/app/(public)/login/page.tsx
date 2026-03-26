@@ -31,13 +31,18 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setLoginError(null)
-      await login({
+      const result = await login({
         email: data.email,
         password: data.password,
       }).unwrap()
 
-      // Navigate on success
-      router.push("/dashboard")
+      // Navigate based on role
+      const userRoles = result.user?.roles ?? []
+      if (userRoles.includes("Translator")) {
+        router.push("/template/translate")
+      } else {
+        router.push("/dashboard")
+      }
     } catch (err: any) {
       // Check for first-login password change requirement (403 with requirePasswordChange)
       const errData = err?.data?.data || err?.data
