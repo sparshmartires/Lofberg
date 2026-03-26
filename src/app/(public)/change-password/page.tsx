@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react"
 import { BackButton } from "@/components/ui/back-button"
 import { useState, useEffect } from "react"
 import { useChangePasswordMutation } from "@/store/services/authApi"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface FormValues {
   password: string
@@ -19,6 +20,7 @@ export default function ChangePasswordPage() {
   const [userId, setUserId] = useState<string>("")
   const [currentPassword, setCurrentPassword] = useState<string>("")
   const [error, setError] = useState<string>("")
+  useAutoDismiss(error, () => setError(""))
   const [changePassword, { isLoading }] = useChangePasswordMutation()
 
   const {

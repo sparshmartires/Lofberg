@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { useLoginMutation } from "@/store/services/authApi"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface LoginFormValues {
   email: string
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [login, { isLoading, error }] = useLoginMutation()
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState<string | null>(null)
+  useAutoDismiss(loginError, () => setLoginError(null))
 
   const {
     register,

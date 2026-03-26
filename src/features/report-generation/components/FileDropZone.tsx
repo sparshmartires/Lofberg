@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 import { Upload, X } from "lucide-react"
 import Image from "next/image"
 
@@ -27,6 +28,7 @@ export function FileDropZone({
 }: FileDropZoneProps) {
   const [isDragOver, setIsDragOver] = useState(false)
   const [error, setError] = useState("")
+  useAutoDismiss(error, () => setError(""))
 
   const maxSizeBytes = maxSizeMB * 1024 * 1024
 

@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 import { Button } from "@/components/ui/button"
 import { Save } from "lucide-react"
 import {
@@ -28,6 +29,7 @@ export function TranslatorTemplatePage() {
   const [localEdits, setLocalEdits] = useState<Record<string, string>>({})
   const [isSaving, setIsSaving] = useState(false)
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  useAutoDismiss(statusMessage?.text ?? null, () => setStatusMessage(null))
 
   const isReceipt = templateType === "receipt"
 

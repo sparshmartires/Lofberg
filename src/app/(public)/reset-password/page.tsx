@@ -9,6 +9,7 @@ import { Eye, EyeOff } from "lucide-react"
 import { BackButton } from "@/components/ui/back-button"
 import { useState, useEffect } from "react"
 import { useResetPasswordMutation } from "@/store/services/authApi"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface FormValues {
   password: string
@@ -29,6 +30,7 @@ function ResetPasswordForm() {
   const [resetToken, setResetToken] = useState<string>("")
   const [resetEmail, setResetEmail] = useState<string>("")
   const [error, setError] = useState<string>("")
+  useAutoDismiss(error, () => setError(""))
 
   const [resetPassword, { isLoading }] = useResetPasswordMutation()
 

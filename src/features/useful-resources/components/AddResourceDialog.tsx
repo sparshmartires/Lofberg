@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Upload, Loader2 } from "lucide-react"
 import { useCreateResourceMutation } from "@/store/services/resourcesApi"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface AddNewResourceDialogProps {
   open: boolean
@@ -27,6 +28,7 @@ export default function AddNewResourceDialog({
   const [externalUrl, setExternalUrl] = useState("")
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState("")
+  useAutoDismiss(error, () => setError(""))
   const fileRef = useRef<HTMLInputElement>(null)
 
   const [createResource, { isLoading }] = useCreateResourceMutation()

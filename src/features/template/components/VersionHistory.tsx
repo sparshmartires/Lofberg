@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -59,6 +60,7 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
   const [isCreating, setIsCreating] = useState(false)
   const [actionInProgress, setActionInProgress] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  useAutoDismiss(errorMessage, () => setErrorMessage(null))
 
   const handleCreateVersion = async () => {
     setIsCreating(true)

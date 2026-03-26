@@ -17,6 +17,7 @@ import { useGenerateReportMutation, usePreviewReportMutation, useUploadImageMuta
 import { OutputFormat, OutputSize, ReportType } from "../../types"
 import { getCustomerLogoFile, setCustomerLogoFile } from "../../customerLogoRef"
 import type { Step1Data } from "../../types"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 const fieldClass =
   "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-body focus:ring-0 focus:outline-none"
@@ -32,6 +33,7 @@ export function Step5OutputExport() {
   const [previewReport] = usePreviewReportMutation()
   const [uploadImage] = useUploadImageMutation()
   const [error, setError] = useState<string | null>(null)
+  useAutoDismiss(error, () => setError(null))
 
   const isReceiptOnly = step3.reportType === ReportType.ReceiptOnly
 

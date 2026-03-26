@@ -14,6 +14,7 @@ import {
   useUpdateResourceMutation,
   type ResourceDto,
 } from "@/store/services/resourcesApi"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface EditResourceDialogProps {
   open: boolean
@@ -32,6 +33,7 @@ export default function EditResourceDialog({
   const [externalUrl, setExternalUrl] = useState("")
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState("")
+  useAutoDismiss(error, () => setError(""))
   const fileRef = useRef<HTMLInputElement>(null)
 
   const [updateResource, { isLoading }] = useUpdateResourceMutation()
