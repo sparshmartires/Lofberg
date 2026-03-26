@@ -758,6 +758,31 @@
   display: none;
 }
 
+/* Collapsible filters (mobile + tablet) */
+.mobile-advanced {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.mobile-advanced.open {
+  max-height: 800px;
+  opacity: 1;
+}
+
+.mobile-toggle {
+  margin-top: 16px;
+  text-align: center;
+  color: #5B2D91;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
 /* Mobile */
 @media (max-width: 649px) {
 
@@ -767,30 +792,6 @@
 
   .filters-mobile {
     display: block;
-  }
-
-  .mobile-advanced {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.4s ease, opacity 0.3s ease;
-  }
-
-  .mobile-advanced.open {
-    max-height: 500px;
-    opacity: 1;
-  }
-
-  .mobile-toggle {
-    margin-top: 16px;
-    text-align: center;
-    color: #5B2D91;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
   }
 }
 /* Hide mobile by default */
