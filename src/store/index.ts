@@ -8,6 +8,7 @@ import { templatesApi } from "./services/templatesApi";
 import { reportsApi } from "./services/reportsApi";
 import { conversionLogicApi } from "./services/conversionLogicApi";
 import { resourcesApi } from "./services/resourcesApi";
+import { dashboardApi } from "./services/dashboardApi";
 import authReducer from "./slices/authSlice";
 import reportWizardReducer from "./slices/reportWizardSlice";
 
@@ -23,6 +24,7 @@ export const store = configureStore({
     [reportsApi.reducerPath]: reportsApi.reducer,
     [conversionLogicApi.reducerPath]: conversionLogicApi.reducer,
     [resourcesApi.reducerPath]: resourcesApi.reducer,
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
     auth: authReducer,
     reportWizard: reportWizardReducer,
   },
@@ -36,7 +38,8 @@ export const store = configureStore({
       templatesApi.middleware,
       reportsApi.middleware,
       conversionLogicApi.middleware,
-      resourcesApi.middleware
+      resourcesApi.middleware,
+      dashboardApi.middleware
     ),
 });
 

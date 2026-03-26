@@ -8,48 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import Image from "next/image"
 
-export function SalesRepPerformance() {
-  const reps = [
-    {
-      name: "Karin Bergstrom",
-      region: "Norway",
-      reports: 92,
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    },
-    {
-      name: "Cecilia Holm",
-      region: "Poland",
-      reports: 88,
-      avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-    },
-    {
-      name: "Helena Sjöberg",
-      region: "Sweden",
-      reports: 76,
-      avatar: "https://randomuser.me/api/portraits/women/32.jpg",
-    },
-    {
-      name: "Anna Neilson",
-      region: "Finland",
-      reports: 56,
-      avatar: "https://randomuser.me/api/portraits/women/21.jpg",
-    },
-    {
-      name: "Maya Olsson",
-      region: "Denmark",
-      reports: 48,
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-    },
-    {
-      name: "Ingrid Larsson",
-      region: "Sweden",
-      reports: 44,
-      avatar: "https://randomuser.me/api/portraits/women/17.jpg",
-    },
-  ]
+interface SalesRepPerformanceProps {
+  data: { name: string; profileImageUrl?: string; region?: string; reportCount: number }[]
+}
 
+export function SalesRepPerformance({ data }: SalesRepPerformanceProps) {
   return (
     <div className="w-full bg-white border border-[#EDEDED] rounded-[28px] px-[32px] py-[24px]">
       <h3 className="text-[18px] mb-[20px] font-semibold text-[#1F1F1F]">Sales rep performance</h3>
@@ -64,27 +28,37 @@ export function SalesRepPerformance() {
         </TableHeader>
 
         <TableBody>
-          {reps.map((rep) => (
-            <TableRow key={rep.name} className="border-b border-[#DFDFDF] hover:bg-transparent">
-              <TableCell className="py-3 pl-[12px] text-[#4E4E4E]">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={rep.avatar}
-                    alt={rep.name}
-                    width={28}
-                    height={28}
-                    className="rounded-full"
-                  />
-
-                  {rep.name}
-                </div>
-              </TableCell>
-
-              <TableCell className="py-3 text-[#4E4E4E]">{rep.region}</TableCell>
-
-              <TableCell className="py-3 pr-[12px] text-[#4E4E4E]">{rep.reports}</TableCell>
+          {data.length === 0 ? (
+            <TableRow className="hover:bg-transparent">
+              <TableCell colSpan={3} className="py-6 text-center text-[#747474]">No data available</TableCell>
             </TableRow>
-          ))}
+          ) : (
+            data.map((rep) => (
+              <TableRow key={rep.name} className="border-b border-[#DFDFDF] hover:bg-transparent">
+                <TableCell className="py-3 pl-[12px] text-[#4E4E4E]">
+                  <div className="flex items-center gap-2">
+                    {rep.profileImageUrl ? (
+                      <img
+                        src={rep.profileImageUrl}
+                        alt={rep.name}
+                        className="w-7 h-7 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-7 h-7 rounded-full bg-[#F4ECFB] flex items-center justify-center text-[11px] font-medium text-[#5B2D91]">
+                        {rep.name.split(" ").map((n) => n[0]).join("").toUpperCase()}
+                      </div>
+                    )}
+
+                    {rep.name}
+                  </div>
+                </TableCell>
+
+                <TableCell className="py-3 text-[#4E4E4E]">{rep.region ?? "—"}</TableCell>
+
+                <TableCell className="py-3 pr-[12px] text-[#4E4E4E]">{rep.reportCount}</TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

@@ -1,12 +1,8 @@
-export function ReportsByMarketSegments() {
-  const rows = [
-    { segment: "Hotel", count: 45, percent: "29%" },
-    { segment: "Restaurant", count: 38, percent: "24%" },
-    { segment: "Coffee shop", count: 32, percent: "21%" },
-    { segment: "Retail chain", count: 25, percent: "19%" },
-    { segment: "Other", count: 16, percent: "10%" },
-  ]
+interface ReportsByMarketSegmentsProps {
+  data: { segmentName: string; count: number; percentage: number }[]
+}
 
+export function ReportsByMarketSegments({ data }: ReportsByMarketSegmentsProps) {
   return (
     <div className="w-full bg-white border border-[#EDEDED] rounded-[28px] px-[32px] py-[24px]">
 
@@ -25,16 +21,22 @@ export function ReportsByMarketSegments() {
         </thead>
 
         <tbody>
-          {rows.map((row) => (
-            <tr
-              key={row.segment}
-              className="border-b border-[#DFDFDF]"
-            >
-              <td className="py-3 pl-[12px] text-[#4E4E4E]">{row.segment}</td>
-              <td className="text-[#4E4E4E]">{row.count}</td>
-              <td className="pr-[12px] text-[#4E4E4E]">{row.percent}</td>
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan={3} className="py-6 text-center text-[#747474]">No data available</td>
             </tr>
-          ))}
+          ) : (
+            data.map((row) => (
+              <tr
+                key={row.segmentName}
+                className="border-b border-[#DFDFDF]"
+              >
+                <td className="py-3 pl-[12px] text-[#4E4E4E]">{row.segmentName}</td>
+                <td className="text-[#4E4E4E]">{row.count}</td>
+                <td className="pr-[12px] text-[#4E4E4E]">{row.percentage}%</td>
+              </tr>
+            ))
+          )}
         </tbody>
 
       </table>
