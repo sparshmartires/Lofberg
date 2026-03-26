@@ -167,8 +167,7 @@ export function HistoricalReportsPage() {
   return (
     <div className="min-h-screen bg-background py-10">
       <PageHeaderWithAction
-        title="Reports"
-        description="Past reports, receipts and drafts"
+        title="Past reports, receipts and drafts"
         actionLabel="Generate"
         onActionClick={handleGenerateReport}
       />
@@ -203,9 +202,6 @@ export function HistoricalReportsPage() {
       />
 
       <div className="rounded-[24px] bg-white shadow-sm py-[32px] px-[24px] max-[649px]:p-[12px]">
-        <div className="flex items-center justify-between mb-[28px] max-[649px]:mb-[16px] gap-6">
-          <PageSectionTitle title="Reports" />
-        </div>
 
         {isLoading ? (
           <div className="text-center py-8 text-sm text-[#8A8A8A]">Loading reports...</div>
