@@ -140,8 +140,7 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
 
         <FileDropZone
           accept=".jpg,.jpeg,.png,.svg,.webp"
-          acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
-          file={imageFile}
+          acceptLabel="Recommended size: 1920x1080px, JPG/PNG/SVG"          file={imageFile}
           previewUrl={parsed.cover_image}
           onFileChange={handleImageChange}
           className="h-[125px]"

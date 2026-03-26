@@ -147,8 +147,7 @@ export default function IncreasingImpactSection({
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[imageField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[imageField] ?? null}
                     previewUrl={parsed[imageField]}
                     onFileChange={(file) => handleImageChange(imageField, file)}
                     className="h-[110px]"

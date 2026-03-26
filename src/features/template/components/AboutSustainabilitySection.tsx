@@ -93,8 +93,7 @@ export default function AboutSustainabilitySection({
           <p className="text-sm mb-2">Banner image</p>
           <FileDropZone
             accept=".jpg,.jpeg,.png,.svg,.webp"
-            acceptLabel="Recommended size: 1920x1080px, Max 2MB"
-            file={imageFiles["intro_hero_image"] ?? null}
+            acceptLabel="Recommended size: 1920x1080px, JPG/PNG/SVG"            file={imageFiles["intro_hero_image"] ?? null}
             previewUrl={parsed.intro_hero_image}
             onFileChange={(file) => handleImageChange("intro_hero_image", file)}
             className="h-[125px]"
@@ -115,8 +114,7 @@ export default function AboutSustainabilitySection({
           <p className="text-sm mb-2">Circle image</p>
           <FileDropZone
             accept=".jpg,.jpeg,.png,.svg,.webp"
-            acceptLabel="Recommended size: 800x800px, Max 2MB"
-            file={imageFiles["intro_circle_image"] ?? null}
+            acceptLabel="Recommended size: 800x800px, JPG/PNG/SVG"            file={imageFiles["intro_circle_image"] ?? null}
             previewUrl={parsed.intro_circle_image}
             onFileChange={(file) => handleImageChange("intro_circle_image", file)}
             className="h-[125px]"
@@ -154,8 +152,7 @@ export default function AboutSustainabilitySection({
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[iconField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[iconField] ?? null}
                     previewUrl={parsed[iconField]}
                     onFileChange={(file) => handleImageChange(iconField, file)}
                     className="h-[110px]"
@@ -197,8 +194,7 @@ export default function AboutSustainabilitySection({
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[iconField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[iconField] ?? null}
                     previewUrl={parsed[iconField]}
                     onFileChange={(file) => handleImageChange(iconField, file)}
                     className="h-[110px]"

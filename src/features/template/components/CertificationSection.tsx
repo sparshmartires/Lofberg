@@ -117,8 +117,7 @@ export default function CertificationsSection({
                   <p className="text-sm mb-2">Certification logo</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[logoField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[logoField] ?? null}
                     previewUrl={parsed[logoField]}
                     onFileChange={(file) => handleImageChange(logoField, file)}
                     className="h-[110px]"
@@ -129,8 +128,7 @@ export default function CertificationsSection({
                   <p className="text-sm mb-2">Background image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[imageField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[imageField] ?? null}
                     previewUrl={parsed[imageField]}
                     onFileChange={(file) => handleImageChange(imageField, file)}
                     className="h-[110px]"

@@ -146,8 +146,7 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
 
                 <FileDropZone
                   accept=".jpg,.jpeg,.png,.svg,.webp"
-                  acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
-                  file={imageFiles[`${idx}-bg`] || null}
+                  acceptLabel="Recommended size: 1920x1080px, JPG/PNG/SVG"                  file={imageFiles[`${idx}-bg`] || null}
                   previewUrl={content[fields.bgImage] as string | undefined}
                   onFileChange={(file) => handleImageChange(`${idx}-bg`, page, content, fields.bgImage, file, idx)}
                   className="h-[110px]"
@@ -161,8 +160,7 @@ export default function ReceiptSection({ pages = [], onPageChange }: ReceiptSect
 
                 <FileDropZone
                   accept=".jpg,.jpeg,.png,.svg,.webp"
-                  acceptLabel="Small icon/logo, Max 2MB, JPG/PNG/SVG"
-                  file={imageFiles[`${idx}-section`] || null}
+                  acceptLabel="Small icon/logo, JPG/PNG/SVG"                  file={imageFiles[`${idx}-section`] || null}
                   previewUrl={content[fields.sectionImage] as string | undefined}
                   onFileChange={(file) => handleImageChange(`${idx}-section`, page, content, fields.sectionImage, file, idx)}
                   className="h-[110px]"

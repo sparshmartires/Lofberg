@@ -114,8 +114,7 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
 
                 <FileDropZone
                   accept=".jpg,.jpeg,.png,.svg,.webp"
-                  acceptLabel="Max 2MB, JPG/PNG/SVG"
-                  file={imageFiles[section.imageKey]}
+                  acceptLabel="JPG/PNG/SVG"                  file={imageFiles[section.imageKey]}
                   previewUrl={parsed[section.imageKey]}
                   onFileChange={(file) => handleImageChange(section.imageKey, file)}
                   className="h-[120px]"
