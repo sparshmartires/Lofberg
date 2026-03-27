@@ -247,6 +247,7 @@ export function EditCustomerDialog({
               control={control}
               register={register}
               trigger={trigger}
+              setValue={setValue}
               errors={errors}
               segmentOptions={segmentOptions}
               regionOptions={regionOptions}

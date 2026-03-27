@@ -1,6 +1,6 @@
 "use client"
 
-import { Control, Controller, FieldErrors, UseFormRegister, UseFormTrigger, useWatch } from "react-hook-form"
+import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormTrigger, useWatch } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { formatPhoneDisplay } from "@/lib/phone"
@@ -39,6 +39,7 @@ interface CustomerDialogFormProps {
   register: UseFormRegister<CustomerFormValues>
   errors: FieldErrors<CustomerFormValues>
   trigger?: UseFormTrigger<CustomerFormValues>
+  setValue?: UseFormSetValue<CustomerFormValues>
   segmentOptions: Array<{ id: string; name: string }>
   regionOptions: Array<{ id: string; name: string }>
   logoPreview?: string | null
@@ -58,6 +59,7 @@ export function CustomerDialogForm({
   register,
   errors,
   trigger,
+  setValue,
   segmentOptions,
   regionOptions,
   logoPreview,
@@ -68,6 +70,7 @@ export function CustomerDialogForm({
   hideActions = false,
 }: CustomerDialogFormProps) {
   const isSubCustomer = useWatch({ control, name: "isSubCustomer" })
+  const parentCustomerId = useWatch({ control, name: "parentCustomerId" })
   const { data: parentOptions } = useGetCustomersQuery(
     { pageNumber: 1, pageSize: 200, isActive: true },
     { skip: !isSubCustomer }
@@ -206,6 +209,28 @@ export function CustomerDialogForm({
             />
             {errors.parentCustomerId && (
               <p className="text-xs text-red-500">{errors.parentCustomerId.message}</p>
+            )}
+
+            {parentCustomerId && setValue && (
+              <Button
+                type="button"
+                variant="outlineBrand"
+                size="sm"
+                className="mt-2"
+                onClick={() => {
+                  const parent = (parentOptions?.items ?? []).find((c) => c.id === parentCustomerId)
+                  if (!parent || !setValue) return
+                  if (parent.segmentId) setValue("industry", parent.segmentId)
+                  if (parent.serviceTier) setValue("serviceTier", String(parent.serviceTier))
+                  if (parent.regionId) setValue("region", parent.regionId)
+                  if (parent.contactName) setValue("contactPerson", parent.contactName)
+                  if (parent.contactEmail) setValue("contactEmail", parent.contactEmail)
+                  if (parent.contactPhone) setValue("contactPhone", parent.contactPhone)
+                  if (parent.address) setValue("address", parent.address)
+                }}
+              >
+                Use parent details
+              </Button>
             )}
           </div>
         )}
