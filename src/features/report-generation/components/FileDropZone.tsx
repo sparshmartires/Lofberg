@@ -137,7 +137,7 @@ export function FileDropZone({
   return (
     <div>
       <div
-        className={`relative rounded-[28px] border-2 border-dashed transition-colors ${
+        className={`relative rounded-xl sm:rounded-[28px] border-2 border-dashed transition-colors w-full min-w-0 ${
           error
             ? "border-red-400 bg-red-50"
             : isDragOver
@@ -155,14 +155,14 @@ export function FileDropZone({
           onChange={handleInputChange}
         />
 
-        <div className="flex flex-col items-center justify-center text-center px-6 py-3 h-full">
-          <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#F3E8FF] mb-4">
+        <div className="flex flex-col items-center justify-center text-center px-2 sm:px-6 py-3 h-full">
+          <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl bg-[#F3E8FF] mb-3 sm:mb-4">
             <Upload className="h-6 w-6 text-[#6B21A8]" />
           </div>
-          <p className="text-[15px] font-medium text-[#374151]">
+          <p className="text-xs sm:text-[15px] font-medium text-[#374151]">
             Upload a file or drag and drop
           </p>
-          <p className="text-sm text-[#9CA3AF] mt-1">
+          <p className="text-[10px] sm:text-sm text-[#9CA3AF] mt-1">
             {acceptLabel} (max {maxSizeMB} MB)
           </p>
         </div>
