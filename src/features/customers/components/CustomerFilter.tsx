@@ -115,18 +115,18 @@ export function CustomerFilters({
 
   return (
     <div className="filters-card">
-      {/* Desktop: left-aligned flex-wrap */}
-      <div className="hidden md:flex flex-wrap gap-4 items-end">
+      {/* Desktop (lg+): left-aligned flex-wrap */}
+      <div className="hidden lg:flex flex-wrap gap-4 items-end">
         {searchField}
         {filterFields}
       </div>
 
-      {/* Mobile: search + collapsible filters */}
-      <div className="block md:hidden">
+      {/* Tablet + Mobile (<lg): search + collapsible filters */}
+      <div className="block lg:hidden">
         {searchField}
 
         <div className={`mobile-advanced ${isOpen ? "open" : ""}`}>
-          <div className="flex flex-col gap-4 pt-4">
+          <div className="flex flex-wrap gap-4 pt-4">
             {filterFields}
           </div>
         </div>

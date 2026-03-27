@@ -1,11 +1,10 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { format } from "date-fns"
 import { AppPagination } from "@/components/ui/app-pagination"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
-import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
 import { HistoricalReportsTable } from "../components/HistoricalReportsTable"
 import { HistoricalReportsFilters } from "../components/HistoricalReportsFilters"
 import type { FilterOption } from "../components/HistoricalReportsFilters"
@@ -17,6 +16,7 @@ const TYPE_OPTIONS = ["Report + Receipt", "Receipt Only"]
 
 export function HistoricalReportsPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user } = useAuth()
 
   // Read roles from Redux state first, fall back to localStorage for page reload
@@ -34,7 +34,7 @@ export function HistoricalReportsPage() {
   }, [user])
 
   const [search, setSearch] = useState("")
-  const [customerId, setCustomerId] = useState("all")
+  const [customerId, setCustomerId] = useState(searchParams.get("customerId") ?? "all")
   const [salesRepresentativeId, setSalesRepresentativeId] = useState("all")
   const [type, setType] = useState("all")
   const [status, setStatus] = useState("all")
