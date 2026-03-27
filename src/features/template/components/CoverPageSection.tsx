@@ -23,7 +23,11 @@ import { FileDropZone } from "@/features/report-generation/components/FileDropZo
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
 const DEFAULT_CONTENT: CoverPageContent = {
-  headerText: "<p>Sustainability report</p>",
+  headerText: "Sustainability report",
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "").trim()
 }
 
 const defaultToolbarState = {
@@ -152,7 +156,7 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
 
         <input
           type="text"
-          value={parsed.headerText || ""}
+          value={stripHtml(parsed.headerText || "")}
           onChange={(e) => emitChange({ ...parsedRef.current, headerText: e.target.value })}
           placeholder="Enter header text"
           className="w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm"

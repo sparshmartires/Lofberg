@@ -7,13 +7,13 @@ import { FileDropZone } from "@/features/report-generation/components/FileDropZo
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
 const RIGHT_BLOCKS = [
-  { index: 1, label: "Block 1 (Icon + Textblock1 (right))" },
-  { index: 2, label: "Block 2 (Icon + Textblock 2 (right))" },
+  { index: 1, label: "Block 1" },
+  { index: 2, label: "Block 2" },
 ] as const
 
 const BOTTOM_BLOCKS = [
-  { index: 3, label: "Block 3 (Icon + Textblock3 (bottom left))" },
-  { index: 4, label: "Block 4 (Icon + Textblock 4 (bottom right))" },
+  { index: 3, label: "Block 3" },
+  { index: 4, label: "Block 4" },
 ] as const
 
 const ALL_BLOCKS = [...RIGHT_BLOCKS, ...BOTTOM_BLOCKS] as const
@@ -135,7 +135,6 @@ export default function AboutSustainabilitySection({
 
       <div className="border-t border-[#EDEDED]" />
 
-      <p className="text-sm font-medium text-[#8A8A8A]">Right-side blocks</p>
       <div className="space-y-6">
         {RIGHT_BLOCKS.map((block) => {
           const iconField = `intro_icon_${block.index}` as ImageField
@@ -177,7 +176,6 @@ export default function AboutSustainabilitySection({
 
       <div className="border-t border-[#EDEDED]" />
 
-      <p className="text-sm font-medium text-[#8A8A8A]">Bottom blocks</p>
       <div className="space-y-6">
         {BOTTOM_BLOCKS.map((block) => {
           const iconField = `intro_icon_${block.index}` as ImageField

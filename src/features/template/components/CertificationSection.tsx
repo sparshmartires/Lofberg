@@ -153,7 +153,7 @@ export default function CertificationsSection({
                   value={parsed[textField] ?? ""}
                   onChange={(html) => updateText(textField, html)}
                   placeholder="Enter certification description"
-                  className="h-[90px]"
+                  className="h-[120px]"
                 />
               </div>
             </div>

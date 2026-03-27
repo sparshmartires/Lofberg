@@ -8,6 +8,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
 import { useGetTemplateLanguagesQuery } from "@/store/services/templatesApi"
 
 import styles from "./TemplateConfiguration.module.css"
@@ -19,6 +20,8 @@ interface TemplateConfigurationProps {
   onTemplateTypeChange: (value: string) => void
   onLanguageChange: (value: string) => void
   onTemplateNameChange?: (value: string) => void
+  onPublish?: () => void
+  isPublishing?: boolean
 }
 
 const INVALID_FILENAME_REGEX = /[\/\\:*?"<>|\s]/
@@ -30,6 +33,8 @@ export function TemplateConfiguration({
   onTemplateTypeChange,
   onLanguageChange,
   onTemplateNameChange,
+  onPublish,
+  isPublishing = false,
 }: TemplateConfigurationProps) {
   const { data: languages = [] } = useGetTemplateLanguagesQuery()
   const [nameError, setNameError] = useState("")
@@ -49,11 +54,11 @@ export function TemplateConfiguration({
   return (
     <div className={styles.card}>
 
-      {/* GRID */}
-      <div className={styles.grid}>
+      {/* GRID — 4 columns on desktop, stacked on mobile */}
+      <div className="flex flex-col lg:flex-row gap-4 lg:items-end">
 
         {/* Template Name */}
-        <div className={styles.field}>
+        <div className="flex-1 min-w-0">
           <label className={styles.label}>
             Version name <span className="text-red-500">*</span>
           </label>
@@ -72,7 +77,7 @@ export function TemplateConfiguration({
         </div>
 
         {/* Template Type */}
-        <div className={styles.field}>
+        <div className="flex-1 min-w-0">
           <label className={styles.label}>
             Template type
           </label>
@@ -97,7 +102,7 @@ export function TemplateConfiguration({
         </div>
 
         {/* Language */}
-        <div className={styles.field}>
+        <div className="flex-1 min-w-0">
           <label className={styles.label}>
             Language
           </label>
@@ -119,6 +124,21 @@ export function TemplateConfiguration({
             </SelectContent>
           </Select>
         </div>
+
+        {/* Publish button */}
+        {onPublish && (
+          <div className="shrink-0">
+            <label className={`${styles.label} invisible`}>Action</label>
+            <Button
+              variant="primary"
+              className="h-[44px] px-6 rounded-[99px] whitespace-nowrap"
+              onClick={onPublish}
+              disabled={isPublishing}
+            >
+              {isPublishing ? "Publishing..." : "Publish"}
+            </Button>
+          </div>
+        )}
 
       </div>
     </div>

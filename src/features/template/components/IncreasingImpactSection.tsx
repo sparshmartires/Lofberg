@@ -138,7 +138,6 @@ export default function IncreasingImpactSection({
                   value={currentName}
                   onChange={(e) => updateText(nameField, e.target.value)}
                   placeholder={block.label}
-                  required
                   className="flex-1 h-[36px] rounded-[99px] border border-[#F0F0F0] px-[16px] shadow-[0px_2px_4px_0px_#0000000A] text-sm font-medium"
                 />
               </div>
@@ -178,7 +177,7 @@ export default function IncreasingImpactSection({
           value={parsed.wantMoreText}
           onChange={(html) => updateText("wantMoreText", html)}
           placeholder="Enter 'want to know more' text"
-          className="h-[90px]"
+          className="h-[120px]"
         />
       </div>
     </div>

@@ -16,6 +16,7 @@ import {
   useSaveTranslationsMutation,
   useCreateDraftMutation,
   useUpdateDraftMutation,
+  usePublishDraftMutation,
   TemplateType,
   TemplateSize,
   type TemplatePageContentDto,
@@ -44,6 +45,8 @@ export function TemplatePage() {
   const [templateName, setTemplateName] = useState("")
   const [localEdits, setLocalEdits] = useState<Record<string, string>>({})
   const [isSaving, setIsSaving] = useState(false)
+  const [isPublishing, setIsPublishing] = useState(false)
+  const [editingVersionId, setEditingVersionId] = useState<string | null>(null)
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   useAutoDismiss(statusMessage?.text ?? null, () => setStatusMessage(null))
 
@@ -98,13 +101,14 @@ export function TemplatePage() {
     [templates, isReceipt]
   )
 
-  // ── Fetch active versions (A4 primary) ─────────────────────────────
+  // ── Fetch version (editing or active) ──────────────────────────────
+  const effectiveVersionId = editingVersionId ?? selectedTemplate?.activeVersion?.id ?? ""
   const { data: versionData, isLoading: isLoadingVersion } = useGetTemplateVersionQuery(
     {
       templateId: selectedTemplate?.id ?? "",
-      versionId: selectedTemplate?.activeVersion?.id ?? "",
+      versionId: effectiveVersionId,
     },
-    { skip: !selectedTemplate?.id || !selectedTemplate?.activeVersion?.id }
+    { skip: !selectedTemplate?.id || !effectiveVersionId }
   )
 
   const { data: compiledVersionData, isLoading: isLoadingCompiledVersion } = useGetTemplateVersionQuery(
@@ -114,6 +118,13 @@ export function TemplatePage() {
     },
     { skip: !compiledTemplate?.id || !compiledTemplate?.activeVersion?.id }
   )
+
+  // ── Sync templateName from loaded version ──────────────────────────
+  useEffect(() => {
+    if (versionData?.versionName) {
+      setTemplateName(versionData.versionName)
+    }
+  }, [versionData?.id, versionData?.versionName])
 
   // ── Fetch A3 versions (for page ID mapping during save mirroring) ──
   const { data: a3VersionData } = useGetTemplateVersionQuery(
@@ -242,6 +253,7 @@ export function TemplatePage() {
   const [saveTranslations] = useSaveTranslationsMutation()
   const [createDraft] = useCreateDraftMutation()
   const [updateDraft] = useUpdateDraftMutation()
+  const [publishDraft] = usePublishDraftMutation()
 
   const handleSaveTranslations = async () => {
     if (!selectedTemplate?.id || !language) return
@@ -396,6 +408,44 @@ export function TemplatePage() {
     }
   }
 
+  const handlePublish = async () => {
+    if (!selectedTemplate?.id) return
+    setIsPublishing(true)
+    setStatusMessage(null)
+    try {
+      const templateIds = [selectedTemplate.id, ...(compiledTemplate ? [compiledTemplate.id] : [])]
+
+      // Save current content as draft first, then publish
+      for (const id of templateIds) {
+        await ensureDraft(id)
+      }
+
+      // Update draft with current page changes
+      const changedPages = Object.entries(localEdits)
+      if (changedPages.length > 0) {
+        const pages = changedPages.map(([pageId, contentJson]) => ({
+          templatePageId: pageId,
+          contentJson,
+        }))
+        await updateDraft({ templateId: selectedTemplate.id, body: { pages, versionName: templateName || undefined } }).unwrap()
+      }
+
+      // Publish all templates
+      for (const id of templateIds) {
+        await publishDraft({ templateId: id, body: { versionName: templateName || undefined } }).unwrap()
+      }
+
+      setLocalEdits({})
+      setEditingVersionId(null)
+      setStatusMessage({ type: "success", text: "Published successfully!" })
+    } catch (err) {
+      console.error("Failed to publish:", err)
+      setStatusMessage({ type: "error", text: "Failed to publish. Please try again." })
+    } finally {
+      setIsPublishing(false)
+    }
+  }
+
   const isLoading = isLoadingTemplates || isLoadingVersion || isLoadingCompiledVersion
 
   return (
@@ -459,6 +509,8 @@ export function TemplatePage() {
         onTemplateTypeChange={setTemplateType}
         onLanguageChange={setLanguage}
         onTemplateNameChange={setTemplateName}
+        onPublish={handlePublish}
+        isPublishing={isPublishing}
       />
 
       <TemplateContent
@@ -473,6 +525,11 @@ export function TemplatePage() {
             selectedTemplate.id,
             ...(compiledTemplate ? [compiledTemplate.id] : []),
           ]}
+          onOpenVersion={(versionId) => {
+            setEditingVersionId(versionId)
+            setLocalEdits({})
+            setStatusMessage({ type: "success", text: "Version loaded into editor." })
+          }}
         />
       )}
     </div>

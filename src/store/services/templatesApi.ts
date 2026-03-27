@@ -94,6 +94,7 @@ export interface CreateDraftRequest {
 }
 
 export interface UpdateDraftRequest {
+  versionName?: string
   changeNotes?: string
   pages: UpdatePageContentRequest[]
 }

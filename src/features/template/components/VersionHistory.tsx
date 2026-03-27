@@ -2,13 +2,10 @@
 
 import { useState } from "react"
 import { useAutoDismiss } from "@/hooks/useAutoDismiss"
-import { Plus } from "lucide-react"
+import { ExternalLink, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   useGetTemplateVersionsQuery,
-  useCreateDraftMutation,
-  usePublishDraftMutation,
-  useRollbackVersionMutation,
   useDeleteDraftMutation,
   VersionStatus,
 } from "@/store/services/templatesApi"
@@ -16,6 +13,7 @@ import {
 interface VersionHistoryProps {
   templateIds: string[]
   label?: string
+  onOpenVersion?: (versionId: string) => void
 }
 
 const STATUS_BADGE: Record<VersionStatus, { label: string; classes: string }> = {
@@ -43,88 +41,17 @@ function formatDate(dateString: string | null): string {
   })
 }
 
-export default function VersionHistory({ templateIds, label }: VersionHistoryProps) {
+export default function VersionHistory({ templateIds, label, onOpenVersion }: VersionHistoryProps) {
   const primaryId = templateIds[0]
   const { data: versions = [], isLoading } = useGetTemplateVersionsQuery({ templateId: primaryId })
 
-  // Fetch secondary template versions for restore (need matching versionId by versionNumber)
-  const { data: secondaryVersions = [] } = useGetTemplateVersionsQuery(
-    { templateId: templateIds[1] ?? "" },
-    { skip: templateIds.length < 2 }
-  )
-
-  const [createDraft] = useCreateDraftMutation()
-  const [publishDraft] = usePublishDraftMutation()
-  const [rollbackVersion] = useRollbackVersionMutation()
   const [deleteDraft] = useDeleteDraftMutation()
-  const [isCreating, setIsCreating] = useState(false)
   const [actionInProgress, setActionInProgress] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   useAutoDismiss(errorMessage, () => setErrorMessage(null))
 
-  const handleCreateVersion = async () => {
-    setIsCreating(true)
-    setErrorMessage(null)
-    try {
-      for (const id of templateIds) {
-        await createDraft({ templateId: id }).unwrap()
-        await publishDraft({ templateId: id }).unwrap()
-      }
-    } catch (err) {
-      console.error("Failed to create version:", err)
-      setErrorMessage("Failed to create version. Please try again.")
-    } finally {
-      setIsCreating(false)
-    }
-  }
-
-  const handleRestore = async (versionId: string) => {
-    if (!window.confirm("Are you sure you want to restore this version? The current active version will be archived.")) {
-      return
-    }
-    setActionInProgress(versionId)
-    setErrorMessage(null)
-    try {
-      // Restore primary template
-      await rollbackVersion({ templateId: primaryId, versionId }).unwrap()
-
-      // Restore secondary templates by matching versionNumber
-      if (templateIds.length > 1) {
-        const primaryVersion = versions.find((v) => v.id === versionId)
-        if (primaryVersion) {
-          for (const id of templateIds.slice(1)) {
-            const match = secondaryVersions.find((v) => v.versionNumber === primaryVersion.versionNumber)
-            if (match) {
-              await rollbackVersion({ templateId: id, versionId: match.id }).unwrap()
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.error("Failed to restore version:", err)
-      setErrorMessage("Failed to restore version. Please try again.")
-    } finally {
-      setActionInProgress(null)
-    }
-  }
-
-  const handlePublishDraft = async () => {
-    setActionInProgress("publish")
-    setErrorMessage(null)
-    try {
-      for (const id of templateIds) {
-        await publishDraft({ templateId: id }).unwrap()
-      }
-    } catch (err) {
-      console.error("Failed to publish draft:", err)
-      setErrorMessage("Failed to publish draft. Please try again.")
-    } finally {
-      setActionInProgress(null)
-    }
-  }
-
   const handleDeleteDraft = async () => {
-    if (!window.confirm("Are you sure you want to delete this draft?")) return
+    if (!window.confirm("Are you sure you want to delete this draft? This action cannot be undone.")) return
     setActionInProgress("delete")
     setErrorMessage(null)
     try {
@@ -150,22 +77,13 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
   return (
     <div className="rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 mt-[20px]">
       {errorMessage && (
-        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
           {errorMessage}
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-6 max-[649px]:flex-col max-[649px]:items-start max-[649px]:gap-4">
+      <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-medium text-[#1F1F1F]">{label ?? "Version history"}</h3>
-        <Button
-          variant="primary"
-          className="page-header-with-action-button"
-          onClick={handleCreateVersion}
-          disabled={isCreating}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          {isCreating ? "Creating..." : "Create version"}
-        </Button>
       </div>
 
       {versions.length === 0 ? (
@@ -201,36 +119,33 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
                   </span>
 
                   <div className="flex gap-2 flex-wrap">
-                    {version.status === VersionStatus.Archived && (
+                    {/* All versions get an Open button */}
+                    <Button
+                      variant="outlineBrand"
+                      size="sm"
+                      onClick={() => onOpenVersion?.(version.id)}
+                      disabled={isDisabled}
+                      title="Open in editor"
+                    >
+                      <ExternalLink className="h-4 w-4 sm:mr-1" />
+                      <span className="hidden sm:inline">Open</span>
+                    </Button>
+
+                    {/* Drafts also get a Delete button */}
+                    {version.status === VersionStatus.Draft && (
                       <Button
                         variant="outlineBrand"
                         size="sm"
-                        onClick={() => handleRestore(version.id)}
+                        onClick={handleDeleteDraft}
                         disabled={isDisabled}
+                        title="Delete draft"
+                        className="text-red-600 border-red-300 hover:bg-red-50"
                       >
-                        {actionInProgress === version.id ? "Restoring..." : "Restore"}
-                      </Button>
-                    )}
-
-                    {version.status === VersionStatus.Draft && (
-                      <>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={handlePublishDraft}
-                          disabled={isDisabled}
-                        >
-                          {actionInProgress === "publish" ? "Publishing..." : "Publish"}
-                        </Button>
-                        <Button
-                          variant="outlineBrand"
-                          size="sm"
-                          onClick={handleDeleteDraft}
-                          disabled={isDisabled}
-                        >
+                        <Trash2 className="h-4 w-4 sm:mr-1" />
+                        <span className="hidden sm:inline">
                           {actionInProgress === "delete" ? "Deleting..." : "Delete"}
-                        </Button>
-                      </>
+                        </span>
+                      </Button>
                     )}
                   </div>
                 </div>
