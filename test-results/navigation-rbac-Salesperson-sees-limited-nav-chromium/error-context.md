@@ -1,0 +1,117 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Dashboard" [level=1] [ref=e22]
+          - paragraph [ref=e23]: Overview of all sustainability reports and performance metrics
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - img [ref=e27]
+            - generic [ref=e30]:
+              - generic [ref=e31]: Total reports
+              - generic [ref=e32]: "0"
+              - generic [ref=e33]: All time
+          - generic [ref=e34]:
+            - img [ref=e36]
+            - generic [ref=e38]:
+              - generic [ref=e39]: This month
+              - generic [ref=e40]: "0"
+              - generic [ref=e41]: Current month
+          - generic [ref=e42]:
+            - img [ref=e44]
+            - generic [ref=e47]:
+              - generic [ref=e48]: This quarter
+              - generic [ref=e49]: "0"
+              - generic [ref=e50]: Current quarter
+          - generic [ref=e51]:
+            - img [ref=e53]
+            - generic [ref=e58]:
+              - generic [ref=e59]: Active customers
+              - generic [ref=e60]: "8"
+              - generic [ref=e61]: With reports
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - heading "Reports by markets" [level=3] [ref=e64]
+          - paragraph [ref=e65]: No data available
+        - generic [ref=e66]:
+          - heading "Reports by market segments" [level=3] [ref=e67]
+          - table [ref=e68]:
+            - rowgroup [ref=e69]:
+              - row "Market segment Count Percentage" [ref=e70]:
+                - columnheader "Market segment" [ref=e71]
+                - columnheader "Count" [ref=e72]
+                - columnheader "Percentage" [ref=e73]
+            - rowgroup [ref=e74]:
+              - row "No data available" [ref=e75]:
+                - cell "No data available" [ref=e76]
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - heading "Top 10 customers" [level=3] [ref=e79]
+          - table [ref=e81]:
+            - rowgroup [ref=e82]:
+              - row "Customer Segment Reports" [ref=e83]:
+                - columnheader "Customer" [ref=e84]
+                - columnheader "Segment" [ref=e85]
+                - columnheader "Reports" [ref=e86]
+            - rowgroup [ref=e87]:
+              - row "No data available" [ref=e88]:
+                - cell "No data available" [ref=e89]
+        - generic [ref=e90]:
+          - heading "Sales rep performance" [level=3] [ref=e91]
+          - table [ref=e93]:
+            - rowgroup [ref=e94]:
+              - row "Sales rep Region Reports" [ref=e95]:
+                - columnheader "Sales rep" [ref=e96]
+                - columnheader "Region" [ref=e97]
+                - columnheader "Reports" [ref=e98]
+            - rowgroup [ref=e99]:
+              - row "No data available" [ref=e100]:
+                - cell "No data available" [ref=e101]
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - heading "Report type distribution" [level=3] [ref=e105]
+          - paragraph [ref=e106]: Illustrates the percentage breakdown of report types generated
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]:
+              - paragraph [ref=e110]: Full report
+              - paragraph [ref=e111]: (Report + Receipt)
+              - paragraph [ref=e112]: 0%
+              - paragraph [ref=e113]: 0 reports
+            - img [ref=e115]
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - paragraph [ref=e120]: Receipt only
+              - paragraph [ref=e121]: (Standalone)
+              - paragraph [ref=e122]: 0%
+              - paragraph [ref=e123]: 0 reports
+            - img [ref=e125]
+          - generic [ref=e128]:
+            - generic [ref=e129]:
+              - paragraph [ref=e130]: Compiled report
+              - paragraph [ref=e131]: 0%
+              - paragraph [ref=e132]: 0 reports
+            - img [ref=e134]
+        - generic [ref=e137]:
+          - generic [ref=e138]: "Insight:"
+          - generic [ref=e139]: "Full reports: 0% | Receipt only: 0% | Compiled receipt: 0%"
+  - button "Open Next.js Dev Tools" [ref=e145] [cursor=pointer]:
+    - img [ref=e146]
+  - alert [ref=e149]
+```

@@ -1,0 +1,411 @@
+# Page snapshot
+
+```yaml
+- generic:
+  - generic [ref=e5] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e6]:
+      - img [ref=e7]
+    - generic [ref=e10]:
+      - button "Open issues overlay" [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]: "0"
+          - generic [ref=e14]: "1"
+        - generic [ref=e15]: Issue
+      - button "Collapse issues badge" [ref=e16]:
+        - img [ref=e17]
+  - generic:
+    - banner:
+      - generic:
+        - button:
+          - img
+        - img
+      - generic:
+        - button:
+          - img
+          - text: Generate
+        - button:
+          - img
+          - img
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - heading [level=1]: Past reports, receipts and drafts
+          - button:
+            - img
+            - text: Generate
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: Search
+                - generic:
+                  - textbox:
+                    - /placeholder: Search reports
+              - generic:
+                - generic: Customer
+                - combobox:
+                  - generic: All customers
+                  - generic:
+                    - img
+              - generic:
+                - generic: Salesperson
+                - combobox:
+                  - generic: All salespersons
+                  - generic:
+                    - img
+            - generic:
+              - generic:
+                - generic: Type
+                - combobox:
+                  - generic: All types
+                  - generic:
+                    - img
+              - generic:
+                - generic: Status
+                - combobox [expanded]:
+                  - generic: All statuses
+                  - generic:
+                    - img
+              - generic:
+                - generic: Segment
+                - combobox:
+                  - generic: All segments
+                  - generic:
+                    - img
+            - generic:
+              - generic:
+                - generic: Report date
+                - button:
+                  - img
+                  - generic: Select date range
+              - generic:
+                - generic: Created at
+                - button:
+                  - img
+                  - generic: Select date range
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - table:
+                  - rowgroup:
+                    - row:
+                      - columnheader:
+                        - generic:
+                          - text: Report title
+                          - img
+                      - columnheader:
+                        - generic:
+                          - text: Customer
+                          - img
+                      - columnheader:
+                        - generic:
+                          - text: Salesperson
+                          - img
+                      - columnheader:
+                        - generic:
+                          - text: Segment
+                          - img
+                      - columnheader:
+                        - generic:
+                          - text: Status
+                          - img
+                      - columnheader:
+                        - generic:
+                          - text: Report date
+                          - img
+                      - columnheader:
+                        - generic:
+                          - text: Created at
+                          - img
+                      - columnheader: Actions
+                  - rowgroup:
+                    - row:
+                      - cell:
+                        - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QC
+                          - generic: QA Customer 76f10bb9f22946cfa13b7417da66681a Updated
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QAUpdated SalesRep
+                      - cell: "-"
+                      - cell:
+                        - generic: Draft
+                      - cell: 03/26/2026
+                      - cell: 03/26/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: QA SubCustomer d54047cffdb4471d9b620e0941c7df86 - 2026-03-25
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QAUpdated SalesRep
+                      - cell: Arena
+                      - cell:
+                        - generic: Latest
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QAUpdated SalesRep
+                      - cell: "-"
+                      - cell:
+                        - generic: Draft
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: DR
+                          - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: SA
+                          - generic: System Administrator
+                      - cell: "-"
+                      - cell:
+                        - generic: Draft
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: DR
+                          - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: SA
+                          - generic: System Administrator
+                      - cell: "-"
+                      - cell:
+                        - generic: Draft
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: DR
+                          - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: SA
+                          - generic: System Administrator
+                      - cell: "-"
+                      - cell:
+                        - generic: Draft
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: DR
+                          - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: SA
+                          - generic: System Administrator
+                      - cell: "-"
+                      - cell:
+                        - generic: Draft
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: DR
+                          - generic: Draft
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: SA
+                          - generic: System Administrator
+                      - cell: "-"
+                      - cell:
+                        - generic: Draft
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: Cafe Aroma - Oslo - 2026-03-25
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: CA
+                          - generic: Cafe Aroma - Oslo
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QAUpdated SalesRep
+                      - cell: Coffee shop
+                      - cell:
+                        - generic: Latest
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                          - button:
+                            - img
+                    - row:
+                      - cell:
+                        - generic: QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73 - 2026-03-25
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73
+                      - cell:
+                        - generic:
+                          - generic:
+                            - generic: QS
+                          - generic: QAUpdated SalesRep
+                      - cell: Arena
+                      - cell:
+                        - generic: Latest
+                      - cell: 03/25/2026
+                      - cell: 03/25/2026
+                      - cell:
+                        - generic:
+                          - button:
+                            - img
+                          - button:
+                            - img
+                          - button:
+                            - img
+        - generic:
+          - generic:
+            - generic:
+              - paragraph: "Results: 1–10 of 140"
+            - generic:
+              - navigation:
+                - list:
+                  - listitem:
+                    - button [disabled]:
+                      - img
+                  - listitem:
+                    - button: "1"
+                  - listitem:
+                    - button: "2"
+                  - listitem:
+                    - button: "3"
+                  - listitem:
+                    - button [disabled]: ...
+                  - listitem:
+                    - button: "14"
+                  - listitem:
+                    - button:
+                      - img
+            - generic:
+              - generic: Rows per page
+              - combobox:
+                - generic: "10"
+                - generic:
+                  - img
+  - alert
+  - listbox [ref=e19]:
+    - option "All statuses" [active] [selected] [ref=e20]:
+      - generic [ref=e22]: All statuses
+    - option "Draft" [ref=e23]:
+      - generic [ref=e25]: Draft
+    - option "Latest" [ref=e26]:
+      - generic [ref=e28]: Latest
+    - option "Past" [ref=e29]:
+      - generic [ref=e31]: Past
+    - option "Archived" [ref=e32]:
+      - generic [ref=e34]: Archived
+```

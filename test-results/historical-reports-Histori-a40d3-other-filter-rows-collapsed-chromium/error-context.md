@@ -1,0 +1,329 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e7]:
+      - img [ref=e8]
+    - generic [ref=e11]:
+      - button "Open issues overlay" [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "0"
+          - generic [ref=e15]: "1"
+        - generic [ref=e16]: Issue
+      - button "Collapse issues badge" [ref=e17]:
+        - img [ref=e18]
+  - generic [ref=e20]:
+    - banner [ref=e21]:
+      - generic [ref=e22]:
+        - button "Open menu" [ref=e23]:
+          - img [ref=e24]
+        - img "Löfbergs Logo" [ref=e25]
+      - generic [ref=e26]:
+        - button "Generate" [ref=e27]:
+          - img [ref=e28]
+          - text: Generate
+        - button [ref=e31]:
+          - img [ref=e32]
+          - img [ref=e35]
+    - main [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - heading "Past reports, receipts and drafts" [level=1] [ref=e41]
+            - paragraph
+          - button "Generate" [ref=e42]:
+            - img [ref=e43]
+            - text: Generate
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: Search
+            - textbox "Search reports" [ref=e49]
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - generic [ref=e52]:
+                - generic [ref=e53]: Customer
+                - combobox [ref=e54]:
+                  - generic: All customers
+                  - generic [ref=e55]:
+                    - img
+              - generic [ref=e56]:
+                - generic [ref=e57]: Salesperson
+                - combobox [ref=e58]:
+                  - generic: All salespersons
+                  - generic [ref=e59]:
+                    - img
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]: Type
+                - combobox [ref=e63]:
+                  - generic: All types
+                  - generic [ref=e64]:
+                    - img
+              - generic [ref=e65]:
+                - generic [ref=e66]: Status
+                - combobox [ref=e67]:
+                  - generic: All statuses
+                  - generic [ref=e68]:
+                    - img
+              - generic [ref=e69]:
+                - generic [ref=e70]: Segment
+                - combobox [ref=e71]:
+                  - generic: All segments
+                  - generic [ref=e72]:
+                    - img
+            - generic [ref=e73]:
+              - generic [ref=e74]:
+                - generic [ref=e75]: Report date
+                - button "Select date range" [ref=e76]:
+                  - img [ref=e77]
+                  - generic [ref=e79]: Select date range
+              - generic [ref=e80]:
+                - generic [ref=e81]: Created at
+                - button "Select date range" [ref=e82]:
+                  - img [ref=e83]
+                  - generic [ref=e85]: Select date range
+          - generic [ref=e86] [cursor=pointer]:
+            - generic [ref=e87]: Filters
+            - img [ref=e88]
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - generic "Draft" [ref=e95]
+              - generic [ref=e96]: Draft
+            - generic [ref=e98]:
+              - generic [ref=e100]: QC
+              - generic [ref=e101]: QA Customer 76f10bb9f22946cfa13b7417da66681a Updated
+            - generic [ref=e102]:
+              - generic [ref=e104]: QS
+              - generic [ref=e105]: QAUpdated SalesRep
+            - generic [ref=e106]:
+              - generic [ref=e107]: "Report date: 03/26/2026"
+              - generic [ref=e108]: "Created: 03/26/2026"
+            - generic [ref=e109]:
+              - button "Edit" [ref=e110]:
+                - text: Edit
+                - img [ref=e111]
+              - button "Delete" [ref=e114]:
+                - text: Delete
+                - img [ref=e115]
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - generic "QA SubCustomer d54047cffdb4471d9b620e0941c7df86 - 2026-03-25" [ref=e120]
+              - generic [ref=e121]: Latest
+            - generic [ref=e123]:
+              - generic [ref=e125]: QS
+              - generic [ref=e126]: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+            - generic [ref=e127]:
+              - generic [ref=e129]: QS
+              - generic [ref=e130]: QAUpdated SalesRep
+            - generic [ref=e131]:
+              - generic [ref=e132]: "Segment: Arena"
+              - generic [ref=e133]: "Report date: 03/25/2026"
+              - generic [ref=e134]: "Created: 03/25/2026"
+            - generic [ref=e135]:
+              - button "Edit" [ref=e136]:
+                - text: Edit
+                - img [ref=e137]
+              - button "Download" [ref=e140]:
+                - text: Download
+                - img [ref=e141]
+              - button "Archive" [ref=e144]:
+                - text: Archive
+                - img [ref=e145]
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic "Draft" [ref=e150]
+              - generic [ref=e151]: Draft
+            - generic [ref=e153]:
+              - generic [ref=e155]: QS
+              - generic [ref=e156]: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+            - generic [ref=e157]:
+              - generic [ref=e159]: QS
+              - generic [ref=e160]: QAUpdated SalesRep
+            - generic [ref=e161]:
+              - generic [ref=e162]: "Report date: 03/25/2026"
+              - generic [ref=e163]: "Created: 03/25/2026"
+            - generic [ref=e164]:
+              - button "Edit" [ref=e165]:
+                - text: Edit
+                - img [ref=e166]
+              - button "Delete" [ref=e169]:
+                - text: Delete
+                - img [ref=e170]
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - generic "Draft" [ref=e175]
+              - generic [ref=e176]: Draft
+            - generic [ref=e178]:
+              - generic [ref=e180]: DR
+              - generic [ref=e181]: Draft
+            - generic [ref=e182]:
+              - generic [ref=e184]: SA
+              - generic [ref=e185]: System Administrator
+            - generic [ref=e186]:
+              - generic [ref=e187]: "Report date: 03/25/2026"
+              - generic [ref=e188]: "Created: 03/25/2026"
+            - generic [ref=e189]:
+              - button "Edit" [ref=e190]:
+                - text: Edit
+                - img [ref=e191]
+              - button "Delete" [ref=e194]:
+                - text: Delete
+                - img [ref=e195]
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic "Draft" [ref=e200]
+              - generic [ref=e201]: Draft
+            - generic [ref=e203]:
+              - generic [ref=e205]: DR
+              - generic [ref=e206]: Draft
+            - generic [ref=e207]:
+              - generic [ref=e209]: SA
+              - generic [ref=e210]: System Administrator
+            - generic [ref=e211]:
+              - generic [ref=e212]: "Report date: 03/25/2026"
+              - generic [ref=e213]: "Created: 03/25/2026"
+            - generic [ref=e214]:
+              - button "Edit" [ref=e215]:
+                - text: Edit
+                - img [ref=e216]
+              - button "Delete" [ref=e219]:
+                - text: Delete
+                - img [ref=e220]
+          - generic [ref=e223]:
+            - generic [ref=e224]:
+              - generic "Draft" [ref=e225]
+              - generic [ref=e226]: Draft
+            - generic [ref=e228]:
+              - generic [ref=e230]: DR
+              - generic [ref=e231]: Draft
+            - generic [ref=e232]:
+              - generic [ref=e234]: SA
+              - generic [ref=e235]: System Administrator
+            - generic [ref=e236]:
+              - generic [ref=e237]: "Report date: 03/25/2026"
+              - generic [ref=e238]: "Created: 03/25/2026"
+            - generic [ref=e239]:
+              - button "Edit" [ref=e240]:
+                - text: Edit
+                - img [ref=e241]
+              - button "Delete" [ref=e244]:
+                - text: Delete
+                - img [ref=e245]
+          - generic [ref=e248]:
+            - generic [ref=e249]:
+              - generic "Draft" [ref=e250]
+              - generic [ref=e251]: Draft
+            - generic [ref=e253]:
+              - generic [ref=e255]: DR
+              - generic [ref=e256]: Draft
+            - generic [ref=e257]:
+              - generic [ref=e259]: SA
+              - generic [ref=e260]: System Administrator
+            - generic [ref=e261]:
+              - generic [ref=e262]: "Report date: 03/25/2026"
+              - generic [ref=e263]: "Created: 03/25/2026"
+            - generic [ref=e264]:
+              - button "Edit" [ref=e265]:
+                - text: Edit
+                - img [ref=e266]
+              - button "Delete" [ref=e269]:
+                - text: Delete
+                - img [ref=e270]
+          - generic [ref=e273]:
+            - generic [ref=e274]:
+              - generic "Draft" [ref=e275]
+              - generic [ref=e276]: Draft
+            - generic [ref=e278]:
+              - generic [ref=e280]: DR
+              - generic [ref=e281]: Draft
+            - generic [ref=e282]:
+              - generic [ref=e284]: SA
+              - generic [ref=e285]: System Administrator
+            - generic [ref=e286]:
+              - generic [ref=e287]: "Report date: 03/25/2026"
+              - generic [ref=e288]: "Created: 03/25/2026"
+            - generic [ref=e289]:
+              - button "Edit" [ref=e290]:
+                - text: Edit
+                - img [ref=e291]
+              - button "Delete" [ref=e294]:
+                - text: Delete
+                - img [ref=e295]
+          - generic [ref=e298]:
+            - generic [ref=e299]:
+              - generic "Cafe Aroma - Oslo - 2026-03-25" [ref=e300]
+              - generic [ref=e301]: Latest
+            - generic [ref=e303]:
+              - generic [ref=e305]: CA
+              - generic [ref=e306]: Cafe Aroma - Oslo
+            - generic [ref=e307]:
+              - generic [ref=e309]: QS
+              - generic [ref=e310]: QAUpdated SalesRep
+            - generic [ref=e311]:
+              - generic [ref=e312]: "Segment: Coffee shop"
+              - generic [ref=e313]: "Report date: 03/25/2026"
+              - generic [ref=e314]: "Created: 03/25/2026"
+            - generic [ref=e315]:
+              - button "Edit" [ref=e316]:
+                - text: Edit
+                - img [ref=e317]
+              - button "Download" [ref=e320]:
+                - text: Download
+                - img [ref=e321]
+              - button "Archive" [ref=e324]:
+                - text: Archive
+                - img [ref=e325]
+          - generic [ref=e328]:
+            - generic [ref=e329]:
+              - generic "QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73 - 2026-03-25" [ref=e330]
+              - generic [ref=e331]: Latest
+            - generic [ref=e333]:
+              - generic [ref=e335]: QS
+              - generic [ref=e336]: QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73
+            - generic [ref=e337]:
+              - generic [ref=e339]: QS
+              - generic [ref=e340]: QAUpdated SalesRep
+            - generic [ref=e341]:
+              - generic [ref=e342]: "Segment: Arena"
+              - generic [ref=e343]: "Report date: 03/25/2026"
+              - generic [ref=e344]: "Created: 03/25/2026"
+            - generic [ref=e345]:
+              - button "Edit" [ref=e346]:
+                - text: Edit
+                - img [ref=e347]
+              - button "Download" [ref=e350]:
+                - text: Download
+                - img [ref=e351]
+              - button "Archive" [ref=e354]:
+                - text: Archive
+                - img [ref=e355]
+        - generic [ref=e359]:
+          - paragraph [ref=e361]: "Results: 1–10 of 140"
+          - navigation "pagination" [ref=e363]:
+            - list [ref=e364]:
+              - listitem [ref=e365]:
+                - button [disabled] [ref=e366]:
+                  - img [ref=e367]
+              - listitem [ref=e369]:
+                - button "1" [ref=e370]
+              - listitem [ref=e371]:
+                - button "2" [ref=e372]
+              - listitem [ref=e373]:
+                - button "3" [ref=e374]
+              - listitem [ref=e375]:
+                - button "..." [disabled] [ref=e376]
+              - listitem [ref=e377]:
+                - button "14" [ref=e378]
+              - listitem [ref=e379]:
+                - button [ref=e380]:
+                  - img [ref=e381]
+          - generic [ref=e383]:
+            - generic [ref=e384]: Rows per page
+            - combobox [ref=e385]:
+              - generic: "10"
+              - generic [ref=e386]:
+                - img
+  - alert [ref=e387]
+```

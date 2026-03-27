@@ -1,0 +1,76 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Generate report & receipt" [level=1] [ref=e23]
+          - generic [ref=e26]:
+            - generic [ref=e27]: Step 1 of 5
+            - generic [ref=e28]: Customer & report details
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e34]:
+              - heading "Customer and report details" [level=2] [ref=e36]
+              - generic [ref=e37]:
+                - generic [ref=e38]:
+                  - generic [ref=e39]:
+                    - generic [ref=e40]: Customer
+                    - button "Enter manually" [ref=e41]
+                  - generic [ref=e43]:
+                    - textbox "Find by ID/name/email" [ref=e44]
+                    - img
+                - generic [ref=e45]:
+                  - text: Salesperson
+                  - generic [ref=e47]:
+                    - textbox "Find by name/email" [ref=e48]
+                    - img
+                - generic [ref=e49]:
+                  - text: Report date
+                  - textbox [ref=e50]: 2026-03-27
+                - generic [ref=e51]:
+                  - text: Language
+                  - combobox [ref=e52]:
+                    - generic: English
+                    - generic [ref=e53]:
+                      - img
+              - generic [ref=e54]:
+                - text: Customer logo (optional)
+                - generic [ref=e56]:
+                  - button "Choose File" [ref=e57] [cursor=pointer]
+                  - generic [ref=e58]:
+                    - img [ref=e60]
+                    - paragraph [ref=e63]: Upload a file or drag and drop
+                    - paragraph [ref=e64]: PNG, JPG or SVG recommended (max 10 MB)
+            - generic [ref=e66]:
+              - heading "Report summary" [level=3] [ref=e67]
+              - paragraph [ref=e68]: Select a customer to view report summary
+          - generic [ref=e69]:
+            - button "Back" [disabled]:
+              - img
+              - generic: Back
+            - generic [ref=e70]:
+              - button "Save as draft" [disabled]:
+                - img
+                - generic: Save as draft
+              - button "Next" [ref=e71]:
+                - generic [ref=e72]: Next
+                - img [ref=e73]
+  - button "Open Next.js Dev Tools" [ref=e80] [cursor=pointer]:
+    - img [ref=e81]
+  - alert [ref=e84]
+```

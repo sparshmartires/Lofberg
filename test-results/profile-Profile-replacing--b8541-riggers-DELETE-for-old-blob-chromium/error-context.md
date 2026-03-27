@@ -1,0 +1,62 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e22]:
+          - heading "My profile" [level=1] [ref=e23]
+          - paragraph [ref=e24]: Manage your personal information and preferences
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - paragraph [ref=e27]: Personal information
+            - generic [ref=e28]:
+              - generic [ref=e29]:
+                - img "avatar" [ref=e30]
+                - generic [ref=e31]:
+                  - generic [ref=e32]:
+                    - paragraph [ref=e33]: System Administrator
+                    - generic [ref=e34]: Active
+                  - paragraph [ref=e35]: Administrator
+              - generic [ref=e36]:
+                - paragraph [ref=e37]: Last login
+                - paragraph [ref=e38]: 3/27/2026, 11:05:00 AM
+            - generic [ref=e40]:
+              - generic [ref=e41]:
+                - generic [ref=e42]:
+                  - paragraph [ref=e43]: First name
+                  - textbox "Enter first name" [ref=e44]: System
+                - generic [ref=e45]:
+                  - paragraph [ref=e46]: Last name
+                  - textbox "Enter last name" [ref=e47]: Administrator
+                - generic [ref=e48]:
+                  - paragraph [ref=e49]: Email
+                  - textbox [disabled] [ref=e50]: admin@lofberg.com
+                  - paragraph [ref=e51]: Email cannot be changed. Contact an administrator if you need to update this.
+                - generic [ref=e52]:
+                  - paragraph [ref=e53]: Contact number
+                  - textbox "+XX XXXXX XXXXX" [ref=e54]: +88 88888 888
+              - button "Save changes" [ref=e55]:
+                - img [ref=e56]
+                - text: Save changes
+          - generic [ref=e60]:
+            - paragraph [ref=e61]: Password management
+            - paragraph [ref=e62]: Update your password to keep your account secure
+            - button "Change password" [ref=e63]
+  - button "Open Next.js Dev Tools" [ref=e69] [cursor=pointer]:
+    - img [ref=e70]
+  - alert [ref=e73]
+```

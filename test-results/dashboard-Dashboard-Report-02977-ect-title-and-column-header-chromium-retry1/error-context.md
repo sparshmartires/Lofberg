@@ -1,0 +1,227 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
+    - generic [ref=e10]:
+      - text: Compiling
+      - generic [ref=e11]:
+        - generic [ref=e12]: .
+        - generic [ref=e13]: .
+        - generic [ref=e14]: .
+  - alert [ref=e15]
+  - generic [ref=e16]:
+    - banner [ref=e17]:
+      - generic [ref=e18]:
+        - button "Open menu" [ref=e19]:
+          - img [ref=e20]
+        - img "Löfbergs Logo" [ref=e21]
+      - generic [ref=e22]:
+        - button "Generate" [ref=e23]:
+          - img [ref=e24]
+          - text: Generate
+        - button [ref=e27]:
+          - img [ref=e28]
+          - img [ref=e31]
+    - main [ref=e33]:
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - heading "Dashboard" [level=1] [ref=e36]
+          - paragraph [ref=e37]: Overview of all sustainability reports and performance metrics
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - img [ref=e41]
+            - generic [ref=e44]:
+              - generic [ref=e45]: Total reports
+              - generic [ref=e46]: "116"
+              - generic [ref=e47]: All time
+          - generic [ref=e48]:
+            - img [ref=e50]
+            - generic [ref=e52]:
+              - generic [ref=e53]: This month
+              - generic [ref=e54]: "116"
+              - generic [ref=e55]: Current month
+          - generic [ref=e56]:
+            - img [ref=e58]
+            - generic [ref=e61]:
+              - generic [ref=e62]: This quarter
+              - generic [ref=e63]: "116"
+              - generic [ref=e64]: Current quarter
+          - generic [ref=e65]:
+            - img [ref=e67]
+            - generic [ref=e72]:
+              - generic [ref=e73]: Active customers
+              - generic [ref=e74]: "8"
+              - generic [ref=e75]: With reports
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - heading "Reports by markets" [level=3] [ref=e78]
+          - application [ref=e81]:
+            - generic [ref=e95]:
+              - generic [ref=e96]:
+                - generic [ref=e98]: Norway
+                - generic [ref=e100]: International/Global
+              - generic [ref=e101]:
+                - generic [ref=e103]: "0"
+                - generic [ref=e105]: "9"
+                - generic [ref=e107]: "18"
+                - generic [ref=e109]: "27"
+                - generic [ref=e111]: "36"
+        - generic [ref=e112]:
+          - heading "Reports by market segments" [level=3] [ref=e113]
+          - table [ref=e114]:
+            - rowgroup [ref=e115]:
+              - row "Market segment Count Percentage" [ref=e116]:
+                - columnheader "Market segment" [ref=e117]
+                - columnheader "Count" [ref=e118]
+                - columnheader "Percentage" [ref=e119]
+            - rowgroup [ref=e120]:
+              - row "Hotel 27 67.5%" [ref=e121]:
+                - cell "Hotel" [ref=e122]
+                - cell "27" [ref=e123]
+                - cell "67.5%" [ref=e124]
+              - row "Coffee shop 6 15%" [ref=e125]:
+                - cell "Coffee shop" [ref=e126]
+                - cell "6" [ref=e127]
+                - cell "15%" [ref=e128]
+              - row "Workplace 4 10%" [ref=e129]:
+                - cell "Workplace" [ref=e130]
+                - cell "4" [ref=e131]
+                - cell "10%" [ref=e132]
+              - row "Arena 3 7.5%" [ref=e133]:
+                - cell "Arena" [ref=e134]
+                - cell "3" [ref=e135]
+                - cell "7.5%" [ref=e136]
+      - generic [ref=e137]:
+        - generic [ref=e138]:
+          - heading "Top 10 customers" [level=3] [ref=e139]
+          - table [ref=e141]:
+            - rowgroup [ref=e142]:
+              - row "Customer Segment Reports" [ref=e143]:
+                - columnheader "Customer" [ref=e144]
+                - columnheader "Segment" [ref=e145]
+                - columnheader "Reports" [ref=e146]
+            - rowgroup [ref=e147]:
+              - row "Hotel Aroma Hotel Aroma Hotel 27" [ref=e148]:
+                - cell "Hotel Aroma Hotel Aroma" [ref=e149]:
+                  - generic [ref=e150]:
+                    - img "Hotel Aroma" [ref=e151]
+                    - text: Hotel Aroma
+                - cell "Hotel" [ref=e152]
+                - cell "27" [ref=e153]
+              - row "CA Cafe Aroma Coffee shop 5" [ref=e154]:
+                - cell "CA Cafe Aroma" [ref=e155]:
+                  - generic [ref=e156]:
+                    - generic [ref=e157]: CA
+                    - text: Cafe Aroma
+                - cell "Coffee shop" [ref=e158]
+                - cell "5" [ref=e159]
+              - row "KI Kilowott Workplace 4" [ref=e160]:
+                - cell "KI Kilowott" [ref=e161]:
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: KI
+                    - text: Kilowott
+                - cell "Workplace" [ref=e164]
+                - cell "4" [ref=e165]
+              - row "QA QA SubCustomer d54047cffdb4471d9b620e0941c7df86 Arena 1" [ref=e166]:
+                - cell "QA QA SubCustomer d54047cffdb4471d9b620e0941c7df86" [ref=e167]:
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: QA
+                    - text: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+                - cell "Arena" [ref=e170]
+                - cell "1" [ref=e171]
+              - row "CA Cafe Aroma - Oslo Coffee shop 1" [ref=e172]:
+                - cell "CA Cafe Aroma - Oslo" [ref=e173]:
+                  - generic [ref=e174]:
+                    - generic [ref=e175]: CA
+                    - text: Cafe Aroma - Oslo
+                - cell "Coffee shop" [ref=e176]
+                - cell "1" [ref=e177]
+              - row "QA QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73 Arena 1" [ref=e178]:
+                - cell "QA QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73" [ref=e179]:
+                  - generic [ref=e180]:
+                    - generic [ref=e181]: QA
+                    - text: QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73
+                - cell "Arena" [ref=e182]
+                - cell "1" [ref=e183]
+        - generic [ref=e184]:
+          - heading "Sales rep performance" [level=3] [ref=e185]
+          - table [ref=e187]:
+            - rowgroup [ref=e188]:
+              - row "Sales rep Region Reports" [ref=e189]:
+                - columnheader "Sales rep" [ref=e190]
+                - columnheader "Region" [ref=e191]
+                - columnheader "Reports" [ref=e192]
+            - rowgroup [ref=e193]:
+              - row "US User Sales — 56" [ref=e194]:
+                - cell "US User Sales" [ref=e195]:
+                  - generic [ref=e196]:
+                    - generic [ref=e197]: US
+                    - text: User Sales
+                - cell "—" [ref=e198]
+                - cell "56" [ref=e199]
+              - row "TC Test Customer — 28" [ref=e200]:
+                - cell "TC Test Customer" [ref=e201]:
+                  - generic [ref=e202]:
+                    - generic [ref=e203]: TC
+                    - text: Test Customer
+                - cell "—" [ref=e204]
+                - cell "28" [ref=e205]
+              - row "TG Tushar Ghatwal — 15" [ref=e206]:
+                - cell "TG Tushar Ghatwal" [ref=e207]:
+                  - generic [ref=e208]:
+                    - generic [ref=e209]: TG
+                    - text: Tushar Ghatwal
+                - cell "—" [ref=e210]
+                - cell "15" [ref=e211]
+              - row "SU Sales2 User — 8" [ref=e212]:
+                - cell "SU Sales2 User" [ref=e213]:
+                  - generic [ref=e214]:
+                    - generic [ref=e215]: SU
+                    - text: Sales2 User
+                - cell "—" [ref=e216]
+                - cell "8" [ref=e217]
+              - row "U Unknown — 2" [ref=e218]:
+                - cell "U Unknown" [ref=e219]:
+                  - generic [ref=e220]:
+                    - generic [ref=e221]: U
+                    - text: Unknown
+                - cell "—" [ref=e222]
+                - cell "2" [ref=e223]
+              - row "SA System Administrator — 2" [ref=e224]:
+                - cell "SA System Administrator" [ref=e225]:
+                  - generic [ref=e226]:
+                    - generic [ref=e227]: SA
+                    - text: System Administrator
+                - cell "—" [ref=e228]
+                - cell "2" [ref=e229]
+      - generic [ref=e231]:
+        - generic [ref=e232]:
+          - heading "Report type distribution" [level=3] [ref=e233]
+          - paragraph [ref=e234]: Illustrates the percentage breakdown of report types generated
+        - generic [ref=e235]:
+          - generic [ref=e236]:
+            - generic [ref=e237]:
+              - paragraph [ref=e238]: Full report
+              - paragraph [ref=e239]: (Report + Receipt)
+              - paragraph [ref=e240]: 98%
+              - paragraph [ref=e241]: 114 reports
+            - img [ref=e243]
+          - generic [ref=e246]:
+            - generic [ref=e247]:
+              - paragraph [ref=e248]: Receipt only
+              - paragraph [ref=e249]: (Standalone)
+              - paragraph [ref=e250]: 2%
+              - paragraph [ref=e251]: 2 reports
+            - img [ref=e253]
+          - generic [ref=e256]:
+            - generic [ref=e257]:
+              - paragraph [ref=e258]: Compiled report
+              - paragraph [ref=e259]: 0%
+              - paragraph [ref=e260]: 0 reports
+            - img [ref=e262]
+        - generic [ref=e265]:
+          - generic [ref=e266]: "Insight:"
+          - generic [ref=e267]: "Full reports: 98% | Receipt only: 2% | Compiled receipt: 0%"
+  - generic [ref=e268]: "0"
+```

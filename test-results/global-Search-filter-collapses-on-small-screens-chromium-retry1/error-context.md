@@ -1,0 +1,315 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Customer management" [level=1] [ref=e23]
+            - paragraph
+          - button "Add customer" [ref=e24]:
+            - img [ref=e25]
+            - text: Add customer
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Search
+            - textbox "Search by name or code" [ref=e32]
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]: Segment
+              - combobox [ref=e36]:
+                - generic: All segments
+                - generic [ref=e37]:
+                  - img
+            - generic [ref=e38]:
+              - generic [ref=e39]: Region
+              - combobox [ref=e40]:
+                - generic: All regions
+                - generic [ref=e41]:
+                  - img
+            - generic [ref=e42]:
+              - generic [ref=e43]: Status
+              - combobox [ref=e44]:
+                - generic: All statuses
+                - generic [ref=e45]:
+                  - img
+          - generic [ref=e46] [cursor=pointer]:
+            - generic [ref=e47]: Filters
+            - img [ref=e48]
+        - generic [ref=e50]:
+          - heading "Customers" [level=2] [ref=e52]
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - generic [ref=e57]:
+                - generic [ref=e58]:
+                  - img "gfkoiv" [ref=e59]
+                  - generic [ref=e60]: gfkoiv
+                - generic [ref=e61]: Active
+              - generic [ref=e63]:
+                - generic [ref=e64]: "Segment: Hotel"
+                - generic [ref=e65]: "Service tier: Type A"
+                - generic [ref=e66]: "Last report date: -"
+                - generic [ref=e67]:
+                  - text: "Reports:"
+                  - button "0" [ref=e68]
+              - generic [ref=e70]:
+                - button "Edit" [ref=e71]:
+                  - text: Edit
+                  - img [ref=e72]
+                - button "View details" [ref=e75]:
+                  - text: View details
+                  - img [ref=e76]
+                - button "Archive" [ref=e79]:
+                  - text: Archive
+                  - img [ref=e80]
+            - generic [ref=e83]:
+              - generic [ref=e84]:
+                - generic [ref=e85]:
+                  - img "testenkas" [ref=e86]
+                  - generic [ref=e87]: testenkas
+                - generic [ref=e88]: Active
+              - generic [ref=e90]:
+                - generic [ref=e91]: "Segment: Commercial"
+                - generic [ref=e92]: "Service tier: Type B"
+                - generic [ref=e93]: "Last report date: -"
+                - generic [ref=e94]:
+                  - text: "Reports:"
+                  - button "0" [ref=e95]
+              - generic [ref=e97]:
+                - button "Edit" [ref=e98]:
+                  - text: Edit
+                  - img [ref=e99]
+                - button "View details" [ref=e102]:
+                  - text: View details
+                  - img [ref=e103]
+                - button "Archive" [ref=e106]:
+                  - text: Archive
+                  - img [ref=e107]
+            - generic [ref=e110]:
+              - generic [ref=e111]:
+                - generic [ref=e112]:
+                  - img "QA SubCustomer 821a73299fb6473bb49d8a1c0674978e" [ref=e113]
+                  - generic [ref=e114]: QA SubCustomer 821a73299fb6473bb49d8a1c0674978e
+                - generic [ref=e115]: Archived
+              - generic [ref=e117]:
+                - generic [ref=e118]: "Segment: Arena"
+                - generic [ref=e119]: "Service tier: Type A"
+                - generic [ref=e120]: "Last report date: -"
+                - generic [ref=e121]:
+                  - text: "Reports:"
+                  - button "0" [ref=e122]
+              - generic [ref=e124]:
+                - button "Edit" [ref=e125]:
+                  - text: Edit
+                  - img [ref=e126]
+                - button "View details" [ref=e129]:
+                  - text: View details
+                  - img [ref=e130]
+                - button "Restore" [ref=e133]:
+                  - text: Restore
+                  - img [ref=e134]
+            - generic [ref=e137]:
+              - generic [ref=e138]:
+                - generic [ref=e139]:
+                  - img "QA Customer 76f10bb9f22946cfa13b7417da66681a Updated" [ref=e140]
+                  - generic [ref=e141]: QA Customer 76f10bb9f22946cfa13b7417da66681a Updated
+                - generic [ref=e142]: Active
+              - generic [ref=e144]:
+                - generic [ref=e145]: "Segment: Arena"
+                - generic [ref=e146]: "Service tier: Type A"
+                - generic [ref=e147]: "Last report date: -"
+                - generic [ref=e148]:
+                  - text: "Reports:"
+                  - button "0" [ref=e149]
+              - generic [ref=e151]:
+                - button "Edit" [ref=e152]:
+                  - text: Edit
+                  - img [ref=e153]
+                - button "View details" [ref=e156]:
+                  - text: View details
+                  - img [ref=e157]
+                - button "Archive" [ref=e160]:
+                  - text: Archive
+                  - img [ref=e161]
+            - generic [ref=e164]:
+              - generic [ref=e165]:
+                - generic [ref=e166]:
+                  - img "QA SubCustomer d54047cffdb4471d9b620e0941c7df86" [ref=e167]
+                  - generic [ref=e168]: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+                - generic [ref=e169]: Archived
+              - generic [ref=e171]:
+                - generic [ref=e172]: "Segment: Arena"
+                - generic [ref=e173]: "Service tier: Type A"
+                - generic [ref=e174]: "Last report date: 03/25/2026"
+                - generic [ref=e175]:
+                  - text: "Reports:"
+                  - button "1" [ref=e176]
+              - generic [ref=e178]:
+                - button "Edit" [ref=e179]:
+                  - text: Edit
+                  - img [ref=e180]
+                - button "View details" [ref=e183]:
+                  - text: View details
+                  - img [ref=e184]
+                - button "Restore" [ref=e187]:
+                  - text: Restore
+                  - img [ref=e188]
+            - generic [ref=e191]:
+              - generic [ref=e192]:
+                - generic [ref=e193]:
+                  - img "QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated" [ref=e194]
+                  - generic [ref=e195]: QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated
+                - generic [ref=e196]: Archived
+              - generic [ref=e198]:
+                - generic [ref=e199]: "Segment: Arena"
+                - generic [ref=e200]: "Service tier: Type A"
+                - generic [ref=e201]: "Last report date: -"
+                - generic [ref=e202]:
+                  - text: "Reports:"
+                  - button "0" [ref=e203]
+              - generic [ref=e205]:
+                - button "Edit" [ref=e206]:
+                  - text: Edit
+                  - img [ref=e207]
+                - button "View details" [ref=e210]:
+                  - text: View details
+                  - img [ref=e211]
+                - button "Restore" [ref=e214]:
+                  - text: Restore
+                  - img [ref=e215]
+            - generic [ref=e218]:
+              - generic [ref=e219]:
+                - generic [ref=e220]:
+                  - img "QA SubCustomer 815dda9a917946e893d5f611e3200168" [ref=e221]
+                  - generic [ref=e222]: QA SubCustomer 815dda9a917946e893d5f611e3200168
+                - generic [ref=e223]: Archived
+              - generic [ref=e225]:
+                - generic [ref=e226]: "Segment: Arena"
+                - generic [ref=e227]: "Service tier: Type A"
+                - generic [ref=e228]: "Last report date: -"
+                - generic [ref=e229]:
+                  - text: "Reports:"
+                  - button "0" [ref=e230]
+              - generic [ref=e232]:
+                - button "Edit" [ref=e233]:
+                  - text: Edit
+                  - img [ref=e234]
+                - button "View details" [ref=e237]:
+                  - text: View details
+                  - img [ref=e238]
+                - button "Restore" [ref=e241]:
+                  - text: Restore
+                  - img [ref=e242]
+            - generic [ref=e245]:
+              - generic [ref=e246]:
+                - generic [ref=e247]:
+                  - img "QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated" [ref=e248]
+                  - generic [ref=e249]: QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated
+                - generic [ref=e250]: Archived
+              - generic [ref=e252]:
+                - generic [ref=e253]: "Segment: Arena"
+                - generic [ref=e254]: "Service tier: Type A"
+                - generic [ref=e255]: "Last report date: -"
+                - generic [ref=e256]:
+                  - text: "Reports:"
+                  - button "0" [ref=e257]
+              - generic [ref=e259]:
+                - button "Edit" [ref=e260]:
+                  - text: Edit
+                  - img [ref=e261]
+                - button "View details" [ref=e264]:
+                  - text: View details
+                  - img [ref=e265]
+                - button "Restore" [ref=e268]:
+                  - text: Restore
+                  - img [ref=e269]
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - generic [ref=e274]:
+                  - img "QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c" [ref=e275]
+                  - generic [ref=e276]: QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c
+                - generic [ref=e277]: Archived
+              - generic [ref=e279]:
+                - generic [ref=e280]: "Segment: Arena"
+                - generic [ref=e281]: "Service tier: Type A"
+                - generic [ref=e282]: "Last report date: -"
+                - generic [ref=e283]:
+                  - text: "Reports:"
+                  - button "0" [ref=e284]
+              - generic [ref=e286]:
+                - button "Edit" [ref=e287]:
+                  - text: Edit
+                  - img [ref=e288]
+                - button "View details" [ref=e291]:
+                  - text: View details
+                  - img [ref=e292]
+                - button "Restore" [ref=e295]:
+                  - text: Restore
+                  - img [ref=e296]
+            - generic [ref=e299]:
+              - generic [ref=e300]:
+                - generic [ref=e301]:
+                  - img "QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated" [ref=e302]
+                  - generic [ref=e303]: QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated
+                - generic [ref=e304]: Archived
+              - generic [ref=e306]:
+                - generic [ref=e307]: "Segment: Arena"
+                - generic [ref=e308]: "Service tier: Type A"
+                - generic [ref=e309]: "Last report date: -"
+                - generic [ref=e310]:
+                  - text: "Reports:"
+                  - button "0" [ref=e311]
+              - generic [ref=e313]:
+                - button "Edit" [ref=e314]:
+                  - text: Edit
+                  - img [ref=e315]
+                - button "View details" [ref=e318]:
+                  - text: View details
+                  - img [ref=e319]
+                - button "Restore" [ref=e322]:
+                  - text: Restore
+                  - img [ref=e323]
+        - generic [ref=e327]:
+          - paragraph [ref=e329]: "Results: 1–10 of 46"
+          - navigation "pagination" [ref=e331]:
+            - list [ref=e332]:
+              - listitem [ref=e333]:
+                - button [disabled] [ref=e334]:
+                  - img [ref=e335]
+              - listitem [ref=e337]:
+                - button "1" [ref=e338]
+              - listitem [ref=e339]:
+                - button "2" [ref=e340]
+              - listitem [ref=e341]:
+                - button "3" [ref=e342]
+              - listitem [ref=e343]:
+                - button "..." [disabled] [ref=e344]
+              - listitem [ref=e345]:
+                - button "5" [ref=e346]
+              - listitem [ref=e347]:
+                - button [ref=e348]:
+                  - img [ref=e349]
+          - generic [ref=e351]:
+            - generic [ref=e352]: Rows per page
+            - combobox [ref=e353]:
+              - generic: "10"
+              - generic [ref=e354]:
+                - img
+  - button "Open Next.js Dev Tools" [ref=e360] [cursor=pointer]:
+    - img [ref=e361]
+  - alert [ref=e364]
+```

@@ -1,0 +1,138 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Customer management" [level=1] [ref=e23]
+            - paragraph
+          - button "Add customer" [ref=e24]:
+            - img [ref=e25]
+            - text: Add customer
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Search
+            - generic [ref=e31]:
+              - textbox "Search by name or code" [active] [ref=e32]: test
+              - button [ref=e33]:
+                - img [ref=e34]
+          - generic [ref=e37]:
+            - generic [ref=e38]: Segment
+            - combobox [ref=e39]:
+              - generic: All segments
+              - generic [ref=e40]:
+                - img
+          - generic [ref=e41]:
+            - generic [ref=e42]: Region
+            - combobox [ref=e43]:
+              - generic: All regions
+              - generic [ref=e44]:
+                - img
+          - generic [ref=e45]:
+            - generic [ref=e46]: Status
+            - combobox [ref=e47]:
+              - generic: All statuses
+              - generic [ref=e48]:
+                - img
+        - generic [ref=e49]:
+          - heading "Customers" [level=2] [ref=e51]
+          - table [ref=e57]:
+            - rowgroup [ref=e58]:
+              - row "Name Segment Service tier Last report date Reports Status Actions" [ref=e59]:
+                - columnheader "Name" [ref=e60] [cursor=pointer]:
+                  - generic [ref=e61]:
+                    - text: Name
+                    - img [ref=e62]
+                - columnheader "Segment" [ref=e65] [cursor=pointer]:
+                  - generic [ref=e66]:
+                    - text: Segment
+                    - img [ref=e67]
+                - columnheader "Service tier" [ref=e70] [cursor=pointer]:
+                  - generic [ref=e71]:
+                    - text: Service tier
+                    - img [ref=e72]
+                - columnheader "Last report date" [ref=e75]
+                - columnheader "Reports" [ref=e76]
+                - columnheader "Status" [ref=e77] [cursor=pointer]:
+                  - generic [ref=e78]:
+                    - text: Status
+                    - img [ref=e79]
+                - columnheader "Actions" [ref=e82]
+            - rowgroup [ref=e83]:
+              - row "testenkas testenkas Commercial Type B - 0 Active" [ref=e84]:
+                - cell "testenkas testenkas" [ref=e85]:
+                  - generic [ref=e86]:
+                    - img "testenkas" [ref=e87]
+                    - generic "testenkas" [ref=e88]
+                - cell "Commercial" [ref=e89]
+                - cell "Type B" [ref=e90]
+                - cell "-" [ref=e91]
+                - cell "0" [ref=e92]:
+                  - button "0" [ref=e93] [cursor=pointer]
+                - cell "Active" [ref=e94]:
+                  - generic [ref=e95]: Active
+                - cell [ref=e96]:
+                  - generic [ref=e97]:
+                    - button "Edit" [ref=e98]:
+                      - img [ref=e99]
+                    - button "View details" [ref=e102]:
+                      - img [ref=e103]
+                    - button "Archive" [ref=e106]:
+                      - img [ref=e107]
+              - row "Test cust Test cust Municipality Type A - 0 Active" [ref=e110]:
+                - cell "Test cust Test cust" [ref=e111]:
+                  - generic [ref=e112]:
+                    - img "Test cust" [ref=e113]
+                    - generic "Test cust" [ref=e114]
+                - cell "Municipality" [ref=e115]
+                - cell "Type A" [ref=e116]
+                - cell "-" [ref=e117]
+                - cell "0" [ref=e118]:
+                  - button "0" [ref=e119] [cursor=pointer]
+                - cell "Active" [ref=e120]:
+                  - generic [ref=e121]: Active
+                - cell [ref=e122]:
+                  - generic [ref=e123]:
+                    - button "Edit" [ref=e124]:
+                      - img [ref=e125]
+                    - button "View details" [ref=e128]:
+                      - img [ref=e129]
+                    - button "Archive" [ref=e132]:
+                      - img [ref=e133]
+        - generic [ref=e137]:
+          - paragraph [ref=e139]: "Results: 1–2 of 2"
+          - navigation "pagination" [ref=e141]:
+            - list [ref=e142]:
+              - listitem [ref=e143]:
+                - button [disabled] [ref=e144]:
+                  - img [ref=e145]
+              - listitem [ref=e147]:
+                - button "1" [ref=e148]
+              - listitem [ref=e149]:
+                - button [disabled] [ref=e150]:
+                  - img [ref=e151]
+          - generic [ref=e153]:
+            - generic [ref=e154]: Rows per page
+            - combobox [ref=e155]:
+              - generic: "10"
+              - generic [ref=e156]:
+                - img
+  - button "Open Next.js Dev Tools" [ref=e162] [cursor=pointer]:
+    - img [ref=e163]
+  - alert [ref=e166]
+```

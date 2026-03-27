@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e22]:
+          - heading "Conversions and units" [level=1] [ref=e23]
+          - paragraph [ref=e24]: Manage segment-based area and CO2 quantity conversions
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - paragraph [ref=e28]: Segment-based conversions (Football pitches)
+            - paragraph [ref=e29]: Configure how football pitches convert to segment-specific metrics
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - generic [ref=e32]: Segments
+              - generic [ref=e33]: Segment metric
+              - generic [ref=e34]: Conversion value
+              - generic [ref=e35]: Actions
+            - generic [ref=e36]:
+              - combobox [ref=e37]:
+                - generic: Select segment
+                - generic [ref=e38]:
+                  - img
+              - textbox "e.g. Hotel room" [ref=e39]
+              - textbox "00.0" [ref=e40]
+              - button "Add" [ref=e41]
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - paragraph [ref=e45]: CO2 conversions
+            - paragraph [ref=e46]: Configure how CO2 values convert to tangible comparisons
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - generic [ref=e49]: Name
+              - generic [ref=e50]: Conversion value
+              - generic [ref=e51]: Actions
+            - generic [ref=e52]:
+              - generic [ref=e53]:
+                - generic [ref=e54]: Idling Cars
+                - generic [ref=e55]: "0.5"
+                - generic [ref=e56]:
+                  - button "Translate" [ref=e57]:
+                    - img [ref=e58]
+                  - button [ref=e62]:
+                    - img [ref=e63]
+                  - button [ref=e67]:
+                    - img [ref=e68]
+              - generic [ref=e71]:
+                - generic [ref=e72]: QA CO2 Test
+                - generic [ref=e73]: "1.5"
+                - generic [ref=e74]:
+                  - button "Translate" [ref=e75]:
+                    - img [ref=e76]
+                  - button [ref=e80]:
+                    - img [ref=e81]
+                  - button [ref=e85]:
+                    - img [ref=e86]
+            - generic [ref=e89]:
+              - textbox "e.g. Idling cars" [ref=e90]
+              - textbox "0.002" [ref=e91]
+              - button "Add" [ref=e92]
+  - button "Open Next.js Dev Tools" [ref=e98] [cursor=pointer]:
+    - img [ref=e99]
+  - alert [ref=e102]
+```

@@ -1,0 +1,303 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Customer management" [level=1] [ref=e23]
+            - paragraph
+          - button "Add customer" [ref=e24]:
+            - img [ref=e25]
+            - text: Add customer
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Search
+            - textbox "Search by name or code" [ref=e32]
+          - generic [ref=e33]:
+            - generic [ref=e34]: Segment
+            - combobox [active] [ref=e35]:
+              - generic: All segments
+              - generic [ref=e36]:
+                - img
+          - generic [ref=e37]:
+            - generic [ref=e38]: Region
+            - combobox [ref=e39]:
+              - generic: All regions
+              - generic [ref=e40]:
+                - img
+          - generic [ref=e41]:
+            - generic [ref=e42]: Status
+            - combobox [ref=e43]:
+              - generic: All statuses
+              - generic [ref=e44]:
+                - img
+        - generic [ref=e45]:
+          - heading "Customers" [level=2] [ref=e47]
+          - table [ref=e53]:
+            - rowgroup [ref=e54]:
+              - row "Name Segment Service tier Last report date Reports Status Actions" [ref=e55]:
+                - columnheader "Name" [ref=e56] [cursor=pointer]:
+                  - generic [ref=e57]:
+                    - text: Name
+                    - img [ref=e58]
+                - columnheader "Segment" [ref=e61] [cursor=pointer]:
+                  - generic [ref=e62]:
+                    - text: Segment
+                    - img [ref=e63]
+                - columnheader "Service tier" [ref=e66] [cursor=pointer]:
+                  - generic [ref=e67]:
+                    - text: Service tier
+                    - img [ref=e68]
+                - columnheader "Last report date" [ref=e71]
+                - columnheader "Reports" [ref=e72]
+                - columnheader "Status" [ref=e73] [cursor=pointer]:
+                  - generic [ref=e74]:
+                    - text: Status
+                    - img [ref=e75]
+                - columnheader "Actions" [ref=e78]
+            - rowgroup [ref=e79]:
+              - row "gfkoiv gfkoiv Hotel Type A - 0 Active" [ref=e80]:
+                - cell "gfkoiv gfkoiv" [ref=e81]:
+                  - generic [ref=e82]:
+                    - img "gfkoiv" [ref=e83]
+                    - generic "gfkoiv" [ref=e84]
+                - cell "Hotel" [ref=e85]
+                - cell "Type A" [ref=e86]
+                - cell "-" [ref=e87]
+                - cell "0" [ref=e88]:
+                  - button "0" [ref=e89] [cursor=pointer]
+                - cell "Active" [ref=e90]:
+                  - generic [ref=e91]: Active
+                - cell [ref=e92]:
+                  - generic [ref=e93]:
+                    - button "Edit" [ref=e94]:
+                      - img [ref=e95]
+                    - button "View details" [ref=e98]:
+                      - img [ref=e99]
+                    - button "Archive" [ref=e102]:
+                      - img [ref=e103]
+              - row "testenkas testenkas Commercial Type B - 0 Active" [ref=e106]:
+                - cell "testenkas testenkas" [ref=e107]:
+                  - generic [ref=e108]:
+                    - img "testenkas" [ref=e109]
+                    - generic "testenkas" [ref=e110]
+                - cell "Commercial" [ref=e111]
+                - cell "Type B" [ref=e112]
+                - cell "-" [ref=e113]
+                - cell "0" [ref=e114]:
+                  - button "0" [ref=e115] [cursor=pointer]
+                - cell "Active" [ref=e116]:
+                  - generic [ref=e117]: Active
+                - cell [ref=e118]:
+                  - generic [ref=e119]:
+                    - button "Edit" [ref=e120]:
+                      - img [ref=e121]
+                    - button "View details" [ref=e124]:
+                      - img [ref=e125]
+                    - button "Archive" [ref=e128]:
+                      - img [ref=e129]
+              - row "QA SubCustomer 821a73299fb6473bb49d8a1c0674978e QA SubCustomer 821a73299fb6473bb49d8a1c0674978e Arena Type A - 0 Archived" [ref=e132]:
+                - cell "QA SubCustomer 821a73299fb6473bb49d8a1c0674978e QA SubCustomer 821a73299fb6473bb49d8a1c0674978e" [ref=e133]:
+                  - generic [ref=e134]:
+                    - img "QA SubCustomer 821a73299fb6473bb49d8a1c0674978e" [ref=e135]
+                    - generic "QA SubCustomer 821a73299fb6473bb49d8a1c0674978e" [ref=e136]
+                - cell "Arena" [ref=e137]
+                - cell "Type A" [ref=e138]
+                - cell "-" [ref=e139]
+                - cell "0" [ref=e140]:
+                  - button "0" [ref=e141] [cursor=pointer]
+                - cell "Archived" [ref=e142]:
+                  - generic [ref=e143]: Archived
+                - cell [ref=e144]:
+                  - generic [ref=e145]:
+                    - button "Edit" [ref=e146]:
+                      - img [ref=e147]
+                    - button "View details" [ref=e150]:
+                      - img [ref=e151]
+                    - button "Restore" [ref=e154]:
+                      - img [ref=e155]
+              - row "QA Customer 76f10bb9f22946cfa13b7417da66681a Updated QA Customer 76f10bb9f22946cfa13b7417da66681a Updated Arena Type A - 0 Active" [ref=e158]:
+                - cell "QA Customer 76f10bb9f22946cfa13b7417da66681a Updated QA Customer 76f10bb9f22946cfa13b7417da66681a Updated" [ref=e159]:
+                  - generic [ref=e160]:
+                    - img "QA Customer 76f10bb9f22946cfa13b7417da66681a Updated" [ref=e161]
+                    - generic "QA Customer 76f10bb9f22946cfa13b7417da66681a Updated" [ref=e162]
+                - cell "Arena" [ref=e163]
+                - cell "Type A" [ref=e164]
+                - cell "-" [ref=e165]
+                - cell "0" [ref=e166]:
+                  - button "0" [ref=e167] [cursor=pointer]
+                - cell "Active" [ref=e168]:
+                  - generic [ref=e169]: Active
+                - cell [ref=e170]:
+                  - generic [ref=e171]:
+                    - button "Edit" [ref=e172]:
+                      - img [ref=e173]
+                    - button "View details" [ref=e176]:
+                      - img [ref=e177]
+                    - button "Archive" [ref=e180]:
+                      - img [ref=e181]
+              - row "QA SubCustomer d54047cffdb4471d9b620e0941c7df86 QA SubCustomer d54047cffdb4471d9b620e0941c7df86 Arena Type A 03/25/2026 1 Archived" [ref=e184]:
+                - cell "QA SubCustomer d54047cffdb4471d9b620e0941c7df86 QA SubCustomer d54047cffdb4471d9b620e0941c7df86" [ref=e185]:
+                  - generic [ref=e186]:
+                    - img "QA SubCustomer d54047cffdb4471d9b620e0941c7df86" [ref=e187]
+                    - generic "QA SubCustomer d54047cffdb4471d9b620e0941c7df86" [ref=e188]
+                - cell "Arena" [ref=e189]
+                - cell "Type A" [ref=e190]
+                - cell "03/25/2026" [ref=e191]
+                - cell "1" [ref=e192]:
+                  - button "1" [ref=e193] [cursor=pointer]
+                - cell "Archived" [ref=e194]:
+                  - generic [ref=e195]: Archived
+                - cell [ref=e196]:
+                  - generic [ref=e197]:
+                    - button "Edit" [ref=e198]:
+                      - img [ref=e199]
+                    - button "View details" [ref=e202]:
+                      - img [ref=e203]
+                    - button "Restore" [ref=e206]:
+                      - img [ref=e207]
+              - row "QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated Arena Type A - 0 Archived" [ref=e210]:
+                - cell "QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated" [ref=e211]:
+                  - generic [ref=e212]:
+                    - img "QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated" [ref=e213]
+                    - generic "QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated" [ref=e214]
+                - cell "Arena" [ref=e215]
+                - cell "Type A" [ref=e216]
+                - cell "-" [ref=e217]
+                - cell "0" [ref=e218]:
+                  - button "0" [ref=e219] [cursor=pointer]
+                - cell "Archived" [ref=e220]:
+                  - generic [ref=e221]: Archived
+                - cell [ref=e222]:
+                  - generic [ref=e223]:
+                    - button "Edit" [ref=e224]:
+                      - img [ref=e225]
+                    - button "View details" [ref=e228]:
+                      - img [ref=e229]
+                    - button "Restore" [ref=e232]:
+                      - img [ref=e233]
+              - row "QA SubCustomer 815dda9a917946e893d5f611e3200168 QA SubCustomer 815dda9a917946e893d5f611e3200168 Arena Type A - 0 Archived" [ref=e236]:
+                - cell "QA SubCustomer 815dda9a917946e893d5f611e3200168 QA SubCustomer 815dda9a917946e893d5f611e3200168" [ref=e237]:
+                  - generic [ref=e238]:
+                    - img "QA SubCustomer 815dda9a917946e893d5f611e3200168" [ref=e239]
+                    - generic "QA SubCustomer 815dda9a917946e893d5f611e3200168" [ref=e240]
+                - cell "Arena" [ref=e241]
+                - cell "Type A" [ref=e242]
+                - cell "-" [ref=e243]
+                - cell "0" [ref=e244]:
+                  - button "0" [ref=e245] [cursor=pointer]
+                - cell "Archived" [ref=e246]:
+                  - generic [ref=e247]: Archived
+                - cell [ref=e248]:
+                  - generic [ref=e249]:
+                    - button "Edit" [ref=e250]:
+                      - img [ref=e251]
+                    - button "View details" [ref=e254]:
+                      - img [ref=e255]
+                    - button "Restore" [ref=e258]:
+                      - img [ref=e259]
+              - row "QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated Arena Type A - 0 Archived" [ref=e262]:
+                - cell "QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated" [ref=e263]:
+                  - generic [ref=e264]:
+                    - img "QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated" [ref=e265]
+                    - generic "QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated" [ref=e266]
+                - cell "Arena" [ref=e267]
+                - cell "Type A" [ref=e268]
+                - cell "-" [ref=e269]
+                - cell "0" [ref=e270]:
+                  - button "0" [ref=e271] [cursor=pointer]
+                - cell "Archived" [ref=e272]:
+                  - generic [ref=e273]: Archived
+                - cell [ref=e274]:
+                  - generic [ref=e275]:
+                    - button "Edit" [ref=e276]:
+                      - img [ref=e277]
+                    - button "View details" [ref=e280]:
+                      - img [ref=e281]
+                    - button "Restore" [ref=e284]:
+                      - img [ref=e285]
+              - row "QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c Arena Type A - 0 Archived" [ref=e288]:
+                - cell "QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c" [ref=e289]:
+                  - generic [ref=e290]:
+                    - img "QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c" [ref=e291]
+                    - generic "QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c" [ref=e292]
+                - cell "Arena" [ref=e293]
+                - cell "Type A" [ref=e294]
+                - cell "-" [ref=e295]
+                - cell "0" [ref=e296]:
+                  - button "0" [ref=e297] [cursor=pointer]
+                - cell "Archived" [ref=e298]:
+                  - generic [ref=e299]: Archived
+                - cell [ref=e300]:
+                  - generic [ref=e301]:
+                    - button "Edit" [ref=e302]:
+                      - img [ref=e303]
+                    - button "View details" [ref=e306]:
+                      - img [ref=e307]
+                    - button "Restore" [ref=e310]:
+                      - img [ref=e311]
+              - row "QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated Arena Type A - 0 Archived" [ref=e314]:
+                - cell "QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated" [ref=e315]:
+                  - generic [ref=e316]:
+                    - img "QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated" [ref=e317]
+                    - generic "QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated" [ref=e318]
+                - cell "Arena" [ref=e319]
+                - cell "Type A" [ref=e320]
+                - cell "-" [ref=e321]
+                - cell "0" [ref=e322]:
+                  - button "0" [ref=e323] [cursor=pointer]
+                - cell "Archived" [ref=e324]:
+                  - generic [ref=e325]: Archived
+                - cell [ref=e326]:
+                  - generic [ref=e327]:
+                    - button "Edit" [ref=e328]:
+                      - img [ref=e329]
+                    - button "View details" [ref=e332]:
+                      - img [ref=e333]
+                    - button "Restore" [ref=e336]:
+                      - img [ref=e337]
+        - generic [ref=e341]:
+          - paragraph [ref=e343]: "Results: 1–10 of 46"
+          - navigation "pagination" [ref=e345]:
+            - list [ref=e346]:
+              - listitem [ref=e347]:
+                - button [disabled] [ref=e348]:
+                  - img [ref=e349]
+              - listitem [ref=e351]:
+                - button "1" [ref=e352]
+              - listitem [ref=e353]:
+                - button "2" [ref=e354]
+              - listitem [ref=e355]:
+                - button "3" [ref=e356]
+              - listitem [ref=e357]:
+                - button "..." [disabled] [ref=e358]
+              - listitem [ref=e359]:
+                - button "5" [ref=e360]
+              - listitem [ref=e361]:
+                - button [ref=e362]:
+                  - img [ref=e363]
+          - generic [ref=e365]:
+            - generic [ref=e366]: Rows per page
+            - combobox [ref=e367]:
+              - generic: "10"
+              - generic [ref=e368]:
+                - img
+  - button "Open Next.js Dev Tools" [ref=e374] [cursor=pointer]:
+    - img [ref=e375]
+  - alert [ref=e378]
+```

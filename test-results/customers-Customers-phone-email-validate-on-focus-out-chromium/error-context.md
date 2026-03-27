@@ -1,0 +1,394 @@
+# Page snapshot
+
+```yaml
+- generic [active]:
+  - generic:
+    - banner:
+      - generic:
+        - button:
+          - img
+        - img
+      - generic:
+        - button:
+          - img
+          - text: Generate
+        - button:
+          - img
+          - img
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - heading [level=1]: Customer management
+          - button:
+            - img
+            - text: Add customer
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: Search
+                - generic:
+                  - textbox:
+                    - /placeholder: Search by name or code
+              - generic:
+                - generic: Segment
+                - combobox:
+                  - generic: All segments
+                  - generic:
+                    - img
+              - generic:
+                - generic: Region
+                - combobox:
+                  - generic: All regions
+                  - generic:
+                    - img
+              - generic:
+                - generic: Status
+                - combobox:
+                  - generic: All statuses
+                  - generic:
+                    - img
+        - generic:
+          - generic:
+            - heading [level=2]: Customers
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - table:
+                      - rowgroup:
+                        - row:
+                          - columnheader:
+                            - generic:
+                              - text: Name
+                              - img
+                          - columnheader:
+                            - generic:
+                              - text: Segment
+                              - img
+                          - columnheader:
+                            - generic:
+                              - text: Service tier
+                              - img
+                          - columnheader: Last report date
+                          - columnheader: Reports
+                          - columnheader:
+                            - generic:
+                              - text: Status
+                              - img
+                          - columnheader: Actions
+                      - rowgroup:
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: gfkoiv
+                          - cell: Hotel
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Active
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: testenkas
+                          - cell: Commercial
+                          - cell: Type B
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Active
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA SubCustomer 821a73299fb6473bb49d8a1c0674978e
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Archived
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA Customer 76f10bb9f22946cfa13b7417da66681a Updated
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Active
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: 03/25/2026
+                          - cell:
+                            - button: "1"
+                          - cell:
+                            - generic: Archived
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA Customer 6f84b38a60ca4bcab3a0c8d46b9b8254 Updated
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Archived
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA SubCustomer 815dda9a917946e893d5f611e3200168
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Archived
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA Customer 54bb3c037e384bbfb589801b0f64dac9 Updated
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Archived
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA SubCustomer 74cd3e2d816a4a46895a2a241c5b171c
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Archived
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+                        - row:
+                          - cell:
+                            - generic:
+                              - img
+                              - generic: QA Customer 1ebb3451d00e43708991ae12caf3e3d7 Updated
+                          - cell: Arena
+                          - cell: Type A
+                          - cell: "-"
+                          - cell:
+                            - button: "0"
+                          - cell:
+                            - generic: Archived
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                              - button:
+                                - img
+                              - button:
+                                - img
+        - generic:
+          - generic:
+            - generic:
+              - paragraph: "Results: 1–10 of 46"
+            - generic:
+              - navigation:
+                - list:
+                  - listitem:
+                    - button [disabled]:
+                      - img
+                  - listitem:
+                    - button: "1"
+                  - listitem:
+                    - button: "2"
+                  - listitem:
+                    - button: "3"
+                  - listitem:
+                    - button [disabled]: ...
+                  - listitem:
+                    - button: "5"
+                  - listitem:
+                    - button:
+                      - img
+            - generic:
+              - generic: Rows per page
+              - combobox:
+                - generic: "10"
+                - generic:
+                  - img
+  - button "Open Next.js Dev Tools" [ref=e6] [cursor=pointer]:
+    - img [ref=e7]
+  - alert
+  - dialog "Add new customer" [ref=e11]:
+    - generic [ref=e12]:
+      - heading "Add new customer" [level=2] [ref=e13]
+      - paragraph [ref=e14]: Add a new customer to your system
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - heading "Customer information" [level=3] [ref=e18]
+        - generic [ref=e19]:
+          - text: Customer name
+          - textbox "Eg. Cafe Aroma Oslo" [ref=e20]
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - text: Account code / ERP ID
+            - textbox "CA-001" [ref=e23]
+          - generic [ref=e24]:
+            - text: Market segment
+            - combobox [ref=e25]:
+              - generic: Select segment
+              - generic [ref=e26]:
+                - img
+            - combobox [ref=e27]
+          - generic [ref=e28]:
+            - text: Service tier
+            - combobox [ref=e29]:
+              - generic: Select tier
+              - generic [ref=e30]:
+                - img
+            - combobox [ref=e31]
+          - generic [ref=e32]:
+            - text: Region
+            - combobox [ref=e33]:
+              - generic: Select region
+              - generic [ref=e34]:
+                - img
+            - combobox [ref=e35]
+        - generic [ref=e36]:
+          - checkbox [ref=e37]
+          - checkbox
+          - generic [ref=e38]: Sub-customer
+      - generic [ref=e39]:
+        - heading "Contact information" [level=3] [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - text: Contact person
+            - textbox "Add name" [ref=e43]
+          - generic [ref=e44]:
+            - text: Contact email
+            - textbox "Enter email" [ref=e45]: not-an-email
+            - paragraph [ref=e46]: Invalid email address
+          - generic [ref=e47]:
+            - text: Contact phone
+            - textbox "+XX XXXXX XXXXX" [ref=e48]
+          - generic [ref=e49]:
+            - text: Address
+            - textbox "Add address" [ref=e50]
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - text: Status
+          - combobox [ref=e53]:
+            - generic: Active
+            - generic [ref=e54]:
+              - img
+          - combobox [ref=e55]
+        - generic [ref=e56]:
+          - text: Notes / comments
+          - textbox "Internal admin notes" [ref=e57]
+        - generic [ref=e58]:
+          - text: Customer logo
+          - generic [ref=e60]:
+            - button "Choose File" [ref=e61] [cursor=pointer]
+            - generic [ref=e62]:
+              - img [ref=e64]
+              - paragraph [ref=e67]: Upload a file or drag and drop
+              - paragraph [ref=e68]: PNG, JPG or SVG (max 10 MB)
+      - generic [ref=e69]:
+        - button "Cancel" [ref=e71]
+        - button "Add customer" [ref=e73]:
+          - img [ref=e74]
+          - text: Add customer
+```
