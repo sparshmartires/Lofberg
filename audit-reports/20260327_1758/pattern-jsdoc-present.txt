@@ -1,0 +1,21 @@
+src/features/report-generation/components/DataSourceTable.tsx:19:/** Format a number for EU display (e.g., 1.234,56) */
+src/features/report-generation/components/DataSourceTable.tsx:25:/** Parse an EU-formatted string back to a number */
+src/features/report-generation/components/DataSourceTable.tsx:34:/** Controlled EU-formatted input that shows raw number on focus */
+src/features/report-generation/components/steps/Step2DataSource.tsx:17:/**
+src/features/report-generation/components/steps/Step2DataSource.tsx:76:/**
+src/features/report-generation/components/steps/Step2DataSource.tsx:214:/**
+src/features/report-generation/customerLogoRef.ts:1:/**
+src/features/template/types.ts:4:/** CoverPage (PageType 0) */
+src/features/template/types.ts:10:/** AboutSustainability (PageType 2) */
+src/features/template/types.ts:26:/** LofbergsUSPs (PageType 3) */
+src/features/template/types.ts:38:/** IncreasingPositiveImpact (PageType 4) */
+src/features/template/types.ts:75:/** CertificationsOverview (PageType 5) */
+src/features/template/types.ts:100:/** Receipt pages (PageTypes 6–9) — one per certification.
+src/features/template/types.ts:104:/** CompiledReceiptSummary (PageType 10).
+src/hooks/useAutoDismiss.ts:3:/**
+src/lib/format.ts:1:/** Format number per EU conventions (dot thousands separator, comma decimal) */
+src/lib/format.ts:10:/** Compact format: 1.234 → "1,2k", 12.345 → "12,3k", 123.456 → "123k" */
+src/lib/phone.ts:1:/**
+src/store/hooks/useAuth.ts:4:/**
+src/store/services/baseApi.ts:18:/**
+src/store/services/customersApi.ts:70:/** Convert a request object to FormData with PascalCase keys for [FromForm] binding */

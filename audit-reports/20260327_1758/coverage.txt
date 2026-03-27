@@ -1,0 +1,2 @@
+Test runner: playwright (E2E only, no unit coverage)
+60 passed, 85 failed, 3 skipped (last run)

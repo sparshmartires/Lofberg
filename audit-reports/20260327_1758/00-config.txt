@@ -1,0 +1,7 @@
+project: Lofberg (Frontend)
+package_manager: npm
+test_runner: playwright
+lint_cmd: npx eslint .
+src_dirs: src
+exclude_dirs: node_modules,.next,public,.git
+docstring_style: jsdoc
