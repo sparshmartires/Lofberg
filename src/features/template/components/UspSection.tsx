@@ -109,7 +109,7 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
           <div key={section.textKey} className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4">
             <p className="text-sm font-medium">{section.label}</p>
 
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
               <div className="min-w-0">
                 <p className="text-sm mb-2">Image</p>
 

@@ -79,7 +79,7 @@ export default function CompiledReceiptSection({
       </div>
 
       {/* HEADER + DESC TEXT */}
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
 
         <div className="min-w-0">
           <p className="text-sm mb-2">Header text</p>

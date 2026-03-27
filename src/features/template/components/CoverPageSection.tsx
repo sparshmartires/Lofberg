@@ -134,7 +134,7 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
 
   return (
     <div className="space-y-6">
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
         <div className="min-w-0">
         <p className="text-sm mb-2">Background image</p>
 

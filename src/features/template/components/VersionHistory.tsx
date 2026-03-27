@@ -200,7 +200,7 @@ export default function VersionHistory({ templateIds, label }: VersionHistoryPro
                       : `Created on ${formatDate(version.createdAt)} by ${version.createdByUserName}`}
                   </span>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     {version.status === VersionStatus.Archived && (
                       <Button
                         variant="outlineBrand"

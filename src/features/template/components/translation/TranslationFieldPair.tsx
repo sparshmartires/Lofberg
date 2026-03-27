@@ -26,7 +26,7 @@ export function TranslationFieldPair({
   fieldType = "richtext",
 }: TranslationFieldPairProps) {
   return (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
       {/* English reference (read-only) */}
       <div className="min-w-0">
         <p className="text-sm mb-2">{label}</p>

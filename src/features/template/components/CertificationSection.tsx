@@ -113,7 +113,7 @@ export default function CertificationsSection({
             >
               <p className="text-sm font-medium">{cert.label}</p>
 
-              <div className="grid lg:grid-cols-2 gap-8">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Certification logo</p>
                   <FileDropZone

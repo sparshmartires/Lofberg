@@ -88,7 +88,7 @@ export default function AboutSustainabilitySection({
 
   return (
     <div className="space-y-8">
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
         <div className="min-w-0">
           <p className="text-sm mb-2">Banner image</p>
           <FileDropZone
@@ -148,7 +148,7 @@ export default function AboutSustainabilitySection({
             >
               <p className="text-sm font-medium">{block.label}</p>
 
-              <div className="grid lg:grid-cols-2 gap-8">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone
@@ -190,7 +190,7 @@ export default function AboutSustainabilitySection({
             >
               <p className="text-sm font-medium">{block.label}</p>
 
-              <div className="grid lg:grid-cols-2 gap-8">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone

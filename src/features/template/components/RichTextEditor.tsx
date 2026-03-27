@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   AlignCenter,
   AlignLeft,
@@ -9,6 +9,7 @@ import {
   Italic,
   List,
   ListOrdered,
+  MoreHorizontal,
   Underline as UnderlineIcon,
 } from "lucide-react"
 import Placeholder from "@tiptap/extension-placeholder"
@@ -46,6 +47,8 @@ export function RichTextEditor({
   const isExternalUpdate = useRef(false)
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
     extensions: [
@@ -71,6 +74,18 @@ export function RichTextEditor({
       isExternalUpdate.current = false
     }
   }, [value, editor])
+
+  // Close mobile menu on click outside
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [mobileMenuOpen])
 
   const toolbarState = useEditorState({
     editor,
@@ -104,39 +119,65 @@ export function RichTextEditor({
     []
   )
 
+  const toolbarButtons = (
+    <>
+      <ToolbarButton active={toolbarState?.isBold ?? false} label="Bold" onClick={() => editor?.chain().focus().toggleBold().run()}>
+        <Bold className="h-4 w-4" />
+      </ToolbarButton>
+      <ToolbarButton active={toolbarState?.isItalic ?? false} label="Italic" onClick={() => editor?.chain().focus().toggleItalic().run()}>
+        <Italic className="h-4 w-4" />
+      </ToolbarButton>
+      <ToolbarButton active={toolbarState?.isUnderline ?? false} label="Underline" onClick={() => editor?.chain().focus().toggleUnderline().run()}>
+        <UnderlineIcon className="h-4 w-4" />
+      </ToolbarButton>
+
+      <span className="mx-1 h-5 w-px bg-[#EDEDED]" />
+
+      <ToolbarButton active={toolbarState?.isAlignLeft ?? false} label="Align left" onClick={() => editor?.chain().focus().setTextAlign("left").run()}>
+        <AlignLeft className="h-4 w-4" />
+      </ToolbarButton>
+      <ToolbarButton active={toolbarState?.isAlignCenter ?? false} label="Align center" onClick={() => editor?.chain().focus().setTextAlign("center").run()}>
+        <AlignCenter className="h-4 w-4" />
+      </ToolbarButton>
+      <ToolbarButton active={toolbarState?.isAlignRight ?? false} label="Align right" onClick={() => editor?.chain().focus().setTextAlign("right").run()}>
+        <AlignRight className="h-4 w-4" />
+      </ToolbarButton>
+
+      <span className="mx-1 h-5 w-px bg-[#EDEDED]" />
+
+      <ToolbarButton active={toolbarState?.isBulletList ?? false} label="Bulleted list" onClick={() => editor?.chain().focus().toggleBulletList().run()}>
+        <List className="h-4 w-4" />
+      </ToolbarButton>
+      <ToolbarButton active={toolbarState?.isOrderedList ?? false} label="Numbered list" onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
+        <ListOrdered className="h-4 w-4" />
+      </ToolbarButton>
+    </>
+  )
+
   return (
     <div className={cn("w-full min-w-0 rounded-xl border border-[#EDEDED] bg-white overflow-hidden flex flex-col", className)}>
-      <div className="flex items-center gap-1 border-b border-[#EDEDED] px-2 py-1 bg-white">
-        <ToolbarButton active={toolbarState?.isBold ?? false} label="Bold" onClick={() => editor?.chain().focus().toggleBold().run()}>
-          <Bold className="h-4 w-4" />
-        </ToolbarButton>
-        <ToolbarButton active={toolbarState?.isItalic ?? false} label="Italic" onClick={() => editor?.chain().focus().toggleItalic().run()}>
-          <Italic className="h-4 w-4" />
-        </ToolbarButton>
-        <ToolbarButton active={toolbarState?.isUnderline ?? false} label="Underline" onClick={() => editor?.chain().focus().toggleUnderline().run()}>
-          <UnderlineIcon className="h-4 w-4" />
-        </ToolbarButton>
+      {/* Desktop toolbar — inline icons */}
+      <div className="hidden sm:flex items-center gap-1 border-b border-[#EDEDED] px-2 py-1 bg-white">
+        {toolbarButtons}
+      </div>
 
-        <span className="mx-1 h-5 w-px bg-[#EDEDED]" />
+      {/* Mobile toolbar — 3-dot menu */}
+      <div className="relative flex sm:hidden items-center border-b border-[#EDEDED] px-2 py-1 bg-white" ref={menuRef}>
+        <Button
+          type="button"
+          variant="ghostBrand"
+          className="h-7 min-w-0 rounded-md px-2"
+          aria-label="Formatting options"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
 
-        <ToolbarButton active={toolbarState?.isAlignLeft ?? false} label="Align left" onClick={() => editor?.chain().focus().setTextAlign("left").run()}>
-          <AlignLeft className="h-4 w-4" />
-        </ToolbarButton>
-        <ToolbarButton active={toolbarState?.isAlignCenter ?? false} label="Align center" onClick={() => editor?.chain().focus().setTextAlign("center").run()}>
-          <AlignCenter className="h-4 w-4" />
-        </ToolbarButton>
-        <ToolbarButton active={toolbarState?.isAlignRight ?? false} label="Align right" onClick={() => editor?.chain().focus().setTextAlign("right").run()}>
-          <AlignRight className="h-4 w-4" />
-        </ToolbarButton>
-
-        <span className="mx-1 h-5 w-px bg-[#EDEDED]" />
-
-        <ToolbarButton active={toolbarState?.isBulletList ?? false} label="Bulleted list" onClick={() => editor?.chain().focus().toggleBulletList().run()}>
-          <List className="h-4 w-4" />
-        </ToolbarButton>
-        <ToolbarButton active={toolbarState?.isOrderedList ?? false} label="Numbered list" onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
-          <ListOrdered className="h-4 w-4" />
-        </ToolbarButton>
+        {mobileMenuOpen && (
+          <div className="absolute top-full left-0 z-50 flex items-center gap-1 rounded-lg border border-[#EDEDED] bg-white px-2 py-1.5 shadow-lg">
+            {toolbarButtons}
+          </div>
+        )}
       </div>
 
       <EditorContent
