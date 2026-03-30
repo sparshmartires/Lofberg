@@ -36,13 +36,8 @@ export default function LoginPage() {
         password: data.password,
       }).unwrap()
 
-      // Navigate based on role
-      const userRoles = result.user?.roles ?? []
-      if (userRoles.includes("Translator")) {
-        router.push("/template/translate")
-      } else {
-        router.push("/dashboard")
-      }
+      // All roles go to dashboard after login
+      router.push("/dashboard")
     } catch (err: any) {
       // Check for first-login password change requirement (403 with requirePasswordChange)
       const errData = err?.data?.data || err?.data

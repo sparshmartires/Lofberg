@@ -8,7 +8,7 @@ const adminOnlyRoutes = ["/users", "/customers"]
 const adminOrTranslatorRoutes = ["/template", "/conversion-logic"]
 
 /** Routes NOT accessible by Translator. */
-const noTranslatorRoutes = ["/dashboard", "/report-generation", "/historical-reports"]
+const noTranslatorRoutes = ["/report-generation", "/historical-reports"]
 
 /**
  * Decode the JWT payload and extract the user's role claim.
@@ -63,7 +63,7 @@ export function middleware(request: NextRequest) {
   // If logged in and trying to access login page — redirect to role-appropriate home
   if (token && pathname === "/login") {
     const role = extractRoleFromToken(token)
-    const home = role === "Translator" ? "/template/translate" : "/dashboard"
+    const home = "/dashboard"
     return NextResponse.redirect(new URL(home, request.url))
   }
 
@@ -72,7 +72,7 @@ export function middleware(request: NextRequest) {
     const role = extractRoleFromToken(token)
     if (role === null) return NextResponse.next() // can't determine role — let backend decide
 
-    const defaultHome = role === "Translator" ? "/template/translate" : "/dashboard"
+    const defaultHome = "/dashboard"
 
     // Admin-only routes: block salesperson + translator
     const isAdminRoute = adminOnlyRoutes.some((route) => pathname.startsWith(route))

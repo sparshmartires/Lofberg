@@ -83,7 +83,7 @@ src/
 ### Roles & access
 - **Administrator** — full access to all screens and actions
 - **Salesperson** — Dashboard, Generate, Past reports (own only), Useful resources
-- **Translator** — Templates (translate only), Conversions (view + translate), Useful resources. NO dashboard access — redirects to /template/translate after login.
+- **Translator** — Dashboard, Templates (translate only), Conversions (view + translate), Useful resources
 
 Sidebar items are role-dependent. RBAC enforced on both routes and component visibility.
 

@@ -19,7 +19,5 @@ export async function loginAs(page: Page, role: 'admin' | 'salesperson' | 'trans
   await page.fill('[name=email]', credentials[role].email);
   await page.fill('[name=password]', credentials[role].password);
   await page.click('[type=submit]');
-  // Translator redirects to /template/translate, others to /dashboard
-  const expectedUrl = role === 'translator' ? '**/template/translate' : '**/dashboard';
-  await page.waitForURL(expectedUrl, { timeout: 15_000 });
+  await page.waitForURL('**/dashboard', { timeout: 15_000 });
 }

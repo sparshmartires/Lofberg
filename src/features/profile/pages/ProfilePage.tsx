@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -10,6 +10,7 @@ import { formatPhoneDisplay } from "@/lib/phone"
 import { Loader2, Pencil, Save } from "lucide-react"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { useGetMeQuery, useUpdateMeMutation } from "@/store/services/authApi"
+import { useUploadImageMutation } from "@/store/services/reportsApi"
 import { ChangePasswordDialog } from "@/features/profile/components/ChangePasswordDialog"
 
 const formatDateTime = (value: string) => {
@@ -43,6 +44,9 @@ const getSafeAvatarSrc = (value: string | undefined) => {
 export default function MyProfilePage() {
   const { data: profile, isLoading, isFetching, isError, refetch } = useGetMeQuery()
   const [updateMe, { isLoading: isUpdating }] = useUpdateMeMutation()
+  const [uploadImage] = useUploadImageMutation()
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+  const [avatarUploading, setAvatarUploading] = useState(false)
   const [draft, setDraft] = useState({ firstName: "", lastName: "", phoneNumber: "" })
   const [touched, setTouched] = useState({ firstName: false, lastName: false, phoneNumber: false })
   const [saveError, setSaveError] = useState("")
@@ -61,6 +65,36 @@ export default function MyProfilePage() {
   }, [firstName, lastName, profile])
 
   const isSaveDisabled = isLoading || isFetching || isError || isUpdating
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 10 * 1024 * 1024) {
+      setSaveError("File exceeds 10 MB limit")
+      return
+    }
+
+    setAvatarUploading(true)
+    setSaveError("")
+    try {
+      const { url } = await uploadImage({ file }).unwrap()
+      await updateMe({
+        firstName: firstName.trim() || profile?.firstName || "",
+        lastName: lastName.trim() || profile?.lastName || "",
+        phoneNumber: phoneNumber.trim() || profile?.phoneNumber || "",
+        profileImageUrl: url,
+      }).unwrap()
+      refetch()
+      setSaveSuccess("Profile picture updated")
+      setTimeout(() => setSaveSuccess(""), 3000)
+    } catch {
+      setSaveError("Failed to upload profile picture")
+    } finally {
+      setAvatarUploading(false)
+      if (avatarInputRef.current) avatarInputRef.current.value = ""
+    }
+  }
 
   const handleSave = async () => {
     if (!profile) return
@@ -107,18 +141,35 @@ export default function MyProfilePage() {
           <div className="flex items-center justify-between">
 
             <div className="flex items-center gap-3">
-              <div className="relative">
+              <button
+                type="button"
+                className="relative cursor-pointer"
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={avatarUploading}
+              >
                 <Image
                   src={getSafeAvatarSrc(profile?.avatarUrl)}
                   alt="avatar"
                   width={44}
                   height={44}
                   className="rounded-full"
+                  unoptimized
                 />
                 <div className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5B2D91] rounded-full flex items-center justify-center">
-                  <Pencil className="w-2.5 h-2.5 text-white" />
+                  {avatarUploading ? (
+                    <Loader2 className="w-2.5 h-2.5 text-white animate-spin" />
+                  ) : (
+                    <Pencil className="w-2.5 h-2.5 text-white" />
+                  )}
                 </div>
-              </div>
+              </button>
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept=".png,.jpg,.jpeg,.svg"
+                className="hidden"
+                onChange={handleAvatarChange}
+              />
 
               <div>
                 <div className="flex items-center gap-2">
