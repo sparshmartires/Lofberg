@@ -73,7 +73,7 @@
                               - text: Service tier
                               - img
                           - columnheader: Last report date
-                          - columnheader: Reports
+                          - columnheader: Reports generated
                           - columnheader:
                             - generic:
                               - text: Status
@@ -87,9 +87,9 @@
                               - generic: gfkoiv
                           - cell: Hotel
                           - cell: Type A
-                          - cell: "-"
+                          - cell: 03/30/2026
                           - cell:
-                            - button: "0"
+                            - button: "16"
                           - cell:
                             - generic: Active
                           - cell:
@@ -107,9 +107,9 @@
                               - generic: testenkas
                           - cell: Commercial
                           - cell: Type B
-                          - cell: "-"
+                          - cell: 03/30/2026
                           - cell:
-                            - button: "0"
+                            - button: "2"
                           - cell:
                             - generic: Active
                           - cell:

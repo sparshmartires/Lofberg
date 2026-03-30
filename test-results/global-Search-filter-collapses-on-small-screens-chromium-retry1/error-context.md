@@ -62,10 +62,10 @@
               - generic [ref=e63]:
                 - generic [ref=e64]: "Segment: Hotel"
                 - generic [ref=e65]: "Service tier: Type A"
-                - generic [ref=e66]: "Last report date: -"
+                - generic [ref=e66]: "Last report date: 03/30/2026"
                 - generic [ref=e67]:
                   - text: "Reports:"
-                  - button "0" [ref=e68]
+                  - button "16" [ref=e68]
               - generic [ref=e70]:
                 - button "Edit" [ref=e71]:
                   - text: Edit
@@ -85,10 +85,10 @@
               - generic [ref=e90]:
                 - generic [ref=e91]: "Segment: Commercial"
                 - generic [ref=e92]: "Service tier: Type B"
-                - generic [ref=e93]: "Last report date: -"
+                - generic [ref=e93]: "Last report date: 03/30/2026"
                 - generic [ref=e94]:
                   - text: "Reports:"
-                  - button "0" [ref=e95]
+                  - button "2" [ref=e95]
               - generic [ref=e97]:
                 - button "Edit" [ref=e98]:
                   - text: Edit

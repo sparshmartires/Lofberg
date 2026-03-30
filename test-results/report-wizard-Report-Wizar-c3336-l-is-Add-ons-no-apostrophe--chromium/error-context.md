@@ -1,7 +1,7 @@
 # Page snapshot
 
 ```yaml
-- generic [ref=e1]:
+- generic [active] [ref=e1]:
   - generic [ref=e5]:
     - img "404 Coffee Not Found" [ref=e7]
     - heading "404 Coffee Not Found" [level=1] [ref=e8]

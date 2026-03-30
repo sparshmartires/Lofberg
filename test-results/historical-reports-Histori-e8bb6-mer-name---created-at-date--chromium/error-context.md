@@ -1,411 +1,363 @@
 # Page snapshot
 
 ```yaml
-- generic:
-  - generic [ref=e5] [cursor=pointer]:
-    - button "Open Next.js Dev Tools" [ref=e6]:
-      - img [ref=e7]
-    - generic [ref=e10]:
-      - button "Open issues overlay" [ref=e11]:
-        - generic [ref=e12]:
-          - generic [ref=e13]: "0"
-          - generic [ref=e14]: "1"
-        - generic [ref=e15]: Issue
-      - button "Collapse issues badge" [ref=e16]:
-        - img [ref=e17]
-  - generic:
-    - banner:
-      - generic:
-        - button:
-          - img
-        - img
-      - generic:
-        - button:
-          - img
+- generic [ref=e1]:
+  - generic [ref=e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e7]:
+      - img [ref=e8]
+    - generic [ref=e11]:
+      - button "Open issues overlay" [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "0"
+          - generic [ref=e15]: "1"
+        - generic [ref=e16]: Issue
+      - button "Collapse issues badge" [ref=e17]:
+        - img [ref=e18]
+  - generic [ref=e20]:
+    - banner [ref=e21]:
+      - generic [ref=e22]:
+        - button "Open menu" [ref=e23]:
+          - img [ref=e24]
+        - img "Löfbergs Logo" [ref=e25]
+      - generic [ref=e26]:
+        - button "Generate" [ref=e27]:
+          - img [ref=e28]
           - text: Generate
-        - button:
-          - img
-          - img
-    - main:
-      - generic:
-        - generic:
-          - generic:
-            - heading [level=1]: Past reports, receipts and drafts
-          - button:
-            - img
+        - button [ref=e31]:
+          - img [ref=e32]
+          - img [ref=e35]
+    - main [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - heading "Past reports, receipts and drafts" [level=1] [ref=e41]
+            - paragraph
+          - button "Generate" [ref=e42]:
+            - img [ref=e43]
             - text: Generate
-        - generic:
-          - generic:
-            - generic:
-              - generic:
-                - generic: Search
-                - generic:
-                  - textbox:
-                    - /placeholder: Search reports
-              - generic:
-                - generic: Customer
-                - combobox:
-                  - generic: All customers
-                  - generic:
-                    - img
-              - generic:
-                - generic: Salesperson
-                - combobox:
-                  - generic: All salespersons
-                  - generic:
-                    - img
-            - generic:
-              - generic:
-                - generic: Type
-                - combobox:
-                  - generic: All types
-                  - generic:
-                    - img
-              - generic:
-                - generic: Status
-                - combobox [expanded]:
-                  - generic: All statuses
-                  - generic:
-                    - img
-              - generic:
-                - generic: Segment
-                - combobox:
-                  - generic: All segments
-                  - generic:
-                    - img
-            - generic:
-              - generic:
-                - generic: Report date
-                - button:
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]:
+              - generic [ref=e48]: Search
+              - textbox "Search reports" [ref=e50]
+            - generic [ref=e51]:
+              - generic [ref=e52]: Customer
+              - combobox [ref=e53]:
+                - generic: All customers
+                - generic [ref=e54]:
                   - img
-                  - generic: Select date range
-              - generic:
-                - generic: Created at
-                - button:
+            - generic [ref=e55]:
+              - generic [ref=e56]: Salesperson
+              - combobox [ref=e57]:
+                - generic: All salespersons
+                - generic [ref=e58]:
                   - img
-                  - generic: Select date range
-        - generic:
-          - generic:
-            - generic:
-              - generic:
-                - table:
-                  - rowgroup:
-                    - row:
-                      - columnheader:
-                        - generic:
-                          - text: Report title
-                          - img
-                      - columnheader:
-                        - generic:
-                          - text: Customer
-                          - img
-                      - columnheader:
-                        - generic:
-                          - text: Salesperson
-                          - img
-                      - columnheader:
-                        - generic:
-                          - text: Segment
-                          - img
-                      - columnheader:
-                        - generic:
-                          - text: Status
-                          - img
-                      - columnheader:
-                        - generic:
-                          - text: Report date
-                          - img
-                      - columnheader:
-                        - generic:
-                          - text: Created at
-                          - img
-                      - columnheader: Actions
-                  - rowgroup:
-                    - row:
-                      - cell:
-                        - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QC
-                          - generic: QA Customer 76f10bb9f22946cfa13b7417da66681a Updated
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QAUpdated SalesRep
-                      - cell: "-"
-                      - cell:
-                        - generic: Draft
-                      - cell: 03/26/2026
-                      - cell: 03/26/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: QA SubCustomer d54047cffdb4471d9b620e0941c7df86 - 2026-03-25
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QAUpdated SalesRep
-                      - cell: Arena
-                      - cell:
-                        - generic: Latest
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QAUpdated SalesRep
-                      - cell: "-"
-                      - cell:
-                        - generic: Draft
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: DR
-                          - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: SA
-                          - generic: System Administrator
-                      - cell: "-"
-                      - cell:
-                        - generic: Draft
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: DR
-                          - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: SA
-                          - generic: System Administrator
-                      - cell: "-"
-                      - cell:
-                        - generic: Draft
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: DR
-                          - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: SA
-                          - generic: System Administrator
-                      - cell: "-"
-                      - cell:
-                        - generic: Draft
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: DR
-                          - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: SA
-                          - generic: System Administrator
-                      - cell: "-"
-                      - cell:
-                        - generic: Draft
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: DR
-                          - generic: Draft
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: SA
-                          - generic: System Administrator
-                      - cell: "-"
-                      - cell:
-                        - generic: Draft
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: Cafe Aroma - Oslo - 2026-03-25
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: CA
-                          - generic: Cafe Aroma - Oslo
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QAUpdated SalesRep
-                      - cell: Coffee shop
-                      - cell:
-                        - generic: Latest
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                          - button:
-                            - img
-                    - row:
-                      - cell:
-                        - generic: QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73 - 2026-03-25
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QA SubCustomer 0ff40f4b42644e5a83f646e16ac35d73
-                      - cell:
-                        - generic:
-                          - generic:
-                            - generic: QS
-                          - generic: QAUpdated SalesRep
-                      - cell: Arena
-                      - cell:
-                        - generic: Latest
-                      - cell: 03/25/2026
-                      - cell: 03/25/2026
-                      - cell:
-                        - generic:
-                          - button:
-                            - img
-                          - button:
-                            - img
-                          - button:
-                            - img
-        - generic:
-          - generic:
-            - generic:
-              - paragraph: "Results: 1–10 of 140"
-            - generic:
-              - navigation:
-                - list:
-                  - listitem:
-                    - button [disabled]:
-                      - img
-                  - listitem:
-                    - button: "1"
-                  - listitem:
-                    - button: "2"
-                  - listitem:
-                    - button: "3"
-                  - listitem:
-                    - button [disabled]: ...
-                  - listitem:
-                    - button: "14"
-                  - listitem:
-                    - button:
-                      - img
-            - generic:
-              - generic: Rows per page
-              - combobox:
-                - generic: "10"
-                - generic:
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - generic [ref=e61]: Type
+              - combobox [ref=e62]:
+                - generic: All types
+                - generic [ref=e63]:
                   - img
-  - alert
-  - listbox [ref=e19]:
-    - option "All statuses" [active] [selected] [ref=e20]:
-      - generic [ref=e22]: All statuses
-    - option "Draft" [ref=e23]:
-      - generic [ref=e25]: Draft
-    - option "Latest" [ref=e26]:
-      - generic [ref=e28]: Latest
-    - option "Past" [ref=e29]:
-      - generic [ref=e31]: Past
-    - option "Archived" [ref=e32]:
-      - generic [ref=e34]: Archived
+            - generic [ref=e64]:
+              - generic [ref=e65]: Status
+              - combobox [active] [ref=e66]:
+                - generic: Draft
+                - generic [ref=e67]:
+                  - button [ref=e68] [cursor=pointer]:
+                    - img [ref=e69]
+                  - img
+            - generic [ref=e72]:
+              - generic [ref=e73]: Segment
+              - combobox [ref=e74]:
+                - generic: All segments
+                - generic [ref=e75]:
+                  - img
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: Report date
+              - button "Select date range" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e82]: Select date range
+            - generic [ref=e83]:
+              - generic [ref=e84]: Created at
+              - button "Select date range" [ref=e85]:
+                - img [ref=e86]
+                - generic [ref=e88]: Select date range
+        - table [ref=e93]:
+          - rowgroup [ref=e94]:
+            - row "Report title Customer Salesperson Segment Status Report date Created at Actions" [ref=e95]:
+              - columnheader "Report title" [ref=e96] [cursor=pointer]:
+                - generic [ref=e97]:
+                  - text: Report title
+                  - img [ref=e98]
+              - columnheader "Customer" [ref=e101] [cursor=pointer]:
+                - generic [ref=e102]:
+                  - text: Customer
+                  - img [ref=e103]
+              - columnheader "Salesperson" [ref=e106] [cursor=pointer]:
+                - generic [ref=e107]:
+                  - text: Salesperson
+                  - img [ref=e108]
+              - columnheader "Segment" [ref=e111] [cursor=pointer]:
+                - generic [ref=e112]:
+                  - text: Segment
+                  - img [ref=e113]
+              - columnheader "Status" [ref=e116] [cursor=pointer]:
+                - generic [ref=e117]:
+                  - text: Status
+                  - img [ref=e118]
+              - columnheader "Report date" [ref=e121] [cursor=pointer]:
+                - generic [ref=e122]:
+                  - text: Report date
+                  - img [ref=e123]
+              - columnheader "Created at" [ref=e126] [cursor=pointer]:
+                - generic [ref=e127]:
+                  - text: Created at
+                  - img [ref=e128]
+              - columnheader "Actions" [ref=e131]
+          - rowgroup [ref=e132]:
+            - row "Draft QC QA Customer 76f10bb9f22946cfa13b7417da66681a Updated QS QAUpdated SalesRep - Draft 03/26/2026 03/26/2026 Edit Draft Delete Draft" [ref=e133]:
+              - cell "Draft" [ref=e134]:
+                - generic [ref=e135]: Draft
+              - cell "QC QA Customer 76f10bb9f22946cfa13b7417da66681a Updated" [ref=e136]:
+                - generic [ref=e137]:
+                  - generic [ref=e139]: QC
+                  - generic [ref=e140]: QA Customer 76f10bb9f22946cfa13b7417da66681a Updated
+              - cell "QS QAUpdated SalesRep" [ref=e141]:
+                - generic [ref=e142]:
+                  - generic [ref=e144]: QS
+                  - generic [ref=e145]: QAUpdated SalesRep
+              - cell "-" [ref=e146]
+              - cell "Draft" [ref=e147]:
+                - generic [ref=e148]: Draft
+              - cell "03/26/2026" [ref=e149]
+              - cell "03/26/2026" [ref=e150]
+              - cell "Edit Draft Delete Draft" [ref=e151]:
+                - generic [ref=e152]:
+                  - button "Edit Draft" [ref=e153]:
+                    - img [ref=e154]
+                  - button "Delete Draft" [ref=e157]:
+                    - img [ref=e158]
+            - row "Draft QS QA SubCustomer d54047cffdb4471d9b620e0941c7df86 QS QAUpdated SalesRep - Draft 03/25/2026 03/25/2026 Edit Draft Delete Draft" [ref=e161]:
+              - cell "Draft" [ref=e162]:
+                - generic [ref=e163]: Draft
+              - cell "QS QA SubCustomer d54047cffdb4471d9b620e0941c7df86" [ref=e164]:
+                - generic [ref=e165]:
+                  - generic [ref=e167]: QS
+                  - generic [ref=e168]: QA SubCustomer d54047cffdb4471d9b620e0941c7df86
+              - cell "QS QAUpdated SalesRep" [ref=e169]:
+                - generic [ref=e170]:
+                  - generic [ref=e172]: QS
+                  - generic [ref=e173]: QAUpdated SalesRep
+              - cell "-" [ref=e174]
+              - cell "Draft" [ref=e175]:
+                - generic [ref=e176]: Draft
+              - cell "03/25/2026" [ref=e177]
+              - cell "03/25/2026" [ref=e178]
+              - cell "Edit Draft Delete Draft" [ref=e179]:
+                - generic [ref=e180]:
+                  - button "Edit Draft" [ref=e181]:
+                    - img [ref=e182]
+                  - button "Delete Draft" [ref=e185]:
+                    - img [ref=e186]
+            - row "Draft DR Draft SA System Administrator - Draft 03/25/2026 03/25/2026 Edit Draft Delete Draft" [ref=e189]:
+              - cell "Draft" [ref=e190]:
+                - generic [ref=e191]: Draft
+              - cell "DR Draft" [ref=e192]:
+                - generic [ref=e193]:
+                  - generic [ref=e195]: DR
+                  - generic [ref=e196]: Draft
+              - cell "SA System Administrator" [ref=e197]:
+                - generic [ref=e198]:
+                  - generic [ref=e200]: SA
+                  - generic [ref=e201]: System Administrator
+              - cell "-" [ref=e202]
+              - cell "Draft" [ref=e203]:
+                - generic [ref=e204]: Draft
+              - cell "03/25/2026" [ref=e205]
+              - cell "03/25/2026" [ref=e206]
+              - cell "Edit Draft Delete Draft" [ref=e207]:
+                - generic [ref=e208]:
+                  - button "Edit Draft" [ref=e209]:
+                    - img [ref=e210]
+                  - button "Delete Draft" [ref=e213]:
+                    - img [ref=e214]
+            - row "Draft DR Draft SA System Administrator - Draft 03/25/2026 03/25/2026 Edit Draft Delete Draft" [ref=e217]:
+              - cell "Draft" [ref=e218]:
+                - generic [ref=e219]: Draft
+              - cell "DR Draft" [ref=e220]:
+                - generic [ref=e221]:
+                  - generic [ref=e223]: DR
+                  - generic [ref=e224]: Draft
+              - cell "SA System Administrator" [ref=e225]:
+                - generic [ref=e226]:
+                  - generic [ref=e228]: SA
+                  - generic [ref=e229]: System Administrator
+              - cell "-" [ref=e230]
+              - cell "Draft" [ref=e231]:
+                - generic [ref=e232]: Draft
+              - cell "03/25/2026" [ref=e233]
+              - cell "03/25/2026" [ref=e234]
+              - cell "Edit Draft Delete Draft" [ref=e235]:
+                - generic [ref=e236]:
+                  - button "Edit Draft" [ref=e237]:
+                    - img [ref=e238]
+                  - button "Delete Draft" [ref=e241]:
+                    - img [ref=e242]
+            - row "Draft DR Draft SA System Administrator - Draft 03/25/2026 03/25/2026 Edit Draft Delete Draft" [ref=e245]:
+              - cell "Draft" [ref=e246]:
+                - generic [ref=e247]: Draft
+              - cell "DR Draft" [ref=e248]:
+                - generic [ref=e249]:
+                  - generic [ref=e251]: DR
+                  - generic [ref=e252]: Draft
+              - cell "SA System Administrator" [ref=e253]:
+                - generic [ref=e254]:
+                  - generic [ref=e256]: SA
+                  - generic [ref=e257]: System Administrator
+              - cell "-" [ref=e258]
+              - cell "Draft" [ref=e259]:
+                - generic [ref=e260]: Draft
+              - cell "03/25/2026" [ref=e261]
+              - cell "03/25/2026" [ref=e262]
+              - cell "Edit Draft Delete Draft" [ref=e263]:
+                - generic [ref=e264]:
+                  - button "Edit Draft" [ref=e265]:
+                    - img [ref=e266]
+                  - button "Delete Draft" [ref=e269]:
+                    - img [ref=e270]
+            - row "Draft DR Draft SA System Administrator - Draft 03/25/2026 03/25/2026 Edit Draft Delete Draft" [ref=e273]:
+              - cell "Draft" [ref=e274]:
+                - generic [ref=e275]: Draft
+              - cell "DR Draft" [ref=e276]:
+                - generic [ref=e277]:
+                  - generic [ref=e279]: DR
+                  - generic [ref=e280]: Draft
+              - cell "SA System Administrator" [ref=e281]:
+                - generic [ref=e282]:
+                  - generic [ref=e284]: SA
+                  - generic [ref=e285]: System Administrator
+              - cell "-" [ref=e286]
+              - cell "Draft" [ref=e287]:
+                - generic [ref=e288]: Draft
+              - cell "03/25/2026" [ref=e289]
+              - cell "03/25/2026" [ref=e290]
+              - cell "Edit Draft Delete Draft" [ref=e291]:
+                - generic [ref=e292]:
+                  - button "Edit Draft" [ref=e293]:
+                    - img [ref=e294]
+                  - button "Delete Draft" [ref=e297]:
+                    - img [ref=e298]
+            - row "Draft DR Draft SA System Administrator - Draft 03/25/2026 03/25/2026 Edit Draft Delete Draft" [ref=e301]:
+              - cell "Draft" [ref=e302]:
+                - generic [ref=e303]: Draft
+              - cell "DR Draft" [ref=e304]:
+                - generic [ref=e305]:
+                  - generic [ref=e307]: DR
+                  - generic [ref=e308]: Draft
+              - cell "SA System Administrator" [ref=e309]:
+                - generic [ref=e310]:
+                  - generic [ref=e312]: SA
+                  - generic [ref=e313]: System Administrator
+              - cell "-" [ref=e314]
+              - cell "Draft" [ref=e315]:
+                - generic [ref=e316]: Draft
+              - cell "03/25/2026" [ref=e317]
+              - cell "03/25/2026" [ref=e318]
+              - cell "Edit Draft Delete Draft" [ref=e319]:
+                - generic [ref=e320]:
+                  - button "Edit Draft" [ref=e321]:
+                    - img [ref=e322]
+                  - button "Delete Draft" [ref=e325]:
+                    - img [ref=e326]
+            - row "Draft DR Draft SA System Administrator - Draft 03/24/2026 03/24/2026 Edit Draft Delete Draft" [ref=e329]:
+              - cell "Draft" [ref=e330]:
+                - generic [ref=e331]: Draft
+              - cell "DR Draft" [ref=e332]:
+                - generic [ref=e333]:
+                  - generic [ref=e335]: DR
+                  - generic [ref=e336]: Draft
+              - cell "SA System Administrator" [ref=e337]:
+                - generic [ref=e338]:
+                  - generic [ref=e340]: SA
+                  - generic [ref=e341]: System Administrator
+              - cell "-" [ref=e342]
+              - cell "Draft" [ref=e343]:
+                - generic [ref=e344]: Draft
+              - cell "03/24/2026" [ref=e345]
+              - cell "03/24/2026" [ref=e346]
+              - cell "Edit Draft Delete Draft" [ref=e347]:
+                - generic [ref=e348]:
+                  - button "Edit Draft" [ref=e349]:
+                    - img [ref=e350]
+                  - button "Delete Draft" [ref=e353]:
+                    - img [ref=e354]
+            - row "Draft DR Draft SA System Administrator - Draft 03/24/2026 03/24/2026 Edit Draft Delete Draft" [ref=e357]:
+              - cell "Draft" [ref=e358]:
+                - generic [ref=e359]: Draft
+              - cell "DR Draft" [ref=e360]:
+                - generic [ref=e361]:
+                  - generic [ref=e363]: DR
+                  - generic [ref=e364]: Draft
+              - cell "SA System Administrator" [ref=e365]:
+                - generic [ref=e366]:
+                  - generic [ref=e368]: SA
+                  - generic [ref=e369]: System Administrator
+              - cell "-" [ref=e370]
+              - cell "Draft" [ref=e371]:
+                - generic [ref=e372]: Draft
+              - cell "03/24/2026" [ref=e373]
+              - cell "03/24/2026" [ref=e374]
+              - cell "Edit Draft Delete Draft" [ref=e375]:
+                - generic [ref=e376]:
+                  - button "Edit Draft" [ref=e377]:
+                    - img [ref=e378]
+                  - button "Delete Draft" [ref=e381]:
+                    - img [ref=e382]
+            - row "Draft DR Draft SA System Administrator - Draft 03/24/2026 03/24/2026 Edit Draft Delete Draft" [ref=e385]:
+              - cell "Draft" [ref=e386]:
+                - generic [ref=e387]: Draft
+              - cell "DR Draft" [ref=e388]:
+                - generic [ref=e389]:
+                  - generic [ref=e391]: DR
+                  - generic [ref=e392]: Draft
+              - cell "SA System Administrator" [ref=e393]:
+                - generic [ref=e394]:
+                  - generic [ref=e396]: SA
+                  - generic [ref=e397]: System Administrator
+              - cell "-" [ref=e398]
+              - cell "Draft" [ref=e399]:
+                - generic [ref=e400]: Draft
+              - cell "03/24/2026" [ref=e401]
+              - cell "03/24/2026" [ref=e402]
+              - cell "Edit Draft Delete Draft" [ref=e403]:
+                - generic [ref=e404]:
+                  - button "Edit Draft" [ref=e405]:
+                    - img [ref=e406]
+                  - button "Delete Draft" [ref=e409]:
+                    - img [ref=e410]
+        - generic [ref=e414]:
+          - paragraph [ref=e416]: "Results: 1–10 of 23"
+          - navigation "pagination" [ref=e418]:
+            - list [ref=e419]:
+              - listitem [ref=e420]:
+                - button [disabled] [ref=e421]:
+                  - img [ref=e422]
+              - listitem [ref=e424]:
+                - button "1" [ref=e425]
+              - listitem [ref=e426]:
+                - button "2" [ref=e427]
+              - listitem [ref=e428]:
+                - button "3" [ref=e429]
+              - listitem [ref=e430]:
+                - button [ref=e431]:
+                  - img [ref=e432]
+          - generic [ref=e434]:
+            - generic [ref=e435]: Rows per page
+            - combobox [ref=e436]:
+              - generic: "10"
+              - generic [ref=e437]:
+                - img
+  - alert [ref=e438]
 ```

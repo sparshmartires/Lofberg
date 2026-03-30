@@ -73,7 +73,7 @@
                               - text: Service tier
                               - img
                           - columnheader: Last report date
-                          - columnheader: Reports
+                          - columnheader: Reports generated
                           - columnheader:
                             - generic:
                               - text: Status
@@ -87,9 +87,9 @@
                               - generic: gfkoiv
                           - cell: Hotel
                           - cell: Type A
-                          - cell: "-"
+                          - cell: 03/30/2026
                           - cell:
-                            - button: "0"
+                            - button: "16"
                           - cell:
                             - generic: Active
                           - cell:
@@ -107,9 +107,9 @@
                               - generic: testenkas
                           - cell: Commercial
                           - cell: Type B
-                          - cell: "-"
+                          - cell: 03/30/2026
                           - cell:
-                            - button: "0"
+                            - button: "2"
                           - cell:
                             - generic: Active
                           - cell:
@@ -310,89 +310,84 @@
                 - generic:
                   - img
   - button "Open Next.js Dev Tools" [ref=e6] [cursor=pointer]:
-    - generic [ref=e9]:
-      - text: Compiling
-      - generic [ref=e10]:
-        - generic [ref=e11]: .
-        - generic [ref=e12]: .
-        - generic [ref=e13]: .
+    - img [ref=e7]
   - alert
-  - dialog "Add new customer" [ref=e15]:
+  - dialog "Add new customer" [ref=e11]:
+    - generic [ref=e12]:
+      - heading "Add new customer" [level=2] [ref=e13]
+      - paragraph [ref=e14]: Add a new customer to your system
     - generic [ref=e16]:
-      - heading "Add new customer" [level=2] [ref=e17]
-      - paragraph [ref=e18]: Add a new customer to your system
-    - generic [ref=e20]:
-      - generic [ref=e21]:
-        - heading "Customer information" [level=3] [ref=e22]
-        - generic [ref=e23]:
+      - generic [ref=e17]:
+        - heading "Customer information" [level=3] [ref=e18]
+        - generic [ref=e19]:
           - text: Customer name
-          - textbox "Eg. Cafe Aroma Oslo" [active] [ref=e24]
-        - generic [ref=e25]:
-          - generic [ref=e26]:
+          - textbox "Eg. Cafe Aroma Oslo" [active] [ref=e20]
+        - generic [ref=e21]:
+          - generic [ref=e22]:
             - text: Account code / ERP ID
-            - textbox "CA-001" [ref=e27]
-          - generic [ref=e28]:
+            - textbox "CA-001" [ref=e23]
+          - generic [ref=e24]:
             - text: Market segment
-            - combobox [ref=e29]:
+            - combobox [ref=e25]:
               - generic: Select segment
+              - generic [ref=e26]:
+                - img
+            - combobox [ref=e27]
+          - generic [ref=e28]:
+            - text: Service tier
+            - combobox [ref=e29]:
+              - generic: Select tier
               - generic [ref=e30]:
                 - img
             - combobox [ref=e31]
           - generic [ref=e32]:
-            - text: Service tier
+            - text: Region
             - combobox [ref=e33]:
-              - generic: Select tier
+              - generic: Select region
               - generic [ref=e34]:
                 - img
             - combobox [ref=e35]
-          - generic [ref=e36]:
-            - text: Region
-            - combobox [ref=e37]:
-              - generic: Select region
-              - generic [ref=e38]:
-                - img
-            - combobox [ref=e39]
-        - generic [ref=e40]:
-          - checkbox [ref=e41]
+        - generic [ref=e36]:
+          - checkbox [ref=e37]
           - checkbox
-          - generic [ref=e42]: Sub-customer
-      - generic [ref=e43]:
-        - heading "Contact information" [level=3] [ref=e44]
-        - generic [ref=e45]:
-          - generic [ref=e46]:
+          - generic [ref=e38]: Sub-customer
+      - generic [ref=e39]:
+        - heading "Contact information" [level=3] [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e42]:
             - text: Contact person
-            - textbox "Add name" [ref=e47]
-          - generic [ref=e48]:
+            - textbox "Add name" [ref=e43]
+          - generic [ref=e44]:
             - text: Contact email
-            - textbox "Enter email" [ref=e49]
-          - generic [ref=e50]:
+            - textbox "Enter email" [ref=e45]
+          - generic [ref=e46]:
             - text: Contact phone
-            - textbox "+XX XXXXX XXXXX" [ref=e51]
-          - generic [ref=e52]:
+            - textbox "+XX XXXXX XXXXX" [ref=e47]
+          - generic [ref=e48]:
             - text: Address
-            - textbox "Add address" [ref=e53]
-      - generic [ref=e54]:
-        - generic [ref=e55]:
+            - textbox "Add address" [ref=e49]
+      - generic [ref=e50]:
+        - generic [ref=e51]:
           - text: Status
-          - combobox [ref=e56]:
+          - combobox [ref=e52]:
             - generic: Active
-            - generic [ref=e57]:
+            - generic [ref=e53]:
               - img
-          - combobox [ref=e58]
-        - generic [ref=e59]:
+          - combobox [ref=e54]
+        - generic [ref=e55]:
           - text: Notes / comments
-          - textbox "Internal admin notes" [ref=e60]
-        - generic [ref=e61]:
+          - textbox "Internal admin notes" [ref=e56]
+        - generic [ref=e57]:
           - text: Customer logo
-          - generic [ref=e63]:
-            - button "Choose File" [ref=e64] [cursor=pointer]
-            - generic [ref=e65]:
-              - img [ref=e67]
-              - paragraph [ref=e70]: Upload a file or drag and drop
-              - paragraph [ref=e71]: PNG, JPG or SVG (max 10 MB)
-      - generic [ref=e72]:
-        - button "Cancel" [ref=e74]
-        - button "Add customer" [ref=e76]:
-          - img [ref=e77]
+          - generic [ref=e59]:
+            - button "Choose File" [ref=e60] [cursor=pointer]
+            - generic [ref=e61]:
+              - img [ref=e63]
+              - paragraph [ref=e66]: Upload a file or drag and drop
+              - paragraph [ref=e67]: PNG, JPG or SVG (max 10 MB)
+      - generic [ref=e68]:
+        - button "Cancel" [ref=e70]
+        - button "Add customer" [ref=e72]:
+          - img [ref=e73]
           - text: Add customer
 ```

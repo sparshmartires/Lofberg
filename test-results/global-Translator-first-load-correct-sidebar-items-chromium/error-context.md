@@ -2,59 +2,30 @@
 
 ```yaml
 - generic [active] [ref=e1]:
-  - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
-    - img [ref=e8]
-  - alert [ref=e11]: Template translation
-  - generic [ref=e12]:
-    - banner [ref=e13]:
-      - generic [ref=e14]:
-        - button "Open menu" [ref=e15]:
-          - img [ref=e16]
-        - img "Löfbergs Logo" [ref=e17]
-      - generic [ref=e18]:
-        - button "Generate" [ref=e19]:
-          - img [ref=e20]
-          - text: Generate
-        - button [ref=e23]:
-          - img [ref=e24]
-          - img [ref=e27]
-    - main [ref=e29]:
-      - generic [ref=e30]:
-        - generic [ref=e31]:
-          - heading "Template translation" [level=1] [ref=e33]
-          - generic [ref=e34]:
-            - button "Save as draft" [ref=e35]:
-              - img [ref=e36]
-              - text: Save as draft
-            - button "Submit" [ref=e40]
-        - generic [ref=e42]:
-          - generic [ref=e43]:
-            - generic [ref=e44]: Template type
-            - combobox [ref=e45]:
-              - generic: Report
-              - generic [ref=e46]:
-                - img
-          - generic [ref=e47]:
-            - generic [ref=e48]: Language
-            - combobox [ref=e49]:
-              - generic: Danish
-              - generic [ref=e50]:
-                - img
-        - generic [ref=e51]:
-          - paragraph [ref=e52]: "Available placeholders: {Time period}, {Quantity}, {Area}, {CO2 in KG}, {CO2 in equivalent units}, {EUR FT Cooperative Premium}, {EUR FT Organic Income}, {NOK FT Cooperative Premium}, {NOK FT Organic Income}"
-          - generic [ref=e54]:
-            - button "Cover page" [ref=e55]
-            - button "About sustainability" [ref=e56]
-            - button "Löfbergs USP's" [ref=e57]
-            - button "Increasing impact" [ref=e58]
-            - button "Certifications" [ref=e59]
-          - generic [ref=e62]:
-            - heading "Cover page translation" [level=3] [ref=e63]
-            - generic [ref=e64]:
-              - generic [ref=e65]:
-                - paragraph [ref=e66]: Header text
-                - textbox [ref=e67]: Sustainability report 2026
-              - generic [ref=e68]:
-                - paragraph [ref=e69]: Header text translation
-                - textbox "Enter translation" [ref=e70]
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Löfbergs Logo" [ref=e4] [cursor=pointer]:
+        - /url: /login
+        - img "Löfbergs Logo" [ref=e5]
+    - main [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - heading "Welcome back" [level=1] [ref=e10]
+          - paragraph [ref=e11]: Log in to continue
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - text: Email
+            - textbox "Enter email" [ref=e14]: translator@lofberg.com
+          - generic [ref=e15]:
+            - text: Password
+            - generic [ref=e16]:
+              - textbox "Enter password" [ref=e17]: Translator@1234!
+              - button [ref=e18]:
+                - img [ref=e19]
+            - link "Forgot Password?" [ref=e22] [cursor=pointer]:
+              - /url: /forgot-password
+          - button "Log in" [ref=e24]
+  - button "Open Next.js Dev Tools" [ref=e30] [cursor=pointer]:
+    - img [ref=e31]
+  - alert [ref=e34]
 ```

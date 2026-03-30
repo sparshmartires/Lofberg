@@ -118,6 +118,11 @@
               - textbox "0.002" [ref=e168]
               - button "Add" [ref=e169]
   - button "Open Next.js Dev Tools" [ref=e175] [cursor=pointer]:
-    - img [ref=e176]
-  - alert [ref=e179]
+    - generic [ref=e178]:
+      - text: Compiling
+      - generic [ref=e179]:
+        - generic [ref=e180]: .
+        - generic [ref=e181]: .
+        - generic [ref=e182]: .
+  - alert [ref=e183]
 ```

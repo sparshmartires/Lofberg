@@ -38,7 +38,7 @@
           - heading "Users" [level=2] [ref=e38]
           - table [ref=e44]:
             - rowgroup [ref=e45]:
-              - row "Name Email Role Status Reports Last login Actions" [ref=e46]:
+              - row "Name Email Role Status Reports generated Last login Actions" [ref=e46]:
                 - columnheader "Name" [ref=e47]
                 - columnheader "Email" [ref=e48]
                 - columnheader "Role" [ref=e49] [cursor=pointer]:
@@ -49,7 +49,7 @@
                   - generic [ref=e55]:
                     - text: Status
                     - img [ref=e56]
-                - columnheader "Reports" [ref=e59]
+                - columnheader "Reports generated" [ref=e59]
                 - columnheader "Last login" [ref=e60] [cursor=pointer]:
                   - generic [ref=e61]:
                     - text: Last login
