@@ -20,8 +20,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Archive, ArrowUpDown, Download, Pencil, RotateCcw, Trash2 } from "lucide-react"
+import { Archive, Download, Pencil, RotateCcw, Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { SortableHeader } from "@/components/ui/SortableHeader"
 import type { ReportDto, StatusLabel } from "@/features/report-generation/types"
 import { useArchiveReportMutation, useRestoreReportMutation } from "@/store/services/reportsApi"
 
@@ -134,18 +135,6 @@ export function HistoricalReportsTable({
   const getArchiveAction = (report: ReportDto): ModalAction =>
     report.statusLabel === "Draft" ? "delete" : "archive"
 
-  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
-    <TableHead
-      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
-      onClick={() => onSort?.(column)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#8A8A8A]"}`} />
-      </div>
-    </TableHead>
-  )
-
   const modalTitle = {
     archive: `Archive "${modal.report?.title}"?`,
     delete: `Delete draft "${modal.report?.title}"?`,
@@ -177,27 +166,27 @@ export function HistoricalReportsTable({
           <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="table-header-row-bordered">
-                <SortableHeader column="title" className="max-w-[250px]">
+                <SortableHeader column="title" className="max-w-[250px]" sortBy={sortBy} onSort={onSort}>
                   Report title
                 </SortableHeader>
-                <SortableHeader column="customer" className="max-w-[200px]">
+                <SortableHeader column="customer" className="max-w-[200px]" sortBy={sortBy} onSort={onSort}>
                   Customer
                 </SortableHeader>
                 {showSalesRepColumn && (
-                  <SortableHeader column="salesperson" className="max-w-[180px]">
+                  <SortableHeader column="salesperson" className="max-w-[180px]" sortBy={sortBy} onSort={onSort}>
                     Salesperson
                   </SortableHeader>
                 )}
-                <SortableHeader column="segment">
+                <SortableHeader column="segment" sortBy={sortBy} onSort={onSort}>
                   Segment
                 </SortableHeader>
-                <SortableHeader column="status">
+                <SortableHeader column="status" sortBy={sortBy} onSort={onSort}>
                   Status
                 </SortableHeader>
-                <SortableHeader column="reportdate">
+                <SortableHeader column="reportdate" sortBy={sortBy} onSort={onSort}>
                   Report date
                 </SortableHeader>
-                <SortableHeader column="createdat">
+                <SortableHeader column="createdat" sortBy={sortBy} onSort={onSort}>
                   Created at
                 </SortableHeader>
                 <TableHead className="table-header-cell">

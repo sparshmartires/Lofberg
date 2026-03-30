@@ -9,10 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { ArrowUpDown, Pencil, Eye, Archive, RotateCcw } from "lucide-react"
+import { Pencil, Eye, Archive, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { SortableHeader } from "@/components/ui/SortableHeader"
 import { EditCustomerDialog } from "./EditCustomerPage"
 import { CustomerItem, useUpdateCustomerMutation, useDeleteCustomerMutation } from "@/store/services/customersApi"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
@@ -106,18 +107,6 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
     setConfirmRestore(null)
   }
 
-  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
-    <TableHead
-      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
-      onClick={() => onSort?.(column)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#8A8A8A]"}`} />
-      </div>
-    </TableHead>
-  )
-
   return (
     <>
       <div className="table-card border-[0px]">
@@ -126,13 +115,13 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
           {/* HEADER */}
           <TableHeader>
             <TableRow className="table-header-row-bordered">
-              <SortableHeader column="name">
+              <SortableHeader column="name" sortBy={sortBy} onSort={onSort}>
                 Name
               </SortableHeader>
-              <SortableHeader column="segment">
+              <SortableHeader column="segment" sortBy={sortBy} onSort={onSort}>
                 Segment
               </SortableHeader>
-              <SortableHeader column="servicetier">
+              <SortableHeader column="servicetier" sortBy={sortBy} onSort={onSort}>
                 Service tier
               </SortableHeader>
               <TableHead className="table-header-cell">
@@ -141,7 +130,7 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
               <TableHead className="table-header-cell">
                 Reports
               </TableHead>
-              <SortableHeader column="status">
+              <SortableHeader column="status" sortBy={sortBy} onSort={onSort}>
                 Status
               </SortableHeader>
               <TableHead className="table-header-cell">
