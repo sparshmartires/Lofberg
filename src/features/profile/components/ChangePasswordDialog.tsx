@@ -87,7 +87,6 @@ export function ChangePasswordDialog({
 
     try {
       await changePassword({
-        userId: user?.id || "",
         currentPassword,
         newPassword,
       }).unwrap()
