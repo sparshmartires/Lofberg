@@ -152,6 +152,10 @@ export function Step2DataSource() {
             setParseError("Failed to parse the uploaded file. Please check the format and try again.")
           }
         }
+        reader.onerror = () => {
+          console.error("FileReader error (CSV):", reader.error)
+          setParseError("Failed to read the file. Please try again or use a different file.")
+        }
         reader.readAsText(file)
       } else {
         // Excel path: read as ArrayBuffer, parse with ExcelJS
@@ -166,6 +170,10 @@ export function Step2DataSource() {
             console.error("Excel parsing failed:", err)
             setParseError("Failed to parse the uploaded file. Please check the format and try again.")
           }
+        }
+        reader.onerror = () => {
+          console.error("FileReader error (Excel):", reader.error)
+          setParseError("Failed to read the file. Please try again or use a different file.")
         }
         reader.readAsArrayBuffer(file)
       }

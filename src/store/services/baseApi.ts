@@ -25,8 +25,10 @@ export const createBaseQuery = () =>
     baseUrl: API_BASE_URL,
     credentials: "include",
     prepareHeaders: (headers) => {
-      // Add ngrok bypass header for development tunneling
-      headers.set("ngrok-skip-browser-warning", "true");
+      // Only add ngrok bypass header when actually tunneling through ngrok
+      if (API_BASE_URL.includes("ngrok")) {
+        headers.set("ngrok-skip-browser-warning", "true");
+      }
       return headers;
     },
   });
