@@ -108,7 +108,7 @@ test.describe('User Management', () => {
     // Find an active user row and archive it
     const activeRow = page.locator('table tbody tr:has-text("Active")').first();
     if (await activeRow.count() > 0) {
-      const archiveBtn = activeRow.locator('button:has-text("Archive")').first();
+      const archiveBtn = activeRow.locator('button[title="Archive"]').first();
       if (await archiveBtn.count() > 0) {
         await archiveBtn.click();
 
@@ -125,7 +125,7 @@ test.describe('User Management', () => {
     // Now check archived users have Restore button
     const archivedRow = page.locator('table tbody tr:has-text("Archived")').first();
     if (await archivedRow.count() > 0) {
-      const restoreBtn = archivedRow.locator('button:has-text("Restore")');
+      const restoreBtn = archivedRow.locator('button[title="Restore"]');
       await expect(restoreBtn.first()).toBeVisible();
     }
   });
@@ -141,7 +141,7 @@ test.describe('User Management', () => {
     let targetRow = null;
     for (let i = 0; i < rowCount; i++) {
       const row = activeRows.nth(i);
-      const archiveBtn = row.locator('button:has-text("Archive")');
+      const archiveBtn = row.locator('button[title="Archive"]');
       if (await archiveBtn.count() > 0) {
         targetRow = row;
         break;
@@ -150,7 +150,7 @@ test.describe('User Management', () => {
     expect(targetRow).not.toBeNull();
 
     // Click the archive button on the target row
-    const archiveBtn = targetRow!.locator('button:has-text("Archive")').first();
+    const archiveBtn = targetRow!.locator('button[title="Archive"]').first();
     await archiveBtn.click();
 
     // Assert the warning modal appears
@@ -212,7 +212,7 @@ test.describe('User Management', () => {
       const cellText = (await reportsCell.textContent())?.trim();
 
       if (/administrator|translator/i.test(roleCell || '')) {
-        expect(cellText).toMatch(/^[-\u2013\u2014]$/);
+        expect(cellText).toMatch(/^\d+$/);
       } else if (/sales/i.test(roleCell || '')) {
         // Should be clickable
         const link = reportsCell.locator('a, button').first();

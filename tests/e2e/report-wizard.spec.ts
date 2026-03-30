@@ -27,10 +27,89 @@ async function navigateToWizard(page: import('@playwright/test').Page) {
   return page.url();
 }
 
+async function fillStep1(page: import('@playwright/test').Page) {
+  // Wait for Step 1 form to be visible
+  await page.locator('label').filter({ hasText: /^Customer$/i }).first().waitFor({ timeout: 10000 });
+
+  // Switch to manual customer entry to avoid needing API data
+  const manualToggle = page.getByText(/enter manually/i).first();
+  if (await manualToggle.isVisible().catch(() => false)) {
+    await manualToggle.click();
+    await page.waitForTimeout(300);
+  }
+
+  // Fill customer name (manual text input)
+  const customerNameInput = page.locator('input[placeholder="Enter customer name"]').first();
+  if (await customerNameInput.isVisible().catch(() => false)) {
+    await customerNameInput.fill('Test Customer');
+  }
+
+  // Fill salesperson: type in the search combobox and pick the first result
+  const salespersonInput = page.locator('input[placeholder="Find by name/email"]').first();
+  if (await salespersonInput.isVisible().catch(() => false)) {
+    await salespersonInput.fill('a');
+    await page.waitForTimeout(1500);
+    // Pick first option in the dropdown
+    const firstOption = page.locator('button.w-full.text-left').first();
+    if (await firstOption.isVisible().catch(() => false)) {
+      await firstOption.click();
+      await page.waitForTimeout(300);
+    }
+  }
+
+  // Fill report date
+  const dateInput = page.locator('input[type="date"]').first();
+  if (await dateInput.isVisible().catch(() => false)) {
+    await dateInput.fill('2026-03-27');
+  }
+
+  // Language should default to English via useEffect; wait for it
+  const languageTrigger = page.locator('.space-y-2').filter({ hasText: /^Language/ }).locator('button[role="combobox"]').first();
+  if (await languageTrigger.isVisible().catch(() => false)) {
+    // Wait until a language value is set (not just placeholder)
+    await page.waitForTimeout(2000);
+  }
+}
+
+async function fillStep2(page: import('@playwright/test').Page) {
+  // Step 2 validation requires at least one row with quantityKg or currencyAmount.
+  // The DataSourceTable renders text inputs (EuNumberInput) for each editable cell.
+  // Fill the first Qty (kg) cell with a value.
+  const firstQtyInput = page.locator('table tbody tr').first().locator('input[type="text"]').first();
+  if (await firstQtyInput.isVisible().catch(() => false)) {
+    await firstQtyInput.click();
+    await firstQtyInput.fill('100');
+    // Blur to trigger the onChange/onBlur handler
+    await firstQtyInput.blur();
+    await page.waitForTimeout(500);
+  }
+}
+
 async function goToStep(page: import('@playwright/test').Page, targetStep: number) {
   await navigateToWizard(page);
-  for (let i = 1; i < targetStep; i++) {
-    const nextBtn = page.getByRole('button', { name: /next|continue|proceed/i }).first();
+
+  // Fill Step 1 required fields if we need to advance past it
+  if (targetStep > 1) {
+    await fillStep1(page);
+    const nextBtn1 = page.getByRole('button', { name: /next/i }).first();
+    await expect(nextBtn1).toBeVisible({ timeout: 5000 });
+    await nextBtn1.click();
+    await page.waitForTimeout(1500);
+  }
+
+  // Fill Step 2 data if we need to advance past it
+  if (targetStep > 2) {
+    await fillStep2(page);
+    const nextBtn2 = page.getByRole('button', { name: /next/i }).first();
+    if (await nextBtn2.isVisible().catch(() => false)) {
+      await nextBtn2.click();
+      await page.waitForTimeout(1500);
+    }
+  }
+
+  // Steps 3+ just click Next (no validation blocks on step 3 and 4)
+  for (let i = 3; i < targetStep; i++) {
+    const nextBtn = page.getByRole('button', { name: /next/i }).first();
     if (await nextBtn.isVisible().catch(() => false)) {
       await nextBtn.click();
       await page.waitForTimeout(1500);
@@ -44,10 +123,9 @@ test.describe('Report Wizard', () => {
     await loginAs(page, 'admin');
     await navigateToWizard(page);
 
-    const heading = page.getByRole('heading', { name: /generate report/i }).or(
-      page.locator('h1, h2').filter({ hasText: /generate report/i })
-    ).first();
-    await expect(heading).toBeVisible();
+    // The page renders an h1 with class "page-header-with-action-title"
+    const heading = page.locator('h1').filter({ hasText: /generate/i }).first();
+    await expect(heading).toBeVisible({ timeout: 10000 });
     const text = await heading.textContent();
     expect(text?.toLowerCase()).toContain('generate report');
     expect(text?.toLowerCase()).toContain('receipt');
@@ -67,6 +145,11 @@ test.describe('Report Wizard', () => {
     await loginAs(page, 'admin');
     await navigateToWizard(page);
 
+    // Wait for the step 1 form to render with the "Customer" label
+    const customerLabel = page.locator('label').filter({ hasText: /^Customer$/i }).first();
+    await expect(customerLabel).toBeVisible({ timeout: 10000 });
+
+    // Gather all labels containing "customer" to verify none say "Customer name"
     const labels = await page.locator('label').allTextContents();
     const customerLabels = labels.filter(l => /customer/i.test(l));
     expect(customerLabels.length).toBeGreaterThan(0);
@@ -82,10 +165,9 @@ test.describe('Report Wizard', () => {
     await loginAs(page, 'admin');
     await navigateToWizard(page);
 
-    const salespersonInput = page.getByPlaceholder(/find by name/i).or(
-      page.getByPlaceholder(/name.*email/i)
-    ).first();
-    await expect(salespersonInput).toBeVisible();
+    // The SalespersonSearchCombobox renders an input with placeholder="Find by name/email"
+    const salespersonInput = page.locator('input[placeholder="Find by name/email"]').first();
+    await expect(salespersonInput).toBeVisible({ timeout: 10000 });
   });
 
   // TC-GENREP-005
@@ -93,19 +175,15 @@ test.describe('Report Wizard', () => {
     await loginAs(page, 'admin');
     await navigateToWizard(page);
 
-    // Check language select / combobox value
-    const langSelect = page.locator('select, [role="combobox"], [role="listbox"]')
-      .filter({ hasText: /english/i }).first();
-    const langInput = page.locator('input').filter({ hasText: /english/i }).first();
-    const langDisplay = page.locator('[class*="select"], [class*="dropdown"]')
-      .filter({ hasText: /english/i }).first();
+    // The Language field uses a shadcn Select which renders a button[role="combobox"]
+    // with the selected language name inside. The label "Language" is a sibling label element.
+    // Wait for the language trigger to show "English" as the default (set via useEffect after API loads).
+    const languageSection = page.locator('.space-y-2').filter({ hasText: /^Language/ });
+    const languageTrigger = languageSection.locator('button[role="combobox"]').first();
+    await expect(languageTrigger).toBeVisible({ timeout: 10000 });
 
-    const found =
-      (await langSelect.isVisible().catch(() => false)) ||
-      (await langInput.isVisible().catch(() => false)) ||
-      (await langDisplay.isVisible().catch(() => false));
-
-    expect(found).toBe(true);
+    // Wait until the language API loads and the default is set to English
+    await expect(languageTrigger).toContainText(/english/i, { timeout: 10000 });
   });
 
   // TC-GENREP-006
@@ -113,12 +191,14 @@ test.describe('Report Wizard', () => {
     await loginAs(page, 'admin');
     await navigateToWizard(page);
 
-    const dateInput = page.locator('input[type="date"], input[name*="date" i], [data-testid*="date"]').first();
-    await expect(dateInput).toBeVisible();
+    // The "Report date" field is an input[type="date"] rendered by the Controller
+    const dateInput = page.locator('input[type="date"]').first();
+    await expect(dateInput).toBeVisible({ timeout: 10000 });
     await dateInput.click();
     await dateInput.fill('2026-03-27');
     const value = await dateInput.inputValue();
     expect(value).toBeTruthy();
+    expect(value).toBe('2026-03-27');
   });
 
   // TC-GENREP-007
@@ -195,11 +275,13 @@ test.describe('Report Wizard', () => {
 
   // TC-GENREP-010
   test('step 2: label is "Purchase data"', async ({ page }) => {
+    test.setTimeout(30000);
     await loginAs(page, 'admin');
     await goToStep(page, 2);
 
-    const heading = page.getByText(/purchase data/i).first();
-    await expect(heading).toBeVisible();
+    // Step 2 renders an h2 with text "Purchase data"
+    const heading = page.locator('h2').filter({ hasText: /purchase data/i }).first();
+    await expect(heading).toBeVisible({ timeout: 10000 });
   });
 
   // TC-GENREP-011
@@ -349,8 +431,13 @@ test.describe('Report Wizard', () => {
 
   // TC-GENREP-014
   test('step 3: label is "Add ons" (no apostrophe)', async ({ page }) => {
+    test.setTimeout(45000);
     await loginAs(page, 'admin');
     await goToStep(page, 3);
+
+    // Step 3 has heading "Report type" and a label "Add ons"
+    const addOnsLabel = page.locator('label').filter({ hasText: /add ons/i }).first();
+    await expect(addOnsLabel).toBeVisible({ timeout: 10000 });
 
     const bodyText = await page.locator('body').textContent() ?? '';
     // Should say "Add ons" not "Add-on's" or "Add on's"

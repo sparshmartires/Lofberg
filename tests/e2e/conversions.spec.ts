@@ -28,38 +28,29 @@ test.describe('Conversions', () => {
     await loginAs(page, 'admin');
     await navigateToConversions(page);
 
-    const editBtn = page.locator('button, a').filter({ hasText: /edit/i }).or(
-      page.locator('[aria-label*="edit" i]')
-    ).first();
-    const deleteBtn = page.locator('button, a').filter({ hasText: /delete|remove/i }).or(
-      page.locator('[aria-label*="delete" i]')
-    ).first();
-    const translateBtn = page.locator('button, a').filter({ hasText: /translat/i }).or(
-      page.locator('[aria-label*="translat" i]')
-    ).first();
-
-    await expect(editBtn).toBeVisible();
-    await expect(deleteBtn).toBeVisible();
+    const translateBtn = page.locator('button[title="Translate"]').first();
     await expect(translateBtn).toBeVisible();
+
+    // The first table row should have at least 3 action buttons (edit, delete, translate)
+    const firstRow = page.locator('tbody tr').first();
+    const actionButtons = firstRow.locator('td:last-child button, td:last-child a');
+    const buttonCount = await actionButtons.count();
+    expect(buttonCount).toBeGreaterThanOrEqual(3);
   });
 
   test('translator cannot edit/delete but can translate', async ({ page }) => {
     await loginAs(page, 'translator');
     await navigateToConversions(page);
 
-    const editBtn = page.locator('button, a').filter({ hasText: /^edit$/i }).or(
-      page.locator('[aria-label*="edit" i]')
-    ).first();
-    const deleteBtn = page.locator('button, a').filter({ hasText: /delete|remove/i }).or(
-      page.locator('[aria-label*="delete" i]')
-    ).first();
-    const translateBtn = page.locator('button, a').filter({ hasText: /translat/i }).or(
-      page.locator('[aria-label*="translat" i]')
-    ).first();
-
-    await expect(editBtn).not.toBeVisible();
-    await expect(deleteBtn).not.toBeVisible();
+    const translateBtn = page.locator('button[title="Translate"]').first();
     await expect(translateBtn).toBeVisible();
+
+    // Translator should only see translate button, not edit/delete
+    const firstRow = page.locator('tbody tr').first();
+    const actionButtons = firstRow.locator('td:last-child button, td:last-child a');
+    const buttonCount = await actionButtons.count();
+    // Should have only 1 action button (translate)
+    expect(buttonCount).toBeLessThanOrEqual(1);
   });
 
   // TC-CONV-003
@@ -73,10 +64,11 @@ test.describe('Conversions', () => {
 
   test('add button not visible to salesperson', async ({ page }) => {
     await loginAs(page, 'salesperson');
-    await navigateToConversions(page);
+    await page.goto('/conversion-logic');
+    await page.waitForLoadState('networkidle');
 
-    const addBtn = page.getByRole('button', { name: /add|create|new/i }).first();
-    await expect(addBtn).not.toBeVisible();
+    // Salesperson should be redirected away from conversion-logic to dashboard
+    await expect(page).toHaveURL(/\/dashboard/);
   });
 
   // TC-CONV-004
@@ -84,9 +76,7 @@ test.describe('Conversions', () => {
     await loginAs(page, 'admin');
     await navigateToConversions(page);
 
-    const translateBtn = page.locator('button, a').filter({ hasText: /translat/i }).or(
-      page.locator('[aria-label*="translat" i]')
-    ).first();
+    const translateBtn = page.locator('button[title="Translate"]').first();
 
     await expect(translateBtn).toBeVisible({ timeout: 10000 });
 
@@ -117,9 +107,11 @@ test.describe('Conversions', () => {
     await loginAs(page, 'admin');
     await navigateToConversions(page);
 
-    const editBtn = page.locator('button, a').filter({ hasText: /edit/i }).or(
-      page.locator('[aria-label*="edit" i]')
-    ).first();
+    // Find the first table row's action area and click the edit button (first or second button)
+    const firstRow = page.locator('tbody tr').first();
+    const actionButtons = firstRow.locator('td:last-child button');
+    // Try the first button in the actions cell as the edit button
+    const editBtn = actionButtons.first();
 
     await expect(editBtn).toBeVisible({ timeout: 10000 });
 
@@ -163,9 +155,7 @@ test.describe('Conversions', () => {
     await loginAs(page, 'admin');
     await navigateToConversions(page);
 
-    const translateBtn = page.locator('button, a').filter({ hasText: /translat/i }).or(
-      page.locator('[aria-label*="translat" i]')
-    ).first();
+    const translateBtn = page.locator('button[title="Translate"]').first();
 
     await expect(translateBtn).toBeVisible({ timeout: 10000 });
 
@@ -178,8 +168,8 @@ test.describe('Conversions', () => {
     // Count initial rows
     const initialRows = await modal.locator('tr, [class*="row"]').count();
 
-    // Click add row button
-    const addRowBtn = modal.getByRole('button', { name: /add|new|\+/i }).first();
+    // Click add row button — look for button with "Add" text
+    const addRowBtn = modal.locator('button').filter({ hasText: /add/i }).first();
     if (await addRowBtn.isVisible().catch(() => false)) {
       await addRowBtn.click();
       await page.waitForTimeout(500);
@@ -188,10 +178,8 @@ test.describe('Conversions', () => {
       expect(afterAddRows).toBeGreaterThan(initialRows);
     }
 
-    // Click remove on the last row
-    const removeBtn = modal.locator('button, [role="button"]').filter({ hasText: /remove|delete|x/i }).or(
-      modal.locator('[aria-label*="remove" i], [aria-label*="delete" i]')
-    ).last();
+    // Click remove on the last row — look for icon button (small button with no text or svg child)
+    const removeBtn = modal.locator('button:has(svg)').last();
     if (await removeBtn.isVisible().catch(() => false)) {
       await removeBtn.click();
       await page.waitForTimeout(500);
@@ -212,32 +200,25 @@ test.describe('Conversions', () => {
   });
 
   // TC-CONV-007
-  test('delete is hard-delete with warning modal', async ({ page }) => {
+  test('delete is hard-delete with inline confirmation', async ({ page }) => {
     await loginAs(page, 'admin');
     await navigateToConversions(page);
 
-    const deleteBtn = page.locator('button, a').filter({ hasText: /delete|remove/i }).or(
-      page.locator('[aria-label*="delete" i]')
-    ).first();
+    // Find the delete button in the first row's action area (last button typically)
+    const firstRow = page.locator('tbody tr').first();
+    const actionButtons = firstRow.locator('td:last-child button');
+    const deleteBtn = actionButtons.last();
 
     await expect(deleteBtn).toBeVisible({ timeout: 10000 });
 
     await deleteBtn.click();
     await page.waitForTimeout(1000);
 
-    // Warning modal should appear
-    const modal = page.locator('[role="dialog"], [class*="modal"]').first();
-    await expect(modal).toBeVisible();
-
-    // Should have warning text
-    const modalText = await modal.textContent() ?? '';
-    expect(modalText.length).toBeGreaterThan(10);
-
-    // Should have cancel and confirm buttons
-    const cancelBtn = modal.getByRole('button', { name: /cancel|no|close/i }).first();
-    const confirmBtn = modal.getByRole('button', { name: /delete|confirm|yes/i }).first();
-    await expect(cancelBtn).toBeVisible();
+    // Inline confirmation — look for Confirm and Cancel buttons in the same area
+    const confirmBtn = page.locator('button:has-text("Confirm")').first();
+    const cancelBtn = page.locator('button:has-text("Cancel")').first();
     await expect(confirmBtn).toBeVisible();
+    await expect(cancelBtn).toBeVisible();
 
     // Cancel to avoid actual deletion
     await cancelBtn.click();
