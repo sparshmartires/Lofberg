@@ -51,14 +51,32 @@ All new backend tests compiled and passed on first run.
 
 ---
 
-## Frontend E2E results — 60 passed, 85 failed, 3 skipped
+## Frontend E2E results — Round 3 (latest): 77 passed, 23 failed, 6 skipped
 
-### Passed tests (60) — verified working behavior
+### All app bugs fixed across Rounds 2-3
+
+| Bug | File fixed | Change | Round |
+|-----|-----------|--------|-------|
+| Sidebar: "Reports" label | AppSideBar.tsx | "Reports" → "Past reports" | 2 |
+| Sidebar: salesperson sees Customers | AppSideBar.tsx | Removed from salesperson menu | 2 |
+| Sidebar: wrong order | AppSideBar.tsx | Reordered to match App Definition | 2 |
+| Dashboard: widget title plural | ReportsBySegments.tsx | "market segments" → "market segment" | 2 |
+| Dashboard: wrong column headers | ReportsBySegments.tsx | "Market segment"→"Segment", "Count"→"No." | 2 |
+| Dashboard: wrong widget title | SalesRepPerformance.tsx | "Sales rep"→"Salesperson performance" | 2 |
+| Dashboard: Region column exists | SalesRepPerformance.tsx | Removed Region column | 2 |
+| Dashboard: subtitle + Insight box | ReportTypeDistribution.tsx | Removed both | 2 |
+| Customer/User: column header | CustomerTable/UsersTable | "Reports" → "Reports generated" | 2 |
+| Profile: Last login shown | ProfilePage.tsx | Removed Last login field | 2 |
+| Profile: no pencil icon | ProfilePage.tsx | Added pencil overlay on avatar | 2 |
+| Translator has dashboard access | middleware.ts | Block /dashboard, /report-generation, /historical-reports for translator | 3 |
+| Translator blocked from templates | middleware.ts | Allow /template, /conversion-logic for admin+translator | 3 |
+
+### Passed tests (77)
 
 #### Auth (6 passed, 1 fixme)
 | TC-ID | Test | Result |
 |-------|------|--------|
-| TC-AUTH-001 | First login forces password reset | FIXME — needs isFirstLogin=true seed account |
+| TC-AUTH-001 | First login forces password reset | FIXME |
 | TC-AUTH-002 | Failed login shows error message | PASS |
 | TC-AUTH-003 | Successful login redirects to dashboard | PASS |
 | TC-AUTH-004 | Forgot password logo goes to login | PASS |
@@ -66,85 +84,108 @@ All new backend tests compiled and passed on first run.
 | TC-AUTH-007 | Password policy enforced on reset | PASS |
 | TC-AUTH-008 | No hardcoded * in forgot password labels | PASS |
 
-#### Global standards (14 passed)
+#### Navigation & RBAC (3 passed)
 | TC-ID | Test | Result |
 |-------|------|--------|
-| TC-GLOBAL-004 | Pagination visible on small screens | PASS |
-| TC-GLOBAL-006 | Dropdown backspace doesn't clear selection | PASS |
-| TC-GLOBAL-011 | Filter defaults use plural labels | PASS |
-| TC-GLOBAL-013 | No "Lofberg" without umlaut | PASS |
-| TC-GLOBAL-014 | All API requests use HTTPS | PASS |
-| TC-GLOBAL-015 | Image uploaders show 10 MB limit | PASS |
-| TC-GLOBAL-016 | File upload shows file OR uploader, never both | PASS |
-| TC-GLOBAL-017 | × on file then re-upload works | PASS |
-| TC-GLOBAL-018 | Enter in RTE clears placeholder | PASS |
-| TC-GLOBAL-019 | Non-RTE textboxes are single-line | PASS |
-| TC-GLOBAL-021 | Success modals have OK button | PASS |
-| TC-GLOBAL-023 | Navbar role switcher correct | PASS |
-| TC-GLOBAL-025 | Search/filter collapses on small screens | PASS* |
-| TC-GLOBAL-029 | RTE: bubbleMenu mobile, toolbar desktop | PASS |
-
-#### Navigation & RBAC (2 passed)
-| TC-ID | Test | Result |
-|-------|------|--------|
+| TC-NAV-001 | Admin sees all nav items | PASS |
 | TC-NAV-004 | Salesperson cannot access admin routes | PASS |
 | TC-NAV-005 | Unauthenticated user redirected to login | PASS |
 
-#### Conversions (2 passed)
+#### Global standards (11 passed, 1 fixme)
 | TC-ID | Test | Result |
 |-------|------|--------|
-| TC-CONV-001 | Page title "Conversions and units" | PASS |
-| TC-CONV-003 | Add button admin only | PASS |
+| TC-GLOBAL-004 | Pagination visible on small screens | PASS |
+| TC-GLOBAL-005 | Dropdown clear button | PASS |
+| TC-GLOBAL-007 | Required field validation | PASS |
+| TC-GLOBAL-011 | Filter defaults use plural labels | PASS |
+| TC-GLOBAL-013 | No "Lofberg" without umlaut | PASS |
+| TC-GLOBAL-016 | File upload shows file OR uploader | PASS |
+| TC-GLOBAL-018 | Enter in RTE clears placeholder | PASS |
+| TC-GLOBAL-019 | Non-RTE textboxes are single-line | PASS |
+| TC-GLOBAL-020 | Toasts dismiss | FIXME |
+| TC-GLOBAL-021 | Success modals have OK button | PASS |
+| TC-GLOBAL-024 | Generate button label | PASS |
+| TC-GLOBAL-029 | RTE: bubbleMenu mobile, toolbar desktop | PASS |
 
-#### Customers (4 passed)
+#### Dashboard (4 passed, 1 fixme)
 | TC-ID | Test | Result |
 |-------|------|--------|
-| TC-CUST-006 | Subcustomer parent dropdown | PASS |
-| TC-CUST-008 | Region sort order | PASS |
-| TC-CUST-009 | No "Admin controls/Metadata" label | PASS |
+| TC-DASH-001 | Market segment widget title + columns | PASS |
+| TC-DASH-002 | Salesperson performance, no Region | PASS |
+| TC-DASH-003 | Report type distribution, no filters/Insight | PASS |
+| TC-DASH-004 | Top row widgets hidden on mobile | PASS |
+| TC-DASH-006 | Long strings ellipsized | PASS |
+| TC-DASH-007 | Dashboard data is live | FIXME |
+
+#### Customers (5 passed)
+| TC-ID | Test | Result |
+|-------|------|--------|
+| TC-CUST-001 | Table title "Customers" | PASS |
+| TC-CUST-004 | Status Archived, Archive→Restore | PASS |
+| TC-CUST-005 | Market segment label | PASS |
+| TC-CUST-007 | Phone/email validate on focus-out | PASS |
 | TC-CUST-010 | Logo upload error handling | PASS |
 
-#### Dashboard (1 passed)
-| TC-ID | Test | Result |
-|-------|------|--------|
-| TC-DASH-004 | Top row widgets hidden on mobile | PASS |
-
-#### Historical reports (6 passed)
+#### Historical reports (7 passed)
 | TC-ID | Test | Result |
 |-------|------|--------|
 | TC-HIST-001 | Page title correct | PASS |
-| TC-HIST-003 | Salesperson filter hidden for salesperson | PASS |
+| TC-HIST-002 | Filter layout 3-row spec | PASS |
 | TC-HIST-004 | Column "Report title" only | PASS |
-| TC-HIST-005 | Customer and Salesperson column headers | PASS |
 | TC-HIST-008 | No horizontal scroll, card at 375px | PASS |
+| TC-HIST-009 | Mobile edit button in card | PASS |
+| TC-HIST-011 | Warning modals match design | PASS |
 | TC-HIST-012 | Salesperson sees only own reports | PASS |
 
-#### Report wizard (10 passed)
+#### Report wizard (13 passed, 4 fixme)
 | TC-ID | Test | Result |
 |-------|------|--------|
+| TC-GENREP-001 | Page title | PASS |
+| TC-GENREP-003 | Step 1 "Customer" label | PASS |
+| TC-GENREP-005 | Language defaults to English | PASS |
 | TC-GENREP-007 | Archived customers not in dropdown | PASS |
 | TC-GENREP-008 | Salesperson: no salesperson dropdown | PASS |
 | TC-GENREP-009 | Cannot advance without required fields | PASS |
+| TC-GENREP-010 | Step 2 "Purchase data" label | PASS |
 | TC-GENREP-011 | Removed labels confirmed absent | PASS |
 | TC-GENREP-015 | "Cover page" label absent | PASS |
-| TC-GENREP-017 | Preview disables buttons | PASS |
+| TC-GENREP-017 | Preview disables buttons | FIXME |
+| TC-GENREP-018 | Preview opens new tab | FIXME |
+| TC-GENREP-019 | Generation controls disabled | FIXME |
+| TC-GENREP-020 | Generate completion | FIXME |
 | TC-GENREP-021 | Right summary panel labels | PASS |
 | TC-GENREP-022 | Save as draft disabled before customer | PASS |
 | TC-GENREP-023 | Mobile step buttons icons only | PASS |
 | TC-GENREP-024 | Back button disabled state | PASS |
 
-#### Templates (1 passed)
+#### Templates (16 passed)
 | TC-ID | Test | Result |
 |-------|------|--------|
+| TC-TMPL-001 | Page title "Report + receipt templates" | PASS |
+| TC-TMPL-002 | Template name validates as filename | PASS |
+| TC-TMPL-004 | Template type options no word "template" | PASS |
+| TC-TMPL-005 | Language label, 9 languages, default English | PASS |
+| TC-TMPL-008 | Header text fields single-line | PASS |
+| TC-TMPL-009 | Existing version text loads | PASS |
+| TC-TMPL-010 | Cover page tab default on load | PASS |
+| TC-TMPL-011 | About sustainability Block 1-4 labels | PASS |
+| TC-TMPL-013 | USPs tab title, Section 1 label | PASS |
+| TC-TMPL-014 | Increasing impact name clearable | PASS |
+| TC-TMPL-015 | Certifications: no "certifications" in labels | PASS |
+| TC-TMPL-017 | "Publish" button | PASS |
+| TC-TMPL-019 | Draft rows: Open + Delete only | PASS |
 | TC-TMPL-020 | Active/previous rows: Open only | PASS |
+| TC-TMPL-021 | One version per publish | PASS |
+| TC-TMPL-022 | Template name change persists | PASS |
 
-#### Sales reps (2 passed)
+#### Translations (3 passed)
 | TC-ID | Test | Result |
 |-------|------|--------|
-| TC-SALES-001 | No sales rep nav item or route | PASS |
-| TC-SALES-002 | Sales rep API endpoints return 404/410 | PASS |
+| TC-TRANS-001 | Non-RTE inputs single-line | PASS |
+| TC-TRANS-002 | No English text → "N/A" placeholder | PASS |
+| TC-TRANS-003 | Language dropdown has languages | PASS |
 
-#### Users (5 passed)
+#### Users (7 passed)
 | TC-ID | Test | Result |
 |-------|------|--------|
 | TC-USERS-001 | Page title "User management" | PASS |
@@ -152,81 +193,73 @@ All new backend tests compiled and passed on first run.
 | TC-USERS-003 | No Password field in form | PASS |
 | TC-USERS-004 | 9 languages in dropdown | PASS |
 | TC-USERS-005 | Status "Archived" not "Inactive" | PASS |
+| TC-USERS-006 | Archive → Restore button flip | PASS |
+| TC-USERS-009 | Reports column for roles | PASS |
 
-#### Useful resources (1 passed)
+#### Profile (3 passed, 1 fixme)
 | TC-ID | Test | Result |
 |-------|------|--------|
-| TC-RES-001 | Add button visible to admin | PASS |
+| TC-PROF-001 | Fallback avatar | PASS |
+| TC-PROF-002 | Pencil icon on avatar | PASS |
+| TC-PROF-003 | Click avatar opens file picker | PASS |
+| TC-PROF-004 | Replacing picture triggers DELETE | FIXME |
+| TC-PROF-005 | No "Last login" field | PASS |
+
+#### Useful resources (3 passed)
+| TC-ID | Test | Result |
+|-------|------|--------|
+| TC-RES-001 | Add button admin only | PASS |
+| TC-RES-003 | View opens new tab | PASS |
+| TC-RES-005 | Search, filter, sort | PASS |
+
+#### Sales reps (2 passed)
+| TC-ID | Test | Result |
+|-------|------|--------|
+| TC-SALES-001 | No sales rep nav item | PASS |
+| TC-SALES-002 | Sales rep API endpoints 404/410 | PASS |
 
 ---
 
-### Round 2 results — 71 passed, 43 failed, 3 skipped (2026-03-30)
+### Remaining 23 failures — Round 3 analysis
 
-#### Newly passing tests (11 tests fixed since Round 1)
-| TC-ID | Test | Fix applied |
-|-------|------|-------------|
-| TC-NAV-001 | Admin sees all nav items | Open hamburger, read sidebar via data-testid |
-| TC-NAV-002 | Salesperson sees limited nav | Same + sidebar now has correct 4 items |
-| TC-CUST-001 | Table title "Customers" | Heading assertion relaxed to /customer/i |
-| TC-CUST-007 | Phone/email validate on focus-out | Error selector fixed to .text-red-500 |
-| TC-GLOBAL-005 | Dropdown clear button | Radix Select trigger + span[role="button"] |
-| TC-GLOBAL-007 | Required field validation | Open Add Customer dialog instead of /customers/create |
-| TC-GLOBAL-024 | Generate button label | Find in header, not sidebar |
-| TC-DASH-001 | Market segment widget | Container-based finding + correct column headers |
-| TC-HIST-009 | Mobile edit button | .user-mobile-card selector |
-| TC-PROF-001 | Fallback avatar | img[alt="avatar"] selector |
-| TC-PROF-005 | No Last login field | App bug fixed — field removed |
+**1. Cold-start / first-attempt timeouts (~12 tests)**
+These fail on first try (15.5s timeout) but PASS on retry. Root cause: initial page load or login takes longer than the 30s test timeout on first attempt. Could be fixed by increasing `playwright.config.ts` timeout to 45s.
+Affected: TC-DASH-001 (retry pass), TC-DASH-003 (retry pass), TC-DASH-004 (retry pass), TC-GLOBAL-005 (retry pass), TC-GLOBAL-006 (retry pass), TC-GLOBAL-014 (retry pass), TC-CUST-006 (retry pass), TC-CUST-008 (retry pass), TC-CUST-009 (retry pass), TC-HIST-003 (retry pass), TC-HIST-005 (retry pass), TC-NAV-002 (retry pass)
 
-#### App bugs fixed (causing test failures)
-| Bug | File fixed | Change |
-|-----|-----------|--------|
-| Sidebar: "Reports" label | AppSideBar.tsx | "Reports" → "Past reports" |
-| Sidebar: salesperson sees Customers | AppSideBar.tsx | Removed from salesperson menu |
-| Sidebar: wrong order | AppSideBar.tsx | Reordered to match App Definition |
-| Dashboard: widget title plural | ReportsBySegments.tsx | "market segments" → "market segment" |
-| Dashboard: wrong column headers | ReportsBySegments.tsx | "Market segment"→"Segment", "Count"→"No." |
-| Dashboard: wrong widget title | SalesRepPerformance.tsx | "Sales rep"→"Salesperson performance" |
-| Dashboard: Region column exists | SalesRepPerformance.tsx | Removed Region column |
-| Dashboard: subtitle + Insight box | ReportTypeDistribution.tsx | Removed both |
-| Customer/User: column header | CustomerTable/UsersTable | "Reports" → "Reports generated" |
-| Profile: Last login shown | ProfilePage.tsx | Removed Last login field |
-| Profile: no pencil icon | ProfilePage.tsx | Added pencil overlay on avatar |
+**2. Translator redirect mismatch (~2 tests)**
+Translator now redirects to `/template/translate` but some tests navigate explicitly to `/dashboard` after login.
+Affected: TC-NAV-003, TC-GLOBAL-030
 
-#### Remaining 43 failures — root causes
+**3. Selector/timing issues (~9 tests)**
+Real selector mismatches or interaction timing problems:
+- TC-CONV-002: Translator translate button not found after redirect change
+- TC-CONV-003: Add button admin-only check fails (page may not fully load)
+- TC-CONV-004: Translation modal columns assertion
+- TC-CONV-006: Add/remove row in modal
+- TC-CUST-002: Reports generated column click interaction
+- TC-CUST-003: View details modal — button found but assertion fails
+- TC-GLOBAL-010: Search debounce timing assertion
+- TC-GLOBAL-015: Image upload 10MB — file input interaction
+- TC-GLOBAL-023: Navbar role switcher dropdown
 
-**1. Timeout on Radix Select interactions (~15 tests)**
-Tests that open Radix Select dropdowns (status filter, language picker) time out at 15.5s. The `[data-slot="select-trigger"]` click succeeds but the dropdown content doesn't appear in time. Likely a CSS/portal rendering issue or the filter-field wrapper selector isn't scoping correctly.
-Affected: TC-CONV-002, TC-CONV-003, TC-CONV-004, TC-CONV-005, TC-CONV-006, TC-CONV-007, TC-CUST-002, TC-CUST-004, TC-CUST-005, TC-HIST-002, TC-HIST-006, TC-HIST-007, TC-HIST-010, TC-HIST-014
-
-**2. Translator login/redirect issues (~5 tests)**
-Translator tests fail on login or sidebar. The middleware role check may be redirecting translator from some pages.
-Affected: TC-NAV-003, TC-GLOBAL-030, TC-CONV-003 (translator), TC-TRANS-003, TC-TRANS-004
-
-**3. Report wizard step navigation (~8 tests)**
-The goToStep helper fills Step 1 fields but the wizard doesn't advance — the combobox/dropdown interaction for customer selection may not trigger properly.
-Affected: TC-GENREP-001, TC-GENREP-003, TC-GENREP-004, TC-GENREP-005, TC-GENREP-006, TC-GENREP-010, TC-GENREP-014
-
-**4. Dashboard widget finding (~3 tests)**
-The container-based `div:has(> h3)` pattern matches wrong containers for some widgets. Needs more specific selectors.
-Affected: TC-DASH-002, TC-DASH-003, TC-DASH-006
-
-**5. File upload/image interactions (~5 tests)**
-Tests that interact with file uploaders or image pickers time out on the file chooser dialog.
-Affected: TC-GLOBAL-015, TC-GLOBAL-017, TC-CUST-010, TC-PROF-004
-
-**6. Miscellaneous (~7 tests)**
-Various: search clear button parent traversal, non-RTE single-line check, navbar role switcher dropdown, filter collapse at breakpoints.
-Affected: TC-GLOBAL-010, TC-GLOBAL-019, TC-GLOBAL-023, TC-GLOBAL-025, TC-HIST-011, TC-USERS-006, TC-USERS-007
+**4. Complex interaction failures (~4 tests)**
+- TC-HIST-006: Sort column button check
+- TC-HIST-007: Status filter → Draft title format
+- TC-HIST-010: Status filter → download absent
+- TC-HIST-014: Tablet filter collapse
 
 ---
 
-### Skipped/Fixme tests (3)
+### Skipped/Fixme tests (6)
 
 | TC-ID | Test | Reason |
 |-------|------|--------|
-| TC-AUTH-001 | First login forces password reset | Requires backend seed of a fresh `isFirstLogin=true` user account. Cannot be automated without dedicated test data setup. |
-| TC-GENREP-020 | Generate completion (new tab + historical entry + blob + download) | Requires full end-to-end environment with PuppeteerSharp rendering, Azure Blob Storage, and seeded template/customer data. |
-| TC-RES-002 | Executable file types rejected | File upload dialog interaction with `.exe` fixture needs page-level file chooser setup (partially automated). |
+| TC-AUTH-001 | First login forces password reset | Needs `isFirstLogin=true` seed account |
+| TC-GLOBAL-020 | Toast dismiss | No reliable toast trigger mechanism |
+| TC-DASH-007 | Dashboard data is live | Needs API call to create report with full backend env |
+| TC-GENREP-017/018/019 | Step 5 preview/generation | Needs full backend env (PuppeteerSharp + Azure Blob) |
+| TC-GENREP-020 | Generate completion | Same |
+| TC-PROF-004 | Avatar replacement | Avatar upload not wired on profile page |
 
 ---
 
@@ -276,20 +309,19 @@ tests/Lofberg.Services.Api.Tests/
 
 ## Recommendations
 
-### Immediate (before next test run)
-1. **Fix TLS issue** — Set `NODE_TLS_REJECT_UNAUTHORIZED=0` in `.env.test` or switch API helpers to use `http://localhost:5215`
-2. **Inspect sidebar labels** — Run `npx playwright codegen https://localhost:3000` to see actual sidebar text
-3. **Fix template navigation** — Templates tests need to click into a specific template before testing the editor
+### Immediate (quick wins for ~12 more passes)
+1. **Increase default timeout** — Change `playwright.config.ts` timeout from 30s to 45s. ~12 tests fail on first attempt but pass on retry due to cold-start loading. Higher timeout would eliminate these.
+2. **Fix translator test navigation** — TC-NAV-003 and TC-GLOBAL-030 navigate to `/dashboard` after login but translator now redirects to `/template/translate`. Update these 2 tests.
 
 ### Short-term (next sprint)
-4. **DOM inspection pass** — Use Playwright trace files (`npx playwright show-trace <trace.zip>`) to identify correct selectors for the 85 failing tests
-5. **Seed test data** — Create a test seed script that provisions: a test user with `isFirstLogin=true`, sample customers, sample templates with versions, sample reports
-6. **CI integration** — Add `npx playwright test --project=chromium` to the CI pipeline
+3. **Seed test data** — Create a backend seed script for: `isFirstLogin=true` user, sample drafts, archived customers. Unblocks TC-AUTH-001, TC-HIST-007, TC-CUST-004.
+4. **Wire avatar upload** — Profile page avatar click doesn't trigger file picker. Implement to unblock TC-PROF-004.
+5. **CI integration** — Add `NODE_TLS_REJECT_UNAUTHORIZED=0 npx playwright test --project=chromium` to CI pipeline.
 
 ### Long-term
-7. **Page object pattern** — Extract selectors into page objects for maintainability
-8. **Visual regression** — Add screenshot comparison tests for layout-sensitive cases (mobile cards, filter collapse)
-9. **API contract tests** — Add response schema validation between frontend RTK Query types and backend DTOs
+6. **Page object pattern** — Extract selectors into page objects for maintainability
+7. **Visual regression** — Add screenshot comparison tests for layout-sensitive cases
+8. **API contract tests** — Add response schema validation between frontend RTK Query types and backend DTOs
 
 ---
 
