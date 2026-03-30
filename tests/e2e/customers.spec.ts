@@ -24,41 +24,66 @@ test.describe('Customers', () => {
 
   // TC-CUST-002
   test('table has "Reports generated" column; clicking opens historical reports with filter', async ({ page }) => {
-    // Wait for table to load
-    await page.locator('table thead th').first().waitFor({ state: 'visible', timeout: 10000 });
+    // Wait for table rows to load
+    await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 15000 });
 
     const headers = page.locator('table thead th');
     const headerTexts = await headers.allTextContents();
     const reportsCol = headerTexts.findIndex(h => /reports generated/i.test(h.trim()));
     expect(reportsCol).toBeGreaterThanOrEqual(0);
 
-    // Click on the report count button in the first data row
-    // The "Reports generated" cell renders a <button> with the count that navigates to historical-reports
-    const reportCell = page.locator(`table tbody tr:first-child td:nth-child(${reportsCol + 1})`);
-    const cellText = await reportCell.textContent();
+    // Find the first row that has a positive report count (button inside the "Reports generated" cell)
+    const rows = page.locator('table tbody tr');
+    const rowCount = await rows.count();
+    let clicked = false;
 
-    if (cellText && parseInt(cellText.trim()) > 0) {
-      await reportCell.locator('button').first().click();
-      await page.waitForURL(/.*historical-reports.*/, { timeout: 10000 });
-      // Verify the page has a customer filter applied
-      const url = page.url();
-      expect(url).toMatch(/customerId/i);
+    for (let i = 0; i < rowCount && !clicked; i++) {
+      const cell = rows.nth(i).locator(`td:nth-child(${reportsCol + 1})`);
+      const btn = cell.locator('button').first();
+      if (await btn.isVisible().catch(() => false)) {
+        const btnText = (await btn.textContent() ?? '').trim();
+        if (btnText && parseInt(btnText) > 0) {
+          await btn.click();
+          await page.waitForURL(/.*historical-reports.*/, { timeout: 10000 });
+          const url = page.url();
+          expect(url).toMatch(/customerId/i);
+          clicked = true;
+        }
+      }
+    }
+
+    // If no row had a positive count, just verify the column header exists
+    if (!clicked) {
+      test.info().annotations.push({
+        type: 'note',
+        description: 'No customer had a positive report count to click through to historical reports.',
+      });
     }
   });
 
   // TC-CUST-003
   test('"View details" opens non-editable modal', async ({ page }) => {
     // Wait for table data to load
-    await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 15000 });
     await page.locator('button[title="View details"]').first().click();
 
-    const modal = page.locator('[role="dialog"], [data-testid="customer-detail-modal"]').first();
-    await expect(modal).toBeVisible();
+    const modal = page.locator('[role="dialog"]').first();
+    await expect(modal).toBeVisible({ timeout: 10000 });
 
-    // Fields should be read-only (no editable inputs)
-    const editableInputs = modal.locator('input:not([readonly]):not([disabled]), textarea:not([readonly]):not([disabled])');
-    const editableCount = await editableInputs.count();
-    expect(editableCount).toBe(0);
+    // The view dialog wraps all inputs in a <fieldset disabled> element,
+    // which disables all child inputs without individually setting disabled attributes.
+    const disabledFieldset = modal.locator('fieldset[disabled]');
+    await expect(disabledFieldset).toBeVisible();
+
+    // Double-check: try typing into the first input inside the fieldset — it should not accept input
+    const firstInput = disabledFieldset.locator('input').first();
+    if (await firstInput.isVisible().catch(() => false)) {
+      const valueBefore = await firstInput.inputValue();
+      await firstInput.focus();
+      await page.keyboard.type('XYZ');
+      const valueAfter = await firstInput.inputValue();
+      expect(valueAfter).toBe(valueBefore);
+    }
   });
 
   // TC-CUST-004

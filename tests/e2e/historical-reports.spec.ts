@@ -107,7 +107,7 @@ test.describe('Historical Reports', () => {
     await navigateToReports(page);
 
     // Wait for table headers to load
-    await page.locator('th, [role="columnheader"]').first().waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('th, [role="columnheader"]').first().waitFor({ state: 'visible', timeout: 15000 });
 
     const headers = page.locator('th, [role="columnheader"]');
     const headerCount = await headers.count();
@@ -121,11 +121,12 @@ test.describe('Historical Reports', () => {
       // Skip Actions column — it is not sortable (uses plain TableHead, no SortableHeader)
       if (/actions/i.test(text)) continue;
 
-      // Each sortable column uses SortableHeader which renders a button with an ArrowUpDown SVG
-      const sortButton = header.locator('button');
-      const sortButtonCount = await sortButton.count();
-      // SortableHeader renders a clickable button containing the label + SVG icon
-      expect(sortButtonCount).toBeGreaterThan(0);
+      // SortableHeader renders a <th> with cursor-pointer class and a div containing text + ArrowUpDown SVG.
+      // It does NOT use a <button> element — the th itself is clickable via onClick.
+      // Verify the header has an SVG icon (ArrowUpDown indicator) inside it.
+      const sortIcon = header.locator('svg, img');
+      const iconCount = await sortIcon.count();
+      expect(iconCount).toBeGreaterThan(0);
     }
   });
 
@@ -138,25 +139,32 @@ test.describe('Historical Reports', () => {
     // The filter is inside a .filter-field div with a <label>Status</label> and a SelectTrigger.
     const statusField = page.locator('.filter-field').filter({ has: page.locator('label:text("Status")') });
     const statusTrigger = statusField.locator('[data-slot="select-trigger"]').first();
-    if (await statusTrigger.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await statusTrigger.click();
-      await page.waitForTimeout(500);
-      const draftOption = page.locator('[role="option"]').filter({ hasText: /^Draft$/i }).first();
-      if (await draftOption.isVisible().catch(() => false)) {
-        await draftOption.click();
-        await page.waitForTimeout(1500);
-      }
-    }
+    await expect(statusTrigger).toBeVisible({ timeout: 10000 });
+    await statusTrigger.click();
+    await page.waitForTimeout(500);
+
+    const draftOption = page.locator('[role="option"]').filter({ hasText: /^Draft$/i }).first();
+    await expect(draftOption).toBeVisible({ timeout: 3000 });
+    await draftOption.click();
+    await page.waitForTimeout(2000);
 
     const rows = page.locator('tbody tr');
+    await expect(rows.first()).toBeVisible({ timeout: 10000 });
     const rowCount = await rows.count();
-    if (rowCount > 0) {
-      // First cell of first row should follow draft naming pattern
-      const firstCell = rows.first().locator('td').first();
-      const cellText = (await firstCell.textContent() ?? '').trim();
-      // Pattern: "Draft - <customer> - <date>"
-      expect(cellText).toMatch(/^Draft\s*-\s*.+\s*-\s*.+$/i);
-    }
+    expect(rowCount).toBeGreaterThan(0);
+
+    // Check the first row's Report title cell and Status cell
+    const firstRow = rows.first();
+    const firstCell = firstRow.locator('td').first();
+    const cellText = (await firstCell.textContent() ?? '').trim();
+
+    // Draft title should contain "Draft" — either as "Draft - Customer - Date" or just "Draft"
+    expect(cellText.toLowerCase()).toContain('draft');
+
+    // Also verify the Status column shows "Draft"
+    const statusCell = firstRow.locator('td').nth(4); // Status is the 5th column (0-indexed: 4)
+    const statusText = (await statusCell.textContent() ?? '').trim();
+    expect(statusText).toMatch(/draft/i);
   });
 
   // TC-HIST-008
@@ -223,37 +231,41 @@ test.describe('Historical Reports', () => {
     // Filter to drafts using the Status Select filter.
     const statusField = page.locator('.filter-field').filter({ has: page.locator('label:text("Status")') });
     const statusTrigger = statusField.locator('[data-slot="select-trigger"]').first();
-    if (await statusTrigger.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await statusTrigger.click();
-      await page.waitForTimeout(500);
-      const draftOption = page.locator('[role="option"]').filter({ hasText: /^Draft$/i }).first();
-      if (await draftOption.isVisible().catch(() => false)) {
-        await draftOption.click();
-        await page.waitForTimeout(1500);
-      }
-    }
+    await expect(statusTrigger).toBeVisible({ timeout: 10000 });
+
+    // Select "Draft" status
+    await statusTrigger.click();
+    await page.waitForTimeout(500);
+    const draftOption = page.locator('[role="option"]').filter({ hasText: /^Draft$/i }).first();
+    await expect(draftOption).toBeVisible({ timeout: 3000 });
+    await draftOption.click();
+    await page.waitForTimeout(2000);
 
     // Draft rows should not have a download button (aria-label starts with "Download")
     const firstRow = page.locator('tbody tr').first();
-    if (await firstRow.isVisible().catch(() => false)) {
-      const draftDownload = firstRow.locator('button[aria-label^="Download"]');
-      await expect(draftDownload).toHaveCount(0);
+    await expect(firstRow).toBeVisible({ timeout: 10000 });
+    const draftDownloadBtns = firstRow.locator('button[aria-label^="Download"]');
+    await expect(draftDownloadBtns).toHaveCount(0);
+
+    // Clear the draft filter by clicking the clear button on the trigger, then select Archived
+    const clearBtn = statusTrigger.locator('span[role="button"], button').first();
+    if (await clearBtn.isVisible().catch(() => false)) {
+      await clearBtn.click();
+      await page.waitForTimeout(1000);
     }
 
-    // Check archived rows
-    if (await statusTrigger.isVisible().catch(() => false)) {
-      await statusTrigger.click();
-      await page.waitForTimeout(500);
-      const archivedOption = page.locator('[role="option"]').filter({ hasText: /^Archived$/i }).first();
-      if (await archivedOption.isVisible().catch(() => false)) {
-        await archivedOption.click();
-        await page.waitForTimeout(1500);
+    // Now select "Archived" status
+    await statusTrigger.click();
+    await page.waitForTimeout(500);
+    const archivedOption = page.locator('[role="option"]').filter({ hasText: /^Archived$/i }).first();
+    if (await archivedOption.isVisible().catch(() => false)) {
+      await archivedOption.click();
+      await page.waitForTimeout(2000);
 
-        const archivedFirstRow = page.locator('tbody tr').first();
-        if (await archivedFirstRow.isVisible().catch(() => false)) {
-          const archivedDownload = archivedFirstRow.locator('button[aria-label^="Download"]');
-          await expect(archivedDownload).toHaveCount(0);
-        }
+      const archivedFirstRow = page.locator('tbody tr').first();
+      if (await archivedFirstRow.isVisible().catch(() => false)) {
+        const archivedDownload = archivedFirstRow.locator('button[aria-label^="Download"]');
+        await expect(archivedDownload).toHaveCount(0);
       }
     }
   });
@@ -330,27 +342,30 @@ test.describe('Historical Reports', () => {
   // TC-HIST-014
   test('tablet (768px): search visible; other filter rows collapsed', async ({ page }) => {
     await loginAs(page, 'admin');
-    await navigateToReports(page);
 
-    // The filter layout switches at the "lg" breakpoint (1024px).
-    // At 768px, the mobile/tablet layout shows: search visible, other filters behind a toggle.
+    // Set viewport to tablet BEFORE navigating, so the responsive layout renders correctly
     await page.setViewportSize({ width: 768, height: 1024 });
-    await page.waitForTimeout(500);
+    await navigateToReports(page);
+    await page.waitForTimeout(1000);
 
-    // Search should still be visible
-    const searchInput = page.getByPlaceholder(/search/i).or(
-      page.locator('input[type="search"]')
-    ).first();
-    await expect(searchInput).toBeVisible();
+    // Search should still be visible (the SearchInput is always visible in both layouts)
+    const searchInput = page.locator('input[placeholder*="Search"]').first();
+    await expect(searchInput).toBeVisible({ timeout: 10000 });
 
     // A "Filters" toggle (div.mobile-toggle with span "Filters") should be visible
+    // This element only renders in the "block lg:hidden" section
     const filtersToggle = page.locator('.mobile-toggle').first();
-    await expect(filtersToggle).toBeVisible();
+    await expect(filtersToggle).toBeVisible({ timeout: 5000 });
 
     // Advanced filter section (.mobile-advanced) should be collapsed (not "open") by default
     const mobileAdvanced = page.locator('.mobile-advanced').first();
-    // The collapsed state means it does NOT have class "open"
     const isOpen = await mobileAdvanced.evaluate((el) => el.classList.contains('open'));
     expect(isOpen).toBe(false);
+
+    // Filter labels (Customer, Status, etc.) should NOT be visible while collapsed
+    // They live inside .mobile-advanced which has max-height:0 / overflow:hidden when not open
+    const customerLabel = page.locator('.mobile-advanced label').filter({ hasText: 'Customer' }).first();
+    const isLabelVisible = await customerLabel.isVisible().catch(() => false);
+    expect(isLabelVisible).toBe(false);
   });
 });

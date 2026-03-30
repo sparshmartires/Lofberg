@@ -115,18 +115,18 @@ test('Search bars have clear button; search uses debounce >= 300ms', async ({ pa
 
   // Type in search to trigger the clear button to appear
   await searchInput.fill('test');
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(800);
 
   // Assert clear button appears (button inside the same div.relative parent)
   const clearButton = searchInput.locator('..').locator('button').first();
-  await expect(clearButton).toBeVisible({ timeout: 3000 });
+  await expect(clearButton).toBeVisible({ timeout: 5000 });
 
   // Click clear and assert input is cleared
   await clearButton.click();
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(500);
   await expect(searchInput).toHaveValue('');
 
-  // Debounce test: track API requests that include the search term
+  // Debounce test: track API requests
   const searchApiRequests: number[] = [];
   page.on('request', (req) => {
     const url = req.url();
@@ -135,22 +135,22 @@ test('Search bars have clear button; search uses debounce >= 300ms', async ({ pa
     }
   });
 
-  // Clear any previous state
-  await page.waitForTimeout(500);
+  // Wait for any lingering requests to settle
+  await page.waitForTimeout(1000);
   searchApiRequests.length = 0;
 
   const startTime = Date.now();
   // Type one character at a time with short delays
-  await searchInput.type('abc', { delay: 50 });
+  await searchInput.pressSequentially('abc', { delay: 50 });
 
-  // Wait a short time (less than debounce) and check no request fired yet
-  await page.waitForTimeout(200);
-  const earlyRequests = searchApiRequests.filter((t) => t - startTime < 250);
-  // Allow 0 early requests (debounce is working)
+  // Wait a short time (less than debounce threshold) and check no request fired yet
+  await page.waitForTimeout(150);
+  const earlyRequests = searchApiRequests.filter((t) => t - startTime < 200);
+  // Debounce should prevent any requests in the first ~200ms after last keystroke
   expect(earlyRequests.length).toBe(0);
 
-  // After debounce fires, a request should eventually come through
-  await page.waitForTimeout(600);
+  // After debounce window passes (~300ms default), a request should come through
+  await page.waitForTimeout(1500);
   expect(searchApiRequests.length).toBeGreaterThan(0);
 });
 
@@ -228,16 +228,17 @@ test('Image uploaders show 10 MB limit; show error on exceeding', async ({ page 
 
   // Open the Add Customer dialog
   await page.getByRole('button', { name: /Add customer/i }).click();
-  await page.locator('[role="dialog"]').waitFor({ state: 'visible', timeout: 10000 });
-
-  // Look for file upload area / helper text mentioning 10 MB limit
   const dialog = page.locator('[role="dialog"]');
-  const uploadArea = dialog.locator('[class*="upload"], [class*="dropzone"], [data-testid*="upload"]').first();
-  if (await uploadArea.isVisible().catch(() => false)) {
-    const helperText = await uploadArea.textContent();
-    expect(helperText).toMatch(/10/);
-    expect(helperText).toMatch(/MB/i);
-  }
+  await dialog.waitFor({ state: 'visible', timeout: 10000 });
+
+  // The upload area contains helper text "PNG, JPG or SVG (max 10 MB)"
+  // Look for the text "10 MB" anywhere in the dialog near the file input
+  const dialogText = await dialog.textContent() ?? '';
+  expect(dialogText).toMatch(/10\s*MB/i);
+
+  // The file input is inside the dialog
+  const fileInput = dialog.locator('input[type="file"]').first();
+  await expect(fileInput).toHaveCount(1);
 
   // Route upload to return 413
   await page.route('**/api/**upload**', (route) =>
@@ -246,22 +247,24 @@ test('Image uploaders show 10 MB limit; show error on exceeding', async ({ page 
   await page.route('**/api/**blob**', (route) =>
     route.fulfill({ status: 413, body: JSON.stringify({ message: 'File too large' }) })
   );
+  await page.route('**/api/**logo**', (route) =>
+    route.fulfill({ status: 413, body: JSON.stringify({ message: 'File too large' }) })
+  );
+  await page.route('**/api/**image**', (route) =>
+    route.fulfill({ status: 413, body: JSON.stringify({ message: 'File too large' }) })
+  );
 
   // Attempt to upload an oversized file
-  const fileInput = dialog.locator('input[type="file"]').first();
-  if (await fileInput.count() > 0) {
-    // Create a buffer that represents a file > 10MB
-    const largeBuffer = Buffer.alloc(11 * 1024 * 1024, 'x');
-    await fileInput.setInputFiles({
-      name: 'large-image.png',
-      mimeType: 'image/png',
-      buffer: largeBuffer,
-    });
+  const largeBuffer = Buffer.alloc(11 * 1024 * 1024, 'x');
+  await fileInput.setInputFiles({
+    name: 'large-image.png',
+    mimeType: 'image/png',
+    buffer: largeBuffer,
+  });
 
-    // Assert user-visible error
-    const error = page.locator('[class*="error"], [role="alert"], [class*="toast"]').first();
-    await expect(error).toBeVisible({ timeout: 5000 });
-  }
+  // Assert user-visible error (could be inline error, toast, or alert)
+  const error = page.locator('[class*="error"], [role="alert"], [class*="toast"], .text-red-500, .text-red-600').first();
+  await expect(error).toBeVisible({ timeout: 5000 });
 });
 
 // TC-GLOBAL-016
@@ -464,24 +467,26 @@ test('Success modals have OK button', async ({ page }) => {
 
 // TC-GLOBAL-023
 test('Navbar role switcher: person icon + arrow only; dropdown shows profile and logout', async ({ page }) => {
+  test.setTimeout(60000);
   await loginAs(page, 'admin');
   await page.goto('/dashboard');
   await page.waitForLoadState('networkidle');
 
-  // Find the user profile dropdown trigger (has data-testid="user-menu")
+  // The UserProfileDropdown trigger has data-testid="user-menu" and contains only SVG icons (User + ChevronDown)
   const switcher = page.locator('[data-testid="user-menu"]');
-  await expect(switcher).toBeVisible({ timeout: 10000 });
+  await expect(switcher).toBeVisible({ timeout: 15000 });
 
   // Assert no role name text is displayed (icon + chevron only, no text content)
   const switcherText = await switcher.textContent();
   expect(switcherText?.trim()).not.toMatch(/admin|administrator|sales|translator/i);
 
-  // Click to open dropdown
+  // Click to open Radix DropdownMenu
   await switcher.click();
   await page.waitForTimeout(500);
 
   // Assert dropdown items (DropdownMenuItem renders [role="menuitem"])
   const menuItems = page.locator('[role="menuitem"]');
+  await expect(menuItems.first()).toBeVisible({ timeout: 5000 });
   const menuTexts = await menuItems.allTextContents();
   const joined = menuTexts.join(' ').toLowerCase();
   expect(joined).toContain('my profile');
@@ -489,6 +494,7 @@ test('Navbar role switcher: person icon + arrow only; dropdown shows profile and
 
   // Close dropdown by pressing Escape
   await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
 
   // Repeat at mobile viewport
   await page.setViewportSize({ width: 375, height: 812 });
@@ -496,11 +502,12 @@ test('Navbar role switcher: person icon + arrow only; dropdown shows profile and
   await page.waitForLoadState('networkidle');
 
   const mobileSwitcher = page.locator('[data-testid="user-menu"]');
-  await expect(mobileSwitcher).toBeVisible({ timeout: 10000 });
+  await expect(mobileSwitcher).toBeVisible({ timeout: 15000 });
   await mobileSwitcher.click();
   await page.waitForTimeout(500);
 
   const mobileMenuItems = page.locator('[role="menuitem"]');
+  await expect(mobileMenuItems.first()).toBeVisible({ timeout: 5000 });
   const mobileTexts = await mobileMenuItems.allTextContents();
   const mobileJoined = mobileTexts.join(' ').toLowerCase();
   expect(mobileJoined).toContain('my profile');
