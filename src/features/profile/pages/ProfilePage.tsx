@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 
 import { Badge } from "@/components/ui/badge"
 import { formatPhoneDisplay } from "@/lib/phone"
-import { Loader2, Save } from "lucide-react"
+import { Loader2, Pencil, Save } from "lucide-react"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { useGetMeQuery, useUpdateMeMutation } from "@/store/services/authApi"
 import { ChangePasswordDialog } from "@/features/profile/components/ChangePasswordDialog"
@@ -107,13 +107,18 @@ export default function MyProfilePage() {
           <div className="flex items-center justify-between">
 
             <div className="flex items-center gap-3">
-              <Image
-                src={getSafeAvatarSrc(profile?.avatarUrl)}
-                alt="avatar"
-                width={44}
-                height={44}
-                className="rounded-full"
-              />
+              <div className="relative">
+                <Image
+                  src={getSafeAvatarSrc(profile?.avatarUrl)}
+                  alt="avatar"
+                  width={44}
+                  height={44}
+                  className="rounded-full"
+                />
+                <div className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5B2D91] rounded-full flex items-center justify-center">
+                  <Pencil className="w-2.5 h-2.5 text-white" />
+                </div>
+              </div>
 
               <div>
                 <div className="flex items-center gap-2">
@@ -130,11 +135,6 @@ export default function MyProfilePage() {
                   {primaryRole}
                 </p>
               </div>
-            </div>
-
-            <div className="text-right text-[12px] text-[#6B6B6B]">
-              <p>Last login</p>
-              <p>{formatDateTime(profile?.lastLoginAt || "")}</p>
             </div>
 
           </div>
