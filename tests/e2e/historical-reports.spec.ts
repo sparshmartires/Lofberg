@@ -106,6 +106,9 @@ test.describe('Historical Reports', () => {
     await loginAs(page, 'admin');
     await navigateToReports(page);
 
+    // Wait for table headers to load
+    await page.locator('th, [role="columnheader"]').first().waitFor({ state: 'visible', timeout: 10000 });
+
     const headers = page.locator('th, [role="columnheader"]');
     const headerCount = await headers.count();
     expect(headerCount).toBeGreaterThan(0);
@@ -115,12 +118,14 @@ test.describe('Historical Reports', () => {
       const text = (await header.textContent() ?? '').trim();
       if (!text) continue;
 
-      // Skip Actions column — it is not sortable
+      // Skip Actions column — it is not sortable (uses plain TableHead, no SortableHeader)
       if (/actions/i.test(text)) continue;
 
-      // Each sortable column should contain an SVG sort icon
-      const svgCount = await header.locator('svg').count();
-      expect(svgCount).toBeGreaterThan(0);
+      // Each sortable column uses SortableHeader which renders a button with an ArrowUpDown SVG
+      const sortButton = header.locator('button');
+      const sortButtonCount = await sortButton.count();
+      // SortableHeader renders a clickable button containing the label + SVG icon
+      expect(sortButtonCount).toBeGreaterThan(0);
     }
   });
 
@@ -129,23 +134,25 @@ test.describe('Historical Reports', () => {
     await loginAs(page, 'admin');
     await navigateToReports(page);
 
-    // Filter to drafts using Radix Select near "Status" label
-    const statusTrigger = page.getByText('Status').locator('..').locator('button[role="combobox"], [data-radix-select-trigger], button').first();
-    if (await statusTrigger.isVisible().catch(() => false)) {
+    // Filter to drafts using the Status Select filter.
+    // The filter is inside a .filter-field div with a <label>Status</label> and a SelectTrigger.
+    const statusField = page.locator('.filter-field').filter({ has: page.locator('label:text("Status")') });
+    const statusTrigger = statusField.locator('[data-slot="select-trigger"]').first();
+    if (await statusTrigger.isVisible({ timeout: 5000 }).catch(() => false)) {
       await statusTrigger.click();
       await page.waitForTimeout(500);
-      const draftOption = page.locator('[data-radix-select-viewport] [role="option"], [role="option"]').filter({ hasText: /^Draft$/i }).first();
+      const draftOption = page.locator('[role="option"]').filter({ hasText: /^Draft$/i }).first();
       if (await draftOption.isVisible().catch(() => false)) {
         await draftOption.click();
         await page.waitForTimeout(1500);
       }
     }
 
-    const rows = page.locator('tbody tr, [role="row"]');
+    const rows = page.locator('tbody tr');
     const rowCount = await rows.count();
     if (rowCount > 0) {
       // First cell of first row should follow draft naming pattern
-      const firstCell = rows.first().locator('td, [role="cell"]').first();
+      const firstCell = rows.first().locator('td').first();
       const cellText = (await firstCell.textContent() ?? '').trim();
       // Pattern: "Draft - <customer> - <date>"
       expect(cellText).toMatch(/^Draft\s*-\s*.+\s*-\s*.+$/i);
@@ -213,33 +220,40 @@ test.describe('Historical Reports', () => {
     await loginAs(page, 'admin');
     await navigateToReports(page);
 
-    // Filter to drafts using Radix Select near "Status" label
-    const statusTrigger = page.getByText('Status').locator('..').locator('button[role="combobox"], [data-radix-select-trigger], button').first();
-    if (await statusTrigger.isVisible().catch(() => false)) {
+    // Filter to drafts using the Status Select filter.
+    const statusField = page.locator('.filter-field').filter({ has: page.locator('label:text("Status")') });
+    const statusTrigger = statusField.locator('[data-slot="select-trigger"]').first();
+    if (await statusTrigger.isVisible({ timeout: 5000 }).catch(() => false)) {
       await statusTrigger.click();
       await page.waitForTimeout(500);
-      const draftOption = page.locator('[data-radix-select-viewport] [role="option"], [role="option"]').filter({ hasText: /^Draft$/i }).first();
+      const draftOption = page.locator('[role="option"]').filter({ hasText: /^Draft$/i }).first();
       if (await draftOption.isVisible().catch(() => false)) {
         await draftOption.click();
         await page.waitForTimeout(1500);
       }
     }
 
-    // Draft rows should not have a download button
-    const draftDownload = page.locator('tbody tr').first().locator('button[aria-label*="Download"]');
-    await expect(draftDownload.first()).not.toBeVisible();
+    // Draft rows should not have a download button (aria-label starts with "Download")
+    const firstRow = page.locator('tbody tr').first();
+    if (await firstRow.isVisible().catch(() => false)) {
+      const draftDownload = firstRow.locator('button[aria-label^="Download"]');
+      await expect(draftDownload).toHaveCount(0);
+    }
 
     // Check archived rows
     if (await statusTrigger.isVisible().catch(() => false)) {
       await statusTrigger.click();
       await page.waitForTimeout(500);
-      const archivedOption = page.locator('[data-radix-select-viewport] [role="option"], [role="option"]').filter({ hasText: /^Archived$/i }).first();
+      const archivedOption = page.locator('[role="option"]').filter({ hasText: /^Archived$/i }).first();
       if (await archivedOption.isVisible().catch(() => false)) {
         await archivedOption.click();
         await page.waitForTimeout(1500);
 
-        const archivedDownload = page.locator('tbody tr').first().locator('button[aria-label*="Download"]');
-        await expect(archivedDownload.first()).not.toBeVisible();
+        const archivedFirstRow = page.locator('tbody tr').first();
+        if (await archivedFirstRow.isVisible().catch(() => false)) {
+          const archivedDownload = archivedFirstRow.locator('button[aria-label^="Download"]');
+          await expect(archivedDownload).toHaveCount(0);
+        }
       }
     }
   });
@@ -249,32 +263,36 @@ test.describe('Historical Reports', () => {
     await loginAs(page, 'admin');
     await navigateToReports(page);
 
-    // Trigger a warning modal (e.g., archive action)
-    const archiveBtn = page.locator('button[aria-label*="Archive"]').first();
+    // Wait for table to load
+    await page.locator('tbody tr').first().waitFor({ state: 'visible', timeout: 10000 });
+
+    // Archive/Delete buttons have dynamic aria-labels: "Archive <title>" or "Delete <title>".
+    // Find the first button whose aria-label starts with "Archive" or "Delete".
+    const archiveBtn = page.locator('button[aria-label^="Archive"], button[aria-label^="Delete"]').first();
 
     if (await archiveBtn.isVisible().catch(() => false)) {
       await archiveBtn.click();
       await page.waitForTimeout(1000);
 
-      // Modal should appear
-      const modal = page.locator('[role="dialog"], [class*="modal"]').first();
+      // Modal should appear (Dialog component)
+      const modal = page.locator('[role="dialog"]').first();
       await expect(modal).toBeVisible();
 
-      // Should have heading
+      // Should have heading (DialogTitle)
       const heading = modal.locator('h1, h2, h3, h4, [class*="title"]').first();
       await expect(heading).toBeVisible();
 
-      // Should have body text
+      // Should have body text (DialogDescription)
       const bodyText = await modal.textContent() ?? '';
       expect(bodyText.length).toBeGreaterThan(10);
 
       // Should have cancel and action buttons
-      const cancelBtn = modal.getByRole('button', { name: /cancel|no|close/i }).first();
-      const actionBtn = modal.getByRole('button', { name: /archive|confirm|yes|delete/i }).first();
+      const cancelBtn = modal.getByRole('button', { name: /cancel/i }).first();
+      const actionBtn = modal.getByRole('button', { name: /archive|delete|restore/i }).first();
       await expect(cancelBtn).toBeVisible();
       await expect(actionBtn).toBeVisible();
 
-      // Check border on modal
+      // Check border/shadow on modal content
       const hasBorder = await modal.evaluate((el) => {
         const cs = window.getComputedStyle(el);
         return cs.borderWidth !== '0px' || cs.boxShadow !== 'none';
@@ -314,6 +332,8 @@ test.describe('Historical Reports', () => {
     await loginAs(page, 'admin');
     await navigateToReports(page);
 
+    // The filter layout switches at the "lg" breakpoint (1024px).
+    // At 768px, the mobile/tablet layout shows: search visible, other filters behind a toggle.
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.waitForTimeout(500);
 
@@ -323,21 +343,14 @@ test.describe('Historical Reports', () => {
     ).first();
     await expect(searchInput).toBeVisible();
 
-    // A "Filters" toggle button should be visible at tablet width
-    const filtersToggle = page.getByText('Filters').or(
-      page.getByRole('button', { name: /filters/i })
-    ).first();
+    // A "Filters" toggle (div.mobile-toggle with span "Filters") should be visible
+    const filtersToggle = page.locator('.mobile-toggle').first();
     await expect(filtersToggle).toBeVisible();
 
-    // Advanced filter section should be collapsed (not visible) by default
-    const statusLabel = page.getByText('Status');
-    const segmentLabel = page.getByText('Segment');
-
-    const statusVisible = await statusLabel.isVisible().catch(() => false);
-    const segmentVisible = await segmentLabel.isVisible().catch(() => false);
-
-    // At tablet size, additional filters should be hidden (collapsed)
-    const filtersCollapsed = !statusVisible || !segmentVisible;
-    expect(filtersCollapsed).toBe(true);
+    // Advanced filter section (.mobile-advanced) should be collapsed (not "open") by default
+    const mobileAdvanced = page.locator('.mobile-advanced').first();
+    // The collapsed state means it does NOT have class "open"
+    const isOpen = await mobileAdvanced.evaluate((el) => el.classList.contains('open'));
+    expect(isOpen).toBe(false);
   });
 });

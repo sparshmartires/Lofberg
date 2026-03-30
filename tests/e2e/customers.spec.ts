@@ -23,22 +23,26 @@ test.describe('Customers', () => {
   });
 
   // TC-CUST-002
-  test('table has "Number of reports" column; clicking opens historical reports with filter', async ({ page }) => {
+  test('table has "Reports generated" column; clicking opens historical reports with filter', async ({ page }) => {
+    // Wait for table to load
+    await page.locator('table thead th').first().waitFor({ state: 'visible', timeout: 10000 });
+
     const headers = page.locator('table thead th');
     const headerTexts = await headers.allTextContents();
     const reportsCol = headerTexts.findIndex(h => /reports generated/i.test(h.trim()));
     expect(reportsCol).toBeGreaterThanOrEqual(0);
 
-    // Click on a report count cell in the first data row
+    // Click on the report count button in the first data row
+    // The "Reports generated" cell renders a <button> with the count that navigates to historical-reports
     const reportCell = page.locator(`table tbody tr:first-child td:nth-child(${reportsCol + 1})`);
     const cellText = await reportCell.textContent();
 
     if (cellText && parseInt(cellText.trim()) > 0) {
-      await reportCell.locator('a, button').first().click();
-      await page.waitForURL(/.*reports.*/);
-      // Verify the page has a filter applied
+      await reportCell.locator('button').first().click();
+      await page.waitForURL(/.*historical-reports.*/, { timeout: 10000 });
+      // Verify the page has a customer filter applied
       const url = page.url();
-      expect(url).toMatch(/customer|filter/i);
+      expect(url).toMatch(/customerId/i);
     }
   });
 
@@ -59,19 +63,24 @@ test.describe('Customers', () => {
 
   // TC-CUST-004
   test('status shows "Archived"; Archive button changes to Restore', async ({ page }) => {
-    // Filter or navigate to see archived customers using Radix Select
-    const statusTrigger = page.locator('[data-testid="status-filter"], button[role="combobox"]').first();
-    if (await statusTrigger.count() > 0) {
-      await statusTrigger.click();
-      await page.locator('[role="option"]:has-text("Archived")').click();
-      await page.waitForLoadState('networkidle');
-    }
+    // Filter to see archived customers using the Status Select filter.
+    // The Status filter is inside a .filter-field div with a <label>Status</label>.
+    const statusField = page.locator('.filter-field').filter({ has: page.locator('label:text("Status")') });
+    const statusTrigger = statusField.locator('[data-slot="select-trigger"]').first();
+    await expect(statusTrigger).toBeVisible({ timeout: 10000 });
+
+    await statusTrigger.click();
+    await page.waitForTimeout(500);
+    // The "Archived" option text is "Archived" (value="inactive")
+    await page.locator('[role="option"]').filter({ hasText: /^Archived$/i }).click();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
 
     const allText = await getAllVisibleText(page);
     const hasArchived = allText.some(t => t.trim() === 'Archived');
     expect(hasArchived).toBe(true);
 
-    // On archived row, button should be "Restore" not "Archive"
+    // On archived row, button should be "Restore" (title="Restore") not "Archive"
     const archivedRow = page.locator('table tbody tr:has-text("Archived")').first();
     if (await archivedRow.count() > 0) {
       const restoreBtn = archivedRow.locator('button[title="Restore"]');
@@ -87,9 +96,11 @@ test.describe('Customers', () => {
     await page.getByRole('button', { name: /Add customer/ }).click();
 
     // Wait for dialog to appear
-    await page.locator('[role="dialog"]').waitFor({ state: 'visible' });
+    await page.locator('[role="dialog"]').waitFor({ state: 'visible', timeout: 10000 });
 
-    const formLabels = await page.locator('label').allTextContents();
+    // Get all labels inside the dialog
+    const dialog = page.locator('[role="dialog"]');
+    const formLabels = await dialog.locator('label').allTextContents();
     const segmentLabel = formLabels.find(l => /segment/i.test(l));
     expect(segmentLabel).toBeDefined();
     expect(segmentLabel).toMatch(/market segment/i);
@@ -175,7 +186,11 @@ test.describe('Customers', () => {
 
   // TC-CUST-010
   test('customer logo error on upload failure; old logo deleted on replace', async ({ page }) => {
-    await page.locator('button:has-text("Create"), button:has-text("Add customer"), a:has-text("Create")').first().click();
+    // Open the Add Customer dialog
+    await page.getByRole('button', { name: /Add customer/ }).click();
+    await page.locator('[role="dialog"]').waitFor({ state: 'visible', timeout: 10000 });
+
+    const dialog = page.locator('[role="dialog"]');
 
     // Intercept file upload requests and return 500
     await page.route('**/api/**/upload**', route =>
@@ -188,8 +203,8 @@ test.describe('Customers', () => {
       route.fulfill({ status: 500, body: JSON.stringify({ message: 'Upload failed' }) })
     );
 
-    // Find file input for logo
-    const fileInput = page.locator('input[type="file"]').first();
+    // Find file input for logo inside the dialog
+    const fileInput = dialog.locator('input[type="file"]').first();
     if (await fileInput.count() > 0) {
       await fileInput.setInputFiles({
         name: 'test-logo.png',

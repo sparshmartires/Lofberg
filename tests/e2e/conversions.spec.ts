@@ -29,11 +29,12 @@ test.describe('Conversions', () => {
     await navigateToConversions(page);
 
     const translateBtn = page.locator('button[title="Translate"]').first();
-    await expect(translateBtn).toBeVisible();
+    await expect(translateBtn).toBeVisible({ timeout: 10000 });
 
-    // The first table row should have at least 3 action buttons (edit, delete, translate)
-    const firstRow = page.locator('tbody tr').first();
-    const actionButtons = firstRow.locator('td:last-child button, td:last-child a');
+    // The conversions page uses a grid layout (not <table>). Each row is a grid div.
+    // Inside each row's last cell (actions div), there are 3 buttons: Translate, Edit/Save, Delete.
+    const firstRowActions = page.locator('.hidden.md\\:block .grid.grid-cols-3 .flex.gap-3, .hidden.md\\:block .grid.grid-cols-4 .flex.gap-3').first();
+    const actionButtons = firstRowActions.locator('button');
     const buttonCount = await actionButtons.count();
     expect(buttonCount).toBeGreaterThanOrEqual(3);
   });
@@ -43,11 +44,12 @@ test.describe('Conversions', () => {
     await navigateToConversions(page);
 
     const translateBtn = page.locator('button[title="Translate"]').first();
-    await expect(translateBtn).toBeVisible();
+    await expect(translateBtn).toBeVisible({ timeout: 10000 });
 
     // Translator should only see translate button, not edit/delete
-    const firstRow = page.locator('tbody tr').first();
-    const actionButtons = firstRow.locator('td:last-child button, td:last-child a');
+    // The conversions page uses a grid layout. Each row's actions div contains buttons.
+    const firstRowActions = page.locator('.hidden.md\\:block .grid.grid-cols-3 .flex.gap-3, .hidden.md\\:block .grid.grid-cols-4 .flex.gap-3').first();
+    const actionButtons = firstRowActions.locator('button');
     const buttonCount = await actionButtons.count();
     // Should have only 1 action button (translate)
     expect(buttonCount).toBeLessThanOrEqual(1);
@@ -107,11 +109,12 @@ test.describe('Conversions', () => {
     await loginAs(page, 'admin');
     await navigateToConversions(page);
 
-    // Find the first table row's action area and click the edit button (first or second button)
-    const firstRow = page.locator('tbody tr').first();
-    const actionButtons = firstRow.locator('td:last-child button');
-    // Try the first button in the actions cell as the edit button
-    const editBtn = actionButtons.first();
+    // The conversions page uses grid layout, not <table>. The edit button is the 2nd icon button
+    // in each row's actions div (after the Translate button). It uses the Save icon.
+    // Clicking it enters inline edit mode with input fields in the same row.
+    const firstRowActions = page.locator('.hidden.md\\:block .grid.grid-cols-3 .flex.gap-3, .hidden.md\\:block .grid.grid-cols-4 .flex.gap-3').first();
+    // Edit button is the 2nd button (index 1) — after Translate (index 0)
+    const editBtn = firstRowActions.locator('button').nth(1);
 
     await expect(editBtn).toBeVisible({ timeout: 10000 });
 
@@ -127,8 +130,8 @@ test.describe('Conversions', () => {
     await editBtn.click();
     await page.waitForTimeout(1500);
 
-    // Find and change the metric field
-    const metricInput = page.locator('input[name*="metric" i], input[name*="name" i], textarea').first();
+    // After clicking edit, inline inputs appear in the same grid row
+    const metricInput = page.locator('.hidden.md\\:block input[class*="rounded-full"]').first();
     if (await metricInput.isVisible().catch(() => false)) {
       await metricInput.fill('Test metric change');
       await page.waitForTimeout(500);
@@ -143,11 +146,9 @@ test.describe('Conversions', () => {
       description: `Translation deletion warning shown: ${hasTranslationWarning}. Verify manually that changing the metric text clears existing translations in the backend.`,
     });
 
-    // Cancel changes
-    const cancelBtn = page.getByRole('button', { name: /cancel|close/i }).first();
-    if (await cancelBtn.isVisible().catch(() => false)) {
-      await cancelBtn.click();
-    }
+    // Cancel changes by clicking away or reloading (no explicit cancel button in inline edit)
+    await page.reload();
+    await page.waitForLoadState('networkidle');
   });
 
   // TC-CONV-006
@@ -204,17 +205,18 @@ test.describe('Conversions', () => {
     await loginAs(page, 'admin');
     await navigateToConversions(page);
 
-    // Find the delete button in the first row's action area (last button typically)
-    const firstRow = page.locator('tbody tr').first();
-    const actionButtons = firstRow.locator('td:last-child button');
-    const deleteBtn = actionButtons.last();
+    // The conversions page uses grid layout, not <table>. The delete button is the 3rd icon button
+    // in each row's actions div (after Translate and Edit/Save). Uses Trash2 icon.
+    const firstRowActions = page.locator('.hidden.md\\:block .grid.grid-cols-3 .flex.gap-3, .hidden.md\\:block .grid.grid-cols-4 .flex.gap-3').first();
+    // Delete button is the 3rd button (index 2) — after Translate (0) and Edit (1)
+    const deleteBtn = firstRowActions.locator('button').nth(2);
 
     await expect(deleteBtn).toBeVisible({ timeout: 10000 });
 
     await deleteBtn.click();
     await page.waitForTimeout(1000);
 
-    // Inline confirmation — look for Confirm and Cancel buttons in the same area
+    // Inline confirmation — "Confirm" (red text button) and "Cancel" text button appear in the same area
     const confirmBtn = page.locator('button:has-text("Confirm")').first();
     const cancelBtn = page.locator('button:has-text("Cancel")').first();
     await expect(confirmBtn).toBeVisible();

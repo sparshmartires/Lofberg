@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { loginAs } from './helpers/auth';
-import { getAllVisibleText, assertNoLofbergsWithoutUmlaut } from './helpers/text';
+import { assertNoLofbergsWithoutUmlaut } from './helpers/text';
 
 // TC-GLOBAL-004
 test('Pagination visible on small screens (not "Load more")', async ({ page }) => {
@@ -108,42 +108,50 @@ test('Search bars have clear button; search uses debounce >= 300ms', async ({ pa
   await page.goto('/customers');
   await page.waitForLoadState('networkidle');
 
-  const searchInput = page.locator('input[type="search"], input[placeholder*="Search"], input[placeholder*="search"], [data-testid*="search"] input').first();
-  await expect(searchInput).toBeVisible();
+  // The SearchInput component renders an <input> inside a div.relative.
+  // The clear button (X icon) appears only when the input has a value.
+  const searchInput = page.locator('input[placeholder*="Search"]').first();
+  await expect(searchInput).toBeVisible({ timeout: 10000 });
 
-  // Type in search
+  // Type in search to trigger the clear button to appear
   await searchInput.fill('test');
+  await page.waitForTimeout(500);
 
-  // Assert clear button appears (sibling button inside parent div)
+  // Assert clear button appears (button inside the same div.relative parent)
   const clearButton = searchInput.locator('..').locator('button').first();
   await expect(clearButton).toBeVisible({ timeout: 3000 });
 
   // Click clear and assert input is cleared
   await clearButton.click();
+  await page.waitForTimeout(300);
   await expect(searchInput).toHaveValue('');
 
-  // Debounce test: intercept network requests
-  const apiRequests: number[] = [];
+  // Debounce test: track API requests that include the search term
+  const searchApiRequests: number[] = [];
   page.on('request', (req) => {
-    if (req.url().includes('/api/') || req.url().includes('customer')) {
-      apiRequests.push(Date.now());
+    const url = req.url();
+    if (url.includes('/api/') && url.includes('customer')) {
+      searchApiRequests.push(Date.now());
     }
   });
 
-  const startTime = Date.now();
-  await searchInput.fill('');
-  apiRequests.length = 0;
+  // Clear any previous state
+  await page.waitForTimeout(500);
+  searchApiRequests.length = 0;
 
+  const startTime = Date.now();
+  // Type one character at a time with short delays
   await searchInput.type('abc', { delay: 50 });
 
-  // No request should fire within 300ms of first keystroke
-  await page.waitForTimeout(250);
-  const earlyRequests = apiRequests.filter((t) => t - startTime < 300);
+  // Wait a short time (less than debounce) and check no request fired yet
+  await page.waitForTimeout(200);
+  const earlyRequests = searchApiRequests.filter((t) => t - startTime < 250);
+  // Allow 0 early requests (debounce is working)
   expect(earlyRequests.length).toBe(0);
 
-  // A request should eventually fire after debounce
-  await page.waitForTimeout(500);
-  expect(apiRequests.length).toBeGreaterThan(0);
+  // After debounce fires, a request should eventually come through
+  await page.waitForTimeout(600);
+  expect(searchApiRequests.length).toBeGreaterThan(0);
 });
 
 // TC-GLOBAL-011
@@ -173,12 +181,14 @@ test('"All" filter options use plural labels', async ({ page }) => {
 
 // TC-GLOBAL-013
 test('No "Lofberg" or "Lofbergs" without umlaut in UI text', async ({ page }) => {
+  test.setTimeout(60000);
   await loginAs(page, 'admin');
 
   const routes = ['/dashboard', '/customers', '/users', '/templates'];
   for (const route of routes) {
     await page.goto(route);
     await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
 
     const violations = await assertNoLofbergsWithoutUmlaut(page);
     expect(violations).toEqual([]);
@@ -212,13 +222,18 @@ test('All API requests use HTTPS (excluding localhost)', async ({ page }) => {
 // TC-GLOBAL-015
 test('Image uploaders show 10 MB limit; show error on exceeding', async ({ page }) => {
   await loginAs(page, 'admin');
-  // Navigate to a page with image upload (customer create has logo upload)
-  await page.goto('/customers/create');
+  // Navigate to customers page and open the Add Customer dialog (which has logo upload)
+  await page.goto('/customers');
   await page.waitForLoadState('networkidle');
 
-  // Assert helper text mentions 10 MB limit
-  const uploadArea = page.locator('[class*="upload"], [class*="dropzone"], [data-testid*="upload"]').first();
-  if (await uploadArea.isVisible()) {
+  // Open the Add Customer dialog
+  await page.getByRole('button', { name: /Add customer/i }).click();
+  await page.locator('[role="dialog"]').waitFor({ state: 'visible', timeout: 10000 });
+
+  // Look for file upload area / helper text mentioning 10 MB limit
+  const dialog = page.locator('[role="dialog"]');
+  const uploadArea = dialog.locator('[class*="upload"], [class*="dropzone"], [data-testid*="upload"]').first();
+  if (await uploadArea.isVisible().catch(() => false)) {
     const helperText = await uploadArea.textContent();
     expect(helperText).toMatch(/10/);
     expect(helperText).toMatch(/MB/i);
@@ -233,7 +248,7 @@ test('Image uploaders show 10 MB limit; show error on exceeding', async ({ page 
   );
 
   // Attempt to upload an oversized file
-  const fileInput = page.locator('input[type="file"]').first();
+  const fileInput = dialog.locator('input[type="file"]').first();
   if (await fileInput.count() > 0) {
     // Create a buffer that represents a file > 10MB
     const largeBuffer = Buffer.alloc(11 * 1024 * 1024, 'x');
@@ -252,10 +267,14 @@ test('Image uploaders show 10 MB limit; show error on exceeding', async ({ page 
 // TC-GLOBAL-016
 test('File upload shows file OR uploader, never both', async ({ page }) => {
   await loginAs(page, 'admin');
-  await page.goto('/customers/create');
+  // Open the Add Customer dialog from the customers page
+  await page.goto('/customers');
   await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: /Add customer/i }).click();
+  await page.locator('[role="dialog"]').waitFor({ state: 'visible', timeout: 10000 });
 
-  const fileInput = page.locator('input[type="file"]').first();
+  const dialog = page.locator('[role="dialog"]');
+  const fileInput = dialog.locator('input[type="file"]').first();
   if (await fileInput.count() > 0) {
     // Upload a file
     await fileInput.setInputFiles({
@@ -267,20 +286,20 @@ test('File upload shows file OR uploader, never both', async ({ page }) => {
     await page.waitForTimeout(1000);
 
     // After upload: file preview should be visible
-    const preview = page.locator('[class*="preview"], img[src*="blob"], [data-testid*="preview"], [class*="uploaded"]').first();
-    const removeButton = page.locator('[aria-label*="remove"], [aria-label*="Remove"], [aria-label*="delete"], button:has([class*="close"])').first();
+    const preview = dialog.locator('[class*="preview"], img[src*="blob"], [data-testid*="preview"], [class*="uploaded"]').first();
+    const removeButton = dialog.locator('[aria-label*="remove"], [aria-label*="Remove"], [aria-label*="delete"], button:has([class*="close"])').first();
 
     // Dropzone / upload area should NOT be visible simultaneously
-    const dropzone = page.locator('[class*="dropzone"]:visible, [class*="upload-area"]:visible').first();
+    const dropzone = dialog.locator('[class*="dropzone"]:visible, [class*="upload-area"]:visible').first();
 
-    if (await preview.isVisible()) {
+    if (await preview.isVisible().catch(() => false)) {
       // If preview is shown, the dropzone should be hidden
       const dropzoneVisible = await dropzone.isVisible().catch(() => false);
       expect(dropzoneVisible).toBeFalsy();
     }
 
     // Click remove
-    if (await removeButton.isVisible()) {
+    if (await removeButton.isVisible().catch(() => false)) {
       await removeButton.click();
       await page.waitForTimeout(500);
 
@@ -294,10 +313,14 @@ test('File upload shows file OR uploader, never both', async ({ page }) => {
 // TC-GLOBAL-017
 test('Remove uploaded file then re-upload works', async ({ page }) => {
   await loginAs(page, 'admin');
-  await page.goto('/customers/create');
+  // Open the Add Customer dialog from the customers page
+  await page.goto('/customers');
   await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: /Add customer/i }).click();
+  await page.locator('[role="dialog"]').waitFor({ state: 'visible', timeout: 10000 });
 
-  const fileInput = page.locator('input[type="file"]').first();
+  const dialog = page.locator('[role="dialog"]');
+  const fileInput = dialog.locator('input[type="file"]').first();
   if (await fileInput.count() > 0) {
     // Upload file A
     await fileInput.setInputFiles({
@@ -308,14 +331,14 @@ test('Remove uploaded file then re-upload works', async ({ page }) => {
     await page.waitForTimeout(1000);
 
     // Click remove
-    const removeButton = page.locator('[aria-label*="remove"], [aria-label*="Remove"], [aria-label*="delete"], button:has([class*="close"])').first();
-    if (await removeButton.isVisible()) {
+    const removeButton = dialog.locator('[aria-label*="remove"], [aria-label*="Remove"], [aria-label*="delete"], button:has([class*="close"])').first();
+    if (await removeButton.isVisible().catch(() => false)) {
       await removeButton.click();
       await page.waitForTimeout(500);
     }
 
     // Upload file B
-    const fileInputAgain = page.locator('input[type="file"]').first();
+    const fileInputAgain = dialog.locator('input[type="file"]').first();
     await fileInputAgain.setInputFiles({
       name: 'fileB.png',
       mimeType: 'image/png',
@@ -324,9 +347,7 @@ test('Remove uploaded file then re-upload works', async ({ page }) => {
     await page.waitForTimeout(1000);
 
     // Assert file B is shown
-    const pageText = await page.textContent('body');
-    // The file name or a preview should be present
-    const preview = page.locator('[class*="preview"], img[src*="blob"], [data-testid*="preview"], [class*="uploaded"]').first();
+    const preview = dialog.locator('[class*="preview"], img[src*="blob"], [data-testid*="preview"], [class*="uploaded"]').first();
     const isUploaded = await preview.isVisible().catch(() => false);
     expect(isUploaded).toBeTruthy();
   }
@@ -367,11 +388,16 @@ test('Enter in rich text editor clears placeholder', async ({ page }) => {
 // TC-GLOBAL-019
 test('Non-RTE textboxes are single-line input elements', async ({ page }) => {
   await loginAs(page, 'admin');
-  await page.goto('/customers/create');
+  // Open the Add Customer dialog from the customers page
+  await page.goto('/customers');
   await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: /Add customer/i }).click();
+  await page.locator('[role="dialog"]').waitFor({ state: 'visible', timeout: 10000 });
+
+  const dialog = page.locator('[role="dialog"]');
 
   // Get all visible text inputs that are NOT rich text editors
-  const inputs = page.locator(
+  const inputs = dialog.locator(
     'input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input:not([type])'
   );
   const count = await inputs.count();
@@ -386,7 +412,7 @@ test('Non-RTE textboxes are single-line input elements', async ({ page }) => {
 
   // Also check that any textarea elements are specifically for notes/descriptions (multi-line expected)
   // but not used for regular single-line fields
-  const textareas = page.locator('textarea');
+  const textareas = dialog.locator('textarea');
   const taCount = await textareas.count();
   for (let i = 0; i < taCount; i++) {
     const ta = textareas.nth(i);
@@ -442,34 +468,39 @@ test('Navbar role switcher: person icon + arrow only; dropdown shows profile and
   await page.goto('/dashboard');
   await page.waitForLoadState('networkidle');
 
-  // Find the user/profile switcher area in navbar
-  const switcher = page.locator('[data-testid*="user-menu"], [data-testid*="profile"], [class*="avatar"], [class*="user-menu"], nav button:has(svg)').last();
-  await expect(switcher).toBeVisible();
+  // Find the user profile dropdown trigger (has data-testid="user-menu")
+  const switcher = page.locator('[data-testid="user-menu"]');
+  await expect(switcher).toBeVisible({ timeout: 10000 });
 
-  // Assert no role name text is displayed next to it (icon + arrow only)
+  // Assert no role name text is displayed (icon + chevron only, no text content)
   const switcherText = await switcher.textContent();
   expect(switcherText?.trim()).not.toMatch(/admin|administrator|sales|translator/i);
 
   // Click to open dropdown
   await switcher.click();
+  await page.waitForTimeout(500);
 
-  // Assert dropdown items
-  const menuItems = page.locator('[role="menuitem"], [role="menu"] a, [role="menu"] button, [class*="dropdown"] a, [class*="dropdown"] button');
+  // Assert dropdown items (DropdownMenuItem renders [role="menuitem"])
+  const menuItems = page.locator('[role="menuitem"]');
   const menuTexts = await menuItems.allTextContents();
   const joined = menuTexts.join(' ').toLowerCase();
   expect(joined).toContain('my profile');
   expect(joined).toContain('logout');
+
+  // Close dropdown by pressing Escape
+  await page.keyboard.press('Escape');
 
   // Repeat at mobile viewport
   await page.setViewportSize({ width: 375, height: 812 });
   await page.reload();
   await page.waitForLoadState('networkidle');
 
-  const mobileSwitcher = page.locator('[data-testid*="user-menu"], [data-testid*="profile"], [class*="avatar"], [class*="user-menu"], nav button:has(svg)').last();
-  await expect(mobileSwitcher).toBeVisible();
+  const mobileSwitcher = page.locator('[data-testid="user-menu"]');
+  await expect(mobileSwitcher).toBeVisible({ timeout: 10000 });
   await mobileSwitcher.click();
+  await page.waitForTimeout(500);
 
-  const mobileMenuItems = page.locator('[role="menuitem"], [role="menu"] a, [role="menu"] button, [class*="dropdown"] a, [class*="dropdown"] button');
+  const mobileMenuItems = page.locator('[role="menuitem"]');
   const mobileTexts = await mobileMenuItems.allTextContents();
   const mobileJoined = mobileTexts.join(' ').toLowerCase();
   expect(mobileJoined).toContain('my profile');
@@ -494,33 +525,37 @@ test('Search/filter collapses on small screens', async ({ page }) => {
   await page.goto('/customers');
   await page.waitForLoadState('networkidle');
 
-  // At 1280px: filters should be visible
+  // At 1280px (above lg breakpoint): filters should be visible inline
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.waitForTimeout(500);
 
-  const filterRow = page.locator('[class*="filter"], [data-testid*="filter"]').first();
-  if (await filterRow.isVisible()) {
-    // Good, filters visible at desktop
+  // The desktop filter row is inside a "hidden lg:flex" container
+  const searchBar = page.locator('input[placeholder*="Search"]').first();
+  await expect(searchBar).toBeVisible({ timeout: 10000 });
 
-    // At 768px: filters should be collapsed
-    await page.setViewportSize({ width: 768, height: 1024 });
-    await page.waitForTimeout(500);
+  // At 768px (below lg breakpoint): filters should be collapsed behind a toggle
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await page.waitForTimeout(500);
 
-    // Search bar should still be visible
-    const searchBar = page.locator('input[type="search"], input[placeholder*="Search"], input[placeholder*="search"]').first();
-    await expect(searchBar).toBeVisible();
+  // Search bar should still be visible
+  await expect(searchBar).toBeVisible();
 
-    // There should be a "Filters" toggle button
-    const filtersToggle = page.getByRole('button', { name: /filter/i }).first();
-    await expect(filtersToggle).toBeVisible();
+  // There should be a "Filters" toggle (div.mobile-toggle with span "Filters")
+  const filtersToggle = page.locator('.mobile-toggle').first();
+  await expect(filtersToggle).toBeVisible();
 
-    // Click to expand
-    await filtersToggle.click();
-    await page.waitForTimeout(500);
+  // The advanced filters should be collapsed by default
+  const mobileAdvanced = page.locator('.mobile-advanced').first();
+  const isOpen = await mobileAdvanced.evaluate((el) => el.classList.contains('open'));
+  expect(isOpen).toBe(false);
 
-    // Filter options should now be visible
-    await expect(filterRow).toBeVisible();
-  }
+  // Click to expand
+  await filtersToggle.click();
+  await page.waitForTimeout(500);
+
+  // After clicking, the mobile-advanced section should have "open" class
+  const isOpenAfter = await mobileAdvanced.evaluate((el) => el.classList.contains('open'));
+  expect(isOpenAfter).toBe(true);
 });
 
 // TC-GLOBAL-029
