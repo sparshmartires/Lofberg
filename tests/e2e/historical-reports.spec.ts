@@ -46,17 +46,18 @@ test.describe('Historical Reports', () => {
     ).first();
     await expect(searchInput).toBeVisible();
 
-    await expect(page.getByText('Customer')).toBeVisible();
-    await expect(page.getByText('Salesperson')).toBeVisible();
+    // Filter labels (inside label elements or filter-field containers)
+    await expect(page.locator('label').filter({ hasText: 'Customer' }).first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('label').filter({ hasText: 'Salesperson' }).first()).toBeVisible();
 
     // Row 2: Type, Status, Segment
-    await expect(page.getByText('Type')).toBeVisible();
-    await expect(page.getByText('Status')).toBeVisible();
-    await expect(page.getByText('Segment')).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: 'Type' }).first()).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: 'Status' }).first()).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: 'Segment' }).first()).toBeVisible();
 
     // Row 3: Date ranges
-    await expect(page.getByText('Report date')).toBeVisible();
-    await expect(page.getByText('Created at')).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: 'Report date' }).first()).toBeVisible();
+    await expect(page.locator('label').filter({ hasText: 'Created at' }).first()).toBeVisible();
   });
 
   // TC-HIST-003
@@ -74,6 +75,8 @@ test.describe('Historical Reports', () => {
     await loginAs(page, 'admin');
     await navigateToReports(page);
 
+    // Wait for table headers to load
+    await page.locator('th, [role="columnheader"]').first().waitFor({ state: 'visible', timeout: 10000 });
     const headers = await page.locator('th, [role="columnheader"]').allTextContents();
     const headerTexts = headers.map(h => h.trim().toLowerCase());
 

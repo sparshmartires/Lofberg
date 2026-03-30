@@ -20,9 +20,11 @@ test.describe('Dashboard', () => {
 
   // TC-DASH-002
   test('"Salesperson performance" widget has correct title and header, no Region column', async ({ page }) => {
-    const widget = page.locator('div').filter({ has: page.locator('h3') }).filter({ hasText: 'Salesperson performance' }).first();
-    await expect(widget).toBeVisible();
+    const title = page.locator('h3').filter({ hasText: 'Salesperson performance' });
+    await expect(title).toBeVisible({ timeout: 10000 });
 
+    // Widget is the closest parent div with border
+    const widget = title.locator('..');
     const headers = widget.locator('th');
     const headerTexts = await headers.allTextContents();
     expect(headerTexts.some(h => h.trim() === 'Salesperson')).toBe(true);
@@ -31,8 +33,10 @@ test.describe('Dashboard', () => {
 
   // TC-DASH-003
   test('"Report type distribution" has no filters and no Insight section', async ({ page }) => {
-    const widget = page.locator('div').filter({ has: page.locator('h3') }).filter({ hasText: 'Report type distribution' }).first();
-    await expect(widget).toBeVisible();
+    const title = page.locator('h3').filter({ hasText: 'Report type distribution' });
+    await expect(title).toBeVisible({ timeout: 10000 });
+
+    const widget = title.locator('..');
 
     // No filter controls within the widget
     await expect(widget.locator('select, [role="combobox"]')).toHaveCount(0);

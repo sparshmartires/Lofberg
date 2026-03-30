@@ -44,6 +44,8 @@ test.describe('Customers', () => {
 
   // TC-CUST-003
   test('"View details" opens non-editable modal', async ({ page }) => {
+    // Wait for table data to load
+    await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 10000 });
     await page.locator('button[title="View details"]').first().click();
 
     const modal = page.locator('[role="dialog"], [data-testid="customer-detail-modal"]').first();
