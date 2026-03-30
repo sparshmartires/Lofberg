@@ -10,27 +10,26 @@ import {
 } from "@/components/ui/table"
 
 interface SalesRepPerformanceProps {
-  data: { name: string; profileImageUrl?: string; region?: string; reportCount: number }[]
+  data: { name: string; profileImageUrl?: string; reportCount: number }[]
 }
 
 export function SalesRepPerformance({ data }: SalesRepPerformanceProps) {
   return (
     <div className="w-full bg-white border border-[#EDEDED] rounded-[28px] px-[32px] py-[24px]">
-      <h3 className="text-[18px] mb-[20px] font-semibold text-[#1F1F1F]">Sales rep performance</h3>
+      <h3 className="text-[18px] mb-[20px] font-semibold text-[#1F1F1F]">Salesperson performance</h3>
 
       <Table>
         <TableHeader>
           <TableRow className="border-b border-dashed border-[#E6CAF5] hover:bg-transparent">
-            <TableHead className="pb-3 text-[#1F1F1F] pl-[12px]">Sales rep</TableHead>
-            <TableHead className="pb-3 text-[#1F1F1F]">Region</TableHead>
-            <TableHead className="pb-3 text-[#1F1F1F] pr-[12px]">Reports</TableHead>
+            <TableHead className="pb-3 text-[#1F1F1F] pl-[12px]">Salesperson</TableHead>
+            <TableHead className="pb-3 text-[#1F1F1F] pr-[12px]">No.</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {data.length === 0 ? (
             <TableRow className="hover:bg-transparent">
-              <TableCell colSpan={3} className="py-6 text-center text-[#747474]">No data available</TableCell>
+              <TableCell colSpan={2} className="py-6 text-center text-[#747474]">No data available</TableCell>
             </TableRow>
           ) : (
             data.map((rep) => (
@@ -52,8 +51,6 @@ export function SalesRepPerformance({ data }: SalesRepPerformanceProps) {
                     {rep.name}
                   </div>
                 </TableCell>
-
-                <TableCell className="py-3 text-[#4E4E4E]">{rep.region ?? "—"}</TableCell>
 
                 <TableCell className="py-3 pr-[12px] text-[#4E4E4E]">{rep.reportCount}</TableCell>
               </TableRow>

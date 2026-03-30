@@ -128,7 +128,7 @@ export function CustomersTable({ customers, sortBy, sortDirection, onSort }: Cus
                 Last report date
               </TableHead>
               <TableHead className="table-header-cell">
-                Reports
+                Reports generated
               </TableHead>
               <SortableHeader column="status" sortBy={sortBy} onSort={onSort}>
                 Status

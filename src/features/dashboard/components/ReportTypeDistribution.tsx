@@ -19,10 +19,6 @@ export default function ReportTypeDistribution({ data }: ReportTypeDistributionP
         <h3 className="text-[18px] text-[#1F1F1F]">
           Report type distribution
         </h3>
-
-        <p className="text-[14px] text-[#747474]">
-          Illustrates the percentage breakdown of report types generated
-        </p>
       </div>
 
       {/* STAT CARDS */}
@@ -49,14 +45,6 @@ export default function ReportTypeDistribution({ data }: ReportTypeDistributionP
           reports={`${data.compiledReceipt} reports`}
         />
 
-      </div>
-
-      {/* INSIGHT */}
-      <div className="flex items-start gap-3 bg-[#FAFAFA] rounded-lg p-3 border-l-[4px] border-[#7B3EBE] text-sm text-[#4E4E4E]">
-        <span className="font-medium">Insight:</span>
-        <span>
-          Full reports: {fullReportPct}% | Receipt only: {receiptOnlyPct}% | Compiled receipt: {compiledReceiptPct}%
-        </span>
       </div>
 
     </div>
