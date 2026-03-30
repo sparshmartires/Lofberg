@@ -2,7 +2,13 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 /** Routes that require the Administrator role. */
-const adminOnlyRoutes = ["/users", "/customers", "/template", "/conversion-logic"]
+const adminOnlyRoutes = ["/users", "/customers"]
+
+/** Routes accessible by Admin + Translator (not Salesperson). */
+const adminOrTranslatorRoutes = ["/template", "/conversion-logic"]
+
+/** Routes NOT accessible by Translator. */
+const noTranslatorRoutes = ["/dashboard", "/report-generation", "/historical-reports"]
 
 /**
  * Decode the JWT payload and extract the user's role claim.
@@ -54,20 +60,36 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 
-  // If logged in and trying to access login page
+  // If logged in and trying to access login page — redirect to role-appropriate home
   if (token && pathname === "/login") {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
+    const role = extractRoleFromToken(token)
+    const home = role === "Translator" ? "/template/translate" : "/dashboard"
+    return NextResponse.redirect(new URL(home, request.url))
   }
 
   // Role-based route protection for authenticated users
   if (token) {
     const role = extractRoleFromToken(token)
-    const isAdminRoute = adminOnlyRoutes.some((route) =>
-      pathname.startsWith(route)
-    )
+    if (role === null) return NextResponse.next() // can't determine role — let backend decide
 
-    if (isAdminRoute && role !== null && role !== "Administrator") {
-      return NextResponse.redirect(new URL("/dashboard", request.url))
+    const defaultHome = role === "Translator" ? "/template/translate" : "/dashboard"
+
+    // Admin-only routes: block salesperson + translator
+    const isAdminRoute = adminOnlyRoutes.some((route) => pathname.startsWith(route))
+    if (isAdminRoute && role !== "Administrator") {
+      return NextResponse.redirect(new URL(defaultHome, request.url))
+    }
+
+    // Admin + Translator routes: block salesperson
+    const isAdminOrTranslatorRoute = adminOrTranslatorRoutes.some((route) => pathname.startsWith(route))
+    if (isAdminOrTranslatorRoute && role !== "Administrator" && role !== "Translator") {
+      return NextResponse.redirect(new URL(defaultHome, request.url))
+    }
+
+    // No-translator routes: block translator from dashboard, generate, reports
+    const isNoTranslatorRoute = noTranslatorRoutes.some((route) => pathname.startsWith(route))
+    if (isNoTranslatorRoute && role === "Translator") {
+      return NextResponse.redirect(new URL(defaultHome, request.url))
     }
   }
 
