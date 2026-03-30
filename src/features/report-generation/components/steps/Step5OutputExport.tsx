@@ -1,8 +1,8 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Sparkles } from "lucide-react"
+import { Sparkles, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -33,6 +33,7 @@ export function Step5OutputExport() {
   const [previewReport] = usePreviewReportMutation()
   const [uploadImage] = useUploadImageMutation()
   const [error, setError] = useState<string | null>(null)
+  const [generatedUrl, setGeneratedUrl] = useState<string | null>(null)
   useAutoDismiss(error, () => setError(null))
 
   const isReceiptOnly = step3.reportType === ReportType.ReceiptOnly
@@ -79,6 +80,7 @@ export function Step5OutputExport() {
     }
 
     dispatch(setGenerating(true))
+    setGeneratedUrl(null)
     try {
       const resolvedStep1 = await resolveStep1WithLogo()
       const result = await generateReport({
@@ -91,9 +93,15 @@ export function Step5OutputExport() {
       }).unwrap()
       dispatch(setGeneratedReportId(result.reportId))
 
-      // Open the generated PDF in a new tab
+      // Store the URL so the user can open it via a visible link.
+      // Auto-open via window.open is blocked by browsers after long async ops.
       if (result.generatedFileUrl) {
-        window.open(result.generatedFileUrl, "_blank")
+        setGeneratedUrl(result.generatedFileUrl)
+        // Also trigger download
+        const a = document.createElement("a")
+        a.href = result.generatedFileUrl
+        a.download = ""
+        a.click()
       }
     } catch (err: unknown) {
       const message =
@@ -241,6 +249,18 @@ export function Step5OutputExport() {
           </Button>
 
         </div>
+
+        {generatedUrl && (
+          <a
+            href={generatedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-[#6B2D8B] hover:underline"
+          >
+            <ExternalLink size={16} />
+            View generated report
+          </a>
+        )}
       </div>
     </div>
   )
