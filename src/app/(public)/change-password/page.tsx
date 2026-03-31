@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react"
 import { BackButton } from "@/components/ui/back-button"
 import { useState, useEffect } from "react"
 import { useChangePasswordMutation } from "@/store/services/authApi"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface FormValues {
   password: string
@@ -16,9 +17,9 @@ interface FormValues {
 
 export default function ChangePasswordPage() {
   const router = useRouter()
-  const [userId, setUserId] = useState<string>("")
   const [currentPassword, setCurrentPassword] = useState<string>("")
   const [error, setError] = useState<string>("")
+  useAutoDismiss(error, () => setError(""))
   const [changePassword, { isLoading }] = useChangePasswordMutation()
 
   const {
@@ -34,11 +35,9 @@ export default function ChangePasswordPage() {
   const passwordValue = watch("password")
 
   useEffect(() => {
-    const storedUserId = sessionStorage.getItem("firstLoginUserId")
     const storedPassword = sessionStorage.getItem("firstLoginPassword")
 
-    if (storedUserId && storedPassword) {
-      setUserId(storedUserId)
+    if (storedPassword) {
       setCurrentPassword(storedPassword)
     } else {
       setError("Invalid session. Please log in again.")
@@ -50,19 +49,17 @@ export default function ChangePasswordPage() {
     try {
       setError("")
 
-      if (!userId || !currentPassword) {
+      if (!currentPassword) {
         setError("Invalid session. Please log in again.")
         return
       }
 
       await changePassword({
-        userId,
         currentPassword,
         newPassword: data.password,
       }).unwrap()
 
       // Clear session storage
-      sessionStorage.removeItem("firstLoginUserId")
       sessionStorage.removeItem("firstLoginPassword")
 
       // Navigate to login to sign in with new password

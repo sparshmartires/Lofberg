@@ -65,6 +65,9 @@ export default function TranslationContent({
 
   return (
     <div className="w-full rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 space-y-6 mt-[20px] min-w-0">
+      <p className="text-[10px] text-[#747474]">
+        Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"}, {"{CO2 in KG}"}, {"{CO2 in equivalent units}"}, {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}, {"{NOK FT Cooperative Premium}"}, {"{NOK FT Organic Income}"}
+      </p>
       <div className={`w-full ${isReceiptTemplate ? "overflow-x-hidden" : "overflow-x-auto"}`}>
         <div
           className={`${

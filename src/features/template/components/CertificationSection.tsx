@@ -88,11 +88,12 @@ export default function CertificationsSection({
     <div className="space-y-8">
       <div>
         <p className="text-sm mb-2">Header Text</p>
-        <textarea
+        <input
+          type="text"
           placeholder="Enter header text"
           value={parsed.headerText}
           onChange={(e) => updateText("headerText", e.target.value)}
-          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[44px] rounded-full border border-[#EDEDED] px-5 py-3"
         />
       </div>
 
@@ -112,13 +113,12 @@ export default function CertificationsSection({
             >
               <p className="text-sm font-medium">{cert.label}</p>
 
-              <div className="grid lg:grid-cols-2 gap-8">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Certification logo</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[logoField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[logoField] ?? null}
                     previewUrl={parsed[logoField]}
                     onFileChange={(file) => handleImageChange(logoField, file)}
                     className="h-[110px]"
@@ -129,8 +129,7 @@ export default function CertificationsSection({
                   <p className="text-sm mb-2">Background image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[imageField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[imageField] ?? null}
                     previewUrl={parsed[imageField]}
                     onFileChange={(file) => handleImageChange(imageField, file)}
                     className="h-[110px]"
@@ -154,7 +153,7 @@ export default function CertificationsSection({
                   value={parsed[textField] ?? ""}
                   onChange={(html) => updateText(textField, html)}
                   placeholder="Enter certification description"
-                  className="h-[90px]"
+                  className="h-[120px]"
                 />
               </div>
             </div>

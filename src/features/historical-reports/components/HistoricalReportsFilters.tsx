@@ -87,7 +87,7 @@ export function HistoricalReportsFilters({
     "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm focus:outline-none"
 
   const searchField = (
-    <div className="filter-field w-[240px] max-[649px]:w-full">
+    <div className="filter-field flex-1 max-[649px]:w-full">
       <label>Search</label>
       <SearchInput
         placeholder="Search reports"
@@ -98,122 +98,197 @@ export function HistoricalReportsFilters({
     </div>
   )
 
-  const filterFields = (
-    <>
-      <div className="filter-field w-[180px] max-[649px]:w-full">
-        <label>Customer</label>
-        <Select value={customer} onValueChange={onCustomerChange}>
-          <SelectTrigger className={fieldClass} showClear={customer !== "all"} onClear={() => onCustomerChange("all")}>
-            <SelectValue placeholder="All customers" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All customers</SelectItem>
-            {customerOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {showSalesRepFilter && (
-        <div className="filter-field w-[230px] max-[649px]:w-full">
-          <label>Sales representative</label>
-          <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
-            <SelectTrigger className={fieldClass} showClear={salesRepresentative !== "all"} onClear={() => onSalesRepresentativeChange("all")}>
-              <SelectValue placeholder="All sales representatives" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All sales representatives</SelectItem>
-              {salesRepresentativeOptions.map((option) => (
-                <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
-
-      <div className="filter-field w-[160px] max-[649px]:w-full">
-        <label>Type</label>
-        <Select value={type} onValueChange={onTypeChange}>
-          <SelectTrigger className={fieldClass} showClear={type !== "all"} onClear={() => onTypeChange("all")}>
-            <SelectValue placeholder="All types" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All types</SelectItem>
-            {typeOptions.map((option) => (
-              <SelectItem key={option} value={option}>{option}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="filter-field w-[160px] max-[649px]:w-full">
-        <label>Status</label>
-        <Select value={status} onValueChange={onStatusChange}>
-          <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
-            <SelectValue placeholder="All statuses" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            {statusOptions.map((option) => (
-              <SelectItem key={option} value={option}>{option}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="filter-field w-[160px] max-[649px]:w-full">
-        <label>Segment</label>
-        <Select value={segment} onValueChange={onSegmentChange}>
-          <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
-            <SelectValue placeholder="All segments" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All segments</SelectItem>
-            {segmentOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="filter-field w-[220px] max-[649px]:w-full">
-        <label>Report date</label>
-        <DateRangePicker
-          from={reportDateFrom}
-          to={reportDateTo}
-          onFromChange={onReportDateFromChange}
-          onToChange={onReportDateToChange}
-        />
-      </div>
-
-      <div className="filter-field w-[220px] max-[649px]:w-full">
-        <label>Created at</label>
-        <DateRangePicker
-          from={createdFrom}
-          to={createdTo}
-          onFromChange={onCreatedFromChange}
-          onToChange={onCreatedToChange}
-        />
-      </div>
-    </>
-  )
-
   return (
-    <div className="filters-card">
-      {/* Desktop: left-aligned flex-wrap */}
-      <div className="hidden md:flex flex-wrap gap-4 items-end">
-        {searchField}
-        {filterFields}
+    <div className="filters-card !flex !flex-col !w-full">
+      {/* Desktop (lg+): all 3 rows visible */}
+      <div className="hidden lg:flex flex-col gap-4">
+        <div className="flex flex-wrap gap-4 items-end">
+          {searchField}
+          {/* Row 1: Customer + Salesperson */}
+          <div className="filter-field flex-1">
+            <label>Customer</label>
+            <Select value={customer} onValueChange={onCustomerChange}>
+              <SelectTrigger className={fieldClass} showClear={customer !== "all"} onClear={() => onCustomerChange("all")}>
+                <SelectValue placeholder="All customers" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All customers</SelectItem>
+                {customerOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {showSalesRepFilter && (
+            <div className="filter-field flex-1">
+              <label>Salesperson</label>
+              <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
+                <SelectTrigger className={fieldClass} showClear={salesRepresentative !== "all"} onClear={() => onSalesRepresentativeChange("all")}>
+                  <SelectValue placeholder="All salespersons" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All salespersons</SelectItem>
+                  {salesRepresentativeOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-4 items-end">
+          {/* Row 2: Type + Status + Segment */}
+          <div className="filter-field flex-1">
+            <label>Type</label>
+            <Select value={type} onValueChange={onTypeChange}>
+              <SelectTrigger className={fieldClass} showClear={type !== "all"} onClear={() => onTypeChange("all")}>
+                <SelectValue placeholder="All types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All types</SelectItem>
+                {typeOptions.map((option) => (
+                  <SelectItem key={option} value={option}>{option}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="filter-field flex-1">
+            <label>Status</label>
+            <Select value={status} onValueChange={onStatusChange}>
+              <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
+                <SelectValue placeholder="All statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All statuses</SelectItem>
+                {statusOptions.map((option) => (
+                  <SelectItem key={option} value={option}>{option}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="filter-field flex-1">
+            <label>Segment</label>
+            <Select value={segment} onValueChange={onSegmentChange}>
+              <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
+                <SelectValue placeholder="All segments" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All segments</SelectItem>
+                {segmentOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-4 items-end">
+          {/* Row 3: Report date + Created at */}
+          <div className="filter-field flex-1">
+            <label>Report date</label>
+            <DateRangePicker from={reportDateFrom} to={reportDateTo} onFromChange={onReportDateFromChange} onToChange={onReportDateToChange} />
+          </div>
+          <div className="filter-field flex-1">
+            <label>Created at</label>
+            <DateRangePicker from={createdFrom} to={createdTo} onFromChange={onCreatedFromChange} onToChange={onCreatedToChange} />
+          </div>
+        </div>
       </div>
 
-      {/* Mobile: search + collapsible filters */}
-      <div className="block md:hidden">
+      {/* Tablet + Mobile: search visible, filters collapsible */}
+      <div className="block lg:hidden">
         {searchField}
 
         <div className={`mobile-advanced ${isOpen ? "open" : ""}`}>
           <div className="flex flex-col gap-4 pt-4">
-            {filterFields}
+            {/* Row 2: Customer, Salesperson */}
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="filter-field flex-1 min-w-[160px]">
+                <label>Customer</label>
+                <Select value={customer} onValueChange={onCustomerChange}>
+                  <SelectTrigger className={fieldClass} showClear={customer !== "all"} onClear={() => onCustomerChange("all")}>
+                    <SelectValue placeholder="All customers" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All customers</SelectItem>
+                    {customerOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              {showSalesRepFilter && (
+                <div className="filter-field flex-1 min-w-[160px]">
+                  <label>Salesperson</label>
+                  <Select value={salesRepresentative} onValueChange={onSalesRepresentativeChange}>
+                    <SelectTrigger className={fieldClass} showClear={salesRepresentative !== "all"} onClear={() => onSalesRepresentativeChange("all")}>
+                      <SelectValue placeholder="All salespersons" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All salespersons</SelectItem>
+                      {salesRepresentativeOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+            {/* Row 3: Type, Status, Segment */}
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="filter-field flex-1 min-w-[120px]">
+                <label>Type</label>
+                <Select value={type} onValueChange={onTypeChange}>
+                  <SelectTrigger className={fieldClass} showClear={type !== "all"} onClear={() => onTypeChange("all")}>
+                    <SelectValue placeholder="All types" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All types</SelectItem>
+                    {typeOptions.map((option) => (
+                      <SelectItem key={option} value={option}>{option}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="filter-field flex-1 min-w-[120px]">
+                <label>Status</label>
+                <Select value={status} onValueChange={onStatusChange}>
+                  <SelectTrigger className={fieldClass} showClear={status !== "all"} onClear={() => onStatusChange("all")}>
+                    <SelectValue placeholder="All statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All statuses</SelectItem>
+                    {statusOptions.map((option) => (
+                      <SelectItem key={option} value={option}>{option}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="filter-field flex-1 min-w-[120px]">
+                <label>Segment</label>
+                <Select value={segment} onValueChange={onSegmentChange}>
+                  <SelectTrigger className={fieldClass} showClear={segment !== "all"} onClear={() => onSegmentChange("all")}>
+                    <SelectValue placeholder="All segments" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All segments</SelectItem>
+                    {segmentOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>{option.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            {/* Row 4: Report date, Created at */}
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="filter-field flex-1 min-w-[180px]">
+                <label>Report date</label>
+                <DateRangePicker from={reportDateFrom} to={reportDateTo} onFromChange={onReportDateFromChange} onToChange={onReportDateToChange} />
+              </div>
+              <div className="filter-field flex-1 min-w-[180px]">
+                <label>Created at</label>
+                <DateRangePicker from={createdFrom} to={createdTo} onFromChange={onCreatedFromChange} onToChange={onCreatedToChange} />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -109,7 +109,8 @@ export function UserFeedbackDialog({
         </Button>
       )}
 
-    {primaryActionLabel&&  <Button
+    {primaryActionLabel && (
+      <Button
         variant="primary" size="sm"
         className="px-[20px] py-[10px]"
         onClick={onPrimaryAction}
@@ -117,7 +118,18 @@ export function UserFeedbackDialog({
       >
         {primaryActionLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
         {primaryActionLabel}
-      </Button>}
+      </Button>
+    )}
+
+    {!primaryActionLabel && (
+      <Button
+        variant="primary" size="sm"
+        className="px-[20px] py-[10px]"
+        onClick={() => onOpenChange(false)}
+      >
+        Ok
+      </Button>
+    )}
     </div>
   </DialogContent>
 </Dialog>

@@ -175,7 +175,7 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
                   Status
                 </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.reports}`}>
-                  Reports
+                  Reports generated
                 </TableHead>
                 <SortableHeader column="lastlogin" className={columnWidths.lastLogin}>
                   Last login

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import { BackButton } from "@/components/ui/back-button"
 import { useForgotPasswordMutation } from "@/store/services/authApi"
 import { useState } from "react"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface FormValues {
   emailOrPhone: string
@@ -16,6 +17,7 @@ export default function ForgotPasswordPage() {
   const router = useRouter()
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation()
   const [apiError, setApiError] = useState<string>("")
+  useAutoDismiss(apiError, () => setApiError(""))
   const [successMessage, setSuccessMessage] = useState<string>("")
 
   const {

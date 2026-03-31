@@ -3,7 +3,19 @@
 import type { ReactNode } from "react"
 import { FileText, CalendarDays, PieChart, Users } from "lucide-react"
 
-export default function DashboardHeader() {
+interface DashboardHeaderProps {
+  totalReports: number
+  reportsThisMonth: number
+  reportsThisQuarter: number
+  activeCustomers: number
+}
+
+export default function DashboardHeader({
+  totalReports,
+  reportsThisMonth,
+  reportsThisQuarter,
+  activeCustomers,
+}: DashboardHeaderProps) {
   return (
     <div className="w-full rounded-[12px] flex items-center justify-between">
       <div>
@@ -20,28 +32,28 @@ export default function DashboardHeader() {
         <StatCard
           icon={<FileText className="w-5 h-5 text-[#3C1053]" />}
           title="Total reports"
-          value="156"
+          value={String(totalReports)}
           subtitle="All time"
         />
 
         <StatCard
           icon={<CalendarDays className="w-5 h-5 text-[#3C1053]" />}
           title="This month"
-          value="48"
-          subtitle="+12% from last month"
+          value={String(reportsThisMonth)}
+          subtitle="Current month"
         />
 
         <StatCard
           icon={<PieChart className="w-5 h-5 text-[#3C1053]" />}
           title="This quarter"
-          value="67"
-          subtitle="Q4 2025"
+          value={String(reportsThisQuarter)}
+          subtitle="Current quarter"
         />
 
         <StatCard
           icon={<Users className="w-5 h-5 text-[#3C1053]" />}
           title="Active customers"
-          value="47"
+          value={String(activeCustomers)}
           subtitle="With reports"
         />
       </div>

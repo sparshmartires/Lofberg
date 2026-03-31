@@ -23,7 +23,7 @@ export default function CompiledReceiptTranslation({ contentJson, translationJso
     onChange?.(JSON.stringify({ ...translation, [field]: html }))
   }
 
-  const fields: { key: keyof CompiledReceiptContent; label: string; fieldType?: "richtext" | "textarea" | "input" }[] = [
+  const fields: { key: keyof CompiledReceiptContent; label: string; fieldType?: "richtext" | "input" }[] = [
     { key: "receipt_comp_header", label: "Compiled receipt header", fieldType: "input" },
     { key: "receipt_comp_desc_text", label: "Compiled receipt description" },
   ]

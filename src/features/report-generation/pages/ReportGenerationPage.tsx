@@ -61,14 +61,9 @@ function ReportGenerationContent() {
       {/* Page Header + Progress Tracker */}
       <div className="flex flex-col min-[900px]:flex-row min-[900px]:items-center min-[900px]:justify-between gap-4 mb-8">
         <div className="shrink-0">
-          <h1 className="text-[32px] font-semibold text-[#1F1F1F] leading-tight">
-            {isEditing ? "Edit report" : "Generate reports and receipts"}
+          <h1 className="page-header-with-action-title">
+            {isEditing ? "Edit report" : "Generate report & receipt"}
           </h1>
-          <p className="text-sm text-[#747474] mt-1">
-            {isEditing
-              ? "Edit and regenerate this report"
-              : "Create sustainability reports and receipts for customers"}
-          </p>
         </div>
 
         <div className="w-full min-[900px]:max-w-[480px]">

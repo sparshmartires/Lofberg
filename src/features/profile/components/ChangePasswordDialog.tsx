@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { X, Loader2 } from "lucide-react"
 import { useChangePasswordMutation } from "@/store/services/authApi"
 import { useAuth } from "@/store/hooks/useAuth"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface ChangePasswordDialogProps {
   open: boolean
@@ -47,7 +48,9 @@ export function ChangePasswordDialog({
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [errors, setErrors] = useState<FormErrors>({})
+  useAutoDismiss(errors.general, () => setErrors((prev) => ({ ...prev, general: undefined })))
   const [successMessage, setSuccessMessage] = useState("")
+  useAutoDismiss(successMessage, () => setSuccessMessage(""))
 
   const [changePassword, { isLoading }] = useChangePasswordMutation()
   const { user } = useAuth()
@@ -84,7 +87,6 @@ export function ChangePasswordDialog({
 
     try {
       await changePassword({
-        userId: user?.id || "",
         currentPassword,
         newPassword,
       }).unwrap()

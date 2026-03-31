@@ -26,8 +26,8 @@ export default function UspTranslation({ contentJson, translationJson, onChange 
     onChange?.(JSON.stringify({ ...translation, [field]: html }))
   }
 
-  const fields: { key: keyof UspContent; label: string; fieldType?: "richtext" | "textarea" | "input" }[] = [
-    { key: "headerText", label: "Header text", fieldType: "textarea" },
+  const fields: { key: keyof UspContent; label: string; fieldType?: "richtext" | "input" }[] = [
+    { key: "headerText", label: "Header text", fieldType: "input" },
     { key: "introText", label: "Intro text" },
     { key: "sectionText1", label: "Section text 1" },
     { key: "sectionText2", label: "Section text 2" },

@@ -83,11 +83,12 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
     <div className="space-y-8">
       <div>
         <p className="text-sm mb-2">Header text</p>
-        <textarea
+        <input
+          type="text"
           placeholder="Enter header text"
           value={parsed.headerText}
           onChange={(e) => updateField("headerText", e.target.value)}
-          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[44px] rounded-full border border-[#EDEDED] px-5 py-3"
         />
       </div>
 
@@ -108,14 +109,13 @@ export default function UspSection({ contentJson, onChange }: UspSectionProps) {
           <div key={section.textKey} className="border border-[#EDEDED] rounded-[24px] p-6 space-y-4">
             <p className="text-sm font-medium">{section.label}</p>
 
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
               <div className="min-w-0">
                 <p className="text-sm mb-2">Image</p>
 
                 <FileDropZone
                   accept=".jpg,.jpeg,.png,.svg,.webp"
-                  acceptLabel="Max 2MB, JPG/PNG/SVG"
-                  file={imageFiles[section.imageKey]}
+                  acceptLabel="JPG/PNG/SVG"                  file={imageFiles[section.imageKey]}
                   previewUrl={parsed[section.imageKey]}
                   onFileChange={(file) => handleImageChange(section.imageKey, file)}
                   className="h-[120px]"

@@ -125,14 +125,10 @@ export function Step4ContentSelection() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold text-[#1F1F1F]">Content selection</h2>
-      </div>
+      <h2 className="text-lg font-semibold text-[#1F1F1F]">Content selection</h2>
 
       {/* Cover page options */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">Cover page</label>
-
         <div className="flex items-center gap-2">
           <Checkbox
             checked={step4.includeTableOfContents}
@@ -156,7 +152,7 @@ export function Step4ContentSelection() {
 
       {/* Add on blocks */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">Add on</label>
+        <label className="text-sm font-medium text-[#1F1F1F]">Increasing impact</label>
         <AddOnBlockSelector
           selected={step4.selectedAddOnBlocks}
           onChange={handleAddOnChange}
@@ -167,7 +163,7 @@ export function Step4ContentSelection() {
 
       {/* Certifications page */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">Certifications page</label>
+        <label className="text-sm font-medium text-[#1F1F1F]">Certifications</label>
         <p className="text-xs text-[#9CA3AF]">
           Data loaded from CSV file - displays coffee quantities in kilograms
         </p>

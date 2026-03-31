@@ -1,16 +1,16 @@
 "use client"
 
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select"
-
 import { FileText } from "lucide-react"
 
-export default function ReportTypeDistribution() {
+interface ReportTypeDistributionProps {
+  data: { fullReport: number; receiptOnly: number; compiledReceipt: number; total: number }
+}
+
+export default function ReportTypeDistribution({ data }: ReportTypeDistributionProps) {
+  const fullReportPct = data.total > 0 ? Math.round((data.fullReport / data.total) * 100) : 0
+  const receiptOnlyPct = data.total > 0 ? Math.round((data.receiptOnly / data.total) * 100) : 0
+  const compiledReceiptPct = data.total > 0 ? Math.round((data.compiledReceipt / data.total) * 100) : 0
+
   return (
     <div className="w-full bg-white border border-[#EDEDED] rounded-[28px] p-6 space-y-6">
 
@@ -19,72 +19,6 @@ export default function ReportTypeDistribution() {
         <h3 className="text-[18px] text-[#1F1F1F]">
           Report type distribution
         </h3>
-
-        <p className="text-[14px] text-[#747474]">
-          Illustrates the percentage breakdown of report types generated
-        </p>
-      </div>
-
-      {/* FILTERS */}
-      <div className="grid md:grid-cols-3 gap-4">
-
-        <div>
-          <p className="text-[12px] text-[#6B6B6B] mb-1">
-            Date range
-          </p>
-
-          <Select defaultValue="all">
-            <SelectTrigger className="rounded-full h-[40px]">
-              <SelectValue placeholder="All time" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="all">All time</SelectItem>
-              <SelectItem value="month">This month</SelectItem>
-              <SelectItem value="quarter">This quarter</SelectItem>
-            </SelectContent>
-          </Select>
-
-        </div>
-
-        <div>
-          <p className="text-[12px] text-[#6B6B6B] mb-1">
-            Market
-          </p>
-
-          <Select defaultValue="all">
-            <SelectTrigger className="rounded-full h-[40px]">
-              <SelectValue placeholder="All markets" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="all">All markets</SelectItem>
-              <SelectItem value="sweden">Sweden</SelectItem>
-              <SelectItem value="norway">Norway</SelectItem>
-            </SelectContent>
-          </Select>
-
-        </div>
-
-        <div>
-          <p className="text-[12px] text-[#6B6B6B] mb-1">
-            Segment
-          </p>
-
-          <Select defaultValue="all">
-            <SelectTrigger className="rounded-full h-[40px]">
-              <SelectValue placeholder="All segments" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="all">All segments</SelectItem>
-              <SelectItem value="hotel">Hotel</SelectItem>
-              <SelectItem value="restaurant">Restaurant</SelectItem>
-            </SelectContent>
-          </Select>
-
-        </div>
-
       </div>
 
       {/* STAT CARDS */}
@@ -93,32 +27,24 @@ export default function ReportTypeDistribution() {
         <StatCard
           title="Full report"
           subtitle="(Report + Receipt)"
-          percent="45%"
-          reports="70 reports"
+          percent={`${fullReportPct}%`}
+          reports={`${data.fullReport} reports`}
         />
 
         <StatCard
           title="Receipt only"
           subtitle="(Standalone)"
-          percent="35%"
-          reports="55 reports"
+          percent={`${receiptOnlyPct}%`}
+          reports={`${data.receiptOnly} reports`}
         />
 
         <StatCard
           title="Compiled report"
           subtitle=""
-          percent="20%"
-          reports="31 reports"
+          percent={`${compiledReceiptPct}%`}
+          reports={`${data.compiledReceipt} reports`}
         />
 
-      </div>
-
-      {/* INSIGHT */}
-      <div className="flex items-start gap-3 bg-[#FAFAFA] rounded-lg p-3 border-l-[4px] border-[#7B3EBE] text-sm text-[#4E4E4E]">
-        <span className="font-medium">Insight:</span>
-        <span>
-          Full reports: 45% | Receipt only: 35% | Compiled receipt: 20%
-        </span>
       </div>
 
     </div>
