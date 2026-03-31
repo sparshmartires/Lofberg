@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 import { useForm, useWatch } from "react-hook-form"
 import { CustomerDialogForm, CustomerFormValues } from "./CustomerDialogForm"
@@ -217,21 +218,28 @@ export function EditCustomerDialog({
         </div>
 
         {readOnly ? (
-          <fieldset disabled className="opacity-100">
-            <CustomerDialogForm
-              mode="edit"
-              control={control}
-              register={register}
-              errors={{}}
-              segmentOptions={segmentOptions}
-              regionOptions={regionOptions}
-              logoPreview={customer?.logoUrl || null}
-              submitError=""
-              isSubmitting={false}
-              onCancel={() => handleDialogOpenChange(false)}
-              hideActions
-            />
-          </fieldset>
+          <>
+            <fieldset disabled className="opacity-100">
+              <CustomerDialogForm
+                mode="edit"
+                control={control}
+                register={register}
+                errors={{}}
+                segmentOptions={segmentOptions}
+                regionOptions={regionOptions}
+                logoPreview={customer?.logoUrl || null}
+                submitError=""
+                isSubmitting={false}
+                onCancel={() => handleDialogOpenChange(false)}
+                hideActions
+              />
+            </fieldset>
+            <div className="flex justify-center pt-6">
+              <Button type="button" variant="outlineBrand" onClick={() => handleDialogOpenChange(false)} className="w-[200px] px-[20px] py-[10px]">
+                Close
+              </Button>
+            </div>
+          </>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <CustomerDialogForm
@@ -239,6 +247,7 @@ export function EditCustomerDialog({
               control={control}
               register={register}
               trigger={trigger}
+              setValue={setValue}
               errors={errors}
               segmentOptions={segmentOptions}
               regionOptions={regionOptions}

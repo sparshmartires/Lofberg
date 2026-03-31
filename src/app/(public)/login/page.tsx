@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { useLoginMutation } from "@/store/services/authApi"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 interface LoginFormValues {
   email: string
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [login, { isLoading, error }] = useLoginMutation()
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState<string | null>(null)
+  useAutoDismiss(loginError, () => setLoginError(null))
 
   const {
     register,
@@ -29,12 +31,12 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setLoginError(null)
-      await login({
+      const result = await login({
         email: data.email,
         password: data.password,
       }).unwrap()
 
-      // Navigate on success
+      // All roles go to dashboard after login
       router.push("/dashboard")
     } catch (err: any) {
       // Check for first-login password change requirement (403 with requirePasswordChange)

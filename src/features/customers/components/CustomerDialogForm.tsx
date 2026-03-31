@@ -1,6 +1,6 @@
 "use client"
 
-import { Control, Controller, FieldErrors, UseFormRegister, UseFormTrigger, useWatch } from "react-hook-form"
+import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormTrigger, useWatch } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { formatPhoneDisplay } from "@/lib/phone"
@@ -39,6 +39,7 @@ interface CustomerDialogFormProps {
   register: UseFormRegister<CustomerFormValues>
   errors: FieldErrors<CustomerFormValues>
   trigger?: UseFormTrigger<CustomerFormValues>
+  setValue?: UseFormSetValue<CustomerFormValues>
   segmentOptions: Array<{ id: string; name: string }>
   regionOptions: Array<{ id: string; name: string }>
   logoPreview?: string | null
@@ -58,6 +59,7 @@ export function CustomerDialogForm({
   register,
   errors,
   trigger,
+  setValue,
   segmentOptions,
   regionOptions,
   logoPreview,
@@ -68,6 +70,7 @@ export function CustomerDialogForm({
   hideActions = false,
 }: CustomerDialogFormProps) {
   const isSubCustomer = useWatch({ control, name: "isSubCustomer" })
+  const parentCustomerId = useWatch({ control, name: "parentCustomerId" })
   const { data: parentOptions } = useGetCustomersQuery(
     { pageNumber: 1, pageSize: 200, isActive: true },
     { skip: !isSubCustomer }
@@ -206,6 +209,28 @@ export function CustomerDialogForm({
             />
             {errors.parentCustomerId && (
               <p className="text-xs text-red-500">{errors.parentCustomerId.message}</p>
+            )}
+
+            {parentCustomerId && setValue && (
+              <Button
+                type="button"
+                variant="outlineBrand"
+                size="sm"
+                className="mt-2"
+                onClick={() => {
+                  const parent = (parentOptions?.items ?? []).find((c) => c.id === parentCustomerId)
+                  if (!parent || !setValue) return
+                  if (parent.segmentId) setValue("industry", parent.segmentId)
+                  if (parent.serviceTier) setValue("serviceTier", String(parent.serviceTier))
+                  if (parent.regionId) setValue("region", parent.regionId)
+                  if (parent.contactName) setValue("contactPerson", parent.contactName)
+                  if (parent.contactEmail) setValue("contactEmail", parent.contactEmail)
+                  if (parent.contactPhone) setValue("contactPhone", parent.contactPhone)
+                  if (parent.address) setValue("address", parent.address)
+                }}
+              >
+                Use parent details
+              </Button>
             )}
           </div>
         )}
@@ -352,7 +377,15 @@ export function CustomerDialogForm({
                       type="file"
                       accept=".png,.jpg,.jpeg,.svg"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                      onChange={(e) => field.onChange(e.target.files)}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file && file.size > 10 * 1024 * 1024) {
+                          alert(`File exceeds 10 MB limit (${(file.size / 1024 / 1024).toFixed(1)} MB)`)
+                          e.target.value = ""
+                          return
+                        }
+                        field.onChange(e.target.files)
+                      }}
                     />
                     <div className="flex flex-col items-center justify-center text-center px-6 py-12 rounded-[28px] border-2 border-dashed border-[#D9C2F3] bg-[#FAF7FF] transition-colors hover:bg-[#F5EDFF]">
                       <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#F3E8FF] mb-4">
@@ -362,7 +395,7 @@ export function CustomerDialogForm({
                         Upload a file or drag and drop
                       </p>
                       <p className="text-sm text-[#9CA3AF] mt-1">
-                        PNG, JPG or SVG recommended
+                        PNG, JPG or SVG (max 10 MB)
                       </p>
                     </div>
                   </div>
@@ -376,6 +409,8 @@ export function CustomerDialogForm({
       {submitError ? (
         <p className="text-sm text-destructive">{submitError}</p>
       ) : null}
+
+
 
       {!hideActions && (
         <div className="flex justify-center gap-6 pt-6 max-[600px]:gap-2">

@@ -7,13 +7,13 @@ import { FileDropZone } from "@/features/report-generation/components/FileDropZo
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
 const RIGHT_BLOCKS = [
-  { index: 1, label: "Block 1 (Icon + Textblock1 (right))" },
-  { index: 2, label: "Block 2 (Icon + Textblock 2 (right))" },
+  { index: 1, label: "Block 1" },
+  { index: 2, label: "Block 2" },
 ] as const
 
 const BOTTOM_BLOCKS = [
-  { index: 3, label: "Block 3 (Icon + Textblock3 (bottom left))" },
-  { index: 4, label: "Block 4 (Icon + Textblock 4 (bottom right))" },
+  { index: 3, label: "Block 3" },
+  { index: 4, label: "Block 4" },
 ] as const
 
 const ALL_BLOCKS = [...RIGHT_BLOCKS, ...BOTTOM_BLOCKS] as const
@@ -88,13 +88,12 @@ export default function AboutSustainabilitySection({
 
   return (
     <div className="space-y-8">
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
         <div className="min-w-0">
           <p className="text-sm mb-2">Banner image</p>
           <FileDropZone
             accept=".jpg,.jpeg,.png,.svg,.webp"
-            acceptLabel="Recommended size: 1920x1080px, Max 2MB"
-            file={imageFiles["intro_hero_image"] ?? null}
+            acceptLabel="Recommended size: 1920x1080px, JPG/PNG/SVG"            file={imageFiles["intro_hero_image"] ?? null}
             previewUrl={parsed.intro_hero_image}
             onFileChange={(file) => handleImageChange("intro_hero_image", file)}
             className="h-[125px]"
@@ -103,11 +102,12 @@ export default function AboutSustainabilitySection({
 
         <div className="min-w-0">
           <p className="text-sm mb-2">Header text</p>
-          <textarea
+          <input
+            type="text"
             placeholder="Enter header text"
             value={parsed.headerText}
             onChange={(e) => updateText("headerText", e.target.value)}
-            className="w-full min-w-0 h-[125px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+            className="w-full min-w-0 h-[44px] rounded-full border border-[#EDEDED] px-5 py-3"
           />
         </div>
 
@@ -115,8 +115,7 @@ export default function AboutSustainabilitySection({
           <p className="text-sm mb-2">Circle image</p>
           <FileDropZone
             accept=".jpg,.jpeg,.png,.svg,.webp"
-            acceptLabel="Recommended size: 800x800px, Max 2MB"
-            file={imageFiles["intro_circle_image"] ?? null}
+            acceptLabel="Recommended size: 800x800px, JPG/PNG/SVG"            file={imageFiles["intro_circle_image"] ?? null}
             previewUrl={parsed.intro_circle_image}
             onFileChange={(file) => handleImageChange("intro_circle_image", file)}
             className="h-[125px]"
@@ -136,7 +135,6 @@ export default function AboutSustainabilitySection({
 
       <div className="border-t border-[#EDEDED]" />
 
-      <p className="text-sm font-medium text-[#8A8A8A]">Right-side blocks</p>
       <div className="space-y-6">
         {RIGHT_BLOCKS.map((block) => {
           const iconField = `intro_icon_${block.index}` as ImageField
@@ -149,13 +147,12 @@ export default function AboutSustainabilitySection({
             >
               <p className="text-sm font-medium">{block.label}</p>
 
-              <div className="grid lg:grid-cols-2 gap-8">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[iconField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[iconField] ?? null}
                     previewUrl={parsed[iconField]}
                     onFileChange={(file) => handleImageChange(iconField, file)}
                     className="h-[110px]"
@@ -179,7 +176,6 @@ export default function AboutSustainabilitySection({
 
       <div className="border-t border-[#EDEDED]" />
 
-      <p className="text-sm font-medium text-[#8A8A8A]">Bottom blocks</p>
       <div className="space-y-6">
         {BOTTOM_BLOCKS.map((block) => {
           const iconField = `intro_icon_${block.index}` as ImageField
@@ -192,13 +188,12 @@ export default function AboutSustainabilitySection({
             >
               <p className="text-sm font-medium">{block.label}</p>
 
-              <div className="grid lg:grid-cols-2 gap-8">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[iconField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[iconField] ?? null}
                     previewUrl={parsed[iconField]}
                     onFileChange={(file) => handleImageChange(iconField, file)}
                     className="h-[110px]"

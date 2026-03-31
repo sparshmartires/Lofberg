@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 import { Trash2, Plus, Loader2 } from "lucide-react"
 import {
   Dialog,
@@ -47,6 +48,7 @@ export default function ConversionTranslationDialog({
   const [rows, setRows] = useState<TranslationRow[]>([])
   const [isSaving, setIsSaving] = useState(false)
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  useAutoDismiss(statusMessage?.text ?? null, () => setStatusMessage(null))
 
   // Fetch languages
   const { data: languages = [] } = useGetTemplateLanguagesQuery()

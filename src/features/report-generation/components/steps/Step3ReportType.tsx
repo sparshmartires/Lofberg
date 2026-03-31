@@ -82,7 +82,7 @@ export function Step3ReportType() {
 
       {/* Add-ons */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">Add on&apos;s</label>
+        <label className="text-sm font-medium text-[#1F1F1F]">Add ons</label>
 
         <div className="flex flex-wrap gap-6">
           <div className="flex items-center gap-2">
@@ -95,13 +95,13 @@ export function Step3ReportType() {
             </label>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2" title="TBD">
             <Checkbox
-              checked={step3.generateMediaScreens}
-              onCheckedChange={(checked) => handleMediaScreensChange(Boolean(checked))}
+              checked={false}
+              disabled
             />
-            <label className="text-sm text-[#1F1F1F] cursor-pointer">
-              Generate media screens
+            <label className="text-sm text-[#9CA3AF] cursor-not-allowed">
+              Generate media screens (TBD)
             </label>
           </div>
         </div>

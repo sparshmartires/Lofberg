@@ -79,7 +79,7 @@ export default function CompiledReceiptSection({
       </div>
 
       {/* HEADER + DESC TEXT */}
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
 
         <div className="min-w-0">
           <p className="text-sm mb-2">Header text</p>
@@ -156,8 +156,7 @@ export default function CompiledReceiptSection({
 
               <FileDropZone
                 accept=".jpg,.jpeg,.png,.svg,.webp"
-                acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
-                file={imageFiles[iconKey] || null}
+                acceptLabel="Recommended size: 1920x1080px, JPG/PNG/SVG"                file={imageFiles[iconKey] || null}
                 previewUrl={parsed[iconKey]}
                 onFileChange={(file) => handleImageChange(iconKey, file)}
                 className="h-[110px]"

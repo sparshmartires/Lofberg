@@ -1,0 +1,1032 @@
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\auth.spec.ts
+  2:57  warning  'loginAs' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\conversion-logic.spec.ts
+  1:16  warning  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\historical-reports.spec.ts
+  1:16  warning  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\report-wizard.spec.ts
+  1:16  warning  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\resources.spec.ts
+  1:16  warning  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\e2e\templates.spec.ts
+  1:16  warning  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\change-password\page.tsx
+  36:25  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\change-password\page.tsx:36:25
+  34 |   const [showConfirm, setShowConfirm] = useState(false)
+  35 |
+> 36 |   const passwordValue = watch("password")
+     |                         ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  37 |
+  38 |   useEffect(() => {
+  39 |     const storedUserId = sessionStorage.getItem("firstLoginUserId")  react-hooks/incompatible-library
+  72:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\forgot-password\page.tsx
+  27:5   warning  'setError' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  39:19  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\login\page.tsx
+  20:30  warning  'error' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  46:19  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\reset-password\page.tsx
+  47:25  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\reset-password\page.tsx:47:25
+  45 |   const [showConfirm, setShowConfirm] = useState(false)
+  46 |
+> 47 |   const passwordValue = watch("password")
+     |                         ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  48 |
+  49 |   // Get reset token/email from URL first, fallback to session storage
+  50 |   useEffect(() => {  react-hooks/incompatible-library
+  96:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\verify-code\page.tsx
+   31:35  warning  'isResending' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   37:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\(public)\verify-code\page.tsx:37:7
+  35 |   useEffect(() => {
+  36 |     if (seconds === 0) {
+> 37 |       setCanResend(true)
+     |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  38 |       return
+  39 |     }
+  40 |  react-hooks/set-state-in-effect
+   63:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+  114:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\not-found.tsx
+  34:27  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\providers.tsx
+  18:34  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\app\providers.tsx:18:34
+  16 |   const router = useRouter();
+  17 |   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+> 18 |   const lastActivityRef = useRef(Date.now());
+     |                                  ^^^^^^^^^^ Cannot call impure function
+  19 |   const [refreshToken] = useRefreshTokenMutation();
+  20 |
+  21 |   // Hydrate auth state from localStorage on first mount  react-hooks/purity
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\components\layout\AppHeader.tsx
+   4:20  warning  'User' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  13:3   warning  'Select' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  14:3   warning  'SelectTrigger' is defined but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  15:3   warning  'SelectContent' is defined but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  16:3   warning  'SelectItem' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  17:3   warning  'SelectValue' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  21:7   warning  'languages' is assigned a value but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  32:10  warning  'language' is assigned a value but never used                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  32:20  warning  'setLanguage' is assigned a value but never used                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  55:9   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\components\layout\AppSideBar.tsx
+  81:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\components\layout\PublicAppHeader.tsx
+  9:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\components\ui\feedback-dialog.tsx
+  10:10  warning  'Check' is defined but never used          @typescript-eslint/no-unused-vars
+  10:17  warning  'AlertTriangle' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\components\ui\input.tsx
+  4:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\components\ui\select.tsx
+  4:10  warning  'CheckIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\conversion-logic\components\ConversionTranslationDialog.tsx
+  66:9  warning  The 'translationData' logical expression could make the dependencies of useEffect Hook (at line 80) change on every render. Move it inside the useEffect callback. Alternatively, wrap the initialization of 'translationData' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\AddCustomerPage.tsx
+   93:9   warning  'extractEntityId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  135:12  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerReportUploader.tsx
+  25:11  warning  'register' is assigned a value but never used                                                                    @typescript-eslint/no-unused-vars
+  25:21  warning  'setValue' is assigned a value but never used                                                                    @typescript-eslint/no-unused-vars
+  87:6   warning  React Hook useCallback has a missing dependency: 'handleFile'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx
+   74:53  warning  'sortDirection' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   81:10  warning  'deleteCustomer' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   97:76  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  104:75  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  129:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:129:16
+  127 |           <TableHeader>
+  128 |             <TableRow className="table-header-row-bordered">
+> 129 |               <SortableHeader column="name">
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  130 |                 Name
+  131 |               </SortableHeader>
+  132 |               <SortableHeader column="segment">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:109:26
+  107 |   }
+  108 |
+> 109 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 110 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 111 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 118 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 119 |   )
+      | ^^^^ The component is created during render here
+  120 |
+  121 |   return (
+  122 |     <>  react-hooks/static-components
+  132:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:132:16
+  130 |                 Name
+  131 |               </SortableHeader>
+> 132 |               <SortableHeader column="segment">
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  133 |                 Segment
+  134 |               </SortableHeader>
+  135 |               <SortableHeader column="servicetier">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:109:26
+  107 |   }
+  108 |
+> 109 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 110 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 111 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 118 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 119 |   )
+      | ^^^^ The component is created during render here
+  120 |
+  121 |   return (
+  122 |     <>                        react-hooks/static-components
+  135:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:135:16
+  133 |                 Segment
+  134 |               </SortableHeader>
+> 135 |               <SortableHeader column="servicetier">
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  136 |                 Service tier
+  137 |               </SortableHeader>
+  138 |               <TableHead className="table-header-cell">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:109:26
+  107 |   }
+  108 |
+> 109 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 110 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 111 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 118 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 119 |   )
+      | ^^^^ The component is created during render here
+  120 |
+  121 |   return (
+  122 |     <>        react-hooks/static-components
+  144:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:144:16
+  142 |                 Reports
+  143 |               </TableHead>
+> 144 |               <SortableHeader column="status">
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  145 |                 Status
+  146 |               </SortableHeader>
+  147 |               <TableHead className="table-header-cell">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\CustomerTable.tsx:109:26
+  107 |   }
+  108 |
+> 109 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 110 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 111 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 118 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 119 |   )
+      | ^^^^ The component is created during render here
+  120 |
+  121 |   return (
+  122 |     <>                        react-hooks/static-components
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\customers\components\EditCustomerPage.tsx
+  194:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\dashboard\components\ReportsByMarkets.tsx
+  18:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\dashboard\components\SalesRepPerformance.tsx
+  41:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\dashboard\components\TopCustomers.tsx
+  41:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx
+   82:3   warning  'sortDirection' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  180:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:180:18
+  178 |             <TableHeader>
+  179 |               <TableRow className="table-header-row-bordered">
+> 180 |                 <SortableHeader column="title" className="max-w-[250px]">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  181 |                   Report title
+  182 |                 </SortableHeader>
+  183 |                 <SortableHeader column="customer" className="max-w-[200px]">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,  react-hooks/static-components
+  183:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:183:18
+  181 |                   Report title
+  182 |                 </SortableHeader>
+> 183 |                 <SortableHeader column="customer" className="max-w-[200px]">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  184 |                   Customer
+  185 |                 </SortableHeader>
+  186 |                 {showSalesRepColumn && (
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                                                               react-hooks/static-components
+  187:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:187:20
+  185 |                 </SortableHeader>
+  186 |                 {showSalesRepColumn && (
+> 187 |                   <SortableHeader column="salesperson" className="max-w-[180px]">
+      |                    ^^^^^^^^^^^^^^ This component is created during render
+  188 |                     Salesperson
+  189 |                   </SortableHeader>
+  190 |                 )}
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                                                             react-hooks/static-components
+  191:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:191:18
+  189 |                   </SortableHeader>
+  190 |                 )}
+> 191 |                 <SortableHeader column="segment">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  192 |                   Segment
+  193 |                 </SortableHeader>
+  194 |                 <SortableHeader column="status">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                                                                                             react-hooks/static-components
+  194:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:194:18
+  192 |                   Segment
+  193 |                 </SortableHeader>
+> 194 |                 <SortableHeader column="status">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  195 |                   Status
+  196 |                 </SortableHeader>
+  197 |                 <SortableHeader column="reportdate">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                                                                                      react-hooks/static-components
+  197:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:197:18
+  195 |                   Status
+  196 |                 </SortableHeader>
+> 197 |                 <SortableHeader column="reportdate">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  198 |                   Report date
+  199 |                 </SortableHeader>
+  200 |                 <SortableHeader column="createdat">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                                                                               react-hooks/static-components
+  200:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:200:18
+  198 |                   Report date
+  199 |                 </SortableHeader>
+> 200 |                 <SortableHeader column="createdat">
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  201 |                   Created at
+  202 |                 </SortableHeader>
+  203 |                 <TableHead className="table-header-cell">
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\historical-reports\components\HistoricalReportsTable.tsx:137:26
+  135 |     report.statusLabel === "Draft" ? "delete" : "archive"
+  136 |
+> 137 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 138 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 139 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 146 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 147 |   )
+      | ^^^^ The component is created during render here
+  148 |
+  149 |   const modalTitle = {
+  150 |     archive: `Archive "${modal.report?.title}"?`,                                                                      react-hooks/static-components
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\report-generation\components\DataSourceTable.tsx
+  39:3  warning  'step' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\report-generation\components\ReportSummary.tsx
+  8:10  warning  'formatEuNumber' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\report-generation\components\steps\Step3ReportType.tsx
+  27:9  warning  'handleMediaScreensChange' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\report-generation\components\steps\Step5OutputExport.tsx
+  26:9  warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\report-generation\hooks\useWizardNavigation.ts
+  62:15  warning  'isGenerating' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  62:29  warning  'generatedReportId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\AboutSustainabilitySection.tsx
+  19:7  warning  'ALL_BLOCKS' is assigned a value but only used as a type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  53:3  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\AboutSustainabilitySection.tsx:53:3
+  51 |
+  52 |   const onChangeRef = useRef(onChange)
+> 53 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  54 |   const parsedRef = useRef(parsed)
+  55 |   parsedRef.current = parsed
+  56 |                                                                 react-hooks/refs
+  55:3  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\AboutSustainabilitySection.tsx:55:3
+  53 |   onChangeRef.current = onChange
+  54 |   const parsedRef = useRef(parsed)
+> 55 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  56 |
+  57 |   const emitChange = useCallback((data: AboutSustainabilityContent) => {
+  58 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\CertificationSection.tsx
+  51:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\CertificationSection.tsx:51:3
+  49 |
+  50 |   const onChangeRef = useRef(onChange)
+> 51 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  52 |   const parsedRef = useRef(parsed)
+  53 |   parsedRef.current = parsed
+  54 |                                                            react-hooks/refs
+  53:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\CertificationSection.tsx:53:3
+  51 |   onChangeRef.current = onChange
+  52 |   const parsedRef = useRef(parsed)
+> 53 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  54 |
+  55 |   const emitChange = useCallback((data: CertificationsContent) => {
+  56 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\CompiledReceiptSection.tsx
+  38:9  warning  The 'emit' function makes the dependencies of useCallback Hook (at line 64) change on every render. To fix this, wrap the definition of 'emit' in its own useCallback() Hook  react-hooks/exhaustive-deps
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\CoverPageSection.tsx
+    5:3   warning  'AlignCenter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    6:3   warning  'AlignLeft' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    7:3   warning  'AlignRight' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+    8:3   warning  'Bold' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+    9:3   warning  'Italic' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   10:3   warning  'List' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   11:3   warning  'ListOrdered' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   12:16  warning  'UnderlineIcon' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   18:10  warning  'EditorContent' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   19:10  warning  'Button' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   20:10  warning  'cn' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   60:3   error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\CoverPageSection.tsx:60:3
+  58 |   const isExternalUpdate = useRef(false)
+  59 |   const onChangeRef = useRef(onChange)
+> 60 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  61 |   const parsedRef = useRef(parsed)
+  62 |   parsedRef.current = parsed
+  63 |              react-hooks/refs
+   62:3   error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\CoverPageSection.tsx:62:3
+  60 |   onChangeRef.current = onChange
+  61 |   const parsedRef = useRef(parsed)
+> 62 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  63 |
+  64 |   const emitChange = useCallback((data: CoverPageContent) => {
+  65 |     if (onChangeRef.current) {  react-hooks/refs
+  119:9   warning  'toolbarState' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\IncreasingImpactSection.tsx
+  61:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\IncreasingImpactSection.tsx:61:3
+  59 |
+  60 |   const onChangeRef = useRef(onChange)
+> 61 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  62 |   const parsedRef = useRef(parsed)
+  63 |   parsedRef.current = parsed
+  64 |                                                              react-hooks/refs
+  63:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\IncreasingImpactSection.tsx:63:3
+  61 |   onChangeRef.current = onChange
+  62 |   const parsedRef = useRef(parsed)
+> 63 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  64 |
+  65 |   const emitChange = useCallback((data: IncreasingImpactContent) => {
+  66 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\RichTextEditor.tsx
+  44:3  warning  'placeholder' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  49:3  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\RichTextEditor.tsx:49:3
+  47 |   const isExternalUpdate = useRef(false)
+  48 |   const onChangeRef = useRef(onChange)
+> 49 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  50 |   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  51 |   const menuRef = useRef<HTMLDivElement>(null)
+  52 |  react-hooks/refs
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\TemplateContent.tsx
+  44:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\TemplateContent.tsx:44:5
+  42 |
+  43 |   useEffect(() => {
+> 44 |     setActiveTab(isReceiptTemplate ? "receipt" : "cover")
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  45 |   }, [isReceiptTemplate])
+  46 |
+  47 |   const getPage = (pageType: PageType) => pages.find((p) => p.pageType === pageType)  react-hooks/set-state-in-effect
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\TranslationContent.tsx
+  44:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\TranslationContent.tsx:44:5
+  42 |
+  43 |   useEffect(() => {
+> 44 |     setActiveTab(isReceiptTemplate ? "receipt" : "cover")
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  45 |   }, [isReceiptTemplate])
+  46 |
+  47 |   const getPage = (pageType: PageType) => pages.find((p) => p.pageType === pageType)  react-hooks/set-state-in-effect
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\UspSection.tsx
+  40:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\UspSection.tsx:40:3
+  38 |
+  39 |   const onChangeRef = useRef(onChange)
+> 40 |   onChangeRef.current = onChange
+     |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  41 |   const parsedRef = useRef(parsed)
+  42 |   parsedRef.current = parsed
+  43 |                                                 react-hooks/refs
+  42:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\template\components\UspSection.tsx:42:3
+  40 |   onChangeRef.current = onChange
+  41 |   const parsedRef = useRef(parsed)
+> 42 |   parsedRef.current = parsed
+     |   ^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  43 |
+  44 |   const emitChange = useCallback((data: UspContent) => {
+  45 |     if (onChangeRef.current) {  react-hooks/refs
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\EditResourceDialog.tsx
+  43:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\EditResourceDialog.tsx:43:5
+  41 |   useEffect(() => {
+  42 |     if (!resource) return
+> 43 |     setTitle(resource.title)
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  44 |     setDescription(resource.description || "")
+  45 |     setResourceType(resource.resourceType === 2 ? "link" : "file")
+  46 |     setExternalUrl(resource.externalUrl || "")  react-hooks/set-state-in-effect
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx
+  46:3   warning  'sortDirection' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  72:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:72:16
+  70 |           <TableHeader>
+  71 |             <TableRow className="table-header-row-bordered">
+> 72 |               <SortableHeader column="title">Title</SortableHeader>
+     |                ^^^^^^^^^^^^^^ This component is created during render
+  73 |               <TableHead className="table-header-cell">Description</TableHead>
+  74 |               <SortableHeader column="resourcetype">Type</SortableHeader>
+  75 |               <SortableHeader column="updatedat">Updated at</SortableHeader>
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:53:26
+  51 | }: UsefulResourcesTableProps) {
+  52 |
+> 53 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 54 |     <TableHead
+     | ^^^^^^^^^^^^^^
+> 55 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+     …
+     | ^^^^^^^^^^^^^^
+> 62 |     </TableHead>
+     | ^^^^^^^^^^^^^^
+> 63 |   )
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   return (
+  66 |     <div className="table-card border-[#EDEDED]">                                                                     react-hooks/static-components
+  74:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:74:16
+  72 |               <SortableHeader column="title">Title</SortableHeader>
+  73 |               <TableHead className="table-header-cell">Description</TableHead>
+> 74 |               <SortableHeader column="resourcetype">Type</SortableHeader>
+     |                ^^^^^^^^^^^^^^ This component is created during render
+  75 |               <SortableHeader column="updatedat">Updated at</SortableHeader>
+  76 |               <SortableHeader column="createdat">Created at</SortableHeader>
+  77 |               <TableHead className="table-header-cell">Actions</TableHead>
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:53:26
+  51 | }: UsefulResourcesTableProps) {
+  52 |
+> 53 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 54 |     <TableHead
+     | ^^^^^^^^^^^^^^
+> 55 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+     …
+     | ^^^^^^^^^^^^^^
+> 62 |     </TableHead>
+     | ^^^^^^^^^^^^^^
+> 63 |   )
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   return (
+  66 |     <div className="table-card border-[#EDEDED]">  react-hooks/static-components
+  75:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:75:16
+  73 |               <TableHead className="table-header-cell">Description</TableHead>
+  74 |               <SortableHeader column="resourcetype">Type</SortableHeader>
+> 75 |               <SortableHeader column="updatedat">Updated at</SortableHeader>
+     |                ^^^^^^^^^^^^^^ This component is created during render
+  76 |               <SortableHeader column="createdat">Created at</SortableHeader>
+  77 |               <TableHead className="table-header-cell">Actions</TableHead>
+  78 |             </TableRow>
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:53:26
+  51 | }: UsefulResourcesTableProps) {
+  52 |
+> 53 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 54 |     <TableHead
+     | ^^^^^^^^^^^^^^
+> 55 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+     …
+     | ^^^^^^^^^^^^^^
+> 62 |     </TableHead>
+     | ^^^^^^^^^^^^^^
+> 63 |   )
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   return (
+  66 |     <div className="table-card border-[#EDEDED]">                                              react-hooks/static-components
+  76:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:76:16
+  74 |               <SortableHeader column="resourcetype">Type</SortableHeader>
+  75 |               <SortableHeader column="updatedat">Updated at</SortableHeader>
+> 76 |               <SortableHeader column="createdat">Created at</SortableHeader>
+     |                ^^^^^^^^^^^^^^ This component is created during render
+  77 |               <TableHead className="table-header-cell">Actions</TableHead>
+  78 |             </TableRow>
+  79 |           </TableHeader>
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\components\UsefulResourcesTable.tsx:53:26
+  51 | }: UsefulResourcesTableProps) {
+  52 |
+> 53 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 54 |     <TableHead
+     | ^^^^^^^^^^^^^^
+> 55 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+     …
+     | ^^^^^^^^^^^^^^
+> 62 |     </TableHead>
+     | ^^^^^^^^^^^^^^
+> 63 |   )
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   return (
+  66 |     <div className="table-card border-[#EDEDED]">                                                                                                    react-hooks/static-components
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\pages\UsefulResourcesPage.tsx
+  66:21  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\useful-resources\pages\UsefulResourcesPage.tsx:66:21
+  64 |       )
+  65 |
+> 66 |   useEffect(() => { setPageNumber(1) }, [debouncedSearch, typeFilter])
+     |                     ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  67 |
+  68 |   const handlePageSizeChange = (value: number) => {
+  69 |     setPageSize(value)  react-hooks/set-state-in-effect
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\users\components\UsersTable.tsx
+   82:45  warning  'sortDirection' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  150:12  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  171:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\users\components\UsersTable.tsx:171:18
+  169 |                   Email
+  170 |                 </TableHead>
+> 171 |                 <SortableHeader column="role" className={columnWidths.role}>
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  172 |                   Role
+  173 |                 </SortableHeader>
+  174 |                 <SortableHeader column="status" className={columnWidths.status}>
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\users\components\UsersTable.tsx:104:26
+  102 |   }
+  103 |
+> 104 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 105 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 106 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 113 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 114 |   )
+      | ^^^^ The component is created during render here
+  115 |
+  116 |   const handleEdit = (user: ViewUser) => {
+  117 |     setSelectedUser(user)                       react-hooks/static-components
+  174:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\users\components\UsersTable.tsx:174:18
+  172 |                   Role
+  173 |                 </SortableHeader>
+> 174 |                 <SortableHeader column="status" className={columnWidths.status}>
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  175 |                   Status
+  176 |                 </SortableHeader>
+  177 |                 <TableHead className={`table-header-cell ${columnWidths.reports}`}>
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\users\components\UsersTable.tsx:104:26
+  102 |   }
+  103 |
+> 104 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 105 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 106 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 113 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 114 |   )
+      | ^^^^ The component is created during render here
+  115 |
+  116 |   const handleEdit = (user: ViewUser) => {
+  117 |     setSelectedUser(user)          react-hooks/static-components
+  180:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\users\components\UsersTable.tsx:180:18
+  178 |                   Reports
+  179 |                 </TableHead>
+> 180 |                 <SortableHeader column="lastlogin" className={columnWidths.lastLogin}>
+      |                  ^^^^^^^^^^^^^^ This component is created during render
+  181 |                   Last login
+  182 |                 </SortableHeader>
+  183 |                 <TableHead className={`table-header-cell ${columnWidths.actions}`}>
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\features\users\components\UsersTable.tsx:104:26
+  102 |   }
+  103 |
+> 104 |   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 105 |     <TableHead
+      | ^^^^^^^^^^^^^^
+> 106 |       className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
+      …
+      | ^^^^^^^^^^^^^^
+> 113 |     </TableHead>
+      | ^^^^^^^^^^^^^^
+> 114 |   )
+      | ^^^^ The component is created during render here
+  115 |
+  116 |   const handleEdit = (user: ViewUser) => {
+  117 |     setSelectedUser(user)  react-hooks/static-components
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\hooks\useAutoDismiss.ts
+  12:35  error  Error: Expected the first argument to be an inline function expression
+
+Expected the first argument to be an inline function expression.
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\hooks\useAutoDismiss.ts:12:35
+  10 |   ms = 10000
+  11 | ) {
+> 12 |   const stableClear = useCallback(clear, [clear])
+     |                                   ^^^^^ Expected the first argument to be an inline function expression
+  13 |
+  14 |   useEffect(() => {
+  15 |     if (!value) return  react-hooks/use-memo
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\src\store\services\exampleApi.ts
+  9:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\auth.spec.ts
+  2:10  warning  'loginAs' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\conversions.spec.ts
+  127:9   warning  'updatePayload' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  127:24  error    Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\customers.spec.ts
+  151:13  warning  'regionCells' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  152:13  warning  'regions' is assigned a value but never used      @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\global.spec.ts
+    3:10  warning  'getAllVisibleText' is defined but never used   @typescript-eslint/no-unused-vars
+  321:11  warning  'pageText' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  352:11  warning  'textAfter' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\helpers\api.ts
+   28:46  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:52  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:66  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:44  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:58  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   62:16  warning  'apiDelete' is defined but never used     @typescript-eslint/no-unused-vars
+   62:49  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  110:47  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:43  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  129:56  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:52  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:47  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\historical-reports.spec.ts
+   55:11  warning  'typeFilter' is assigned a value but never used      @typescript-eslint/no-unused-vars
+   57:11  warning  'statusFilter' is assigned a value but never used    @typescript-eslint/no-unused-vars
+   59:11  warning  'segmentFilter' is assigned a value but never used   @typescript-eslint/no-unused-vars
+   69:11  warning  'salespersonBox' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  332:13  warning  'bodyText' is assigned a value but never used        @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\profile.spec.ts
+  80:11  warning  'fileInputCount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\report-wizard.spec.ts
+    8:7   warning  'API_BASE' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  152:11  warning  'bodyText' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  489:9   warning  'dialogShown' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  514:93  warning  'page' is defined but never used                  @typescript-eslint/no-unused-vars
+  514:99  warning  'context' is defined but never used               @typescript-eslint/no-unused-vars
+  531:13  warning  'bodyText' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  569:15  warning  'text' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\templates.spec.ts
+  380:11  warning  'initialRows' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  399:17  warning  'version' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  455:11  warning  'coverContent' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\translations.spec.ts
+  47:11  warning  'placeholders' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  53:11  warning  'hasNAPlaceholder' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\Projects\Others\LofbergsWorkspace\Lofberg\tests\e2e\useful-resources.spec.ts
+  122:13  warning  'downloadPromise' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 149 problems (63 errors, 86 warnings)
+

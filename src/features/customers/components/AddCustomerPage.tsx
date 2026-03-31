@@ -163,6 +163,7 @@ export function AddCustomerDialog({
             register={register}
             control={control}
             trigger={trigger}
+            setValue={setValue}
             errors={errors}
             segmentOptions={segmentOptions}
             regionOptions={regionOptions}

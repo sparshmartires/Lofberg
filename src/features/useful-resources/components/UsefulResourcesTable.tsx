@@ -8,66 +8,116 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Download, Pencil, Trash2 } from "lucide-react"
-
-export interface UsefulResourceItem {
-  id: number
-  title: string
-  description: string
-  dateCreated: string
-  attachmentsCount: number
-}
+import { ExternalLink, Eye, Pencil, Trash2 } from "lucide-react"
+import { SortableHeader } from "@/components/ui/SortableHeader"
+import type { ResourceDto } from "@/store/services/resourcesApi"
 
 interface UsefulResourcesTableProps {
-  resources: UsefulResourceItem[]
-  onEditResource: (resource: UsefulResourceItem) => void
+  resources: ResourceDto[]
+  isAdmin: boolean
+  sortBy: string
+  sortDirection: string
+  onSort: (column: string) => void
+  onView: (resource: ResourceDto) => void
+  onEditResource: (resource: ResourceDto) => void
+  onDeleteResource: (resource: ResourceDto) => void
 }
 
-export function UsefulResourcesTable({ resources, onEditResource }: UsefulResourcesTableProps) {
+function formatDate(dateStr?: string): string {
+  if (!dateStr) return "-"
+  try {
+    return new Date(dateStr).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+  } catch {
+    return "-"
+  }
+}
+
+function getTypeLabel(resourceType: number): string {
+  return resourceType === 2 ? "Link" : "File"
+}
+
+export function UsefulResourcesTable({
+  resources,
+  isAdmin,
+  sortBy,
+  sortDirection,
+  onSort,
+  onView,
+  onEditResource,
+  onDeleteResource,
+}: UsefulResourcesTableProps) {
+
   return (
     <div className="table-card border-[#EDEDED]">
-      <div className="users-table-desktop overflow-x-auto">
-        <Table className="table-fixed min-w-[980px]">
+      {/* Desktop */}
+      <div className="users-table-desktop">
+        <Table className="w-full">
           <TableHeader>
             <TableRow className="table-header-row-bordered">
-              <TableHead className="table-header-cell w-[220px]">Title</TableHead>
-              <TableHead className="table-header-cell w-[330px]">Description</TableHead>
-              <TableHead className="table-header-cell w-[170px]">Date created</TableHead>
-              <TableHead className="table-header-cell w-[190px]">Number of attachments</TableHead>
-              <TableHead className="table-header-cell w-[130px]">Actions</TableHead>
+              <SortableHeader column="title" sortBy={sortBy} onSort={onSort}>Title</SortableHeader>
+              <TableHead className="table-header-cell">Description</TableHead>
+              <SortableHeader column="resourcetype" sortBy={sortBy} onSort={onSort}>Type</SortableHeader>
+              <SortableHeader column="updatedat" sortBy={sortBy} onSort={onSort}>Updated at</SortableHeader>
+              <SortableHeader column="createdat" sortBy={sortBy} onSort={onSort}>Created at</SortableHeader>
+              <TableHead className="table-header-cell">Actions</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {resources.map((resource) => (
               <TableRow key={resource.id} className="table-body-row">
-                <TableCell className="table-name-text pl-[12px]" data-label="Title" title={resource.title}>
+                <TableCell className="table-name-text max-w-[200px]" title={resource.title}>
                   <span className="block truncate">{resource.title}</span>
                 </TableCell>
-                <TableCell className="table-muted-text" data-label="Description" title={resource.description}>
-                  <span className="block truncate">{resource.description}</span>
+                <TableCell className="table-muted-text max-w-[280px]" title={resource.description}>
+                  <span className="block truncate">{resource.description || "-"}</span>
                 </TableCell>
-                <TableCell className="table-muted-text" data-label="Date created">
-                  {resource.dateCreated}
+                <TableCell className="table-muted-text">
+                  <span className="flex items-center gap-1">
+                    {resource.resourceType === 2 && <ExternalLink className="h-3.5 w-3.5" />}
+                    {getTypeLabel(resource.resourceType)}
+                  </span>
                 </TableCell>
-                <TableCell className="table-muted-text" data-label="Number of attachments">
-                  {resource.attachmentsCount}
+                <TableCell className="table-muted-text">
+                  {formatDate(resource.updatedAt)}
                 </TableCell>
-                <TableCell data-label="Actions">
+                <TableCell className="table-muted-text">
+                  {formatDate(resource.createdAt)}
+                </TableCell>
+                <TableCell>
                   <div className="table-actions-wrap">
-                    <button className="table-action-btn" aria-label={`Download ${resource.title}`}>
-                      <Download className="table-action-icon" />
-                    </button>
                     <button
                       className="table-action-btn"
-                      aria-label={`Edit ${resource.title}`}
-                      onClick={() => onEditResource(resource)}
+                      aria-label={`View ${resource.title}`}
+                      title="View"
+                      onClick={() => onView(resource)}
                     >
-                      <Pencil className="table-action-icon" />
+                      <Eye className="table-action-icon" />
                     </button>
-                    <button className="table-action-btn" aria-label={`Delete ${resource.title}`}>
-                      <Trash2 className="table-action-icon" />
-                    </button>
+                    {isAdmin && (
+                      <>
+                        <button
+                          className="table-action-btn"
+                          aria-label={`Edit ${resource.title}`}
+                          title="Edit"
+                          onClick={() => onEditResource(resource)}
+                        >
+                          <Pencil className="table-action-icon" />
+                        </button>
+                        <button
+                          className="table-action-btn"
+                          aria-label={`Delete ${resource.title}`}
+                          title="Archive"
+                          onClick={() => onDeleteResource(resource)}
+                        >
+                          <Trash2 className="table-action-icon" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
@@ -76,56 +126,47 @@ export function UsefulResourcesTable({ resources, onEditResource }: UsefulResour
         </Table>
       </div>
 
-     <div className="users-list-mobile">
-  {resources.map((resource) => (
-    <div key={resource.id} className="user-mobile-card">
+      {/* Mobile */}
+      <div className="users-list-mobile">
+        {resources.map((resource) => (
+          <div key={resource.id} className="user-mobile-card">
+            <div className="flex justify-between items-start gap-4">
+              <div className="min-w-0">
+                <div className="text-[14px] font-medium text-[#1F1F1F] truncate">{resource.title}</div>
+                <div className="text-[13px] text-[#747474]">{getTypeLabel(resource.resourceType)}</div>
+              </div>
+              <div className="text-right shrink-0 text-[13px] text-[#747474]">
+                {formatDate(resource.createdAt)}
+              </div>
+            </div>
 
-      {/* TITLE + DATE */}
-      <div className="flex justify-between items-start gap-4">
-        <div>
-          <div className="text-[14px] text-[#6B6B6B]">Title</div>
-          <div className="text-[14px] text-[#1F1F1F]">{resource.title}</div>
-        </div>
+            {resource.description && (
+              <>
+                <div className="user-mobile-divider" />
+                <div className="text-[13px] text-[#4E4E4E] line-clamp-2">
+                  {resource.description}
+                </div>
+              </>
+            )}
 
-        <div className="text-right">
-          <div className="text-[14px] text-[#6B6B6B]">Last report date</div>
-          <div className="text-[14px] text-[#1F1F1F]">{resource.dateCreated}</div>
-        </div>
+            <div className="border-t border-[#EDEDED] mt-3 pt-3 flex justify-end gap-4 text-[#5B2D91] text-[13px]">
+              <button className="flex items-center gap-1" onClick={() => onView(resource)}>
+                View <Eye className="h-4 w-4" />
+              </button>
+              {isAdmin && (
+                <>
+                  <button className="flex items-center gap-1" onClick={() => onEditResource(resource)}>
+                    Edit <Pencil className="h-4 w-4" />
+                  </button>
+                  <button className="flex items-center gap-1" onClick={() => onDeleteResource(resource)}>
+                    Archive <Trash2 className="h-4 w-4" />
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
-
-      <div className="user-mobile-divider" />
-
-      {/* DESCRIPTION */}
-      <div>
-        <div className="text-[14px] text-[#6B6B6B] mb-1">Description</div>
-        <div className="text-[14px] text-[#4E4E4E] leading-relaxed">
-          {resource.description}
-        </div>
-      </div>
-
-      <div className="user-mobile-divider" />
-
-      {/* ACTIONS */}
-      <div className="flex justify-between text-[#5B2D91] text-[14px]">
-        <button className="flex items-center gap-1">
-          Save <Download className="h-4 w-4" />
-        </button>
-
-        <button
-          className="flex items-center gap-1"
-          onClick={() => onEditResource(resource)}
-        >
-          Edit <Pencil className="h-4 w-4" />
-        </button>
-
-        <button className="flex items-center gap-1">
-          Delete <Trash2 className="h-4 w-4" />
-        </button>
-      </div>
-
-    </div>
-  ))}
-</div>
     </div>
   )
 }

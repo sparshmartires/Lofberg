@@ -98,11 +98,12 @@ export default function IncreasingImpactSection({
     <div className="space-y-8">
       <div>
         <p className="text-sm mb-2">Header text</p>
-        <textarea
+        <input
+          type="text"
           placeholder="Enter header text"
           value={parsed.headerText}
           onChange={(e) => updateText("headerText", e.target.value)}
-          className="w-full min-w-0 h-[90px] rounded-xl border border-[#EDEDED] p-3 resize-none"
+          className="w-full min-w-0 h-[44px] rounded-full border border-[#EDEDED] px-5 py-3"
         />
       </div>
 
@@ -137,18 +138,16 @@ export default function IncreasingImpactSection({
                   value={currentName}
                   onChange={(e) => updateText(nameField, e.target.value)}
                   placeholder={block.label}
-                  required
                   className="flex-1 h-[36px] rounded-[99px] border border-[#F0F0F0] px-[16px] shadow-[0px_2px_4px_0px_#0000000A] text-sm font-medium"
                 />
               </div>
 
-              <div className="grid lg:grid-cols-2 gap-8">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
                 <div className="min-w-0">
                   <p className="text-sm mb-2">Image</p>
                   <FileDropZone
                     accept=".jpg,.jpeg,.png,.svg,.webp"
-                    acceptLabel="Max 2MB, JPG/PNG/SVG"
-                    file={imageFiles[imageField] ?? null}
+                    acceptLabel="JPG/PNG/SVG"                    file={imageFiles[imageField] ?? null}
                     previewUrl={parsed[imageField]}
                     onFileChange={(file) => handleImageChange(imageField, file)}
                     className="h-[110px]"
@@ -178,7 +177,7 @@ export default function IncreasingImpactSection({
           value={parsed.wantMoreText}
           onChange={(html) => updateText("wantMoreText", html)}
           placeholder="Enter 'want to know more' text"
-          className="h-[90px]"
+          className="h-[120px]"
         />
       </div>
     </div>

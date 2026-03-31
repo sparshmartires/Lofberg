@@ -20,8 +20,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Archive, ArrowUpDown, Download, Pencil, RotateCcw, Trash2 } from "lucide-react"
+import { Archive, Download, Pencil, RotateCcw, Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { SortableHeader } from "@/components/ui/SortableHeader"
 import type { ReportDto, StatusLabel } from "@/features/report-generation/types"
 import { useArchiveReportMutation, useRestoreReportMutation } from "@/store/services/reportsApi"
 
@@ -134,18 +135,6 @@ export function HistoricalReportsTable({
   const getArchiveAction = (report: ReportDto): ModalAction =>
     report.statusLabel === "Draft" ? "delete" : "archive"
 
-  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
-    <TableHead
-      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
-      onClick={() => onSort?.(column)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#8A8A8A]"}`} />
-      </div>
-    </TableHead>
-  )
-
   const modalTitle = {
     archive: `Archive "${modal.report?.title}"?`,
     delete: `Delete draft "${modal.report?.title}"?`,
@@ -173,34 +162,34 @@ export function HistoricalReportsTable({
   return (
     <>
       <div className="table-card border-[#EDEDED]">
-        <div className="users-table-desktop">
-          <Table>
+        <div className="users-table-desktop overflow-hidden">
+          <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="table-header-row-bordered">
-                <SortableHeader column="title" className="min-w-[180px]">
-                  Report title/ID
+                <SortableHeader column="title" className="max-w-[250px]" sortBy={sortBy} onSort={onSort}>
+                  Report title
                 </SortableHeader>
-                <SortableHeader column="customer" className="min-w-[160px]">
-                  Customer name
+                <SortableHeader column="customer" className="max-w-[200px]" sortBy={sortBy} onSort={onSort}>
+                  Customer
                 </SortableHeader>
                 {showSalesRepColumn && (
-                  <SortableHeader column="salesperson" className="min-w-[160px]">
-                    Sales representative
+                  <SortableHeader column="salesperson" className="max-w-[180px]" sortBy={sortBy} onSort={onSort}>
+                    Salesperson
                   </SortableHeader>
                 )}
-                <SortableHeader column="segment" className="min-w-[120px]">
+                <SortableHeader column="segment" sortBy={sortBy} onSort={onSort}>
                   Segment
                 </SortableHeader>
-                <SortableHeader column="status" className="min-w-[100px]">
+                <SortableHeader column="status" sortBy={sortBy} onSort={onSort}>
                   Status
                 </SortableHeader>
-                <SortableHeader column="reportdate" className="min-w-[120px]">
+                <SortableHeader column="reportdate" sortBy={sortBy} onSort={onSort}>
                   Report date
                 </SortableHeader>
-                <SortableHeader column="createdat" className="min-w-[120px]">
+                <SortableHeader column="createdat" sortBy={sortBy} onSort={onSort}>
                   Created at
                 </SortableHeader>
-                <TableHead className="table-header-cell min-w-[120px]">
+                <TableHead className="table-header-cell">
                   Actions
                 </TableHead>
               </TableRow>
@@ -209,16 +198,13 @@ export function HistoricalReportsTable({
             <TableBody>
               {reports.map((report) => (
                 <TableRow key={report.id} className="table-body-row">
-                  <TableCell className="table-name-cell min-w-[180px]" data-label="Report title/ID">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="table-name-text truncate">{report.title}</span>
-                      <span className="table-muted-text">{report.id.substring(0, 8)}</span>
-                    </div>
+                  <TableCell className="table-name-cell max-w-[250px]" data-label="Report title" title={report.title}>
+                    <span className="table-name-text block truncate">{report.title}</span>
                   </TableCell>
 
-                  <TableCell className="min-w-[160px]" data-label="Customer name">
-                    <div className="flex items-center gap-2">
-                      <Avatar size="sm">
+                  <TableCell className="max-w-[200px]" data-label="Customer" title={report.customerName}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Avatar size="sm" className="shrink-0">
                         {report.customerLogoUrl && (
                           <AvatarImage src={report.customerLogoUrl} alt={report.customerName} />
                         )}
@@ -229,7 +215,7 @@ export function HistoricalReportsTable({
                   </TableCell>
 
                   {showSalesRepColumn && (
-                    <TableCell className="min-w-[160px]" data-label="Sales representative">
+                    <TableCell className="max-w-[180px]" data-label="Salesperson">
                       <div className="flex items-center gap-2">
                         <Avatar size="sm">
                           {report.salesRepProfileImageUrl && (
@@ -319,55 +305,63 @@ export function HistoricalReportsTable({
         <div className="users-list-mobile">
           {reports.map((report) => (
             <div key={report.id} className="user-mobile-card">
-              <div className="flex items-center justify-between">
-                <div className="text-[14px] text-[#1F1F1F]">
-                  Report title/ID : <span className="text-[#4E4E4E]">{report.id.substring(0, 8)}</span>
-                </div>
-
-                <Badge className={`${getStatusClass(report.statusLabel)} rounded-full px-4 py-1 text-xs`}>
+              <div className="flex items-center justify-between gap-2 min-w-0">
+                <span className="text-[14px] font-medium text-[#1F1F1F] truncate min-w-0" title={report.title}>
+                  {report.title}
+                </span>
+                <Badge className={`${getStatusClass(report.statusLabel)} rounded-full px-4 py-1 text-xs shrink-0`}>
                   {report.statusLabel}
                 </Badge>
               </div>
 
               <div className="user-mobile-divider" />
 
-              <div className="flex items-center gap-2 text-[14px] text-[#4E4E4E]">
-                <Avatar size="sm">
+              <div className="flex items-center gap-2 text-[14px] text-[#4E4E4E] min-w-0">
+                <Avatar size="sm" className="shrink-0">
                   {report.customerLogoUrl && (
                     <AvatarImage src={report.customerLogoUrl} alt={report.customerName} />
                   )}
                   <AvatarFallback>{getInitials(report.customerName)}</AvatarFallback>
                 </Avatar>
-                Customer name : {report.customerName}
+                <span className="truncate">{report.customerName}</span>
               </div>
 
               {showSalesRepColumn && (
-                <div className="flex items-center gap-2 text-[14px] text-[#4E4E4E]">
-                  <Avatar size="sm">
+                <div className="flex items-center gap-2 text-[14px] text-[#4E4E4E] min-w-0">
+                  <Avatar size="sm" className="shrink-0">
                     {report.salesRepProfileImageUrl && (
                       <AvatarImage src={report.salesRepProfileImageUrl} alt={report.salesRepresentative} />
                     )}
                     <AvatarFallback>{getInitials(report.salesRepresentative)}</AvatarFallback>
                   </Avatar>
-                  Sales representative: {report.salesRepresentative}
+                  <span className="truncate">{report.salesRepresentative}</span>
                 </div>
               )}
 
-              {report.customerSegment && (
-                <div className="text-[14px] text-[#4E4E4E]">
-                  Segment : {report.customerSegment}
-                </div>
-              )}
-
-              <div className="text-[14px] text-[#4E4E4E]">
-                Report date : {formatDate(report.reportDate)}
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px] text-[#4E4E4E]">
+                {report.customerSegment && (
+                  <div><span className="text-[#747474]">Segment:</span> {report.customerSegment}</div>
+                )}
+                <div><span className="text-[#747474]">Report date:</span> {formatDate(report.reportDate)}</div>
+                <div><span className="text-[#747474]">Created:</span> {formatDate(report.createdAt)}</div>
               </div>
 
-              <div className="text-[14px] text-[#4E4E4E]">
-                Created at : {formatDate(report.createdAt)}
-              </div>
-
-              <div className="flex justify-end mt-4 gap-3">
+              <div className="border-t border-[#EDEDED] mt-4 pt-3 flex justify-end gap-3">
+                {canEdit(report) && (
+                  <button
+                    onClick={() =>
+                      router.push(
+                        report.statusLabel === "Draft"
+                          ? `/report-generation?draftId=${report.id}`
+                          : `/report-generation?reportId=${report.id}`
+                      )
+                    }
+                    className="flex items-center gap-2 text-[#5B2D91] text-[14px]"
+                  >
+                    Edit
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                )}
                 {canDownload(report) && (
                   <button
                     onClick={() => handleDownload(report)}

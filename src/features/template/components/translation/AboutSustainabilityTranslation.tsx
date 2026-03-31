@@ -27,8 +27,8 @@ export default function AboutSustainabilityTranslation({ contentJson, translatio
     onChange?.(JSON.stringify({ ...translation, [field]: html }))
   }
 
-  const fields: { key: keyof AboutSustainabilityContent; label: string; fieldType?: "richtext" | "textarea" | "input" }[] = [
-    { key: "headerText", label: "Header text", fieldType: "textarea" },
+  const fields: { key: keyof AboutSustainabilityContent; label: string; fieldType?: "richtext" | "input" }[] = [
+    { key: "headerText", label: "Header text", fieldType: "input" },
     { key: "introText", label: "Intro text" },
     { key: "intro_textblock_1", label: "Textblock 1" },
     { key: "intro_textblock_2", label: "Textblock 2" },

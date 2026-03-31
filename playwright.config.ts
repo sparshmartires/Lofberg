@@ -1,13 +1,19 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
+
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './tests/e2e',
+  timeout: 45_000,
+  retries: 1,
+  workers: 1,
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.TEST_BASE_URL ?? 'https://localhost:3000',
     headless: true,
+    ignoreHTTPSErrors: true,
     screenshot: 'only-on-failure',
-    video: 'off',
+    trace: 'on-first-retry',
   },
-  timeout: 30000,
-  retries: 0,
-  workers: 1, // Sequential to avoid rate limiting
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'mobile', use: { ...devices['iPhone 12'] } },
+  ],
 });

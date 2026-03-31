@@ -23,7 +23,11 @@ import { FileDropZone } from "@/features/report-generation/components/FileDropZo
 import { useUploadTemplateImageMutation } from "@/store/services/templatesApi"
 
 const DEFAULT_CONTENT: CoverPageContent = {
-  headerText: "<p>Sustainability report</p>",
+  headerText: "Sustainability report",
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "").trim()
 }
 
 const defaultToolbarState = {
@@ -92,7 +96,7 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
         types: ["heading", "paragraph"],
       }),
       Placeholder.configure({
-        placeholder: "Sustainability report",
+        placeholder: "",
       }),
     ],
     content: parsed.headerText,
@@ -134,14 +138,13 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
 
   return (
     <div className="space-y-6">
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-8">
         <div className="min-w-0">
         <p className="text-sm mb-2">Background image</p>
 
         <FileDropZone
           accept=".jpg,.jpeg,.png,.svg,.webp"
-          acceptLabel="Recommended size: 1920x1080px, Max 2MB, JPG/PNG/SVG"
-          file={imageFile}
+          acceptLabel="Recommended size: 1920x1080px, JPG/PNG/SVG"          file={imageFile}
           previewUrl={parsed.cover_image}
           onFileChange={handleImageChange}
           className="h-[125px]"
@@ -153,7 +156,7 @@ export default function CoverPageSection({ contentJson, onChange }: CoverPageSec
 
         <input
           type="text"
-          value={parsed.headerText || ""}
+          value={stripHtml(parsed.headerText || "")}
           onChange={(e) => emitChange({ ...parsedRef.current, headerText: e.target.value })}
           placeholder="Enter header text"
           className="w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-sm"

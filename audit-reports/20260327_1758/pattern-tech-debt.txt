@@ -1,0 +1,4 @@
+src/features/customers/components/CustomerDialogForm.tsx:288:                  placeholder="+XX XXXXX XXXXX"
+src/features/profile/pages/ProfilePage.tsx:221:                  placeholder="+XX XXXXX XXXXX"
+src/features/users/components/UserDialogForm.tsx:186:                    placeholder="+XX XXXXX XXXXX"
+src/lib/phone.ts:2: * Format a phone number for display as +XX XXXXX XXXXX.

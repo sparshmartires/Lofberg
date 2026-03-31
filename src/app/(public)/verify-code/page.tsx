@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { BackButton } from "@/components/ui/back-button"
 import { useVerifyCodeMutation, useResendCodeMutation } from "@/store/services/authApi"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 export default function VerifyCodePage() {
   return (
@@ -22,6 +23,7 @@ function VerifyCodeForm() {
 
   const [code, setCode] = useState(["", "", "", "", ""])
   const [error, setError] = useState("")
+  useAutoDismiss(error, () => setError(""))
   const [seconds, setSeconds] = useState(60)
   const [canResend, setCanResend] = useState(false)
 

@@ -23,7 +23,7 @@ export default function SustainabilitySection({
 }: SustainabilitySectionProps) {
   const isReceiptTemplate = templateType === "receipt"
 
-  const [activeTab, setActiveTab] = useState(isReceiptTemplate ? "receipt" : "about")
+  const [activeTab, setActiveTab] = useState(isReceiptTemplate ? "receipt" : "cover")
 
   const reportTabs = [
     { value: "cover", label: "Cover page" },
@@ -41,7 +41,7 @@ export default function SustainabilitySection({
   const tabs = isReceiptTemplate ? receiptTabs : reportTabs
 
   useEffect(() => {
-    setActiveTab(isReceiptTemplate ? "receipt" : "about")
+    setActiveTab(isReceiptTemplate ? "receipt" : "cover")
   }, [isReceiptTemplate])
 
   const getPage = (pageType: PageType) => pages.find((p) => p.pageType === pageType)
@@ -63,7 +63,7 @@ export default function SustainabilitySection({
   ].filter((p): p is TemplatePageContentDto => p !== undefined)
 
   return (
-    <div className="w-full rounded-[28px] border border-[#EDEDED] bg-white p-4 sm:p-6 lg:p-8 space-y-6 mt-[20px] min-w-0">
+    <div className="w-full rounded-[28px] border border-[#EDEDED] bg-white p-2 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 mt-[20px] min-w-0">
       <p className="text-[10px] text-[#747474]">
         Available placeholders: {"{Time period}"}, {"{Quantity}"}, {"{Area}"}, {"{CO2 in KG}"}, {"{CO2 in equivalent units}"}, {"{EUR FT Cooperative Premium}"}, {"{EUR FT Organic Income}"}, {"{NOK FT Cooperative Premium}"}, {"{NOK FT Organic Income}"}
       </p>

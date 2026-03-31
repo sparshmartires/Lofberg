@@ -1,8 +1,10 @@
 "use client"
 
 import { useCallback } from "react"
-import { ChevronLeft, ChevronRight, Save } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ChevronLeft, ChevronRight, Save, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAppSelector } from "@/store/hooks"
 import { useWizardNavigation } from "../hooks/useWizardNavigation"
 import { ReportSummary } from "./ReportSummary"
 import { Step1CustomerDetails } from "./steps/Step1CustomerDetails"
@@ -12,6 +14,7 @@ import { Step4ContentSelection } from "./steps/Step4ContentSelection"
 import { Step5OutputExport } from "./steps/Step5OutputExport"
 
 export function ReportWizard() {
+  const router = useRouter()
   const {
     currentStep,
     isFirstStep,
@@ -22,6 +25,10 @@ export function ReportWizard() {
     isSaving,
     stepError,
   } = useWizardNavigation()
+
+  // Disable "Save as draft" until customer details are added (SRS requirement)
+  const step1 = useAppSelector((state) => state.reportWizard.step1)
+  const hasCustomer = !!(step1.customerId || step1.customerName)
 
   const handleSaveDraft = useCallback(async () => {
     await saveDraft()
@@ -52,8 +59,8 @@ export function ReportWizard() {
       )}
 
       {/* Navigation Bar — same width as content grid above */}
-      <div className="rounded-[24px] bg-white shadow-sm px-6 py-4 flex items-center justify-between">
-        {/* Back — same variant/size as Save as draft */}
+      <div className="rounded-[24px] bg-white shadow-sm px-4 sm:px-6 py-4 flex items-center justify-between">
+        {/* Back */}
         <Button
           type="button"
           variant="outlineBrand"
@@ -62,31 +69,42 @@ export function ReportWizard() {
           className="gap-2"
         >
           <ChevronLeft className="h-4 w-4" />
-          Back
+          <span className="hidden sm:inline">Back</span>
         </Button>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Button
             type="button"
             variant="outlineBrand"
             onClick={handleSaveDraft}
-            disabled={isSaving}
+            disabled={isSaving || !hasCustomer}
+            title={!hasCustomer ? "Add customer details first" : undefined}
             className="gap-2"
           >
             <Save className="h-4 w-4" />
-            {isSaving ? "Saving..." : "Save as draft"}
+            <span className="hidden sm:inline">{isSaving ? "Saving..." : "Save as draft"}</span>
           </Button>
 
-          {!isLastStep && (
+          {!isLastStep ? (
             <Button
               type="button"
               variant="primary"
               onClick={goNext}
               className="gap-2"
             >
-              Next
+              <span className="hidden sm:inline">Next</span>
               <ChevronRight className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => router.push("/dashboard")}
+              className="gap-2"
+            >
+              <Check className="h-4 w-4" />
+              <span className="hidden sm:inline">Finish</span>
             </Button>
           )}
         </div>

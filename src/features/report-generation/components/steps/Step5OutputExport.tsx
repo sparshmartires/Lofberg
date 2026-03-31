@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,23 +13,27 @@ import {
 } from "@/components/ui/select"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep5, setGenerating, setGeneratedReportId } from "@/store/slices/reportWizardSlice"
-import { useGenerateReportMutation, useUploadImageMutation } from "@/store/services/reportsApi"
+import { useGenerateReportMutation, usePreviewReportMutation, useUploadImageMutation } from "@/store/services/reportsApi"
 import { OutputFormat, OutputSize, ReportType } from "../../types"
 import { getCustomerLogoFile, setCustomerLogoFile } from "../../customerLogoRef"
 import type { Step1Data } from "../../types"
+import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
 const fieldClass =
   "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-body focus:ring-0 focus:outline-none"
 
 export function Step5OutputExport() {
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const { step1, step2, step3, step4, step5, isGenerating, draftId, editingReportId } = useAppSelector(
     (state) => state.reportWizard
   )
 
   const [generateReport] = useGenerateReportMutation()
+  const [previewReport] = usePreviewReportMutation()
   const [uploadImage] = useUploadImageMutation()
   const [error, setError] = useState<string | null>(null)
+  useAutoDismiss(error, () => setError(null))
 
   const isReceiptOnly = step3.reportType === ReportType.ReceiptOnly
 
@@ -116,8 +121,7 @@ export function Step5OutputExport() {
     dispatch(setGenerating(true))
     try {
       const resolvedStep1 = await resolveStep1WithLogo()
-      const result = await generateReport({
-        draftId: editingReportId ? undefined : draftId,
+      const result = await previewReport({
         step1: resolvedStep1,
         step2: { rows: step2.rows, timePeriod: step2.timePeriod },
         step3,
@@ -125,8 +129,17 @@ export function Step5OutputExport() {
         step5,
       }).unwrap()
 
-      if (result.generatedFileUrl) {
-        window.open(result.generatedFileUrl, "_blank")
+      if (result.previewPdfBase64) {
+        // Convert base64 to blob and open in new tab
+        const byteChars = atob(result.previewPdfBase64)
+        const byteArray = new Uint8Array(byteChars.length)
+        for (let i = 0; i < byteChars.length; i++) {
+          byteArray[i] = byteChars.charCodeAt(i)
+        }
+        const blob = new Blob([byteArray], { type: "application/pdf" })
+        const url = URL.createObjectURL(blob)
+        window.open(url, "_blank")
+        setTimeout(() => URL.revokeObjectURL(url), 60000)
       }
     } catch (err: unknown) {
       const message =
@@ -137,12 +150,12 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, editingReportId, step2, step3, step4, step5, step1.salesRepresentativeId])
+  }, [dispatch, previewReport, resolveStep1WithLogo, step2, step3, step4, step5, step1.salesRepresentativeId])
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-[#1F1F1F]">Output & export</h2>
+        <h2 className="text-lg font-semibold text-[#1F1F1F]">Generate</h2>
       </div>
 
       <div className="grid grid-cols-1 min-[500px]:grid-cols-2 gap-6">
@@ -161,9 +174,6 @@ export function Step5OutputExport() {
               <SelectItem value={String(OutputFormat.JPEG)}>JPEG</SelectItem>
             </SelectContent>
           </Select>
-          <p className="text-xs text-[#9CA3AF]">
-            PDF or JPEG format available for all outputs
-          </p>
         </div>
 
         {/* Size */}
@@ -187,11 +197,6 @@ export function Step5OutputExport() {
               A4 (default)
             </div>
           )}
-          <p className="text-xs text-[#9CA3AF]">
-            {isReceiptOnly
-              ? "Select A4, A3, or both sizes for receipts"
-              : "Reports are generated in A4 format only"}
-          </p>
         </div>
       </div>
 
@@ -232,8 +237,9 @@ export function Step5OutputExport() {
             onClick={handleGenerate}
             disabled={isGenerating}
           >
-            {isGenerating ? "Generating..." : "Generate and download"}
+            {isGenerating ? "Generating..." : "Generate"}
           </Button>
+
         </div>
       </div>
     </div>
