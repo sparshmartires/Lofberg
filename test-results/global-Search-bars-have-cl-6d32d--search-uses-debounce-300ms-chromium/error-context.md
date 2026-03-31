@@ -1,0 +1,118 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Customer management" [level=1] [ref=e23]
+            - paragraph
+          - button "Add customer" [ref=e24]:
+            - img [ref=e25]
+            - text: Add customer
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Search
+            - generic [ref=e31]:
+              - textbox "Search by name or code" [active] [ref=e32]: abc
+              - button [ref=e33]:
+                - img [ref=e34]
+          - generic [ref=e37]:
+            - generic [ref=e38]: Segment
+            - combobox [ref=e39]:
+              - generic: All segments
+              - generic [ref=e40]:
+                - img
+          - generic [ref=e41]:
+            - generic [ref=e42]: Region
+            - combobox [ref=e43]:
+              - generic: All regions
+              - generic [ref=e44]:
+                - img
+          - generic [ref=e45]:
+            - generic [ref=e46]: Status
+            - combobox [ref=e47]:
+              - generic: All statuses
+              - generic [ref=e48]:
+                - img
+        - generic [ref=e49]:
+          - heading "Customers" [level=2] [ref=e51]
+          - table [ref=e57]:
+            - rowgroup [ref=e58]:
+              - row "Name Segment Service tier Last report date Reports generated Status Actions" [ref=e59]:
+                - columnheader "Name" [ref=e60] [cursor=pointer]:
+                  - generic [ref=e61]:
+                    - text: Name
+                    - img [ref=e62]
+                - columnheader "Segment" [ref=e65] [cursor=pointer]:
+                  - generic [ref=e66]:
+                    - text: Segment
+                    - img [ref=e67]
+                - columnheader "Service tier" [ref=e70] [cursor=pointer]:
+                  - generic [ref=e71]:
+                    - text: Service tier
+                    - img [ref=e72]
+                - columnheader "Last report date" [ref=e75]
+                - columnheader "Reports generated" [ref=e76]
+                - columnheader "Status" [ref=e77] [cursor=pointer]:
+                  - generic [ref=e78]:
+                    - text: Status
+                    - img [ref=e79]
+                - columnheader "Actions" [ref=e82]
+            - rowgroup [ref=e83]:
+              - row "QA SubCustomer 528f444fabcf4be8af9a22a1bf7586b9 QA SubCustomer 528f444fabcf4be8af9a22a1bf7586b9 Arena Type A - 0 Archived" [ref=e84]:
+                - cell "QA SubCustomer 528f444fabcf4be8af9a22a1bf7586b9 QA SubCustomer 528f444fabcf4be8af9a22a1bf7586b9" [ref=e85]:
+                  - generic [ref=e86]:
+                    - img "QA SubCustomer 528f444fabcf4be8af9a22a1bf7586b9" [ref=e87]
+                    - generic "QA SubCustomer 528f444fabcf4be8af9a22a1bf7586b9" [ref=e88]
+                - cell "Arena" [ref=e89]
+                - cell "Type A" [ref=e90]
+                - cell "-" [ref=e91]
+                - cell "0" [ref=e92]:
+                  - button "0" [ref=e93] [cursor=pointer]
+                - cell "Archived" [ref=e94]:
+                  - generic [ref=e95]: Archived
+                - cell [ref=e96]:
+                  - generic [ref=e97]:
+                    - button "Edit" [ref=e98]:
+                      - img [ref=e99]
+                    - button "View details" [ref=e102]:
+                      - img [ref=e103]
+                    - button "Restore" [ref=e106]:
+                      - img [ref=e107]
+        - generic [ref=e111]:
+          - paragraph [ref=e113]: "Results: 1–1 of 1"
+          - navigation "pagination" [ref=e115]:
+            - list [ref=e116]:
+              - listitem [ref=e117]:
+                - button [disabled] [ref=e118]:
+                  - img [ref=e119]
+              - listitem [ref=e121]:
+                - button "1" [ref=e122]
+              - listitem [ref=e123]:
+                - button [disabled] [ref=e124]:
+                  - img [ref=e125]
+          - generic [ref=e127]:
+            - generic [ref=e128]: Rows per page
+            - combobox [ref=e129]:
+              - generic: "10"
+              - generic [ref=e130]:
+                - img
+  - button "Open Next.js Dev Tools" [ref=e136] [cursor=pointer]:
+    - img [ref=e137]
+  - alert [ref=e140]
+```

@@ -1,0 +1,60 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - button "Open menu" [ref=e5]:
+          - img [ref=e6]
+        - img "Löfbergs Logo" [ref=e7]
+      - generic [ref=e8]:
+        - button "Generate" [ref=e9]:
+          - img [ref=e10]
+          - text: Generate
+        - button [ref=e13]:
+          - img [ref=e14]
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Template translation" [level=1] [ref=e23]
+          - generic [ref=e24]:
+            - button "Save as draft" [ref=e25]:
+              - img [ref=e26]
+              - text: Save as draft
+            - button "Submit" [ref=e30]
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: Template type
+            - combobox [ref=e35]:
+              - generic: Report
+              - generic [ref=e36]:
+                - img
+          - generic [ref=e37]:
+            - generic [ref=e38]: Language
+            - combobox [ref=e39]:
+              - generic: Danish
+              - generic [ref=e40]:
+                - img
+        - generic [ref=e41]:
+          - paragraph [ref=e42]: "Available placeholders: {Time period}, {Quantity}, {Area}, {CO2 in KG}, {CO2 in equivalent units}, {EUR FT Cooperative Premium}, {EUR FT Organic Income}, {NOK FT Cooperative Premium}, {NOK FT Organic Income}"
+          - generic [ref=e44]:
+            - button "Cover page" [ref=e45]
+            - button "About sustainability" [ref=e46]
+            - button "Löfbergs USP's" [ref=e47]
+            - button "Increasing impact" [ref=e48]
+            - button "Certifications" [ref=e49]
+          - generic [ref=e52]:
+            - heading "Cover page translation" [level=3] [ref=e53]
+            - generic [ref=e54]:
+              - generic [ref=e55]:
+                - paragraph [ref=e56]: Header text
+                - textbox [ref=e57]: Sustainability report 2026
+              - generic [ref=e58]:
+                - paragraph [ref=e59]: Header text translation
+                - textbox "Enter translation" [ref=e60]
+  - button "Open Next.js Dev Tools" [ref=e66] [cursor=pointer]:
+    - img [ref=e67]
+  - alert [ref=e70]
+```
