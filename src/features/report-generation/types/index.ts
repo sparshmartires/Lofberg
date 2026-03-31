@@ -133,6 +133,7 @@ export interface Step4Data {
 export interface Step5Data {
   outputFormat: OutputFormat
   outputSize: OutputSize
+  generateJpegs: boolean
 }
 
 export interface ReportWizardState {

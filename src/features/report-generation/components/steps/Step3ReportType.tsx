@@ -34,15 +34,11 @@ export function Step3ReportType() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-[#1F1F1F]">Report type</h2>
+        <h2 className="text-lg font-semibold text-[#1F1F1F]">Output type</h2>
       </div>
 
       {/* Output type selection */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-[#1F1F1F]">
-          Choose output type <span className="text-red-500">*</span>
-        </label>
-
         <div className="grid grid-cols-1 min-[500px]:grid-cols-2 gap-4">
           <label
             className={`flex items-center gap-3 px-5 py-4 rounded-[16px] border cursor-pointer transition-colors ${
@@ -91,18 +87,34 @@ export function Step3ReportType() {
               onCheckedChange={(checked) => handleCompiledReceiptChange(Boolean(checked))}
             />
             <label className="text-sm text-[#1F1F1F] cursor-pointer">
-              Generate compiled receipt
+              Compiled receipt
             </label>
           </div>
 
-          <div className="flex items-center gap-2" title="TBD">
-            <Checkbox
-              checked={false}
-              disabled
-            />
-            <label className="text-sm text-[#9CA3AF] cursor-not-allowed">
-              Generate media screens (TBD)
-            </label>
+          <div>
+            <div className="flex items-center gap-2" title="TBD">
+              <Checkbox
+                checked={step3.generateMediaScreens}
+                onCheckedChange={(checked) => handleMediaScreensChange(Boolean(checked))}
+                disabled
+              />
+              <label className="text-sm text-[#9CA3AF] cursor-not-allowed">
+                Media screens (TBD)
+              </label>
+            </div>
+
+            {step3.generateMediaScreens && (
+              <div className="ml-6 mt-2 flex flex-wrap gap-4">
+                <label className="flex items-center gap-2">
+                  <Checkbox checked disabled />
+                  <span className="text-sm text-[#9CA3AF]">800 × 480</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <Checkbox checked disabled />
+                  <span className="text-sm text-[#9CA3AF]">800 × 600</span>
+                </label>
+              </div>
+            )}
           </div>
         </div>
       </div>
