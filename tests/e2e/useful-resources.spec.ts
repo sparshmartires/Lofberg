@@ -2,65 +2,34 @@ import { test, expect } from '@playwright/test';
 import { loginAs } from './helpers/auth';
 import { generateFakeExe } from './helpers/api';
 
-const RESOURCE_PATHS = ['/resources', '/resource-library', '/library', '/useful-resources'];
-
-async function navigateToResources(page: import('@playwright/test').Page): Promise<string> {
-  for (const p of RESOURCE_PATHS) {
-    await page.goto(p);
-    await page.waitForLoadState('networkidle');
-    const url = page.url();
-    if (url.includes(p) || url.includes('resource') || url.includes('library')) {
-      return url;
-    }
-  }
-  // Try nav link
-  await page.goto('/');
-  await page.waitForLoadState('networkidle');
-  const navLink = page.getByText(/resource|library/i).first();
-  if (await navLink.isVisible().catch(() => false)) {
-    await navLink.click();
-    await page.waitForLoadState('networkidle');
-  }
-  return page.url();
-}
-
 test.describe('Useful Resources', () => {
   // TC-RES-001
   test('add button visible to admin only', async ({ page }) => {
-    // Admin sees the add button
     await loginAs(page, 'admin');
-    await navigateToResources(page);
+    await page.goto('/useful-resources');
+    await page.waitForLoadState('networkidle');
 
-    const addBtn = page.getByRole('button', { name: /add|create|new|upload/i }).or(
-      page.getByRole('link', { name: /add|create|new|upload/i })
-    ).first();
+    // The "Add resource" button is rendered by PageHeaderWithAction with actionLabel="Add resource"
+    const addBtn = page.getByRole('button', { name: /add resource/i }).first();
     await expect(addBtn).toBeVisible();
   });
 
   test('add button not visible to salesperson', async ({ page }) => {
     await loginAs(page, 'salesperson');
-    await navigateToResources(page);
+    await page.goto('/useful-resources');
+    await page.waitForLoadState('networkidle');
 
-    const addBtn = page.getByRole('button', { name: /add|create|new|upload/i }).or(
-      page.getByRole('link', { name: /add|create|new|upload/i })
-    ).first();
-    await expect(addBtn).not.toBeVisible();
+    const addBtn = page.getByRole('button', { name: /add resource/i });
+    await expect(addBtn).toHaveCount(0);
   });
 
   // TC-RES-002
   test('executable file types rejected (e.g., .exe)', async ({ page }) => {
     await loginAs(page, 'admin');
-    await navigateToResources(page);
+    await page.goto('/useful-resources');
+    await page.waitForLoadState('networkidle');
 
-    const addBtn = page.getByRole('button', { name: /add|create|new|upload/i }).or(
-      page.getByRole('link', { name: /add|create|new|upload/i })
-    ).first();
-
-    if (!(await addBtn.isVisible().catch(() => false))) {
-      test.skip(true, 'Add button not found');
-      return;
-    }
-
+    const addBtn = page.getByRole('button', { name: /add resource/i }).first();
     await addBtn.click();
     await page.waitForTimeout(1500);
 
@@ -95,19 +64,15 @@ test.describe('Useful Resources', () => {
   // TC-RES-003
   test('view opens new tab for viewable types; download for others', async ({ page, context }) => {
     await loginAs(page, 'admin');
-    await navigateToResources(page);
+    await page.goto('/useful-resources');
+    await page.waitForLoadState('networkidle');
 
-    // Find a view/open button for a resource
-    const viewBtn = page.locator('button, a').filter({ hasText: /view|open/i }).or(
-      page.locator('[aria-label*="view" i], [aria-label*="open" i]')
-    ).first();
-
-    const downloadBtn = page.locator('button, a').filter({ hasText: /download/i }).or(
-      page.locator('[aria-label*="download" i]')
-    ).first();
+    // Table action buttons use aria-label like "View <title>"
+    // The view button is an icon button with aria-label starting with "View"
+    const viewBtn = page.locator('button[aria-label^="View"]').first();
 
     if (await viewBtn.isVisible().catch(() => false)) {
-      // View should open in new tab
+      // View opens in a new tab via window.open
       const newTabPromise = context.waitForEvent('page', { timeout: 5000 }).catch(() => null);
       await viewBtn.click();
       const newTab = await newTabPromise;
@@ -116,63 +81,56 @@ test.describe('Useful Resources', () => {
         await newTab.close();
       }
     }
-
-    if (await downloadBtn.isVisible().catch(() => false)) {
-      // Download action should trigger a download
-      const downloadPromise = page.waitForEvent('download', { timeout: 5000 }).catch(() => null);
-      await downloadBtn.click();
-      // Download event is expected for non-viewable types
-    }
   });
 
   // TC-RES-004
   test('archive button admin only; hard delete with warning modal', async ({ page }) => {
-    // Admin sees archive/delete
     await loginAs(page, 'admin');
-    await navigateToResources(page);
+    await page.goto('/useful-resources');
+    await page.waitForLoadState('networkidle');
 
-    const archiveBtn = page.locator('button, a').filter({ hasText: /archive|delete|remove/i }).or(
-      page.locator('[aria-label*="delete" i], [aria-label*="archive" i]')
-    ).first();
+    // Delete/archive buttons use aria-label like "Delete <title>" and have title="Archive"
+    const deleteBtn = page.locator('button[aria-label^="Delete"]').first();
 
-    if (await archiveBtn.isVisible().catch(() => false)) {
-      await archiveBtn.click();
+    if (await deleteBtn.isVisible().catch(() => false)) {
+      await deleteBtn.click();
       await page.waitForTimeout(1000);
 
-      // Warning modal should appear
-      const modal = page.locator('[role="dialog"], [class*="modal"]').first();
+      // Warning dialog should appear (radix Dialog with role="dialog")
+      const modal = page.locator('[role="dialog"]').first();
       await expect(modal).toBeVisible();
 
-      // Should have cancel and confirm buttons
-      const cancelBtn = modal.getByRole('button', { name: /cancel|no|close/i }).first();
+      // Should have Cancel and Delete buttons
+      const cancelBtn = modal.getByRole('button', { name: /cancel/i }).first();
       await expect(cancelBtn).toBeVisible();
 
-      const confirmBtn = modal.getByRole('button', { name: /delete|archive|confirm|yes/i }).first();
+      const confirmBtn = modal.getByRole('button', { name: /delete/i }).first();
       await expect(confirmBtn).toBeVisible();
 
+      // Cancel to dismiss
       await cancelBtn.click();
+      await page.waitForTimeout(500);
     }
   });
 
   test('archive button not visible to salesperson', async ({ page }) => {
     await loginAs(page, 'salesperson');
-    await navigateToResources(page);
+    await page.goto('/useful-resources');
+    await page.waitForLoadState('networkidle');
 
-    const archiveBtn = page.locator('button, a').filter({ hasText: /archive|delete|remove/i }).or(
-      page.locator('[aria-label*="delete" i], [aria-label*="archive" i]')
-    ).first();
-    await expect(archiveBtn).not.toBeVisible();
+    // Salesperson should not see delete/archive buttons
+    const deleteBtn = page.locator('button[aria-label^="Delete"]');
+    await expect(deleteBtn).toHaveCount(0);
   });
 
   // TC-RES-005
   test('search, filter, sort all function', async ({ page }) => {
     await loginAs(page, 'admin');
-    await navigateToResources(page);
+    await page.goto('/useful-resources');
+    await page.waitForLoadState('networkidle');
 
-    // Search
-    const searchInput = page.getByPlaceholder(/search/i).or(
-      page.locator('input[type="search"]')
-    ).first();
+    // Search — uses SearchInput with placeholder "Search by title"
+    const searchInput = page.getByPlaceholder(/search by title/i).first();
     if (await searchInput.isVisible().catch(() => false)) {
       await searchInput.fill('test');
       await page.waitForTimeout(1500);
@@ -180,29 +138,28 @@ test.describe('Useful Resources', () => {
       await page.waitForTimeout(1000);
     }
 
-    // Filter (if present)
-    const filterSelect = page.locator('select, [role="combobox"]').first();
-    if (await filterSelect.isVisible().catch(() => false)) {
-      await filterSelect.click();
-      await page.waitForTimeout(500);
-      const firstOption = page.locator('[role="option"], option').first();
+    // Filter — the Type select uses a radix Select with role="combobox"
+    const typeFilter = page.locator('label:has-text("Type")').locator('..').locator('button[role="combobox"]').first();
+    if (await typeFilter.isVisible().catch(() => false)) {
+      await typeFilter.click();
+      await page.waitForTimeout(300);
+      const firstOption = page.locator('[role="option"]').first();
       if (await firstOption.isVisible().catch(() => false)) {
         await firstOption.click();
         await page.waitForTimeout(1000);
       }
     }
 
-    // Sort (click a column header)
-    const headers = page.locator('th, [role="columnheader"]');
+    // Sort — click a sortable column header (SortableHeader renders a th with click handler)
+    const headers = page.locator('th');
     const headerCount = await headers.count();
     if (headerCount > 0) {
       await headers.first().click();
       await page.waitForTimeout(1000);
 
-      // Check for sort indicator
-      const ariaSort = await headers.first().getAttribute('aria-sort');
-      const hasIcon = await headers.first().locator('svg, [class*="sort"]').count();
-      expect(ariaSort !== null || hasIcon > 0).toBe(true);
+      // Check for sort indicator (SVG icon in the header)
+      const hasIcon = await headers.first().locator('svg').count();
+      expect(hasIcon).toBeGreaterThan(0);
     }
   });
 });

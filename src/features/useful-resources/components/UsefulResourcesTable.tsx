@@ -8,7 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ExternalLink, Eye, Pencil, Trash2, ArrowUpDown } from "lucide-react"
+import { ExternalLink, Eye, Pencil, Trash2 } from "lucide-react"
+import { SortableHeader } from "@/components/ui/SortableHeader"
 import type { ResourceDto } from "@/store/services/resourcesApi"
 
 interface UsefulResourcesTableProps {
@@ -50,18 +51,6 @@ export function UsefulResourcesTable({
   onDeleteResource,
 }: UsefulResourcesTableProps) {
 
-  const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
-    <TableHead
-      className={`table-header-cell cursor-pointer select-none ${className ?? ""}`}
-      onClick={() => onSort(column)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        <ArrowUpDown className={`h-3 w-3 ${sortBy === column ? "text-[#5B2D91]" : "text-[#B0B0B0]"}`} />
-      </div>
-    </TableHead>
-  )
-
   return (
     <div className="table-card border-[#EDEDED]">
       {/* Desktop */}
@@ -69,11 +58,11 @@ export function UsefulResourcesTable({
         <Table className="w-full">
           <TableHeader>
             <TableRow className="table-header-row-bordered">
-              <SortableHeader column="title">Title</SortableHeader>
+              <SortableHeader column="title" sortBy={sortBy} onSort={onSort}>Title</SortableHeader>
               <TableHead className="table-header-cell">Description</TableHead>
-              <SortableHeader column="resourcetype">Type</SortableHeader>
-              <SortableHeader column="updatedat">Updated at</SortableHeader>
-              <SortableHeader column="createdat">Created at</SortableHeader>
+              <SortableHeader column="resourcetype" sortBy={sortBy} onSort={onSort}>Type</SortableHeader>
+              <SortableHeader column="updatedat" sortBy={sortBy} onSort={onSort}>Updated at</SortableHeader>
+              <SortableHeader column="createdat" sortBy={sortBy} onSort={onSort}>Created at</SortableHeader>
               <TableHead className="table-header-cell">Actions</TableHead>
             </TableRow>
           </TableHeader>

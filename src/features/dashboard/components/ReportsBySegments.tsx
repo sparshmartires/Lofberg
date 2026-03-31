@@ -7,15 +7,15 @@ export function ReportsByMarketSegments({ data }: ReportsByMarketSegmentsProps) 
     <div className="w-full bg-white border border-[#EDEDED] rounded-[28px] px-[32px] py-[24px]">
 
       <h3 className="text-[18px] mb-[20px] font-semibold text-[#1F1F1F]">
-        Reports by market segments
+        Reports by market segment
       </h3>
 
       <table className="w-full text-sm">
 
         <thead className="text-left border-b border-dashed border-[#E6CAF5]">
           <tr>
-            <th className="pb-3 text-[#1F1F1F] pl-[12px]">Market segment</th>
-            <th className="pb-3 text-[#1F1F1F]">Count</th>
+            <th className="pb-3 text-[#1F1F1F] pl-[12px]">Segment</th>
+            <th className="pb-3 text-[#1F1F1F]">No.</th>
             <th className="pb-3 text-[#1F1F1F] pr-[12px]">Percentage</th>
           </tr>
         </thead>

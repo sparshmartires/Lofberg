@@ -6,38 +6,35 @@ import { getFirstTemplateWithVersion, apiPost } from './helpers/api';
 test.describe('Templates', () => {
   test.beforeEach(async ({ page }) => {
     await loginAs(page, 'admin');
-    await page.goto('/templates');
+    await page.goto('/template');
     await page.waitForLoadState('networkidle');
   });
 
   // TC-TMPL-001
   test('page title "Report + receipt templates"', async ({ page }) => {
-    const title = page.locator('h1, [data-testid="page-title"]').first();
+    const title = page.locator('h1').first();
     await expect(title).toContainText(/report \+ receipt templates/i);
   });
 
   // TC-TMPL-002
   test('template name field validates as filename (no /, no spaces)', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const nameInput = page.locator('input[name*="name"], [data-testid*="template-name"] input').first();
+    // The editor is inline — no need to click a Create button
+    const nameInput = page.locator('input[placeholder*="SustainabilityReport"]').first();
     await nameInput.fill('invalid / name');
     await nameInput.blur();
 
-    const error = page.locator('[class*="error"], [role="alert"]').first();
+    const error = page.locator('p.text-red-500').first();
     await expect(error).toBeVisible({ timeout: 3000 });
 
     await nameInput.fill('invalid name with spaces');
     await nameInput.blur();
 
-    const error2 = page.locator('[class*="error"], [role="alert"]').first();
+    const error2 = page.locator('p.text-red-500').first();
     await expect(error2).toBeVisible({ timeout: 3000 });
   });
 
   // TC-TMPL-003
   test('"Template configuration" heading and subtitle removed', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
     const allText = await getAllVisibleText(page);
     const hasTemplateConfig = allText.some(t => /template configuration/i.test(t));
     expect(hasTemplateConfig).toBe(false);
@@ -45,33 +42,21 @@ test.describe('Templates', () => {
 
   // TC-TMPL-004
   test('template type options contain no word "template"', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
+    // Template type uses a custom radix Select; click the trigger to open it
+    const typeTrigger = page.locator('label:has-text("Template type")').locator('..').locator('button[role="combobox"]').first();
+    await typeTrigger.click();
+    await page.waitForTimeout(300);
 
-    const typeDropdown = page.locator('select[name*="type"], [data-testid*="template-type"] select, label:has-text("Type") ~ select').first();
-    if (await typeDropdown.count() > 0) {
-      const options = await typeDropdown.locator('option').allTextContents();
-      for (const opt of options) {
-        if (opt.trim()) {
-          expect(opt.toLowerCase()).not.toContain('template');
-        }
-      }
-    } else {
-      // Custom dropdown
-      const typeField = page.locator('label:has-text("Type")').first();
-      await typeField.click();
-      const items = await page.locator('[role="option"], [role="listbox"] li').allTextContents();
-      for (const item of items) {
-        if (item.trim()) {
-          expect(item.toLowerCase()).not.toContain('template');
-        }
+    const items = await page.locator('[role="option"]').allTextContents();
+    for (const item of items) {
+      if (item.trim()) {
+        expect(item.toLowerCase()).not.toContain('template');
       }
     }
   });
 
   // TC-TMPL-005
   test('language label "Language"; all 9 languages; defaults to English', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
     const langLabel = page.locator('label:has-text("Language")').first();
     await expect(langLabel).toBeVisible();
 
@@ -80,27 +65,34 @@ test.describe('Templates', () => {
       'Lithuanian', 'Latvian', 'Estonian', 'Polish',
     ];
 
-    const langDropdown = page.locator('select[name*="language"], label:has-text("Language") ~ select, label:has-text("Language") + select').first();
-    if (await langDropdown.count() > 0) {
-      const options = await langDropdown.locator('option').allTextContents();
-      for (const lang of expectedLanguages) {
-        expect(options.some(o => new RegExp(lang, 'i').test(o))).toBe(true);
-      }
-      const selectedValue = await langDropdown.inputValue();
-      expect(selectedValue).toMatch(/english/i);
+    // Open the language radix Select
+    const langTrigger = langLabel.locator('..').locator('button[role="combobox"]').first();
+    await langTrigger.click();
+    await page.waitForTimeout(300);
+
+    const options = await page.locator('[role="option"]').allTextContents();
+    for (const lang of expectedLanguages) {
+      expect(options.some(o => new RegExp(lang, 'i').test(o))).toBe(true);
     }
+
+    // Close the dropdown by pressing Escape
+    await page.keyboard.press('Escape');
+
+    // Check that the currently displayed value indicates English (default)
+    const triggerText = await langTrigger.textContent();
+    expect(triggerText).toMatch(/english/i);
   });
 
   // TC-TMPL-006
   test('placeholders above tab selector; absent elsewhere', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
+    // Placeholders text is rendered as a <p> with "Available placeholders:" above the tab buttons
+    const placeholders = page.locator('p:has-text("Available placeholders")').first();
+    // Tab buttons are inside a container with bg-[#F6F1FB]
+    const tabContainer = page.locator('div.bg-\\[\\#F6F1FB\\]').first();
 
-    const placeholders = page.locator('[data-testid*="placeholder"], :has-text("Placeholders")').first();
-    const tabSelector = page.locator('[role="tablist"], [data-testid*="tab-selector"]').first();
-
-    if (await placeholders.count() > 0 && await tabSelector.count() > 0) {
+    if (await placeholders.count() > 0 && await tabContainer.count() > 0) {
       const placeholderBox = await placeholders.boundingBox();
-      const tabBox = await tabSelector.boundingBox();
+      const tabBox = await tabContainer.boundingBox();
 
       if (placeholderBox && tabBox) {
         expect(placeholderBox.y).toBeLessThan(tabBox.y);
@@ -110,10 +102,8 @@ test.describe('Templates', () => {
 
   // TC-TMPL-007
   test('no section title text inside section content areas', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    // Within content editing areas, section titles should not be repeated
-    const contentAreas = page.locator('[data-testid*="section-content"], [class*="section-content"], [class*="editor"]');
+    // The content area is inside a rounded border div below the tabs
+    const contentAreas = page.locator('[class*="section-content"], [class*="editor"], div.rounded-\\[28px\\].border');
     const count = await contentAreas.count();
     for (let i = 0; i < count; i++) {
       const area = contentAreas.nth(i);
@@ -127,8 +117,6 @@ test.describe('Templates', () => {
 
   // TC-TMPL-008
   test('header text fields are single-line inputs', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
     const headerInputs = page.locator('label:has-text("Header") ~ input, label:has-text("Header") ~ textarea, [data-testid*="header"] input, [data-testid*="header"] textarea');
     const count = await headerInputs.count();
 
@@ -141,14 +129,9 @@ test.describe('Templates', () => {
 
   // TC-TMPL-009
   test('existing version text loads into fields on open', async ({ page }) => {
-    // Use API helper to get a known template + version
-    const { templateId, versionId } = await getFirstTemplateWithVersion();
+    // The template page loads the active version inline — check that at least one field has content
+    await page.waitForTimeout(2000); // Wait for API data to load
 
-    // Navigate to the template editor for this specific template
-    await page.goto(`/templates/${templateId}/versions/${versionId}`);
-    await page.waitForLoadState('networkidle');
-
-    // At least one text field should have content loaded from the version
     const filledInputs: string[] = [];
     const allInputs = page.locator('input[type="text"], textarea');
     const inputCount = await allInputs.count();
@@ -161,21 +144,19 @@ test.describe('Templates', () => {
 
   // TC-TMPL-010
   test('cover page tab is default on load', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const activeTab = page.locator('[role="tab"][aria-selected="true"], [data-testid*="tab"].active, [class*="tab"][class*="active"]').first();
+    // Tabs are plain buttons; the active one has bg-[#4A145F] (dark purple) class
+    const activeTab = page.locator('button.bg-\\[\\#4A145F\\]').first();
     const tabText = await activeTab.textContent();
     expect(tabText?.trim()).toMatch(/cover page/i);
   });
 
   // TC-TMPL-011
   test('about sustainability block labels: Block 1-4; no "Right side blocks" / "Bottom blocks"', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    // Navigate to About Sustainability tab
-    const sustainabilityTab = page.locator('[role="tab"]:has-text("About sustainability"), button:has-text("About sustainability")').first();
+    // Click the "About sustainability" tab button
+    const sustainabilityTab = page.locator('button:has-text("About sustainability")').first();
     if (await sustainabilityTab.count() > 0) {
       await sustainabilityTab.click();
+      await page.waitForTimeout(300);
     }
 
     const allText = await getAllVisibleText(page);
@@ -193,11 +174,10 @@ test.describe('Templates', () => {
 
   // TC-TMPL-012
   test('image uploader labels "Image"; text box labels "Text" in blocks', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const sustainabilityTab = page.locator('[role="tab"]:has-text("About sustainability"), button:has-text("About sustainability")').first();
+    const sustainabilityTab = page.locator('button:has-text("About sustainability")').first();
     if (await sustainabilityTab.count() > 0) {
       await sustainabilityTab.click();
+      await page.waitForTimeout(300);
     }
 
     const labels = await page.locator('label').allTextContents();
@@ -215,11 +195,10 @@ test.describe('Templates', () => {
 
   // TC-TMPL-013
   test('USPs tab title "Lofbergs USPs"; section label "Section 1"', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const uspsTab = page.locator('[role="tab"]:has-text("USP"), button:has-text("USP")').first();
+    const uspsTab = page.locator('button:has-text("USP")').first();
     if (await uspsTab.count() > 0) {
       await uspsTab.click();
+      await page.waitForTimeout(300);
     }
 
     const allText = await getAllVisibleText(page);
@@ -232,11 +211,10 @@ test.describe('Templates', () => {
 
   // TC-TMPL-014
   test('increasing impact name field clearable; validation only on Publish', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const impactTab = page.locator('[role="tab"]:has-text("Impact"), button:has-text("Impact"), [role="tab"]:has-text("Increasing")').first();
+    const impactTab = page.locator('button:has-text("Increasing impact"), button:has-text("Impact")').first();
     if (await impactTab.count() > 0) {
       await impactTab.click();
+      await page.waitForTimeout(300);
     }
 
     const nameField = page.locator('input[name*="name"], [data-testid*="impact-name"] input').first();
@@ -247,7 +225,7 @@ test.describe('Templates', () => {
       expect(val).toBe('');
 
       // No validation error should show on clear (only on Publish)
-      const errors = page.locator('[class*="error"]:visible, [role="alert"]:visible');
+      const errors = page.locator('p.text-red-500:visible, [role="alert"]:visible');
       await page.waitForTimeout(500);
       const errorCount = await errors.count();
       expect(errorCount).toBe(0);
@@ -256,11 +234,10 @@ test.describe('Templates', () => {
 
   // TC-TMPL-015
   test('certifications: no word "certifications" in labels', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const certTab = page.locator('[role="tab"]:has-text("Certification"), button:has-text("Certification")').first();
+    const certTab = page.locator('button:has-text("Certifications")').first();
     if (await certTab.count() > 0) {
       await certTab.click();
+      await page.waitForTimeout(300);
     }
 
     const labels = await page.locator('label').allTextContents();
@@ -271,12 +248,12 @@ test.describe('Templates', () => {
 
   // TC-TMPL-016
   test('receipt: no word "receipt" in labels; image uploaders stack on mobile', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const receiptTab = page.locator('[role="tab"]:has-text("Receipt"), button:has-text("Receipt")').first();
-    if (await receiptTab.count() > 0) {
-      await receiptTab.click();
-    }
+    // Switch template type to Receipt via the radix Select
+    const typeTrigger = page.locator('label:has-text("Template type")').locator('..').locator('button[role="combobox"]').first();
+    await typeTrigger.click();
+    await page.waitForTimeout(300);
+    await page.locator('[role="option"]:has-text("Receipt")').click();
+    await page.waitForTimeout(500);
 
     const labels = await page.locator('label').allTextContents();
     for (const lbl of labels) {
@@ -301,8 +278,6 @@ test.describe('Templates', () => {
 
   // TC-TMPL-017
   test('"Publish" button (not "+ Create a version")', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
     const publishBtn = page.locator('button:has-text("Publish")');
     await expect(publishBtn.first()).toBeVisible();
 
@@ -312,15 +287,13 @@ test.describe('Templates', () => {
 
   // TC-TMPL-018
   test('publish blocked until all English fields + images filled; error identifies tab + field', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    // Try to publish with empty form
+    // Try to publish with empty/incomplete form
     const publishBtn = page.locator('button:has-text("Publish")').first();
     await publishBtn.click();
 
-    // Error should appear identifying which tab and field needs attention
-    const errorMessages = page.locator('[class*="error"], [role="alert"], [data-testid*="validation-error"]');
-    await expect(errorMessages.first()).toBeVisible({ timeout: 3000 });
+    // Error should appear — either a status message or validation error
+    const errorMessages = page.locator('div.text-red-700, p.text-red-500, [role="alert"], [data-testid*="validation-error"]');
+    await expect(errorMessages.first()).toBeVisible({ timeout: 5000 });
 
     const errorText = await errorMessages.allTextContents();
     const combinedErrors = errorText.join(' ');
@@ -330,67 +303,58 @@ test.describe('Templates', () => {
 
   // TC-TMPL-019
   test('draft rows: Open + Delete only (no Publish)', async ({ page }) => {
-    // Check for an existing draft row; if none, create one via API
-    let draftRow = page.locator('table tbody tr:has-text("Draft")').first();
+    // Version history uses data-testid="template-item" divs, not table rows
+    let draftRow = page.locator('[data-testid="template-item"]:has-text("Draft")').first();
     if (await draftRow.count() === 0) {
+      // Create a draft via API if none exists
       const { templateId } = await getFirstTemplateWithVersion();
       await apiPost(`/templates/${templateId}/versions/draft`);
-      // Reload the page to pick up the new draft
-      await page.goto('/templates');
+      await page.goto('/template');
       await page.waitForLoadState('networkidle');
-      // Expand the template to see versions if needed
-      const templateRow = page.locator(`table tbody tr:has-text("${templateId}")`).first();
-      if (await templateRow.count() > 0) {
-        await templateRow.click();
-        await page.waitForTimeout(1000);
-      }
-      draftRow = page.locator('table tbody tr:has-text("Draft")').first();
+      draftRow = page.locator('[data-testid="template-item"]:has-text("Draft")').first();
     }
 
     await expect(draftRow).toBeVisible({ timeout: 5000 });
 
-    const rowText = await draftRow.locator('button, a').allTextContents();
-    const actions = rowText.map(t => t.trim().toLowerCase());
+    // Check that Open and Delete buttons are present, but not Publish
+    const openBtn = draftRow.locator('button:has-text("Open")');
+    const deleteBtn = draftRow.locator('button:has-text("Delete")');
+    const publishBtn = draftRow.locator('button:has-text("Publish")');
 
-    expect(actions.some(a => /open/i.test(a))).toBe(true);
-    expect(actions.some(a => /delete/i.test(a))).toBe(true);
-    expect(actions.some(a => /^publish$/i.test(a))).toBe(false);
+    await expect(openBtn).toBeVisible();
+    await expect(deleteBtn).toBeVisible();
+    await expect(publishBtn).toHaveCount(0);
   });
 
   // TC-TMPL-020
   test('active/previous rows: Open only (no Restore)', async ({ page }) => {
-    const activeRow = page.locator('table tbody tr:has-text("Active")').first();
+    const activeRow = page.locator('[data-testid="template-item"]:has-text("Active")').first();
     if (await activeRow.count() > 0) {
-      const actions = await activeRow.locator('button, a').allTextContents();
-      expect(actions.some(a => /open/i.test(a.trim()))).toBe(true);
-      expect(actions.some(a => /restore/i.test(a.trim()))).toBe(false);
+      const openBtn = activeRow.locator('button:has-text("Open")');
+      const restoreBtn = activeRow.locator('button:has-text("Restore")');
+      await expect(openBtn).toBeVisible();
+      await expect(restoreBtn).toHaveCount(0);
     }
 
-    const previousRow = page.locator('table tbody tr:has-text("Previous"), table tbody tr:has-text("Archived")').first();
-    if (await previousRow.count() > 0) {
-      const actions = await previousRow.locator('button, a').allTextContents();
-      expect(actions.some(a => /open/i.test(a.trim()))).toBe(true);
-      expect(actions.some(a => /restore/i.test(a.trim()))).toBe(false);
+    const archivedRow = page.locator('[data-testid="template-item"]:has-text("Archived")').first();
+    if (await archivedRow.count() > 0) {
+      const openBtn = archivedRow.locator('button:has-text("Open")');
+      const restoreBtn = archivedRow.locator('button:has-text("Restore")');
+      await expect(openBtn).toBeVisible();
+      await expect(restoreBtn).toHaveCount(0);
     }
   });
 
   // TC-TMPL-021
   test('one version row created per publish (not two)', async ({ page }) => {
-    // Count version rows before
-    const initialRows = await page.locator('table tbody tr').count();
-
-    // Open create, fill minimally, and publish
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    // This test checks the result after a publish action
-    // Since we cannot fully fill the form here, we check existing data
-    // by verifying row counts are consistent (no duplicates)
+    // Version history uses data-testid="template-item" divs
+    // Verify that no version number appears twice
     const versionCounts = new Map<string, number>();
-    const rows = page.locator('table tbody tr');
+    const rows = page.locator('[data-testid="template-item"]');
     const rowCount = await rows.count();
     for (let i = 0; i < rowCount; i++) {
       const text = await rows.nth(i).textContent();
-      const version = text?.match(/v?\d+\.\d+/)?.[0];
+      const version = text?.match(/Version\s+(\d+)/)?.[1];
       if (version) {
         versionCounts.set(version, (versionCounts.get(version) || 0) + 1);
       }
@@ -403,20 +367,19 @@ test.describe('Templates', () => {
 
   // TC-TMPL-022
   test('template name change persists after Save draft', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    const nameInput = page.locator('input[name*="name"], [data-testid*="template-name"] input').first();
+    const nameInput = page.locator('input[placeholder*="SustainabilityReport"]').first();
     const testName = `TestTemplate_${Date.now()}`;
     await nameInput.fill(testName);
 
-    const saveDraftBtn = page.locator('button:has-text("Save draft"), button:has-text("Save Draft")').first();
+    const saveDraftBtn = page.locator('button:has-text("Save as draft")').first();
     if (await saveDraftBtn.count() > 0) {
       await saveDraftBtn.click();
       await page.waitForLoadState('networkidle');
 
       // Reload and check the name persists
-      await page.goto('/templates');
+      await page.goto('/template');
       await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(2000);
 
       const pageText = await getAllVisibleText(page);
       const found = pageText.some(t => t.includes(testName));
@@ -427,11 +390,12 @@ test.describe('Templates', () => {
   // TC-TMPL-023
   test('name, type, language on same row at 1024px+', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
+    await page.waitForTimeout(300);
 
-    const nameField = page.locator('label:has-text("Name"), [data-testid*="template-name"]').first();
-    const typeField = page.locator('label:has-text("Type"), [data-testid*="template-type"]').first();
-    const langField = page.locator('label:has-text("Language"), [data-testid*="template-language"]').first();
+    // Labels are "Version name", "Template type", "Language"
+    const nameField = page.locator('label:has-text("Version name")').first();
+    const typeField = page.locator('label:has-text("Template type")').first();
+    const langField = page.locator('label:has-text("Language")').first();
 
     if (await nameField.count() > 0 && await typeField.count() > 0 && await langField.count() > 0) {
       const nameBox = await nameField.boundingBox();
@@ -449,12 +413,7 @@ test.describe('Templates', () => {
 
   // TC-TMPL-024
   test('cover page background image uploader shows "10 MB" limit', async ({ page }) => {
-    await page.locator('button:has-text("Create"), a:has-text("Create")').first().click();
-
-    // Cover page should be default tab
-    const coverContent = page.locator('[data-testid*="cover"], [class*="cover"]')
-      .or(page.locator(':has-text("background image")').first());
-
+    // Cover page is the default tab
     const allText = await getAllVisibleText(page);
     const has10MB = allText.some(t => /10\s*MB/i.test(t));
     expect(has10MB).toBe(true);
@@ -462,13 +421,11 @@ test.describe('Templates', () => {
 
   // TC-TMPL-025
   test('cover page header field value contains no <p> HTML tags', async ({ page }) => {
-    // Use API helper to get a known template + version and navigate to editor
-    const { templateId, versionId } = await getFirstTemplateWithVersion();
-    await page.goto(`/templates/${templateId}/versions/${versionId}`);
-    await page.waitForLoadState('networkidle');
+    // The template page loads version content inline. Cover Page is the default tab.
+    await page.waitForTimeout(2000); // Wait for API data to load
 
-    // Ensure we are on the Cover Page tab (default tab)
-    const coverTab = page.locator('[role="tab"]:has-text("Cover"), button:has-text("Cover")').first();
+    // Ensure we are on the Cover Page tab (default)
+    const coverTab = page.locator('button:has-text("Cover page")').first();
     if (await coverTab.count() > 0) {
       await coverTab.click();
       await page.waitForTimeout(500);

@@ -15,7 +15,12 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  const lastActivityRef = useRef(Date.now());
+  const lastActivityRef = useRef<number>(0);
+
+  // Initialize activity timestamp after mount to avoid calling Date.now() during render
+  useEffect(() => {
+    lastActivityRef.current = Date.now();
+  }, []);
   const [refreshToken] = useRefreshTokenMutation();
 
   // Hydrate auth state from localStorage on first mount

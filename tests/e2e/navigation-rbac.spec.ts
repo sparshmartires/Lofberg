@@ -1,30 +1,26 @@
 import { test, expect } from '@playwright/test';
 import { loginAs } from './helpers/auth';
 
+async function getSidebarItems(page: import('@playwright/test').Page): Promise<string[]> {
+  await page.getByRole('button', { name: 'Open menu' }).click();
+  const nav = page.locator('[data-testid="sidebar-nav"]');
+  await nav.waitFor({ state: 'visible', timeout: 5000 });
+  const texts = await nav.locator('a').allTextContents();
+  await page.getByRole('button', { name: 'Close menu' }).click();
+  return texts.map(t => t.trim());
+}
+
 // TC-NAV-001
 test('Admin sees all nav items', async ({ page }) => {
   await loginAs(page, 'admin');
   await page.goto('/dashboard');
   await page.waitForLoadState('networkidle');
 
-  const sidebar = page.locator('nav, [class*="sidebar"], [role="navigation"]').first();
-  const sidebarText = await sidebar.textContent();
-  const text = sidebarText?.toLowerCase() ?? '';
-
-  const expectedItems = [
-    'Dashboard',
-    'Generate',
-    'Past reports',
-    'Templates',
-    'Conversions',
-    'Users',
-    'Customers',
-    'Useful resources',
-  ];
-
-  for (const item of expectedItems) {
-    expect(text).toContain(item.toLowerCase());
-  }
+  const items = await getSidebarItems(page);
+  expect(items).toEqual([
+    'Dashboard', 'Generate', 'Past reports', 'Templates',
+    'Conversions', 'Customers', 'Users', 'Useful resources',
+  ]);
 });
 
 // TC-NAV-002
@@ -33,21 +29,13 @@ test('Salesperson sees limited nav', async ({ page }) => {
   await page.goto('/dashboard');
   await page.waitForLoadState('networkidle');
 
-  const sidebar = page.locator('nav, [class*="sidebar"], [role="navigation"]').first();
-  const sidebarText = await sidebar.textContent();
-  const text = sidebarText?.toLowerCase() ?? '';
+  const items = await getSidebarItems(page);
+  expect(items).toEqual(['Dashboard', 'Generate', 'Past reports', 'Useful resources']);
 
-  // Should be present
-  const expectedItems = ['Dashboard', 'Generate', 'Past reports', 'Useful resources'];
-  for (const item of expectedItems) {
-    expect(text).toContain(item.toLowerCase());
-  }
-
-  // Should be absent
-  const forbiddenItems = ['Templates', 'Users', 'Customers', 'Conversions'];
-  for (const item of forbiddenItems) {
-    expect(text).not.toContain(item.toLowerCase());
-  }
+  expect(items).not.toContain('Templates');
+  expect(items).not.toContain('Users');
+  expect(items).not.toContain('Customers');
+  expect(items).not.toContain('Conversions');
 });
 
 // TC-NAV-003
@@ -56,21 +44,13 @@ test('Translator sees limited nav', async ({ page }) => {
   await page.goto('/dashboard');
   await page.waitForLoadState('networkidle');
 
-  const sidebar = page.locator('nav, [class*="sidebar"], [role="navigation"]').first();
-  const sidebarText = await sidebar.textContent();
-  const text = sidebarText?.toLowerCase() ?? '';
+  const items = await getSidebarItems(page);
+  expect(items).toEqual(['Dashboard', 'Templates', 'Useful resources', 'Conversions']);
 
-  // Should be present
-  const expectedItems = ['Dashboard', 'Templates', 'Conversions', 'Useful resources'];
-  for (const item of expectedItems) {
-    expect(text).toContain(item.toLowerCase());
-  }
-
-  // Should be absent
-  const forbiddenItems = ['Generate', 'Past reports', 'Users', 'Customers'];
-  for (const item of forbiddenItems) {
-    expect(text).not.toContain(item.toLowerCase());
-  }
+  expect(items).not.toContain('Generate');
+  expect(items).not.toContain('Past reports');
+  expect(items).not.toContain('Users');
+  expect(items).not.toContain('Customers');
 });
 
 // TC-NAV-004

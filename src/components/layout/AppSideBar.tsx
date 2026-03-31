@@ -23,14 +23,14 @@ export default function AppSidebar() {
     const isTranslator = roles.includes("Translator")
 
     const menuItems = [
-        ...(isAdmin || isSales ? [{ label: "Dashboard", href: "/dashboard" }] : []),
+        { label: "Dashboard", href: "/dashboard" },
         ...(isAdmin || isSales ? [{ label: "Generate", href: "/report-generation" }] : []),
-        ...(isAdmin || isSales ? [{ label: "Reports", href: "/historical-reports" }] : []),
-        ...(isAdmin || isSales ? [{ label: "Customers", href: "/customers" }] : []),
-        ...(isAdmin ? [{ label: "Users", href: "/users" }] : []),
+        ...(isAdmin || isSales ? [{ label: "Past reports", href: "/historical-reports" }] : []),
         ...(isAdmin || isTranslator ? [{ label: "Templates", href: isAdmin ? "/template" : "/template/translate" }] : []),
-        { label: "Useful resources", href: "/useful-resources" },
         ...(isAdmin || isTranslator ? [{ label: "Conversions", href: "/conversion-logic" }] : []),
+        ...(isAdmin ? [{ label: "Customers", href: "/customers" }] : []),
+        ...(isAdmin ? [{ label: "Users", href: "/users" }] : []),
+        { label: "Useful resources", href: "/useful-resources" },
     ]
 
     return (
