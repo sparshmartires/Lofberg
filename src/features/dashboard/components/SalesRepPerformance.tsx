@@ -48,7 +48,7 @@ export function SalesRepPerformance({ data }: SalesRepPerformanceProps) {
                       </div>
                     )}
 
-                    {rep.name}
+                    <span className="truncate max-w-[150px]">{rep.name}</span>
                   </div>
                 </TableCell>
 

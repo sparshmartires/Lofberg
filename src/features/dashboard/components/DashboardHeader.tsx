@@ -28,7 +28,7 @@ export default function DashboardHeader({
         </p>
       </div>
 
-      <div className="flex items-center gap-[40px] mr-[40px]">
+      <div className="hidden lg:flex items-center gap-[40px] mr-[40px]">
         <StatCard
           icon={<FileText className="w-5 h-5 text-[#3C1053]" />}
           title="Total reports"

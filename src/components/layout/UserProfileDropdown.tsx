@@ -43,12 +43,14 @@ export function UserProfileDropdown({ onLogout }: UserProfileDropdownProps) {
 
       <DropdownMenuContent
         align="end"
+        sideOffset={8}
         className={cn(
           "w-[160px]",
           "rounded-[16px]",
           "p-2",
           "bg-white",
-          "shadow-lg"
+          "shadow-lg",
+          "z-50"
         )}
       >
         <DropdownMenuItem

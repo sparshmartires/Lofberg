@@ -48,7 +48,7 @@ export function TopCustomers({ data }: TopCustomersProps) {
                         {customer.name.substring(0, 2).toUpperCase()}
                       </div>
                     )}
-                    {customer.name}
+                    <span className="truncate max-w-[150px]">{customer.name}</span>
                   </div>
                 </TableCell>
 
