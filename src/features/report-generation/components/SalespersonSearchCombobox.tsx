@@ -41,11 +41,9 @@ export function SalespersonSearchCombobox({
     { skip: false }
   )
 
-  // Filter to salesperson/KAM roles client-side
+  // Filter to salesperson role client-side
   const salesReps: SalespersonItem[] = (data?.items ?? [])
-    .filter((u: UserItem) =>
-      u.roleName === "Salesperson" || u.roleName === "KeyAccountManager"
-    )
+    .filter((u: UserItem) => u.roleName === "Salesperson")
     .map((u: UserItem) => ({
       id: u.id,
       firstName: u.firstName,
