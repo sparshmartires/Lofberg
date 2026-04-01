@@ -419,9 +419,11 @@ export function TemplatePage() {
       setLocalEdits({})
       setEditingVersionId(null)
       setStatusMessage({ type: "success", text: "Published successfully!" })
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Failed to publish:", err)
-      setStatusMessage({ type: "error", text: "Failed to publish. Please try again." })
+      const apiError = err as { data?: { error?: string } }
+      const message = apiError?.data?.error || "Failed to publish. Please try again."
+      setStatusMessage({ type: "error", text: message })
     } finally {
       setIsPublishing(false)
     }
