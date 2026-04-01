@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/store/hooks"
 import { logout } from "@/store/slices/authSlice"
 import { useLogoutMutation } from "@/store/services/authApi"
+import { useAuth } from "@/store/hooks/useAuth"
 
 import {
   Select,
@@ -32,6 +33,10 @@ export default function AppHeader() {
   const [language, setLanguage] = React.useState("EN")
   const router = useRouter()
   const dispatch = useAppDispatch()
+  const { user } = useAuth()
+  const roles = user?.roles ?? []
+  const isAdmin = roles.includes("Administrator")
+  const isSales = roles.includes("Salesperson")
 
   const [triggerLogout] = useLogoutMutation()
 
@@ -63,16 +68,18 @@ export default function AppHeader() {
       {/* RIGHT SECTION */}
       <div className="flex items-center gap-4">
 
-        {/* Generate button — hidden on mobile */}
-        <Button
-          variant="accent"
-          size="md"
-          className="hidden md:flex gap-2 font-medium px-5 py-3"
-          onClick={() => router.push("/report-generation")}
-        >
-          <FileText className="w-4 h-4" />
-          Generate
-        </Button>
+        {/* Generate button — visible to Admin and Salesperson only, hidden on mobile */}
+        {(isAdmin || isSales) && (
+          <Button
+            variant="accent"
+            size="md"
+            className="hidden md:flex gap-2 font-medium px-5 py-3"
+            onClick={() => router.push("/report-generation")}
+          >
+            <FileText className="w-4 h-4" />
+            Generate
+          </Button>
+        )}
 
         {/* User menu — visible on all screen sizes */}
         <UserProfileDropdown onLogout={handleLogout} />

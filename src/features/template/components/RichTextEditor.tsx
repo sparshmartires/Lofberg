@@ -58,6 +58,7 @@ export function RichTextEditor({
   const isExternalUpdate = useRef(false)
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
+  const lastEmittedHtml = useRef(value)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [tokenMenuOpen, setTokenMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -76,16 +77,19 @@ export function RichTextEditor({
     immediatelyRender: false,
     onUpdate: ({ editor: currentEditor }) => {
       if (isExternalUpdate.current) return
-      onChangeRef.current(currentEditor.getHTML())
+      const html = currentEditor.getHTML()
+      lastEmittedHtml.current = html
+      onChangeRef.current(html)
     },
   })
 
   useEffect(() => {
-    if (editor && value !== editor.getHTML()) {
+    if (editor && value !== editor.getHTML() && value !== lastEmittedHtml.current) {
       isExternalUpdate.current = true
       editor.commands.setContent(value)
       isExternalUpdate.current = false
     }
+    lastEmittedHtml.current = value
   }, [value, editor])
 
   // Close menus on click outside
