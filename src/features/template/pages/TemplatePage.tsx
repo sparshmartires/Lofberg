@@ -19,9 +19,56 @@ import {
   usePublishDraftMutation,
   TemplateType,
   TemplateSize,
+  PageType,
   type TemplatePageContentDto,
   type UpdatePageContentRequest,
 } from "@/store/services/templatesApi"
+
+const PAGE_TYPE_LABELS: Record<number, string> = {
+  [PageType.CoverPage]: "Cover page",
+  [PageType.AboutSustainability]: "About sustainability",
+  [PageType.LofbergsUSPs]: "Löfbergs USPs",
+  [PageType.IncreasingPositiveImpact]: "Increasing impact",
+  [PageType.CertificationsOverview]: "Certifications",
+  [PageType.ReceiptRAC]: "Receipt RAC",
+  [PageType.ReceiptCO2]: "Receipt CO2",
+  [PageType.ReceiptFairtrade]: "Receipt Fairtrade",
+  [PageType.ReceiptOrganic]: "Receipt Organic",
+}
+
+const SKIP_VALIDATION_PAGES = new Set([
+  PageType.TableOfContents,
+  PageType.CompiledReceiptSummary,
+])
+
+function validateEnglishContent(pages: TemplatePageContentDto[]): { valid: boolean; missing: string[] } {
+  const missing: string[] = []
+
+  for (const page of pages) {
+    if (SKIP_VALIDATION_PAGES.has(page.pageType)) continue
+
+    const tabName = PAGE_TYPE_LABELS[page.pageType] ?? `Page ${page.pageType}`
+    if (!page.contentJson) {
+      missing.push(`${tabName}: all fields empty`)
+      continue
+    }
+
+    let content: Record<string, unknown>
+    try {
+      content = JSON.parse(page.contentJson)
+    } catch {
+      continue
+    }
+
+    for (const [field, value] of Object.entries(content)) {
+      if (value === null || value === undefined || (typeof value === "string" && !value.trim())) {
+        missing.push(`${tabName}: ${field}`)
+      }
+    }
+  }
+
+  return { valid: missing.length === 0, missing }
+}
 
 export function TemplatePage() {
   const [templateType, setTemplateType] = useState("report")
@@ -388,6 +435,21 @@ export function TemplatePage() {
 
   const handlePublish = async () => {
     if (!reportTemplate?.id) return
+
+    // FE validation: check all English fields are filled before publishing
+    if (!isEditingTranslation) {
+      const { valid, missing } = validateEnglishContent(mergedPages)
+      if (!valid) {
+        const fieldList = missing.slice(0, 5).join(", ")
+        const suffix = missing.length > 5 ? ` and ${missing.length - 5} more` : ""
+        setStatusMessage({
+          type: "error",
+          text: `Cannot publish: missing content in ${missing.length} field(s). ${fieldList}${suffix}`,
+        })
+        return
+      }
+    }
+
     setIsPublishing(true)
     setStatusMessage(null)
     try {

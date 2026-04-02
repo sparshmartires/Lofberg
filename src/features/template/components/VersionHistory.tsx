@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 import { ExternalLink, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import {
   useGetTemplateVersionsQuery,
   useDeleteDraftMutation,
@@ -48,10 +49,11 @@ export default function VersionHistory({ templateIds, label, onOpenVersion }: Ve
   const [deleteDraft] = useDeleteDraftMutation()
   const [actionInProgress, setActionInProgress] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   useAutoDismiss(errorMessage, () => setErrorMessage(null))
 
   const handleDeleteDraft = async () => {
-    if (!window.confirm("Are you sure you want to delete this draft? This action cannot be undone.")) return
+    setDeleteConfirmOpen(false)
     setActionInProgress("delete")
     setErrorMessage(null)
     try {
@@ -136,7 +138,7 @@ export default function VersionHistory({ templateIds, label, onOpenVersion }: Ve
                       <Button
                         variant="outlineBrand"
                         size="sm"
-                        onClick={handleDeleteDraft}
+                        onClick={() => setDeleteConfirmOpen(true)}
                         disabled={isDisabled}
                         title="Delete draft"
                         className="text-red-600 border-red-300 hover:bg-red-50"
@@ -154,6 +156,18 @@ export default function VersionHistory({ templateIds, label, onOpenVersion }: Ve
           })}
         </div>
       )}
+
+      <UserFeedbackDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        type="error"
+        title="Delete draft"
+        description="Are you sure you want to delete this draft? This action cannot be undone."
+        primaryActionLabel="Delete"
+        onPrimaryAction={handleDeleteDraft}
+        secondaryActionLabel="Cancel"
+        onSecondaryAction={() => setDeleteConfirmOpen(false)}
+      />
     </div>
   )
 }
