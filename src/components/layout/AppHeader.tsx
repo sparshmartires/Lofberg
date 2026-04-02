@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/store/hooks"
 import { logout } from "@/store/slices/authSlice"
-import { useLogoutMutation } from "@/store/services/authApi"
+import { authApi, useLogoutMutation } from "@/store/services/authApi"
 import { useAuth } from "@/store/hooks/useAuth"
 
 import { UserProfileDropdown } from "./UserProfileDropdown"
@@ -30,6 +30,7 @@ export default function AppHeader() {
       // Even if the API call fails, clear local state
     }
     dispatch(logout())
+    dispatch(authApi.util.resetApiState())
     router.replace("/login")
   }, [dispatch, router, triggerLogout])
 

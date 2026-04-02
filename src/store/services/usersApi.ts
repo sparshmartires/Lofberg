@@ -18,6 +18,10 @@ export interface UserItem {
   isActive: boolean;
   reportsCount: number;
   lastLogin: string | null;
+  createdAt: string | null;
+  createdByName: string | null;
+  createdByUserId: string | null;
+  profileImageUrl: string | null;
 }
 
 export interface GetUsersParams {
@@ -25,6 +29,12 @@ export interface GetUsersParams {
   pageSize: number;
   searchTerm?: string;
   isActive?: boolean;
+  roleId?: string;
+  createdByUserId?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  lastLoginAfter?: string;
+  lastLoginBefore?: string;
   sortBy?: string;
   sortDirection?: string;
 }
@@ -142,6 +152,10 @@ const mapUser = (item: ApiObject): UserItem => {
     isActive: Boolean(item.isActive ?? item.active ?? true),
     reportsCount: Number(item.reportsCount ?? item.reports ?? 0),
     lastLogin: (item.lastLogin ?? item.lastLoginAt ?? null) as string | null,
+    createdAt: (item.createdAt ?? null) as string | null,
+    createdByName: (item.createdByName ?? null) as string | null,
+    createdByUserId: (item.createdByUserId ?? null) as string | null,
+    profileImageUrl: (item.profileImageUrl ?? null) as string | null,
   };
 };
 
@@ -210,13 +224,19 @@ export const usersApi = createApi({
   tagTypes: ["Users", "Roles"],
   endpoints: (builder) => ({
     getUsers: builder.query<PaginatedUsersResponse, GetUsersParams>({
-      query: ({ pageNumber, pageSize, searchTerm, isActive, sortBy, sortDirection }) => ({
+      query: ({ pageNumber, pageSize, searchTerm, isActive, roleId, createdByUserId, createdAfter, createdBefore, lastLoginAfter, lastLoginBefore, sortBy, sortDirection }) => ({
         url: "/users",
         params: {
           pageNumber,
           pageSize,
           ...(searchTerm ? { searchTerm } : {}),
           ...(typeof isActive === "boolean" ? { isActive } : {}),
+          ...(roleId ? { roleId } : {}),
+          ...(createdByUserId ? { createdByUserId } : {}),
+          ...(createdAfter ? { createdAfter } : {}),
+          ...(createdBefore ? { createdBefore } : {}),
+          ...(lastLoginAfter ? { lastLoginAfter } : {}),
+          ...(lastLoginBefore ? { lastLoginBefore } : {}),
           ...(sortBy ? { sortBy } : {}),
           ...(sortBy ? { sortDirection } : {}),
         },

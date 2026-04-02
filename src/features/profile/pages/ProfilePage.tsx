@@ -5,7 +5,6 @@ import { useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-import { Badge } from "@/components/ui/badge"
 import { formatPhoneDisplay } from "@/lib/phone"
 import { Loader2, Pencil, Save } from "lucide-react"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
@@ -30,15 +29,17 @@ const formatRole = (role: string | undefined) => {
     .join(" ")
 }
 
-const DEFAULT_AVATAR = "https://randomuser.me/api/portraits/men/32.jpg"
+const getInitials = (first?: string, last?: string) => {
+  const f = (first || "").trim()
+  const l = (last || "").trim()
+  if (f && l) return `${f[0]}${l[0]}`.toUpperCase()
+  if (f) return f.substring(0, 2).toUpperCase()
+  return "?"
+}
 
-const getSafeAvatarSrc = (value: string | undefined) => {
+const isValidAvatarUrl = (value: string | undefined) => {
   const source = (value || "").trim()
-  if (!source) return DEFAULT_AVATAR
-  if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("/")) {
-    return source
-  }
-  return DEFAULT_AVATAR
+  return source.startsWith("http://") || source.startsWith("https://") || source.startsWith("/")
 }
 
 export default function MyProfilePage() {
@@ -147,14 +148,20 @@ export default function MyProfilePage() {
                 onClick={() => avatarInputRef.current?.click()}
                 disabled={avatarUploading}
               >
-                <Image
-                  src={getSafeAvatarSrc(profile?.avatarUrl)}
-                  alt="avatar"
-                  width={44}
-                  height={44}
-                  className="rounded-full"
-                  unoptimized
-                />
+                {isValidAvatarUrl(profile?.avatarUrl) ? (
+                  <Image
+                    src={profile!.avatarUrl!}
+                    alt="avatar"
+                    width={44}
+                    height={44}
+                    className="rounded-full"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="w-[44px] h-[44px] rounded-full bg-[#F4ECFB] flex items-center justify-center text-[14px] font-medium text-[#5B2D91]">
+                    {getInitials(firstName, lastName)}
+                  </div>
+                )}
                 <div className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5B2D91] rounded-full flex items-center justify-center">
                   {avatarUploading ? (
                     <Loader2 className="w-2.5 h-2.5 text-white animate-spin" />
@@ -172,15 +179,9 @@ export default function MyProfilePage() {
               />
 
               <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-[16px] text-[#1F1F1F]">
-                    {fullName}
-                  </p>
-
-                  <Badge className="bg-[#7DB356] text-white rounded-full px-3">
-                    {profile?.isActive === false ? "Inactive" : "Active"}
-                  </Badge>
-                </div>
+                <p className="text-[16px] text-[#1F1F1F]">
+                  {fullName}
+                </p>
 
                 <p className="text-[14px] text-[#6B6B6B]">
                   {primaryRole}

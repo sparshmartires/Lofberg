@@ -17,6 +17,7 @@ import { EditUserDialog } from "./EditUserDialog"
 import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { UserMobileCard } from "./UserMobileCard"
 import { UserItem, useDeleteUserMutation, useUpdateUserMutation } from "@/store/services/usersApi"
+import { formatPhoneDisplay } from "@/lib/phone"
 
 interface UsersTableProps {
   users: UserItem[]
@@ -36,6 +37,8 @@ interface ViewUser {
   status: "Active" | "Archived"
   reports: number
   lastLogin: string | null
+  createdAt: string | null
+  createdByName: string | null
   phone: string
   notes: string
   avatar: string
@@ -72,6 +75,8 @@ const mapUserForView = (user: UserItem): ViewUser => {
     status: user.isActive ? "Active" : "Archived",
     reports: user.reportsCount,
     lastLogin: user.lastLogin,
+    createdAt: user.createdAt,
+    createdByName: user.createdByName,
     phone: user.phoneNumber || "",
     notes: user.notes || "",
     isActive: user.isActive,
@@ -92,13 +97,16 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
   const userRows = users.map(mapUserForView)
 
   const columnWidths = {
-    name: "w-[180px]",
-    email: "w-[230px]",
-    role: "w-[140px]",
-    status: "w-[120px]",
-    reports: "w-[100px]",
-    lastLogin: "w-[110px]",
-    actions: "w-[90px]",
+    name: "min-w-[160px]",
+    email: "min-w-[180px]",
+    phone: "min-w-[155px]",
+    role: "min-w-[110px]",
+    status: "min-w-[90px]",
+    reports: "min-w-[80px]",
+    createdAt: "min-w-[100px]",
+    createdBy: "min-w-[120px]",
+    lastLogin: "min-w-[100px]",
+    actions: "min-w-[80px]",
   }
 
   const SortableHeader = ({ column, children, className }: { column: string; children: React.ReactNode; className?: string }) => (
@@ -156,17 +164,20 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
   return (
     <>
       <div className="table-card border-[#EDEDED]">
-        <div className="users-table-desktop">
-          <Table className="table-fixed">
+        <div className="users-table-desktop overflow-x-auto">
+          <Table className="table-auto min-w-[1300px]">
 
             {/* TABLE HEADER */}
             <TableHeader>
               <TableRow className="table-header-row-bordered">
-                <TableHead className={`table-header-cell ${columnWidths.name}`}>
+                <SortableHeader column="name" className={columnWidths.name}>
                   Name
-                </TableHead>
+                </SortableHeader>
                 <TableHead className={`table-header-cell ${columnWidths.email}`}>
                   Email
+                </TableHead>
+                <TableHead className={`table-header-cell ${columnWidths.phone}`}>
+                  Phone
                 </TableHead>
                 <SortableHeader column="role" className={columnWidths.role}>
                   Role
@@ -174,9 +185,15 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
                 <SortableHeader column="status" className={columnWidths.status}>
                   Status
                 </SortableHeader>
-                <TableHead className={`table-header-cell ${columnWidths.reports}`}>
+                <SortableHeader column="reportsgenerated" className={columnWidths.reports}>
                   Reports generated
-                </TableHead>
+                </SortableHeader>
+                <SortableHeader column="createdat" className={columnWidths.createdAt}>
+                  Created at
+                </SortableHeader>
+                <SortableHeader column="createdby" className={columnWidths.createdBy}>
+                  Created by
+                </SortableHeader>
                 <SortableHeader column="lastlogin" className={columnWidths.lastLogin}>
                   Last login
                 </SortableHeader>
@@ -211,7 +228,12 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
 
                   {/* EMAIL */}
                   <TableCell className={`table-muted-text ${columnWidths.email}`} data-label="Email">
-                    <span className="block truncate max-w-[280px]" title={user.email}>{user.email}</span>
+                    <span className="block truncate max-w-[200px]" title={user.email}>{user.email}</span>
+                  </TableCell>
+
+                  {/* PHONE */}
+                  <TableCell className={`table-muted-text ${columnWidths.phone}`} data-label="Phone">
+                    {user.phone ? formatPhoneDisplay(user.phone) : "\u2014"}
                   </TableCell>
 
                   {/* ROLE */}
@@ -238,9 +260,30 @@ export function UsersTable({ users, sortBy, sortDirection, onSort }: UsersTableP
                     </Badge>
                   </TableCell>
 
-                  {/* REPORTS */}
+                  {/* REPORTS — dash for Admin/Translator, clickable count for Salesperson */}
                   <TableCell className={`table-name-text ${columnWidths.reports}`} data-label="Reports">
-                    {user.reports}
+                    {user.role === "Salesperson" ? (
+                      <a
+                        href={`/historical-reports?salesRepresentativeId=${user.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#5B2D91] underline cursor-pointer"
+                      >
+                        {user.reports}
+                      </a>
+                    ) : (
+                      <span className="text-[#747474]">&mdash;</span>
+                    )}
+                  </TableCell>
+
+                  {/* CREATED AT */}
+                  <TableCell className={`table-muted-text ${columnWidths.createdAt}`} data-label="Created at">
+                    {formatDate(user.createdAt)}
+                  </TableCell>
+
+                  {/* CREATED BY */}
+                  <TableCell className={`table-muted-text ${columnWidths.createdBy}`} data-label="Created by">
+                    {user.createdByName || "\u2014"}
                   </TableCell>
 
                   {/* LAST LOGIN */}
