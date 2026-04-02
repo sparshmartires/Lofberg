@@ -11,15 +11,8 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { UserFeedbackDialog } from "@/components/ui/user-feedback-dialog"
 import { Archive, Download, Pencil, RotateCcw, Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { SortableHeader } from "@/components/ui/SortableHeader"
@@ -396,22 +389,17 @@ export function HistoricalReportsTable({
       </div>
 
       {/* Confirmation Modal */}
-      <Dialog open={modal.open} onOpenChange={(open) => !open && closeModal()}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{modal.report ? modalTitle[modal.action] : ""}</DialogTitle>
-            <DialogDescription>{modalDescription[modal.action]}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={closeModal}>
-              Cancel
-            </Button>
-            <Button variant={modalConfirmVariant[modal.action]} onClick={handleConfirm}>
-              {modalConfirmLabel[modal.action]}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <UserFeedbackDialog
+        open={modal.open}
+        onOpenChange={(open) => !open && closeModal()}
+        type="error"
+        title={modal.report ? modalTitle[modal.action] : ""}
+        description={modalDescription[modal.action]}
+        primaryActionLabel={modalConfirmLabel[modal.action]}
+        onPrimaryAction={handleConfirm}
+        secondaryActionLabel="Cancel"
+        onSecondaryAction={closeModal}
+      />
     </>
   )
 }
