@@ -19,7 +19,7 @@ interface NewRowForm {
   value: string
 }
 
-export default function SegmentBasedConversions() {
+export default function SegmentBasedConversions({ isAdmin = false }: { isAdmin?: boolean }) {
   const { data: conversions = [], isLoading } = useGetSegmentConversionsQuery()
   const { data: segments = [] } = useGetCustomerSegmentsQuery()
 
@@ -125,7 +125,7 @@ export default function SegmentBasedConversions() {
                   <Languages className="w-4 h-4 text-[#5B2D91]" />
                 </button>
 
-                {editingId === row.id ? (
+                {isAdmin && (editingId === row.id ? (
                   <button
                     onClick={() => handleUpdate(row)}
                     className="w-[32px] h-[32px] rounded-lg bg-[#F4ECFB] flex items-center justify-center"
@@ -142,9 +142,9 @@ export default function SegmentBasedConversions() {
                   >
                     <Save className="w-4 h-4 text-[#5B2D91]" />
                   </button>
-                )}
+                ))}
 
-                {confirmDeleteId === row.id ? (
+                {isAdmin && (confirmDeleteId === row.id ? (
                   <div className="flex gap-1 items-center">
                     <button
                       onClick={() => handleDelete(row.id)}
@@ -166,14 +166,14 @@ export default function SegmentBasedConversions() {
                   >
                     <Trash2 className="w-4 h-4 text-[#5B2D91]" />
                   </button>
-                )}
+                ))}
               </div>
             </div>
           ))}
         </div>
 
-        {/* ADD NEW ROW */}
-        <div className="grid grid-cols-4 items-center px-6 py-4 mt-4 border border-dashed border-[#EDEDED] rounded-xl">
+        {/* ADD NEW ROW — Admin only */}
+        {isAdmin && <div className="grid grid-cols-4 items-center px-6 py-4 mt-4 border border-dashed border-[#EDEDED] rounded-xl">
           <Select
             value={form.segmentId}
             onValueChange={(v) => setForm({ ...form, segmentId: v })}
@@ -210,15 +210,15 @@ export default function SegmentBasedConversions() {
           >
             {isCreating ? "Adding..." : "Add"}
           </button>
-        </div>
+        </div>}
       </div>
 
       {/* ================= MOBILE VIEW ================= */}
 
       <div className="md:hidden space-y-6">
 
-        {/* FORM */}
-        <div className="space-y-4">
+        {/* FORM — Admin only */}
+        {isAdmin && <div className="space-y-4">
 
           {/* SEGMENT */}
           <div>
@@ -271,7 +271,7 @@ export default function SegmentBasedConversions() {
           >
             {isCreating ? "Adding..." : "Add new conversion"}
           </button>
-        </div>
+        </div>}
 
         {/* CARDS */}
         <div className="space-y-4">
@@ -306,7 +306,7 @@ export default function SegmentBasedConversions() {
                     <Languages className="w-4 h-4 text-[#5B2D91]" />
                   </button>
 
-                  <button
+                  {isAdmin && <button
                     onClick={() => {
                       setEditingId(row.id)
                       setEditValue(String(row.conversionValue))
@@ -314,14 +314,14 @@ export default function SegmentBasedConversions() {
                     className="w-[28px] h-[28px] bg-[#F4ECFB] rounded flex items-center justify-center"
                   >
                     <Save className="w-4 h-4 text-[#5B2D91]" />
-                  </button>
+                  </button>}
 
-                  <button
+                  {isAdmin && <button
                     onClick={() => handleDelete(row.id)}
                     className="w-[28px] h-[28px] bg-[#F4ECFB] rounded flex items-center justify-center"
                   >
                     <Trash2 className="w-4 h-4 text-[#5B2D91]" />
-                  </button>
+                  </button>}
                 </div>
               </div>
             </div>

@@ -29,7 +29,7 @@ export function CustomerSearchCombobox({
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { data } = useGetCustomersQuery(
-    { pageNumber: 1, pageSize: 10, searchTerm: debouncedTerm },
+    { pageNumber: 1, pageSize: 10, searchTerm: debouncedTerm, isActive: true },
     { skip: !debouncedTerm && !isOpen }
   )
 

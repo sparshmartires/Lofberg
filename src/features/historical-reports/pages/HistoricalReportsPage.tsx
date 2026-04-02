@@ -35,7 +35,7 @@ export function HistoricalReportsPage() {
 
   const [search, setSearch] = useState("")
   const [customerId, setCustomerId] = useState(searchParams.get("customerId") ?? "all")
-  const [salesRepresentativeId, setSalesRepresentativeId] = useState("all")
+  const [salesRepresentativeId, setSalesRepresentativeId] = useState(searchParams.get("salesRepresentativeId") ?? "all")
   const [type, setType] = useState("all")
   const [status, setStatus] = useState("all")
   const [segmentId, setSegmentId] = useState("all")

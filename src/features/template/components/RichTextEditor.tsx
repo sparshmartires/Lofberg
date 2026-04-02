@@ -6,6 +6,7 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  Braces,
   Italic,
   List,
   ListOrdered,
@@ -19,6 +20,16 @@ import StarterKit from "@tiptap/starter-kit"
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+const PLACEHOLDER_TOKENS = [
+  "{Time period}",
+  "{Quantity}",
+  "{Area}",
+  "{CO2 in KG}",
+  "{CO2 in equivalent units}",
+  "{EUR FT Cooperative Premium}",
+  "{EUR FT Organic Income}",
+]
 
 const defaultToolbarState = {
   isBold: false,
@@ -47,8 +58,11 @@ export function RichTextEditor({
   const isExternalUpdate = useRef(false)
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
+  const lastEmittedHtml = useRef(value)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [tokenMenuOpen, setTokenMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const tokenRef = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
     extensions: [
@@ -63,29 +77,35 @@ export function RichTextEditor({
     immediatelyRender: false,
     onUpdate: ({ editor: currentEditor }) => {
       if (isExternalUpdate.current) return
-      onChangeRef.current(currentEditor.getHTML())
+      const html = currentEditor.getHTML()
+      lastEmittedHtml.current = html
+      onChangeRef.current(html)
     },
   })
 
   useEffect(() => {
-    if (editor && value !== editor.getHTML()) {
+    if (editor && value !== editor.getHTML() && value !== lastEmittedHtml.current) {
       isExternalUpdate.current = true
       editor.commands.setContent(value)
       isExternalUpdate.current = false
     }
+    lastEmittedHtml.current = value
   }, [value, editor])
 
-  // Close mobile menu on click outside
+  // Close menus on click outside
   useEffect(() => {
-    if (!mobileMenuOpen) return
+    if (!mobileMenuOpen && !tokenMenuOpen) return
     const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      if (mobileMenuOpen && menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMobileMenuOpen(false)
+      }
+      if (tokenMenuOpen && tokenRef.current && !tokenRef.current.contains(e.target as Node)) {
+        setTokenMenuOpen(false)
       }
     }
     document.addEventListener("mousedown", handler)
     return () => document.removeEventListener("mousedown", handler)
-  }, [mobileMenuOpen])
+  }, [mobileMenuOpen, tokenMenuOpen])
 
   const toolbarState = useEditorState({
     editor,
@@ -151,6 +171,31 @@ export function RichTextEditor({
       <ToolbarButton active={toolbarState?.isOrderedList ?? false} label="Numbered list" onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
         <ListOrdered className="h-4 w-4" />
       </ToolbarButton>
+
+      <span className="mx-1 h-5 w-px bg-[#EDEDED]" />
+
+      <div className="relative" ref={tokenRef}>
+        <ToolbarButton active={tokenMenuOpen} label="Insert placeholder" onClick={() => setTokenMenuOpen(!tokenMenuOpen)}>
+          <Braces className="h-4 w-4" />
+        </ToolbarButton>
+        {tokenMenuOpen && (
+          <div className="absolute top-full left-0 z-50 mt-1 w-64 max-h-48 overflow-y-auto rounded-md border border-[#EDEDED] bg-white py-1 shadow-lg">
+            {PLACEHOLDER_TOKENS.map((token) => (
+              <button
+                key={token}
+                type="button"
+                className="w-full px-3 py-1.5 text-left text-sm hover:bg-gray-100"
+                onClick={() => {
+                  editor?.chain().focus().insertContent(token).run()
+                  setTokenMenuOpen(false)
+                }}
+              >
+                {token}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   )
 

@@ -70,7 +70,7 @@ export function UserDialogForm({
   onSubmit,
 }: UserDialogFormProps) {
   const values = defaultValues ?? EMPTY_VALUES
-  const filteredRoles = roleOptions.filter((r) => r.name !== "KeyAccountManager")
+  const filteredRoles = roleOptions
   const { data: languages = [] } = useGetTemplateLanguagesQuery()
 
   const {

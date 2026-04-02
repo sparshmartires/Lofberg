@@ -60,6 +60,7 @@ const initialStep4: Step4Data = {
 const initialStep5: Step5Data = {
   outputFormat: OutputFormat.PDF,
   outputSize: OutputSize.A4,
+  generateJpegs: false,
 }
 
 const initialState: ReportWizardState = {

@@ -3,15 +3,19 @@
 import { Badge } from "@/components/ui/badge"
 import { Pencil, Archive, RotateCcw } from "lucide-react"
 import Image from "next/image"
+import { formatPhoneDisplay } from "@/lib/phone"
 
 export interface UserMobileCardData {
   id: string
   name: string
   email: string
+  phone: string
   role: string
   status: "Active" | "Archived"
   reports: number
   lastLogin: string | null
+  createdAt: string | null
+  createdByName: string | null
   avatar: string
   isActive: boolean
 }
@@ -72,12 +76,37 @@ export function UserMobileCard({ user, onEdit, onDelete, onCardClick }: UserMobi
             <span className="user-mobile-value text-right truncate ml-2">{user.email}</span>
           </div>
           <div className="flex justify-between">
+            <span className="user-mobile-label">Phone</span>
+            <span className="user-mobile-value">{user.phone ? formatPhoneDisplay(user.phone) : "\u2014"}</span>
+          </div>
+          <div className="flex justify-between">
             <span className="user-mobile-label">Role</span>
             <span className="user-mobile-value">{user.role}</span>
           </div>
           <div className="flex justify-between">
             <span className="user-mobile-label">Reports</span>
-            <span className="user-mobile-value">{user.reports}</span>
+            <span className="user-mobile-value">
+              {user.role === "Salesperson" ? (
+                <a
+                  href={`/historical-reports?salesRepresentativeId=${user.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#5B2D91] underline"
+                >
+                  {user.reports}
+                </a>
+              ) : (
+                <span className="text-[#747474]">&mdash;</span>
+              )}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="user-mobile-label">Created at</span>
+            <span className="user-mobile-value">{formatDateOnly(user.createdAt)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="user-mobile-label">Created by</span>
+            <span className="user-mobile-value">{user.createdByName || "\u2014"}</span>
           </div>
           <div className="flex justify-between">
             <span className="user-mobile-label">Last login</span>

@@ -82,17 +82,17 @@ src/
 
 ### Roles & access
 - **Administrator** — full access to all screens and actions
-- **Salesperson** — Dashboard, Generate, Past reports (own only), Useful resources
-- **Translator** — Dashboard, Templates (translate only), Conversions (view + translate), Useful resources
+- **Salesperson** — Dashboard, Generate, Past reports (own only), Customers (read-only, active only), Useful resources
+- **Translator** — Dashboard, Templates (translate only), Conversions (view + translate only), Useful resources
 
 Sidebar items are role-dependent. RBAC enforced on both routes and component visibility.
 
 ### Report generation (5-step wizard)
 State managed in `reportWizardSlice`. Steps:
-1. **Customer details** — select existing or manual entry (name + logo + segment). Manual customers not persisted. Report date, language, salesperson (hidden for salesperson role).
+1. **Customer details** — select existing or manual entry (name + logo + segment). Manual customers not persisted. Report date, language, salesperson (hidden for salesperson role). Language defaults to customer's preferred language if a customer is selected; otherwise defaults to English.
 2. **Purchase data** — CSV/Excel upload via ExcelJS/PapaParse. Editable table. CO2 value from CSV. Back/forward preserves data.
 3. **Output type** — Report+Receipt or ReceiptOnly. Add-ons: compiled receipt, media screens.
-4. **Content selection** — ToC toggle, 3rd-party logo, up to 3 of 10 impact blocks, certifications, unit selectors (quantity/area/CO2).
+4. **Content selection** — ToC toggle, 3rd-party logo, up to 3 of 10 impact blocks, certifications, unit selectors (quantity/area/CO2). Compiled receipt: select minimum 1, maximum 4 certification receipt blocks.
 5. **Generate** — Preview (new tab, no persist) or Generate (blob + historical + download). All controls disabled during generation.
 
 Draft: disabled until Step 1 complete. Title: "Draft - [Customer] - [date]". No "Unknown" customer drafts.
@@ -140,7 +140,7 @@ Draft: disabled until Step 1 complete. Title: "Draft - [Customer] - [date]". No 
 - **Azure Blob host:** `stlofbergdev0426.blob.core.windows.net` (configured in `next.config.ts` remotePatterns)
 
 ## Conventions
-- Feature-folder: new features in `src/features/<name>/` with `pages/` and `components/` subdirs
+- Feature-folder: new features in `src/features/<n>/` with `pages/` and `components/` subdirs
 - API services: RTK Query `createApi` with shared `createBaseQuery()` from `baseApi.ts`; types inline
 - UI components follow shadcn/ui (Radix primitives + CVA + tailwind-merge)
 - Path alias `@/*` for all imports from `src/`
@@ -153,7 +153,7 @@ Draft: disabled until Step 1 complete. Title: "Draft - [Customer] - [date]". No 
 ## Known inconsistencies
 - `salesRepresentativesApi.ts` still exists in `src/store/services/` and is registered in the Redux store, but the Application Definition states sales representatives screen and APIs are removed entirely.
 - `exampleApi.ts` leftover in `src/store/services/`, registered in Redux store — appears to be scaffolding/template code.
-- `KeyAccountManager` role referenced in `SalespersonSearchCombobox.tsx` and `UserDialogForm.tsx` — App Definition specifies only 3 roles (Administrator, Salesperson, Translator).
+- `KeyAccountManager` role referenced in `SalespersonSearchCombobox.tsx` and `UserDialogForm.tsx` — only three roles exist: Administrator, Salesperson, Translator. All KAM references must be removed.
 - Playwright config (`playwright.config.ts`) exists with `testDir: './e2e'` but no `e2e/` directory exists yet.
 
 ## Out of scope
@@ -166,6 +166,7 @@ Draft: disabled until Step 1 complete. Title: "Draft - [Customer] - [date]". No 
 - No image editing/cropping
 - No cloud storage provider integration
 - No sales representatives management screen (removed per spec)
+- No KeyAccountManager role (removed per spec — three roles only: Administrator, Salesperson, Translator)
 
 ## Audit Config
 - package_manager: npm

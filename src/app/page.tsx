@@ -1,6 +1,5 @@
 "use client";
 
-import { useGetPostsQuery } from "@/store/services/exampleApi";
 import { Button } from "@/components/ui/button";
 import { useState } from "react"
 import { FeedbackDialog } from "@/components/ui/feedback-dialog"
@@ -8,13 +7,8 @@ import { Input } from "@/components/ui/input"
 import { FileText, Plus, Trash2, X } from "lucide-react";
 
 export default function HomePage() {
-  const { data, isLoading, error } = useGetPostsQuery();
   const [successOpen, setSuccessOpen] = useState(false)
 const [errorOpen, setErrorOpen] = useState(false)
-
-
-  if (isLoading) return <p className="p-6 text-body">Loading...</p>;
-  if (error) return <p className="p-6 text-body">Error loading posts</p>;
 
   return (
     <main className="p-10 space-y-16">
@@ -213,24 +207,6 @@ const [errorOpen, setErrorOpen] = useState(false)
     text-body
   "
 />
-
-      {/* ================= API SECTION ================= */}
-      <section className="space-y-4">
-        <h2 className="text-heading-md text-foreground">
-          Posts (RTK Query)
-        </h2>
-
-        <ul className="space-y-2">
-          {data?.slice(0, 5).map((post) => (
-            <li
-              key={post.id}
-              className="rounded-md border border-border p-3 text-body text-muted-foreground"
-            >
-              {post.title}
-            </li>
-          ))}
-        </ul>
-      </section>
 
     </main>
   );

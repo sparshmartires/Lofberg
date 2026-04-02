@@ -19,24 +19,55 @@ import {
   usePublishDraftMutation,
   TemplateType,
   TemplateSize,
+  PageType,
   type TemplatePageContentDto,
   type UpdatePageContentRequest,
 } from "@/store/services/templatesApi"
 
-// ── Helper: map A4 dirty pages to A3 counterparts by pageType ────────
-function mapPagesToA3(
-  dirtyPages: UpdatePageContentRequest[],
-  a4Pages: TemplatePageContentDto[] | undefined,
-  a3Pages: TemplatePageContentDto[] | undefined
-): UpdatePageContentRequest[] {
-  if (!a4Pages || !a3Pages) return []
-  return dirtyPages.flatMap(({ templatePageId, contentJson }) => {
-    const a4Page = a4Pages.find((p) => p.templatePageId === templatePageId)
-    if (!a4Page) return []
-    const a3Page = a3Pages.find((p) => p.pageType === a4Page.pageType)
-    if (!a3Page) return []
-    return [{ templatePageId: a3Page.templatePageId, contentJson }]
-  })
+const PAGE_TYPE_LABELS: Record<number, string> = {
+  [PageType.CoverPage]: "Cover page",
+  [PageType.AboutSustainability]: "About sustainability",
+  [PageType.LofbergsUSPs]: "Löfbergs USPs",
+  [PageType.IncreasingPositiveImpact]: "Increasing impact",
+  [PageType.CertificationsOverview]: "Certifications",
+  [PageType.ReceiptRAC]: "Receipt RAC",
+  [PageType.ReceiptCO2]: "Receipt CO2",
+  [PageType.ReceiptFairtrade]: "Receipt Fairtrade",
+  [PageType.ReceiptOrganic]: "Receipt Organic",
+}
+
+const SKIP_VALIDATION_PAGES = new Set([
+  PageType.TableOfContents,
+  PageType.CompiledReceiptSummary,
+])
+
+function validateEnglishContent(pages: TemplatePageContentDto[]): { valid: boolean; missing: string[] } {
+  const missing: string[] = []
+
+  for (const page of pages) {
+    if (SKIP_VALIDATION_PAGES.has(page.pageType)) continue
+
+    const tabName = PAGE_TYPE_LABELS[page.pageType] ?? `Page ${page.pageType}`
+    if (!page.contentJson) {
+      missing.push(`${tabName}: all fields empty`)
+      continue
+    }
+
+    let content: Record<string, unknown>
+    try {
+      content = JSON.parse(page.contentJson)
+    } catch {
+      continue
+    }
+
+    for (const [field, value] of Object.entries(content)) {
+      if (value === null || value === undefined || (typeof value === "string" && !value.trim())) {
+        missing.push(`${tabName}: ${field}`)
+      }
+    }
+  }
+
+  return { valid: missing.length === 0, missing }
 }
 
 export function TemplatePage() {
@@ -84,64 +115,63 @@ export function TemplatePage() {
     [templates, isReceipt]
   )
 
-  // A3 counterparts (for mirroring saves)
-  const a3ReceiptTemplate = useMemo(
-    () =>
-      isReceipt
-        ? templates?.find((t) => t.type === TemplateType.Receipt && t.size === TemplateSize.A3)
-        : undefined,
-    [templates, isReceipt]
+  // All 3 template entities (Report, Receipt, Compiled Receipt — all A4)
+  const reportTemplate = useMemo(
+    () => templates?.find((t) => t.type === TemplateType.Report && t.size === TemplateSize.A4),
+    [templates]
+  )
+  const receiptTemplate = useMemo(
+    () => templates?.find((t) => t.type === TemplateType.Receipt && t.size === TemplateSize.A4),
+    [templates]
+  )
+  const compiledReceiptTemplate = useMemo(
+    () => templates?.find((t) => t.type === TemplateType.CompiledReceipt && t.size === TemplateSize.A4),
+    [templates]
   )
 
-  const a3CompiledTemplate = useMemo(
-    () =>
-      isReceipt
-        ? templates?.find((t) => t.type === TemplateType.CompiledReceipt && t.size === TemplateSize.A3)
-        : undefined,
-    [templates, isReceipt]
+  // All template IDs for synced operations (draft, publish, delete)
+  const allTemplateIds = useMemo(() => {
+    const ids: string[] = []
+    if (reportTemplate?.id) ids.push(reportTemplate.id)
+    if (receiptTemplate?.id) ids.push(receiptTemplate.id)
+    if (compiledReceiptTemplate?.id) ids.push(compiledReceiptTemplate.id)
+    return ids
+  }, [reportTemplate, receiptTemplate, compiledReceiptTemplate])
+
+  // ── Fetch ALL 3 version data simultaneously (persists across type switch) ──
+  const reportEffectiveVersionId = editingVersionId ?? reportTemplate?.activeVersion?.id ?? ""
+  const { data: reportVersionData, isLoading: isLoadingReportVersion } = useGetTemplateVersionQuery(
+    { templateId: reportTemplate?.id ?? "", versionId: reportEffectiveVersionId },
+    { skip: !reportTemplate?.id || !reportEffectiveVersionId }
   )
 
-  // ── Fetch version (editing or active) ──────────────────────────────
-  const effectiveVersionId = editingVersionId ?? selectedTemplate?.activeVersion?.id ?? ""
-  const { data: versionData, isLoading: isLoadingVersion } = useGetTemplateVersionQuery(
-    {
-      templateId: selectedTemplate?.id ?? "",
-      versionId: effectiveVersionId,
-    },
-    { skip: !selectedTemplate?.id || !effectiveVersionId }
+  const receiptEffectiveVersionId = editingVersionId
+    ? "" // When editing a specific version, only load from primary (report)
+    : receiptTemplate?.activeVersion?.id ?? ""
+  const { data: receiptVersionData, isLoading: isLoadingReceiptVersion } = useGetTemplateVersionQuery(
+    { templateId: receiptTemplate?.id ?? "", versionId: receiptEffectiveVersionId },
+    { skip: !receiptTemplate?.id || !receiptEffectiveVersionId }
   )
 
+  const compiledEffectiveVersionId = editingVersionId
+    ? ""
+    : compiledReceiptTemplate?.activeVersion?.id ?? ""
   const { data: compiledVersionData, isLoading: isLoadingCompiledVersion } = useGetTemplateVersionQuery(
-    {
-      templateId: compiledTemplate?.id ?? "",
-      versionId: compiledTemplate?.activeVersion?.id ?? "",
-    },
-    { skip: !compiledTemplate?.id || !compiledTemplate?.activeVersion?.id }
+    { templateId: compiledReceiptTemplate?.id ?? "", versionId: compiledEffectiveVersionId },
+    { skip: !compiledReceiptTemplate?.id || !compiledEffectiveVersionId }
   )
+
+  // Alias for backward compat — selectedTemplate's version data
+  const versionData = isReceipt ? receiptVersionData : reportVersionData
+  const isLoadingVersion = isReceipt ? isLoadingReceiptVersion : isLoadingReportVersion
 
   // ── Sync templateName from loaded version ──────────────────────────
   useEffect(() => {
-    if (versionData?.versionName) {
-      setTemplateName(versionData.versionName)
+    if (reportVersionData?.versionName) {
+      setTemplateName(reportVersionData.versionName)
     }
-  }, [versionData?.id, versionData?.versionName])
+  }, [reportVersionData?.id, reportVersionData?.versionName])
 
-  // ── Fetch A3 versions (for page ID mapping during save mirroring) ──
-  const { data: a3VersionData } = useGetTemplateVersionQuery(
-    {
-      templateId: a3ReceiptTemplate?.id ?? "",
-      versionId: a3ReceiptTemplate?.activeVersion?.id ?? "",
-    },
-    { skip: !a3ReceiptTemplate?.id || !a3ReceiptTemplate?.activeVersion?.id }
-  )
-
-  const { data: a3CompiledVersionData } = useGetTemplateVersionQuery(
-    {
-      templateId: a3CompiledTemplate?.id ?? "",
-      versionId: a3CompiledTemplate?.activeVersion?.id ?? "",
-    },
-    { skip: !a3CompiledTemplate?.id || !a3CompiledTemplate?.activeVersion?.id }
-  )
 
   // ── Determine if editing translations (non-English language) ────────
   const isEditingTranslation = useMemo(() => {
@@ -161,32 +191,29 @@ export function TemplatePage() {
     { skip: !compiledTemplate?.id || !language || !isEditingTranslation }
   )
 
-  // ── Merge A4 pages from both sources ───────────────────────────────
+  // ── Merge pages from ALL 3 templates (persists across type switch) ─
   const allApiPages = useMemo(() => {
-    const main = versionData?.pages ?? []
+    const report = reportVersionData?.pages ?? []
+    const receipt = receiptVersionData?.pages ?? []
     const compiled = compiledVersionData?.pages ?? []
-    return [...main, ...compiled]
-  }, [versionData, compiledVersionData])
+    return [...report, ...receipt, ...compiled]
+  }, [reportVersionData, receiptVersionData, compiledVersionData])
 
   // ── Initialize local edits — only on language/template change ──────
   const prevLangRef = useRef(language)
-  const prevTemplateRef = useRef(selectedTemplate?.id)
   const initializedRef = useRef(false)
 
   useEffect(() => {
     const langChanged = prevLangRef.current !== language
-    const templateChanged = prevTemplateRef.current !== selectedTemplate?.id
     prevLangRef.current = language
-    prevTemplateRef.current = selectedTemplate?.id
 
-    // Only re-initialize on language change, template change, or first load
-    if (!langChanged && !templateChanged && initializedRef.current) return
+    // Only re-initialize on language change or first load (NOT on template type switch)
+    if (!langChanged && initializedRef.current) return
 
     if (isEditingTranslation) {
       const allTranslations = [...mainTranslations, ...compiledTranslations]
       if (allTranslations.length === 0) {
-        // Translation data not yet loaded — wait for it
-        if (!langChanged && !templateChanged) return
+        if (!langChanged) return
         setLocalEdits({})
         return
       }
@@ -208,7 +235,7 @@ export function TemplatePage() {
       setLocalEdits(initial)
       initializedRef.current = true
     }
-  }, [language, selectedTemplate?.id, isEditingTranslation, allApiPages, mainTranslations, compiledTranslations])
+  }, [language, isEditingTranslation, allApiPages, mainTranslations, compiledTranslations])
 
   // ── Merge API pages with local edits ───────────────────────────────
   const mergedPages: TemplatePageContentDto[] = useMemo(() => {
@@ -296,15 +323,16 @@ export function TemplatePage() {
   }
 
   const handleSaveChanges = async () => {
-    if (!selectedTemplate?.id) {
+    if (!reportTemplate?.id) {
       setStatusMessage({ type: "error", text: "Not connected to API. Please log in first." })
       return
     }
 
-    const mainPages = buildDirtyPagesForTemplate(versionData?.pages)
+    const reportPages = buildDirtyPagesForTemplate(reportVersionData?.pages)
+    const receiptPages = buildDirtyPagesForTemplate(receiptVersionData?.pages)
     const compiledPages = buildDirtyPagesForTemplate(compiledVersionData?.pages)
 
-    if (mainPages.length === 0 && compiledPages.length === 0) {
+    if (reportPages.length === 0 && receiptPages.length === 0 && compiledPages.length === 0) {
       setStatusMessage({ type: "error", text: "No changes to save." })
       return
     }
@@ -312,39 +340,26 @@ export function TemplatePage() {
     setIsSaving(true)
     setStatusMessage(null)
     try {
-      // Save to A4 templates (primary)
-      if (mainPages.length > 0) {
+      // Save to ALL 3 templates
+      if (reportPages.length > 0 && reportTemplate?.id) {
         await saveActiveChanges({
-          templateId: selectedTemplate.id,
-          body: { pages: mainPages },
+          templateId: reportTemplate.id,
+          body: { pages: reportPages },
         }).unwrap()
       }
-      if (compiledPages.length > 0 && compiledTemplate?.id) {
+      if (receiptPages.length > 0 && receiptTemplate?.id) {
         await saveActiveChanges({
-          templateId: compiledTemplate.id,
+          templateId: receiptTemplate.id,
+          body: { pages: receiptPages },
+        }).unwrap()
+      }
+      if (compiledPages.length > 0 && compiledReceiptTemplate?.id) {
+        await saveActiveChanges({
+          templateId: compiledReceiptTemplate.id,
           body: { pages: compiledPages },
         }).unwrap()
       }
 
-      // Mirror to A3 templates
-      if (mainPages.length > 0 && a3ReceiptTemplate?.id) {
-        const a3Pages = mapPagesToA3(mainPages, versionData?.pages, a3VersionData?.pages)
-        if (a3Pages.length > 0) {
-          await saveActiveChanges({
-            templateId: a3ReceiptTemplate.id,
-            body: { pages: a3Pages },
-          }).unwrap()
-        }
-      }
-      if (compiledPages.length > 0 && a3CompiledTemplate?.id) {
-        const a3Pages = mapPagesToA3(compiledPages, compiledVersionData?.pages, a3CompiledVersionData?.pages)
-        if (a3Pages.length > 0) {
-          await saveActiveChanges({
-            templateId: a3CompiledTemplate.id,
-            body: { pages: a3Pages },
-          }).unwrap()
-        }
-      }
 
       setStatusMessage({ type: "success", text: "Changes saved successfully." })
     } catch (err) {
@@ -367,15 +382,16 @@ export function TemplatePage() {
   }
 
   const handleSaveAsDraft = async () => {
-    if (!selectedTemplate?.id) {
+    if (!reportTemplate?.id) {
       setStatusMessage({ type: "error", text: "Not connected to API. Please log in first." })
       return
     }
 
-    const mainPages = buildDirtyPagesForTemplate(versionData?.pages)
+    const reportPages = buildDirtyPagesForTemplate(reportVersionData?.pages)
+    const receiptPages = buildDirtyPagesForTemplate(receiptVersionData?.pages)
     const compiledPages = buildDirtyPagesForTemplate(compiledVersionData?.pages)
 
-    if (mainPages.length === 0 && compiledPages.length === 0) {
+    if (reportPages.length === 0 && receiptPages.length === 0 && compiledPages.length === 0) {
       setStatusMessage({ type: "error", text: "No changes to save as draft." })
       return
     }
@@ -383,19 +399,28 @@ export function TemplatePage() {
     setIsSaving(true)
     setStatusMessage(null)
     try {
-      // Drafts are only created for A4 templates; A3 is mirrored on publish/save
-      if (mainPages.length > 0) {
-        await ensureDraft(selectedTemplate.id)
+      // Create drafts for ALL 3 templates (synced versions)
+      for (const id of allTemplateIds) {
+        await ensureDraft(id)
+      }
+
+      // Save page changes to ALL template drafts
+      if (reportPages.length > 0 && reportTemplate?.id) {
         await updateDraft({
-          templateId: selectedTemplate.id,
-          body: { pages: mainPages },
+          templateId: reportTemplate.id,
+          body: { pages: reportPages, versionName: templateName || undefined },
         }).unwrap()
       }
-      if (compiledPages.length > 0 && compiledTemplate?.id) {
-        await ensureDraft(compiledTemplate.id)
+      if (receiptPages.length > 0 && receiptTemplate?.id) {
         await updateDraft({
-          templateId: compiledTemplate.id,
-          body: { pages: compiledPages },
+          templateId: receiptTemplate.id,
+          body: { pages: receiptPages, versionName: templateName || undefined },
+        }).unwrap()
+      }
+      if (compiledPages.length > 0 && compiledReceiptTemplate?.id) {
+        await updateDraft({
+          templateId: compiledReceiptTemplate.id,
+          body: { pages: compiledPages, versionName: templateName || undefined },
         }).unwrap()
       }
 
@@ -409,38 +434,58 @@ export function TemplatePage() {
   }
 
   const handlePublish = async () => {
-    if (!selectedTemplate?.id) return
+    if (!reportTemplate?.id) return
+
+    // FE validation: check all English fields are filled before publishing
+    if (!isEditingTranslation) {
+      const { valid, missing } = validateEnglishContent(mergedPages)
+      if (!valid) {
+        const fieldList = missing.slice(0, 5).join(", ")
+        const suffix = missing.length > 5 ? ` and ${missing.length - 5} more` : ""
+        setStatusMessage({
+          type: "error",
+          text: `Cannot publish: missing content in ${missing.length} field(s). ${fieldList}${suffix}`,
+        })
+        return
+      }
+    }
+
     setIsPublishing(true)
     setStatusMessage(null)
     try {
-      const templateIds = [selectedTemplate.id, ...(compiledTemplate ? [compiledTemplate.id] : [])]
-
-      // Save current content as draft first, then publish
-      for (const id of templateIds) {
+      // Save current content as draft first, then publish ALL 3 templates
+      for (const id of allTemplateIds) {
         await ensureDraft(id)
       }
 
-      // Update draft with current page changes
-      const changedPages = Object.entries(localEdits)
-      if (changedPages.length > 0) {
-        const pages = changedPages.map(([pageId, contentJson]) => ({
-          templatePageId: pageId,
-          contentJson,
-        }))
-        await updateDraft({ templateId: selectedTemplate.id, body: { pages, versionName: templateName || undefined } }).unwrap()
+      // Update drafts with current page changes (split per template)
+      const reportPages = buildDirtyPagesForTemplate(reportVersionData?.pages)
+      const receiptPages = buildDirtyPagesForTemplate(receiptVersionData?.pages)
+      const compiledPages = buildDirtyPagesForTemplate(compiledVersionData?.pages)
+
+      if (reportPages.length > 0 && reportTemplate?.id) {
+        await updateDraft({ templateId: reportTemplate.id, body: { pages: reportPages, versionName: templateName || undefined } }).unwrap()
+      }
+      if (receiptPages.length > 0 && receiptTemplate?.id) {
+        await updateDraft({ templateId: receiptTemplate.id, body: { pages: receiptPages, versionName: templateName || undefined } }).unwrap()
+      }
+      if (compiledPages.length > 0 && compiledReceiptTemplate?.id) {
+        await updateDraft({ templateId: compiledReceiptTemplate.id, body: { pages: compiledPages, versionName: templateName || undefined } }).unwrap()
       }
 
-      // Publish all templates
-      for (const id of templateIds) {
+      // Publish ALL 3 templates (synced versions)
+      for (const id of allTemplateIds) {
         await publishDraft({ templateId: id, body: { versionName: templateName || undefined } }).unwrap()
       }
 
       setLocalEdits({})
       setEditingVersionId(null)
       setStatusMessage({ type: "success", text: "Published successfully!" })
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Failed to publish:", err)
-      setStatusMessage({ type: "error", text: "Failed to publish. Please try again." })
+      const apiError = err as { data?: { error?: string } }
+      const message = apiError?.data?.error || "Failed to publish. Please try again."
+      setStatusMessage({ type: "error", text: message })
     } finally {
       setIsPublishing(false)
     }
@@ -519,12 +564,9 @@ export function TemplatePage() {
         onPageChange={handlePageChange}
       />
 
-      {selectedTemplate && (
+      {reportTemplate && (
         <VersionHistory
-          templateIds={[
-            selectedTemplate.id,
-            ...(compiledTemplate ? [compiledTemplate.id] : []),
-          ]}
+          templateIds={allTemplateIds}
           onOpenVersion={(versionId) => {
             setEditingVersionId(versionId)
             setLocalEdits({})

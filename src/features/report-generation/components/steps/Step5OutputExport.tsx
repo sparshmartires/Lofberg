@@ -1,29 +1,18 @@
 "use client"
 
-import { useCallback, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import { updateStep5, setGenerating, setGeneratedReportId } from "@/store/slices/reportWizardSlice"
 import { useGenerateReportMutation, usePreviewReportMutation, useUploadImageMutation } from "@/store/services/reportsApi"
-import { OutputFormat, OutputSize, ReportType } from "../../types"
+import { OutputSize } from "../../types"
 import { getCustomerLogoFile, setCustomerLogoFile } from "../../customerLogoRef"
 import type { Step1Data } from "../../types"
 import { useAutoDismiss } from "@/hooks/useAutoDismiss"
 
-const fieldClass =
-  "w-full !h-[44px] rounded-[99px] border border-[#F0F0F0] py-[12px] px-[20px] shadow-[0px_2px_4px_0px_#0000000A] text-body focus:ring-0 focus:outline-none"
-
 export function Step5OutputExport() {
-  const router = useRouter()
   const dispatch = useAppDispatch()
   const { step1, step2, step3, step4, step5, isGenerating, draftId, editingReportId } = useAppSelector(
     (state) => state.reportWizard
@@ -33,32 +22,49 @@ export function Step5OutputExport() {
   const [previewReport] = usePreviewReportMutation()
   const [uploadImage] = useUploadImageMutation()
   const [error, setError] = useState<string | null>(null)
+  const [cachedResult, setCachedResult] = useState<{ fileUrl?: string; zipUrl?: string; dataHash?: string } | null>(null)
   useAutoDismiss(error, () => setError(null))
 
-  const isReceiptOnly = step3.reportType === ReportType.ReceiptOnly
+  // Navigation warning while generating — stored in ref so we can remove explicitly
+  const beforeUnloadRef = useRef<((e: BeforeUnloadEvent) => void) | null>(null)
 
-  const handleFormatChange = useCallback(
-    (val: string) => {
-      dispatch(updateStep5({ outputFormat: Number(val) as OutputFormat }))
+  useEffect(() => {
+    if (!isGenerating) {
+      if (beforeUnloadRef.current) {
+        window.removeEventListener("beforeunload", beforeUnloadRef.current)
+        beforeUnloadRef.current = null
+      }
+      return
+    }
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = "The report/receipt is being generated. If you leave this page your progress will be lost."
+    }
+    beforeUnloadRef.current = handler
+    window.addEventListener("beforeunload", handler)
+    return () => {
+      window.removeEventListener("beforeunload", handler)
+      beforeUnloadRef.current = null
+    }
+  }, [isGenerating])
+
+  const handleJpegToggle = useCallback(
+    (checked: boolean) => {
+      dispatch(updateStep5({ generateJpegs: checked }))
     },
     [dispatch]
   )
 
   const handleSizeChange = useCallback(
-    (val: string) => {
-      dispatch(updateStep5({ outputSize: Number(val) as OutputSize }))
+    (size: OutputSize) => {
+      dispatch(updateStep5({ outputSize: size }))
     },
     [dispatch]
   )
 
   const resolveStep1WithLogo = useCallback(async (): Promise<Step1Data> => {
     const logoFile = getCustomerLogoFile()
-    // If there's a logo file but the URL is a blob: URL, upload it first
-    if (
-      logoFile &&
-      step1.customerLogoUrl &&
-      step1.customerLogoUrl.startsWith("blob:")
-    ) {
+    if (logoFile && step1.customerLogoUrl?.startsWith("blob:")) {
       const { url } = await uploadImage({ file: logoFile }).unwrap()
       setCustomerLogoFile(null)
       return { ...step1, customerLogoUrl: url }
@@ -66,15 +72,31 @@ export function Step5OutputExport() {
     return step1
   }, [step1, uploadImage])
 
+  const validate = (): string | null => {
+    const missing: string[] = []
+    if (!step1.customerId && !step1.customerName) missing.push("Customer (Step 1)")
+    if (!step1.salesRepresentativeId) missing.push("Salesperson (Step 1)")
+    if (!step1.reportDate) missing.push("Report date (Step 1)")
+    if (!step1.languageId) missing.push("Language (Step 1)")
+    if (!step2.rows || step2.rows.length === 0) missing.push("Certification data (Step 2)")
+    if (missing.length > 0) return `Missing required fields: ${missing.join(", ")}`
+    return null
+  }
+
+  // Simple hash of wizard data to detect changes
+  const getDataHash = useCallback(() => {
+    return JSON.stringify({ step1, step2: { rows: step2.rows, timePeriod: step2.timePeriod }, step3, step4, step5 })
+  }, [step1, step2, step3, step4, step5])
+
   const handleGenerate = useCallback(async () => {
     setError(null)
+    const validationError = validate()
+    if (validationError) { setError(validationError); return }
 
-    if (!step1.salesRepresentativeId) {
-      setError("Please select a sales representative in Step 1.")
-      return
-    }
-    if (!step2.rows || step2.rows.length === 0) {
-      setError("Please add certification data in Step 2.")
+    // Use cached result if data hasn't changed since last generate
+    const currentHash = getDataHash()
+    if (cachedResult?.dataHash === currentHash && cachedResult.fileUrl) {
+      window.open(cachedResult.fileUrl, "_blank")
       return
     }
 
@@ -82,18 +104,41 @@ export function Step5OutputExport() {
     try {
       const resolvedStep1 = await resolveStep1WithLogo()
       const result = await generateReport({
-        draftId: editingReportId ? undefined : draftId, // Always create new report when editing a completed report
+        draftId: editingReportId ? undefined : draftId,
         step1: resolvedStep1,
         step2: { rows: step2.rows, timePeriod: step2.timePeriod },
         step3,
         step4,
         step5,
       }).unwrap()
+      console.log("[Generate] Result:", { reportId: result.reportId, fileUrl: result.generatedFileUrl, zipUrl: result.jpegZipUrl })
       dispatch(setGeneratedReportId(result.reportId))
 
-      // Open the generated PDF in a new tab
+      // Cache the result for reuse
+      setCachedResult({ fileUrl: result.generatedFileUrl ?? undefined, zipUrl: result.jpegZipUrl ?? undefined, dataHash: currentHash })
+
+      // Remove beforeunload listener explicitly before opening new tabs
+      if (beforeUnloadRef.current) {
+        window.removeEventListener("beforeunload", beforeUnloadRef.current)
+        beforeUnloadRef.current = null
+      }
+      dispatch(setGenerating(false))
+
+      // Open generated PDF in new tab
       if (result.generatedFileUrl) {
         window.open(result.generatedFileUrl, "_blank")
+      }
+
+      // Download JPEG zip if generated
+      if (result.jpegZipUrl) {
+        const customerName = step1.customerName || "report"
+        const dateStr = step1.reportDate?.replace(/-/g, "") || new Date().toISOString().slice(0, 10).replace(/-/g, "")
+        const link = document.createElement("a")
+        link.href = result.jpegZipUrl
+        link.download = `${customerName} - ${dateStr}.zip`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       }
     } catch (err: unknown) {
       const message =
@@ -104,19 +149,12 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, editingReportId, step2, step3, step4, step5, step1.salesRepresentativeId])
+  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, editingReportId, step1, step2, step3, step4, step5, getDataHash, cachedResult])
 
   const handlePreview = useCallback(async () => {
     setError(null)
-
-    if (!step1.salesRepresentativeId) {
-      setError("Please select a sales representative in Step 1.")
-      return
-    }
-    if (!step2.rows || step2.rows.length === 0) {
-      setError("Please add certification data in Step 2.")
-      return
-    }
+    const validationError = validate()
+    if (validationError) { setError(validationError); return }
 
     dispatch(setGenerating(true))
     try {
@@ -130,7 +168,6 @@ export function Step5OutputExport() {
       }).unwrap()
 
       if (result.previewPdfBase64) {
-        // Convert base64 to blob and open in new tab
         const byteChars = atob(result.previewPdfBase64)
         const byteArray = new Uint8Array(byteChars.length)
         for (let i = 0; i < byteChars.length; i++) {
@@ -150,7 +187,7 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, previewReport, resolveStep1WithLogo, step2, step3, step4, step5, step1.salesRepresentativeId])
+  }, [dispatch, previewReport, resolveStep1WithLogo, step1, step2, step3, step4, step5])
 
   return (
     <div className="space-y-6">
@@ -158,46 +195,48 @@ export function Step5OutputExport() {
         <h2 className="text-lg font-semibold text-[#1F1F1F]">Generate</h2>
       </div>
 
-      <div className="grid grid-cols-1 min-[500px]:grid-cols-2 gap-6">
-        {/* Output Format */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[#1F1F1F]">Output format</label>
-          <Select
-            value={String(step5.outputFormat)}
-            onValueChange={handleFormatChange}
-          >
-            <SelectTrigger className={fieldClass}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={String(OutputFormat.PDF)}>PDF</SelectItem>
-              <SelectItem value={String(OutputFormat.JPEG)}>JPEG</SelectItem>
-            </SelectContent>
-          </Select>
+      {/* Receipt JPEGs checkbox */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={step5.generateJpegs}
+            onCheckedChange={(checked) => handleJpegToggle(Boolean(checked))}
+            disabled={isGenerating}
+          />
+          <label className="text-sm text-[#1F1F1F] cursor-pointer">
+            Receipt JPEGs
+          </label>
         </div>
 
-        {/* Size */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[#1F1F1F]">Size</label>
-          {isReceiptOnly ? (
-            <Select
-              value={String(step5.outputSize)}
-              onValueChange={handleSizeChange}
-            >
-              <SelectTrigger className={fieldClass}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={String(OutputSize.A4)}>A4</SelectItem>
-                <SelectItem value={String(OutputSize.A3)}>A3</SelectItem>
-              </SelectContent>
-            </Select>
-          ) : (
-            <div className={`${fieldClass} flex items-center text-[#1F1F1F]`}>
-              A4 (default)
+        {step5.generateJpegs && (
+          <div className="ml-6 space-y-2">
+            <label className="text-sm font-medium text-[#1F1F1F]">Receipt size</label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="receiptSize"
+                  checked={step5.outputSize === OutputSize.A4}
+                  onChange={() => handleSizeChange(OutputSize.A4)}
+                  className="w-4 h-4 accent-primary"
+                  disabled={isGenerating}
+                />
+                <span className="text-sm">A4</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="receiptSize"
+                  checked={step5.outputSize === OutputSize.A3}
+                  onChange={() => handleSizeChange(OutputSize.A3)}
+                  className="w-4 h-4 accent-primary"
+                  disabled={isGenerating}
+                />
+                <span className="text-sm">A3</span>
+              </label>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {error && (
@@ -239,7 +278,6 @@ export function Step5OutputExport() {
           >
             {isGenerating ? "Generating..." : "Generate"}
           </Button>
-
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ import { useDebounce } from "@/hooks/useDebounce"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { PageHeaderWithAction } from "@/components/layout/PageHeaderWithAction"
 import { PageSectionTitle } from "@/components/layout/PageSectionTitle"
-import { useGetUsersQuery } from "@/store/services/usersApi"
+import { useGetUsersQuery, useGetRolesQuery } from "@/store/services/usersApi"
 import { UsersEmptyState } from "../components/UsersEmptyState"
 import { Loader2 } from "lucide-react"
 
@@ -20,6 +20,11 @@ export function UsersPage() {
   const [searchInput, setSearchInput] = useState("")
   const search = useDebounce(searchInput, 300)
   const [status, setStatus] = useState("all")
+  const [roleId, setRoleId] = useState("all")
+  const [createdAfter, setCreatedAfter] = useState("")
+  const [createdBefore, setCreatedBefore] = useState("")
+  const [lastLoginAfter, setLastLoginAfter] = useState("")
+  const [lastLoginBefore, setLastLoginBefore] = useState("")
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [sortBy, setSortBy] = useState("")
@@ -31,6 +36,8 @@ export function UsersPage() {
     return undefined
   }, [status])
 
+  const { data: roles = [] } = useGetRolesQuery()
+
   const {
     data: usersResponse,
     isLoading,
@@ -41,6 +48,11 @@ export function UsersPage() {
     pageSize,
     ...(search.trim() ? { searchTerm: search.trim() } : {}),
     ...(typeof isActiveFilter === "boolean" ? { isActive: isActiveFilter } : {}),
+    ...(roleId !== "all" ? { roleId } : {}),
+    ...(createdAfter ? { createdAfter } : {}),
+    ...(createdBefore ? { createdBefore } : {}),
+    ...(lastLoginAfter ? { lastLoginAfter } : {}),
+    ...(lastLoginBefore ? { lastLoginBefore } : {}),
     ...(sortBy ? { sortBy } : {}),
     ...(sortBy ? { sortDirection } : {}),
   })
@@ -92,6 +104,7 @@ export function UsersPage() {
 
         {/* Filters */}
         <div className="filters-card">
+          {/* Row 1: Search + Status + Role */}
           <div className="flex flex-wrap gap-4 items-end max-[649px]:flex-col">
             <div className="filter-field flex-[2] min-w-[280px] max-[649px]:min-w-0 max-[649px]:w-full">
               <label>Search</label>
@@ -114,6 +127,39 @@ export function UsersPage() {
                   <SelectItem value="inactive">Archived</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+              <label>Role</label>
+              <Select value={roleId} onValueChange={handleFilterChange(setRoleId)}>
+                <SelectTrigger className={fieldClass} showClear={roleId !== "all"} onClear={() => handleFilterChange(setRoleId)("all")}>
+                  <SelectValue placeholder="All roles" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All roles</SelectItem>
+                  {roles.map((r) => (
+                    <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          {/* Row 2: Created at range + Last logged in range */}
+          <div className="flex flex-wrap gap-4 items-end mt-4 max-[649px]:flex-col">
+            <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+              <label>Created from</label>
+              <input type="date" value={createdAfter} onChange={(e) => { setCreatedAfter(e.target.value); setPageNumber(1) }} className={fieldClass} />
+            </div>
+            <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+              <label>Created to</label>
+              <input type="date" value={createdBefore} onChange={(e) => { setCreatedBefore(e.target.value); setPageNumber(1) }} className={fieldClass} />
+            </div>
+            <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+              <label>Last login from</label>
+              <input type="date" value={lastLoginAfter} onChange={(e) => { setLastLoginAfter(e.target.value); setPageNumber(1) }} className={fieldClass} />
+            </div>
+            <div className="filter-field flex-1 min-w-[150px] max-[649px]:w-full">
+              <label>Last login to</label>
+              <input type="date" value={lastLoginBefore} onChange={(e) => { setLastLoginBefore(e.target.value); setPageNumber(1) }} className={fieldClass} />
             </div>
           </div>
         </div>
