@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -22,17 +22,30 @@ export function Step5OutputExport() {
   const [previewReport] = usePreviewReportMutation()
   const [uploadImage] = useUploadImageMutation()
   const [error, setError] = useState<string | null>(null)
+  const [cachedResult, setCachedResult] = useState<{ fileUrl?: string; zipUrl?: string; dataHash?: string } | null>(null)
   useAutoDismiss(error, () => setError(null))
 
-  // Navigation warning while generating
+  // Navigation warning while generating — stored in ref so we can remove explicitly
+  const beforeUnloadRef = useRef<((e: BeforeUnloadEvent) => void) | null>(null)
+
   useEffect(() => {
-    if (!isGenerating) return
+    if (!isGenerating) {
+      if (beforeUnloadRef.current) {
+        window.removeEventListener("beforeunload", beforeUnloadRef.current)
+        beforeUnloadRef.current = null
+      }
+      return
+    }
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault()
       e.returnValue = "The report/receipt is being generated. If you leave this page your progress will be lost."
     }
+    beforeUnloadRef.current = handler
     window.addEventListener("beforeunload", handler)
-    return () => window.removeEventListener("beforeunload", handler)
+    return () => {
+      window.removeEventListener("beforeunload", handler)
+      beforeUnloadRef.current = null
+    }
   }, [isGenerating])
 
   const handleJpegToggle = useCallback(
@@ -70,10 +83,22 @@ export function Step5OutputExport() {
     return null
   }
 
+  // Simple hash of wizard data to detect changes
+  const getDataHash = useCallback(() => {
+    return JSON.stringify({ step1, step2: { rows: step2.rows, timePeriod: step2.timePeriod }, step3, step4, step5 })
+  }, [step1, step2, step3, step4, step5])
+
   const handleGenerate = useCallback(async () => {
     setError(null)
     const validationError = validate()
     if (validationError) { setError(validationError); return }
+
+    // Use cached result if data hasn't changed since last generate
+    const currentHash = getDataHash()
+    if (cachedResult?.dataHash === currentHash && cachedResult.fileUrl) {
+      window.open(cachedResult.fileUrl, "_blank")
+      return
+    }
 
     dispatch(setGenerating(true))
     try {
@@ -86,7 +111,18 @@ export function Step5OutputExport() {
         step4,
         step5,
       }).unwrap()
+      console.log("[Generate] Result:", { reportId: result.reportId, fileUrl: result.generatedFileUrl, zipUrl: result.jpegZipUrl })
       dispatch(setGeneratedReportId(result.reportId))
+
+      // Cache the result for reuse
+      setCachedResult({ fileUrl: result.generatedFileUrl ?? undefined, zipUrl: result.jpegZipUrl ?? undefined, dataHash: currentHash })
+
+      // Remove beforeunload listener explicitly before opening new tabs
+      if (beforeUnloadRef.current) {
+        window.removeEventListener("beforeunload", beforeUnloadRef.current)
+        beforeUnloadRef.current = null
+      }
+      dispatch(setGenerating(false))
 
       // Open generated PDF in new tab
       if (result.generatedFileUrl) {
@@ -95,9 +131,11 @@ export function Step5OutputExport() {
 
       // Download JPEG zip if generated
       if (result.jpegZipUrl) {
+        const customerName = step1.customerName || "report"
+        const dateStr = step1.reportDate?.replace(/-/g, "") || new Date().toISOString().slice(0, 10).replace(/-/g, "")
         const link = document.createElement("a")
         link.href = result.jpegZipUrl
-        link.download = "receipt-jpegs.zip"
+        link.download = `${customerName} - ${dateStr}.zip`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -111,7 +149,7 @@ export function Step5OutputExport() {
     } finally {
       dispatch(setGenerating(false))
     }
-  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, editingReportId, step1, step2, step3, step4, step5])
+  }, [dispatch, generateReport, resolveStep1WithLogo, draftId, editingReportId, step1, step2, step3, step4, step5, getDataHash, cachedResult])
 
   const handlePreview = useCallback(async () => {
     setError(null)
